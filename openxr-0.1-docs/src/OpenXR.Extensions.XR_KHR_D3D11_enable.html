@@ -1,0 +1,992 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_KHR_D3D11_enable - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_KHR_D3D11_enable  XR_KHR_D3D11_enable&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 28</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 5</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'GraphicsBindingD3D11KHR', 'GraphicsRequirementsD3D11KHR',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'SwapchainImageD3D11KHR', 'getD3D11GraphicsRequirementsKHR'</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_KHR_D3D11_enable OpenXR Specification&gt;</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_KHR_D3D11_enable</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#getD3D11GraphicsRequirementsKHR"><span class="hs-identifier">getD3D11GraphicsRequirementsKHR</span></a></span><span>
+</span><span id="line-37"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier">GraphicsBindingD3D11KHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier">SwapchainImageD3D11KHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier">GraphicsRequirementsD3D11KHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_enable_SPEC_VERSION"><span class="hs-identifier">KHR_D3D11_enable_SPEC_VERSION</span></a></span><span>
+</span><span id="line-41"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_enable_SPEC_VERSION"><span class="hs-identifier">KHR_D3D11_enable_SPEC_VERSION</span></a></span><span>
+</span><span id="line-42"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_ENABLE_EXTENSION_NAME"><span class="hs-identifier">KHR_D3D11_ENABLE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-43"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_ENABLE_EXTENSION_NAME"><span class="hs-identifier">KHR_D3D11_ENABLE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-44"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#LUID"><span class="hs-identifier">LUID</span></a></span><span>
+</span><span id="line-45"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#D3D_FEATURE_LEVEL"><span class="hs-identifier">D3D_FEATURE_LEVEL</span></a></span><span>
+</span><span id="line-46"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Device"><span class="hs-identifier">ID3D11Device</span></a></span><span>
+</span><span id="line-47"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Texture2D"><span class="hs-identifier">ID3D11Texture2D</span></a></span><span>
+</span><span id="line-48"></span><span>                                              </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier">traceAroundEvent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word64</span></span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier">Instance</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-83"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier">Instance</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html"><span class="hs-identifier">OpenXR.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#pXrGetD3D11GraphicsRequirementsKHR"><span class="hs-identifier">pXrGetD3D11GraphicsRequirementsKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-85"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance_T"><span class="hs-identifier">Instance_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Image.html"><span class="hs-identifier">OpenXR.Core10.Image</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Image.html#IsSwapchainImage"><span class="hs-identifier">IsSwapchainImage</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Exception.html"><span class="hs-identifier">OpenXR.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier">OpenXrException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-89"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-91"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Image.html"><span class="hs-identifier">OpenXR.Core10.Image</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Image.html#SwapchainImageBaseHeader"><span class="hs-identifier">SwapchainImageBaseHeader</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Device.html"><span class="hs-identifier">OpenXR.Core10.Device</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Device.html#SystemId"><span class="hs-identifier">SystemId</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Device.html"><span class="hs-identifier">OpenXR.Core10.Device</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Device.html#SystemId"><span class="hs-identifier">SystemId</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_GRAPHICS_BINDING_D3D11_KHR"><span class="hs-identifier">TYPE_GRAPHICS_BINDING_D3D11_KHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR"><span class="hs-identifier">TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SWAPCHAIN_IMAGE_D3D11_KHR"><span class="hs-identifier">TYPE_SWAPCHAIN_IMAGE_D3D11_KHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkXrGetD3D11GraphicsRequirementsKHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#mkXrGetD3D11GraphicsRequirementsKHR"><span class="hs-identifier hs-var">mkXrGetD3D11GraphicsRequirementsKHR</span></a></span></span><span>
+</span><span id="line-103"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance_T"><span class="hs-identifier hs-type">Instance_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="OpenXR.Core10.Device.html#SystemId"><span class="hs-identifier hs-type">SystemId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance_T"><span class="hs-identifier hs-type">Instance_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="OpenXR.Core10.Device.html#SystemId"><span class="hs-identifier hs-type">SystemId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-104"></span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- | xrGetD3D11GraphicsRequirementsKHR - Retrieve the D3D11 feature level and</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- graphics device requirements for an instance and system</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- == Parameter Descriptions</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- The 'getD3D11GraphicsRequirementsKHR' function identifies to the</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- application what graphics device (Windows LUID) needs to be used and the</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- minimum feature level to use. The runtime /must/ return</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING'</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- ('OpenXR.Core10.Enums.Result.ERROR_VALIDATION_FAILURE' /may/ be returned</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- due to legacy behavior) on calls to 'OpenXR.Core10.Device.createSession'</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- if 'getD3D11GraphicsRequirementsKHR' has not been called for the same</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- @instance@ and @systemId@. The LUID and feature level that</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- 'getD3D11GraphicsRequirementsKHR' returns should be used to create the</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- 'ID3D11Device' that the application passes to</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.createSession' in the 'GraphicsBindingD3D11KHR'.</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- -   #VUID-xrGetD3D11GraphicsRequirementsKHR-extension-notenabled# The @@</span><span>
+</span><span id="line-127"></span><span class="hs-comment">--     extension /must/ be enabled prior to calling</span><span>
+</span><span id="line-128"></span><span class="hs-comment">--     'getD3D11GraphicsRequirementsKHR'</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- -   #VUID-xrGetD3D11GraphicsRequirementsKHR-instance-parameter#</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--     @instance@ /must/ be a valid 'OpenXR.Core10.Handles.Instance' handle</span><span>
+</span><span id="line-132"></span><span class="hs-comment">--</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- -   #VUID-xrGetD3D11GraphicsRequirementsKHR-graphicsRequirements-parameter#</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--     @graphicsRequirements@ /must/ be a pointer to an</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--     'GraphicsRequirementsD3D11KHR' structure</span><span>
+</span><span id="line-136"></span><span class="hs-comment">--</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-140"></span><span class="hs-comment">--</span><span>
+</span><span id="line-141"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-142"></span><span class="hs-comment">--</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_HANDLE_INVALID'</span><span>
+</span><span id="line-146"></span><span class="hs-comment">--</span><span>
+</span><span id="line-147"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_INSTANCE_LOST'</span><span>
+</span><span id="line-148"></span><span class="hs-comment">--</span><span>
+</span><span id="line-149"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_RUNTIME_FAILURE'</span><span>
+</span><span id="line-150"></span><span class="hs-comment">--</span><span>
+</span><span id="line-151"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_SYSTEM_INVALID'</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--</span><span>
+</span><span id="line-153"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_VALIDATION_FAILURE'</span><span>
+</span><span id="line-154"></span><span class="hs-comment">--</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_FUNCTION_UNSUPPORTED'</span><span>
+</span><span id="line-156"></span><span class="hs-comment">--</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- 'GraphicsRequirementsD3D11KHR', 'OpenXR.Core10.Handles.Instance',</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId &gt;,</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.createSession'</span><span>
+</span><span id="line-162"></span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#getD3D11GraphicsRequirementsKHR"><span class="hs-identifier hs-type">getD3D11GraphicsRequirementsKHR</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679410397"><span class="annot"><a href="#local-6989586621679410397"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-163"></span><span>                                 </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679410397"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span>                                </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @instance@ is an 'OpenXR.Core10.Handles.Instance' handle previously</span><span>
+</span><span id="line-165"></span><span>                                   </span><span class="hs-comment">-- created with 'OpenXR.Core10.Instance.createInstance'.</span><span>
+</span><span id="line-166"></span><span>                                   </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-type">Instance</span></a></span><span>
+</span><span id="line-167"></span><span>                                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @systemId@ is an</span><span>
+</span><span id="line-168"></span><span>                                   </span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId &gt;</span><span>
+</span><span id="line-169"></span><span>                                   </span><span class="hs-comment">-- handle for the system which will be used to create a session.</span><span>
+</span><span id="line-170"></span><span>                                   </span><span class="annot"><a href="OpenXR.Core10.Device.html#SystemId"><span class="hs-identifier hs-type">SystemId</span></a></span><span>
+</span><span id="line-171"></span><span>                                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679410397"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-172"></span><span id="getD3D11GraphicsRequirementsKHR"><span class="annot"><span class="annottext">getD3D11GraphicsRequirementsKHR :: Instance -&gt; SystemId -&gt; io GraphicsRequirementsD3D11KHR
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#getD3D11GraphicsRequirementsKHR"><span class="hs-identifier hs-var hs-var">getD3D11GraphicsRequirementsKHR</span></a></span></span><span> </span><span id="local-6989586621679410396"><span class="annot"><span class="annottext">instance' :: Instance
+</span><a href="#local-6989586621679410396"><span class="hs-identifier hs-var">instance'</span></a></span></span><span> </span><span id="local-6989586621679410395"><span class="annot"><span class="annottext">systemId :: SystemId
+</span><a href="#local-6989586621679410395"><span class="hs-identifier hs-var">systemId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO GraphicsRequirementsD3D11KHR -&gt; io GraphicsRequirementsD3D11KHR
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO GraphicsRequirementsD3D11KHR
+ -&gt; io GraphicsRequirementsD3D11KHR)
+-&gt; (ContT
+      GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+    -&gt; IO GraphicsRequirementsD3D11KHR)
+-&gt; ContT
+     GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+-&gt; io GraphicsRequirementsD3D11KHR
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+-&gt; IO GraphicsRequirementsD3D11KHR
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+ -&gt; io GraphicsRequirementsD3D11KHR)
+-&gt; ContT
+     GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+-&gt; io GraphicsRequirementsD3D11KHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-173"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679410393"><span class="annot"><span class="annottext">xrGetD3D11GraphicsRequirementsKHRPtr :: FunPtr
+  (Ptr Instance_T
+   -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+</span><a href="#local-6989586621679410393"><span class="hs-identifier hs-var hs-var">xrGetD3D11GraphicsRequirementsKHRPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+-&gt; FunPtr
+     (Ptr Instance_T
+      -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+</span><a href="OpenXR.Dynamic.html#pXrGetD3D11GraphicsRequirementsKHR"><span class="hs-identifier hs-var hs-var">pXrGetD3D11GraphicsRequirementsKHR</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Instance -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3AInstance"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Instance
+</span><a href="#local-6989586621679410396"><span class="hs-identifier hs-var">instance'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-type">Instance</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-174"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT GraphicsRequirementsD3D11KHR IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT GraphicsRequirementsD3D11KHR IO ())
+-&gt; IO () -&gt; ContT GraphicsRequirementsD3D11KHR IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Instance_T
+   -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+</span><a href="#local-6989586621679410393"><span class="hs-identifier hs-var">xrGetD3D11GraphicsRequirementsKHRPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Instance_T
+   -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Instance_T
+      -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Instance_T
+   -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-175"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for xrGetD3D11GraphicsRequirementsKHR is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-176"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679410388"><span class="annot"><span class="annottext">xrGetD3D11GraphicsRequirementsKHR' :: Ptr Instance_T
+-&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result
+</span><a href="#local-6989586621679410388"><span class="hs-identifier hs-var hs-var">xrGetD3D11GraphicsRequirementsKHR'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Instance_T
+   -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+-&gt; Ptr Instance_T
+-&gt; SystemId
+-&gt; Ptr GraphicsRequirementsD3D11KHR
+-&gt; IO Result
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#mkXrGetD3D11GraphicsRequirementsKHR"><span class="hs-identifier hs-var">mkXrGetD3D11GraphicsRequirementsKHR</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Instance_T
+   -&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result)
+</span><a href="#local-6989586621679410393"><span class="hs-identifier hs-var">xrGetD3D11GraphicsRequirementsKHRPtr</span></a></span><span>
+</span><span id="line-177"></span><span>  </span><span id="local-6989586621679410387"><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410387"><span class="hs-identifier hs-var">pGraphicsRequirements</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">((Ptr GraphicsRequirementsD3D11KHR
+  -&gt; IO GraphicsRequirementsD3D11KHR)
+ -&gt; IO GraphicsRequirementsD3D11KHR)
+-&gt; ContT
+     GraphicsRequirementsD3D11KHR IO (Ptr GraphicsRequirementsD3D11KHR)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b.
+ToCStruct GraphicsRequirementsD3D11KHR =&gt;
+(Ptr GraphicsRequirementsD3D11KHR -&gt; IO b) -&gt; IO b
+forall a b. ToCStruct a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">withZeroCStruct</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>  </span><span id="local-6989586621679410384"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679410384"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; ContT GraphicsRequirementsD3D11KHR IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; ContT GraphicsRequirementsD3D11KHR IO Result)
+-&gt; IO Result -&gt; ContT GraphicsRequirementsD3D11KHR IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;xrGetD3D11GraphicsRequirementsKHR&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Instance_T
+-&gt; SystemId -&gt; Ptr GraphicsRequirementsD3D11KHR -&gt; IO Result
+</span><a href="#local-6989586621679410388"><span class="hs-identifier hs-var">xrGetD3D11GraphicsRequirementsKHR'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Instance -&gt; Ptr Instance_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceHandle%3AInstance"><span class="hs-identifier hs-var hs-var">instanceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Instance
+</span><a href="#local-6989586621679410396"><span class="hs-identifier hs-var">instance'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SystemId
+</span><a href="#local-6989586621679410395"><span class="hs-identifier hs-var">systemId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410387"><span class="hs-identifier hs-var">pGraphicsRequirements</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-179"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT GraphicsRequirementsD3D11KHR IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT GraphicsRequirementsD3D11KHR IO ())
+-&gt; IO () -&gt; ContT GraphicsRequirementsD3D11KHR IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679410384"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OpenXrException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; OpenXrException
+</span><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-var">OpenXrException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679410384"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-180"></span><span>  </span><span id="local-6989586621679410380"><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410380"><span class="hs-identifier hs-var">graphicsRequirements</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO GraphicsRequirementsD3D11KHR
+-&gt; ContT
+     GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO GraphicsRequirementsD3D11KHR
+ -&gt; ContT
+      GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR)
+-&gt; IO GraphicsRequirementsD3D11KHR
+-&gt; ContT
+     GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; IO GraphicsRequirementsD3D11KHR
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410387"><span class="hs-identifier hs-var">pGraphicsRequirements</span></a></span><span>
+</span><span id="line-181"></span><span>  </span><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+-&gt; ContT
+     GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(GraphicsRequirementsD3D11KHR
+ -&gt; ContT
+      GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR)
+-&gt; GraphicsRequirementsD3D11KHR
+-&gt; ContT
+     GraphicsRequirementsD3D11KHR IO GraphicsRequirementsD3D11KHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410380"><span class="hs-identifier hs-var">graphicsRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-182"></span><span>
+</span><span id="line-183"></span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- | XrGraphicsBindingD3D11KHR - The graphics binding structure to be passed</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- at session creation to use D3D11</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- == Member Descriptions</span><span>
+</span><span id="line-188"></span><span class="hs-comment">--</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-190"></span><span class="hs-comment">--</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- When creating a D3D11-backed 'OpenXR.Core10.Handles.Session', the</span><span>
+</span><span id="line-192"></span><span class="hs-comment">-- application will provide a pointer to an 'GraphicsBindingD3D11KHR' in</span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- the @next@ chain of the 'OpenXR.Core10.Device.SessionCreateInfo'.</span><span>
+</span><span id="line-194"></span><span class="hs-comment">--</span><span>
+</span><span id="line-195"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-196"></span><span class="hs-comment">--</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- -   #VUID-XrGraphicsBindingD3D11KHR-extension-notenabled# The @@</span><span>
+</span><span id="line-198"></span><span class="hs-comment">--     extension /must/ be enabled prior to using 'GraphicsBindingD3D11KHR'</span><span>
+</span><span id="line-199"></span><span class="hs-comment">--</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- -   #VUID-XrGraphicsBindingD3D11KHR-type-type# @type@ /must/ be</span><span>
+</span><span id="line-201"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_GRAPHICS_BINDING_D3D11_KHR'</span><span>
+</span><span id="line-202"></span><span class="hs-comment">--</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- -   #VUID-XrGraphicsBindingD3D11KHR-next-next# @next@ /must/ be @NULL@</span><span>
+</span><span id="line-204"></span><span class="hs-comment">--     or a valid pointer to the</span><span>
+</span><span id="line-205"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-206"></span><span class="hs-comment">--</span><span>
+</span><span id="line-207"></span><span class="hs-comment">-- -   #VUID-XrGraphicsBindingD3D11KHR-device-parameter# @device@ /must/ be</span><span>
+</span><span id="line-208"></span><span class="hs-comment">--     a pointer to an 'ID3D11Device' value</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--</span><span>
+</span><span id="line-210"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-211"></span><span class="hs-comment">--</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.createSession'</span><span>
+</span><span id="line-214"></span><span class="hs-keyword">data</span><span> </span><span id="GraphicsBindingD3D11KHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-var">GraphicsBindingD3D11KHR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="GraphicsBindingD3D11KHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-var">GraphicsBindingD3D11KHR</span></a></span></span><span>
+</span><span id="line-215"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @device@ is a pointer to a valid 'ID3D11Device' to use.</span><span>
+</span><span id="line-216"></span><span>    </span><span id="%24sel%3Adevice%3AGraphicsBindingD3D11KHR"><span class="annot"><span class="annottext">GraphicsBindingD3D11KHR -&gt; Ptr ID3D11Device
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#%24sel%3Adevice%3AGraphicsBindingD3D11KHR"><span class="hs-identifier hs-var hs-var">device</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Device"><span class="hs-identifier hs-type">ID3D11Device</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-217"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679410373"><span id="local-6989586621679410375"><span class="annot"><span class="annottext">GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; Bool
+(GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; Bool)
+-&gt; (GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; Bool)
+-&gt; Eq GraphicsBindingD3D11KHR
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; Bool
+$c/= :: GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; Bool
+== :: GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; Bool
+$c== :: GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">GraphicsBindingD3D11KHR</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679410366"><span id="local-6989586621679410368"><span id="local-6989586621679410370"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-type">GraphicsBindingD3D11KHR</span></a></span></span></span></span><span>
+</span><span id="line-222"></span><span>
+</span><span id="line-223"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679410361"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-type">GraphicsBindingD3D11KHR</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-224"></span><span>  </span><span id="local-6989586621679410356"><span class="annot"><span class="annottext">withCStruct :: GraphicsBindingD3D11KHR
+-&gt; (Ptr GraphicsBindingD3D11KHR -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></span></span><span> </span><span id="local-6989586621679410354"><span class="annot"><span class="annottext">x :: GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410354"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679410353"><span class="annot"><span class="annottext">f :: Ptr GraphicsBindingD3D11KHR -&gt; IO b
+</span><a href="#local-6989586621679410353"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr GraphicsBindingD3D11KHR -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr GraphicsBindingD3D11KHR -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr GraphicsBindingD3D11KHR -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679410352"><span class="annot"><span class="annottext">p :: Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410352"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+-&gt; GraphicsBindingD3D11KHR -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410352"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410354"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; IO b
+</span><a href="#local-6989586621679410353"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410352"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-225"></span><span>  </span><span id="local-6989586621679410350"><span class="annot"><span class="annottext">pokeCStruct :: Ptr GraphicsBindingD3D11KHR
+-&gt; GraphicsBindingD3D11KHR -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679410350"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679410349"><span class="annot"><span class="annottext">p :: Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410349"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679410348"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-type">GraphicsBindingD3D11KHR</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621679410347"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679410347"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-226"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410349"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_GRAPHICS_BINDING_D3D11_KHR"><span class="hs-identifier hs-var">TYPE_GRAPHICS_BINDING_D3D11_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-227"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410349"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-228"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ID3D11Device) -&gt; Ptr ID3D11Device -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410349"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; Int -&gt; Ptr (Ptr ID3D11Device)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Device"><span class="hs-identifier hs-type">ID3D11Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ID3D11Device
+</span><a href="#local-6989586621679410348"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-229"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679410347"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-230"></span><span>  </span><span id="local-6989586621679410346"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-231"></span><span>  </span><span id="local-6989586621679410344"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-232"></span><span>  </span><span id="local-6989586621679410342"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr GraphicsBindingD3D11KHR -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></span></span><span> </span><span id="local-6989586621679410340"><span class="annot"><span class="annottext">p :: Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410340"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679410339"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679410339"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-233"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410340"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_GRAPHICS_BINDING_D3D11_KHR"><span class="hs-identifier hs-var">TYPE_GRAPHICS_BINDING_D3D11_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-234"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410340"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-235"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ID3D11Device) -&gt; Ptr ID3D11Device -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410340"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; Int -&gt; Ptr (Ptr ID3D11Device)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Device"><span class="hs-identifier hs-type">ID3D11Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ID3D11Device
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-236"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679410339"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-237"></span><span>
+</span><span id="line-238"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-type">GraphicsBindingD3D11KHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-239"></span><span>  </span><span id="local-6989586621679410335"><span class="annot"><span class="annottext">peekCStruct :: Ptr GraphicsBindingD3D11KHR -&gt; IO GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410335"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621679410334"><span class="annot"><span class="annottext">p :: Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410334"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-240"></span><span>    </span><span id="local-6989586621679410333"><span class="annot"><span class="annottext">Ptr ID3D11Device
+</span><a href="#local-6989586621679410333"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ID3D11Device) -&gt; IO (Ptr ID3D11Device)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Device"><span class="hs-identifier hs-type">ID3D11Device</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410334"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; Int -&gt; Ptr (Ptr ID3D11Device)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Device"><span class="hs-identifier hs-type">ID3D11Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-241"></span><span>    </span><span class="annot"><span class="annottext">GraphicsBindingD3D11KHR -&gt; IO GraphicsBindingD3D11KHR
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(GraphicsBindingD3D11KHR -&gt; IO GraphicsBindingD3D11KHR)
+-&gt; GraphicsBindingD3D11KHR -&gt; IO GraphicsBindingD3D11KHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr ID3D11Device -&gt; GraphicsBindingD3D11KHR
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-var">GraphicsBindingD3D11KHR</span></a></span><span>
+</span><span id="line-242"></span><span>             </span><span class="annot"><span class="annottext">Ptr ID3D11Device
+</span><a href="#local-6989586621679410333"><span class="hs-identifier hs-var">device</span></a></span><span>
+</span><span id="line-243"></span><span>
+</span><span id="line-244"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679410323"><span id="local-6989586621679410325"><span id="local-6989586621679410327"><span id="local-6989586621679410329"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-type">GraphicsBindingD3D11KHR</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-245"></span><span>  </span><span id="local-6989586621679410319"><span class="annot"><span class="annottext">sizeOf :: GraphicsBindingD3D11KHR -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">GraphicsBindingD3D11KHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-246"></span><span>  </span><span id="local-6989586621679410317"><span class="annot"><span class="annottext">alignment :: GraphicsBindingD3D11KHR -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">GraphicsBindingD3D11KHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-247"></span><span>  </span><span id="local-6989586621679410315"><span class="annot"><span class="annottext">peek :: Ptr GraphicsBindingD3D11KHR -&gt; IO GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410315"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR -&gt; IO GraphicsBindingD3D11KHR
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-248"></span><span>  </span><span id="local-6989586621679410314"><span class="annot"><span class="annottext">poke :: Ptr GraphicsBindingD3D11KHR -&gt; GraphicsBindingD3D11KHR -&gt; IO ()
+</span><a href="#local-6989586621679410314"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679410313"><span class="annot"><span class="annottext">ptr :: Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410313"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679410312"><span class="annot"><span class="annottext">poked :: GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410312"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+-&gt; GraphicsBindingD3D11KHR -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410313"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410312"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-249"></span><span>
+</span><span id="line-250"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-type">GraphicsBindingD3D11KHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-251"></span><span>  </span><span id="local-6989586621679410309"><span class="annot"><span class="annottext">zero :: GraphicsBindingD3D11KHR
+</span><a href="#local-6989586621679410309"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ID3D11Device -&gt; GraphicsBindingD3D11KHR
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsBindingD3D11KHR"><span class="hs-identifier hs-var">GraphicsBindingD3D11KHR</span></a></span><span>
+</span><span id="line-252"></span><span>           </span><span class="annot"><span class="annottext">Ptr ID3D11Device
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-253"></span><span>
+</span><span id="line-254"></span><span>
+</span><span id="line-255"></span><span class="hs-comment">-- | XrSwapchainImageD3D11KHR - D3D11-specific swapchain image structure</span><span>
+</span><span id="line-256"></span><span class="hs-comment">--</span><span>
+</span><span id="line-257"></span><span class="hs-comment">-- == Member Descriptions</span><span>
+</span><span id="line-258"></span><span class="hs-comment">--</span><span>
+</span><span id="line-259"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-260"></span><span class="hs-comment">--</span><span>
+</span><span id="line-261"></span><span class="hs-comment">-- If a given session was created with 'GraphicsBindingD3D11KHR', the</span><span>
+</span><span id="line-262"></span><span class="hs-comment">-- following conditions /must/ apply.</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--</span><span>
+</span><span id="line-264"></span><span class="hs-comment">-- -   Calls to 'OpenXR.Core10.Image.enumerateSwapchainImages' on an</span><span>
+</span><span id="line-265"></span><span class="hs-comment">--     'OpenXR.Core10.Handles.Swapchain' in that session /must/ return an</span><span>
+</span><span id="line-266"></span><span class="hs-comment">--     array of 'SwapchainImageD3D11KHR' structures.</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--</span><span>
+</span><span id="line-268"></span><span class="hs-comment">-- -   Whenever an OpenXR function accepts an</span><span>
+</span><span id="line-269"></span><span class="hs-comment">--     'OpenXR.Core10.Image.SwapchainImageBaseHeader' pointer as a</span><span>
+</span><span id="line-270"></span><span class="hs-comment">--     parameter in that session, the runtime /must/ also accept a pointer</span><span>
+</span><span id="line-271"></span><span class="hs-comment">--     to an 'SwapchainImageD3D11KHR'.</span><span>
+</span><span id="line-272"></span><span class="hs-comment">--</span><span>
+</span><span id="line-273"></span><span class="hs-comment">-- The OpenXR runtime /must/ interpret the top-left corner of the swapchain</span><span>
+</span><span id="line-274"></span><span class="hs-comment">-- image as the coordinate origin unless specified otherwise by extension</span><span>
+</span><span id="line-275"></span><span class="hs-comment">-- functionality.</span><span>
+</span><span id="line-276"></span><span class="hs-comment">--</span><span>
+</span><span id="line-277"></span><span class="hs-comment">-- The OpenXR runtime /must/ interpret the swapchain images in a clip space</span><span>
+</span><span id="line-278"></span><span class="hs-comment">-- of positive Y pointing up, near Z plane at 0, and far Z plane at 1.</span><span>
+</span><span id="line-279"></span><span class="hs-comment">--</span><span>
+</span><span id="line-280"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-281"></span><span class="hs-comment">--</span><span>
+</span><span id="line-282"></span><span class="hs-comment">-- -   #VUID-XrSwapchainImageD3D11KHR-extension-notenabled# The @@</span><span>
+</span><span id="line-283"></span><span class="hs-comment">--     extension /must/ be enabled prior to using 'SwapchainImageD3D11KHR'</span><span>
+</span><span id="line-284"></span><span class="hs-comment">--</span><span>
+</span><span id="line-285"></span><span class="hs-comment">-- -   #VUID-XrSwapchainImageD3D11KHR-type-type# @type@ /must/ be</span><span>
+</span><span id="line-286"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_SWAPCHAIN_IMAGE_D3D11_KHR'</span><span>
+</span><span id="line-287"></span><span class="hs-comment">--</span><span>
+</span><span id="line-288"></span><span class="hs-comment">-- -   #VUID-XrSwapchainImageD3D11KHR-next-next# @next@ /must/ be @NULL@ or</span><span>
+</span><span id="line-289"></span><span class="hs-comment">--     a valid pointer to the</span><span>
+</span><span id="line-290"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-291"></span><span class="hs-comment">--</span><span>
+</span><span id="line-292"></span><span class="hs-comment">-- -   #VUID-XrSwapchainImageD3D11KHR-texture-parameter# @texture@ /must/</span><span>
+</span><span id="line-293"></span><span class="hs-comment">--     be a pointer to an 'ID3D11Texture2D' value</span><span>
+</span><span id="line-294"></span><span class="hs-comment">--</span><span>
+</span><span id="line-295"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-296"></span><span class="hs-comment">--</span><span>
+</span><span id="line-297"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-298"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.SwapchainImageBaseHeader'</span><span>
+</span><span id="line-299"></span><span class="hs-keyword">data</span><span> </span><span id="SwapchainImageD3D11KHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-var">SwapchainImageD3D11KHR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SwapchainImageD3D11KHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-var">SwapchainImageD3D11KHR</span></a></span></span><span>
+</span><span id="line-300"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @texture@ is a pointer to a valid 'ID3D11Texture2D' to use.</span><span>
+</span><span id="line-301"></span><span>    </span><span id="%24sel%3Atexture%3ASwapchainImageD3D11KHR"><span class="annot"><span class="annottext">SwapchainImageD3D11KHR -&gt; Ptr ID3D11Texture2D
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#%24sel%3Atexture%3ASwapchainImageD3D11KHR"><span class="hs-identifier hs-var hs-var">texture</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Texture2D"><span class="hs-identifier hs-type">ID3D11Texture2D</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-302"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679410303"><span id="local-6989586621679410305"><span class="annot"><span class="annottext">SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; Bool
+(SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; Bool)
+-&gt; (SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; Bool)
+-&gt; Eq SwapchainImageD3D11KHR
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; Bool
+$c/= :: SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; Bool
+== :: SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; Bool
+$c== :: SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">SwapchainImageD3D11KHR</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679410297"><span id="local-6989586621679410299"><span id="local-6989586621679410301"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span></span></span></span><span>
+</span><span id="line-307"></span><span>
+</span><span id="line-308"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.Image.html#IsSwapchainImage"><span class="hs-identifier hs-type">IsSwapchainImage</span></a></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-309"></span><span>  </span><span id="local-6989586621679410293"><span class="annot"><span class="annottext">toSwapchainImageBaseHeader :: SwapchainImageD3D11KHR -&gt; SwapchainImageBaseHeader
+</span><a href="OpenXR.Core10.Image.html#toSwapchainImageBaseHeader"><span class="hs-identifier hs-var hs-var hs-var hs-var">toSwapchainImageBaseHeader</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span><span class="hs-special">{</span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">$WSwapchainImageBaseHeader :: StructureType -&gt; SwapchainImageBaseHeader
+</span><a href="OpenXR.Core10.Image.html#%24WSwapchainImageBaseHeader"><span class="hs-identifier hs-type hs-type">SwapchainImageBaseHeader</span></a></span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:type':SwapchainImageBaseHeader :: StructureType
+</span><a href="#local-6989586621679410289"><span class="hs-identifier hs-var">type'</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SWAPCHAIN_IMAGE_D3D11_KHR"><span class="hs-identifier hs-var">TYPE_SWAPCHAIN_IMAGE_D3D11_KHR</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-310"></span><span>
+</span><span id="line-311"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679410285"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-312"></span><span>  </span><span id="local-6989586621679410281"><span class="annot"><span class="annottext">withCStruct :: SwapchainImageD3D11KHR
+-&gt; (Ptr SwapchainImageD3D11KHR -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621679410281"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621679410280"><span class="annot"><span class="annottext">x :: SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410280"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679410279"><span class="annot"><span class="annottext">f :: Ptr SwapchainImageD3D11KHR -&gt; IO b
+</span><a href="#local-6989586621679410279"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr SwapchainImageD3D11KHR -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr SwapchainImageD3D11KHR -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr SwapchainImageD3D11KHR -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679410278"><span class="annot"><span class="annottext">p :: Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410278"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+-&gt; SwapchainImageD3D11KHR -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410278"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410280"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; IO b
+</span><a href="#local-6989586621679410279"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410278"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-313"></span><span>  </span><span id="local-6989586621679410277"><span class="annot"><span class="annottext">pokeCStruct :: Ptr SwapchainImageD3D11KHR
+-&gt; SwapchainImageD3D11KHR -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679410277"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679410276"><span class="annot"><span class="annottext">p :: Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410276"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679410275"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621679410274"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679410274"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-314"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410276"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SWAPCHAIN_IMAGE_D3D11_KHR"><span class="hs-identifier hs-var">TYPE_SWAPCHAIN_IMAGE_D3D11_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-315"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410276"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-316"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ID3D11Texture2D) -&gt; Ptr ID3D11Texture2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410276"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; Int -&gt; Ptr (Ptr ID3D11Texture2D)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Texture2D"><span class="hs-identifier hs-type">ID3D11Texture2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ID3D11Texture2D
+</span><a href="#local-6989586621679410275"><span class="hs-identifier hs-var">texture</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-317"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679410274"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-318"></span><span>  </span><span id="local-6989586621679410273"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621679410273"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-319"></span><span>  </span><span id="local-6989586621679410272"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621679410272"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-320"></span><span>  </span><span id="local-6989586621679410271"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr SwapchainImageD3D11KHR -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679410271"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621679410270"><span class="annot"><span class="annottext">p :: Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410270"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679410269"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679410269"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-321"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410270"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SWAPCHAIN_IMAGE_D3D11_KHR"><span class="hs-identifier hs-var">TYPE_SWAPCHAIN_IMAGE_D3D11_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-322"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410270"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-323"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ID3D11Texture2D) -&gt; Ptr ID3D11Texture2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410270"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; Int -&gt; Ptr (Ptr ID3D11Texture2D)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Texture2D"><span class="hs-identifier hs-type">ID3D11Texture2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ID3D11Texture2D
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-324"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679410269"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-325"></span><span>
+</span><span id="line-326"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-327"></span><span>  </span><span id="local-6989586621679410267"><span class="annot"><span class="annottext">peekCStruct :: Ptr SwapchainImageD3D11KHR -&gt; IO SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410267"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621679410266"><span class="annot"><span class="annottext">p :: Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410266"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-328"></span><span>    </span><span id="local-6989586621679410265"><span class="annot"><span class="annottext">Ptr ID3D11Texture2D
+</span><a href="#local-6989586621679410265"><span class="hs-identifier hs-var">texture</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ID3D11Texture2D) -&gt; IO (Ptr ID3D11Texture2D)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Texture2D"><span class="hs-identifier hs-type">ID3D11Texture2D</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410266"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; Int -&gt; Ptr (Ptr ID3D11Texture2D)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Texture2D"><span class="hs-identifier hs-type">ID3D11Texture2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-329"></span><span>    </span><span class="annot"><span class="annottext">SwapchainImageD3D11KHR -&gt; IO SwapchainImageD3D11KHR
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(SwapchainImageD3D11KHR -&gt; IO SwapchainImageD3D11KHR)
+-&gt; SwapchainImageD3D11KHR -&gt; IO SwapchainImageD3D11KHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr ID3D11Texture2D -&gt; SwapchainImageD3D11KHR
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-var">SwapchainImageD3D11KHR</span></a></span><span>
+</span><span id="line-330"></span><span>             </span><span class="annot"><span class="annottext">Ptr ID3D11Texture2D
+</span><a href="#local-6989586621679410265"><span class="hs-identifier hs-var">texture</span></a></span><span>
+</span><span id="line-331"></span><span>
+</span><span id="line-332"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679410255"><span id="local-6989586621679410257"><span id="local-6989586621679410259"><span id="local-6989586621679410261"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-333"></span><span>  </span><span id="local-6989586621679410252"><span class="annot"><span class="annottext">sizeOf :: SwapchainImageD3D11KHR -&gt; Int
+</span><a href="#local-6989586621679410252"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SwapchainImageD3D11KHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-334"></span><span>  </span><span id="local-6989586621679410251"><span class="annot"><span class="annottext">alignment :: SwapchainImageD3D11KHR -&gt; Int
+</span><a href="#local-6989586621679410251"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SwapchainImageD3D11KHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-335"></span><span>  </span><span id="local-6989586621679410250"><span class="annot"><span class="annottext">peek :: Ptr SwapchainImageD3D11KHR -&gt; IO SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410250"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR -&gt; IO SwapchainImageD3D11KHR
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-336"></span><span>  </span><span id="local-6989586621679410249"><span class="annot"><span class="annottext">poke :: Ptr SwapchainImageD3D11KHR -&gt; SwapchainImageD3D11KHR -&gt; IO ()
+</span><a href="#local-6989586621679410249"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679410248"><span class="annot"><span class="annottext">ptr :: Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410248"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679410247"><span class="annot"><span class="annottext">poked :: SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410247"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+-&gt; SwapchainImageD3D11KHR -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410248"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410247"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-337"></span><span>
+</span><span id="line-338"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-type">SwapchainImageD3D11KHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-339"></span><span>  </span><span id="local-6989586621679410245"><span class="annot"><span class="annottext">zero :: SwapchainImageD3D11KHR
+</span><a href="#local-6989586621679410245"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ID3D11Texture2D -&gt; SwapchainImageD3D11KHR
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#SwapchainImageD3D11KHR"><span class="hs-identifier hs-var">SwapchainImageD3D11KHR</span></a></span><span>
+</span><span id="line-340"></span><span>           </span><span class="annot"><span class="annottext">Ptr ID3D11Texture2D
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-341"></span><span>
+</span><span id="line-342"></span><span>
+</span><span id="line-343"></span><span class="hs-comment">-- | XrGraphicsRequirementsD3D11KHR - D3D11 feature level and LUID</span><span>
+</span><span id="line-344"></span><span class="hs-comment">-- requirements</span><span>
+</span><span id="line-345"></span><span class="hs-comment">--</span><span>
+</span><span id="line-346"></span><span class="hs-comment">-- == Member Descriptions</span><span>
+</span><span id="line-347"></span><span class="hs-comment">--</span><span>
+</span><span id="line-348"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-349"></span><span class="hs-comment">--</span><span>
+</span><span id="line-350"></span><span class="hs-comment">-- 'GraphicsRequirementsD3D11KHR' is populated by</span><span>
+</span><span id="line-351"></span><span class="hs-comment">-- 'getD3D11GraphicsRequirementsKHR'.</span><span>
+</span><span id="line-352"></span><span class="hs-comment">--</span><span>
+</span><span id="line-353"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-354"></span><span class="hs-comment">--</span><span>
+</span><span id="line-355"></span><span class="hs-comment">-- -   #VUID-XrGraphicsRequirementsD3D11KHR-extension-notenabled# The @@</span><span>
+</span><span id="line-356"></span><span class="hs-comment">--     extension /must/ be enabled prior to using</span><span>
+</span><span id="line-357"></span><span class="hs-comment">--     'GraphicsRequirementsD3D11KHR'</span><span>
+</span><span id="line-358"></span><span class="hs-comment">--</span><span>
+</span><span id="line-359"></span><span class="hs-comment">-- -   #VUID-XrGraphicsRequirementsD3D11KHR-type-type# @type@ /must/ be</span><span>
+</span><span id="line-360"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR'</span><span>
+</span><span id="line-361"></span><span class="hs-comment">--</span><span>
+</span><span id="line-362"></span><span class="hs-comment">-- -   #VUID-XrGraphicsRequirementsD3D11KHR-next-next# @next@ /must/ be</span><span>
+</span><span id="line-363"></span><span class="hs-comment">--     @NULL@ or a valid pointer to the</span><span>
+</span><span id="line-364"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-365"></span><span class="hs-comment">--</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- -   #VUID-XrGraphicsRequirementsD3D11KHR-adapterLuid-parameter#</span><span>
+</span><span id="line-367"></span><span class="hs-comment">--     @adapterLuid@ /must/ be a valid 'LUID' value</span><span>
+</span><span id="line-368"></span><span class="hs-comment">--</span><span>
+</span><span id="line-369"></span><span class="hs-comment">-- -   #VUID-XrGraphicsRequirementsD3D11KHR-minFeatureLevel-parameter#</span><span>
+</span><span id="line-370"></span><span class="hs-comment">--     @minFeatureLevel@ /must/ be a valid 'D3D_FEATURE_LEVEL' value</span><span>
+</span><span id="line-371"></span><span class="hs-comment">--</span><span>
+</span><span id="line-372"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-373"></span><span class="hs-comment">--</span><span>
+</span><span id="line-374"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-375"></span><span class="hs-comment">-- 'getD3D11GraphicsRequirementsKHR'</span><span>
+</span><span id="line-376"></span><span class="hs-keyword">data</span><span> </span><span id="GraphicsRequirementsD3D11KHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-var">GraphicsRequirementsD3D11KHR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="GraphicsRequirementsD3D11KHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-var">GraphicsRequirementsD3D11KHR</span></a></span></span><span>
+</span><span id="line-377"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @adapterLuid@ identifies what graphics device needs to be used.</span><span>
+</span><span id="line-378"></span><span>    </span><span id="%24sel%3AadapterLuid%3AGraphicsRequirementsD3D11KHR"><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR -&gt; LUID
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#%24sel%3AadapterLuid%3AGraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-var hs-var">adapterLuid</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#LUID"><span class="hs-identifier hs-type">LUID</span></a></span><span>
+</span><span id="line-379"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @minFeatureLevel@ is the minimum feature level that the D3D11 device</span><span>
+</span><span id="line-380"></span><span>    </span><span class="hs-comment">-- must be initialized with.</span><span>
+</span><span id="line-381"></span><span>    </span><span id="%24sel%3AminFeatureLevel%3AGraphicsRequirementsD3D11KHR"><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR -&gt; D3D_FEATURE_LEVEL
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#%24sel%3AminFeatureLevel%3AGraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-var hs-var">minFeatureLevel</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#D3D_FEATURE_LEVEL"><span class="hs-identifier hs-type">D3D_FEATURE_LEVEL</span></a></span><span>
+</span><span id="line-382"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-383"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679410238"><span id="local-6989586621679410240"><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; Bool
+(GraphicsRequirementsD3D11KHR
+ -&gt; GraphicsRequirementsD3D11KHR -&gt; Bool)
+-&gt; (GraphicsRequirementsD3D11KHR
+    -&gt; GraphicsRequirementsD3D11KHR -&gt; Bool)
+-&gt; Eq GraphicsRequirementsD3D11KHR
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; Bool
+$c/= :: GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; Bool
+== :: GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; Bool
+$c== :: GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">GraphicsRequirementsD3D11KHR</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679410232"><span id="local-6989586621679410234"><span id="local-6989586621679410236"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span></span></span></span><span>
+</span><span id="line-388"></span><span>
+</span><span id="line-389"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679410228"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-390"></span><span>  </span><span id="local-6989586621679410224"><span class="annot"><span class="annottext">withCStruct :: GraphicsRequirementsD3D11KHR
+-&gt; (Ptr GraphicsRequirementsD3D11KHR -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621679410224"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621679410223"><span class="annot"><span class="annottext">x :: GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410223"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679410222"><span class="annot"><span class="annottext">f :: Ptr GraphicsRequirementsD3D11KHR -&gt; IO b
+</span><a href="#local-6989586621679410222"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr GraphicsRequirementsD3D11KHR -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr GraphicsRequirementsD3D11KHR -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr GraphicsRequirementsD3D11KHR -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679410221"><span class="annot"><span class="annottext">p :: Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410221"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410221"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410223"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; IO b
+</span><a href="#local-6989586621679410222"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410221"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-391"></span><span>  </span><span id="local-6989586621679410220"><span class="annot"><span class="annottext">pokeCStruct :: Ptr GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679410220"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679410219"><span class="annot"><span class="annottext">p :: Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410219"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679410217"><span id="local-6989586621679410218"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621679410216"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679410216"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-392"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410219"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR"><span class="hs-identifier hs-var">TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-393"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410219"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-394"></span><span>    </span><span class="annot"><span class="annottext">Ptr LUID -&gt; LUID -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410219"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr LUID
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#LUID"><span class="hs-identifier hs-type">LUID</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">LUID
+</span><a href="#local-6989586621679410218"><span class="hs-identifier hs-var">adapterLuid</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-395"></span><span>    </span><span class="annot"><span class="annottext">Ptr D3D_FEATURE_LEVEL -&gt; D3D_FEATURE_LEVEL -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410219"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr D3D_FEATURE_LEVEL
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#D3D_FEATURE_LEVEL"><span class="hs-identifier hs-type">D3D_FEATURE_LEVEL</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">D3D_FEATURE_LEVEL
+</span><a href="#local-6989586621679410217"><span class="hs-identifier hs-var">minFeatureLevel</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-396"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679410216"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-397"></span><span>  </span><span id="local-6989586621679410215"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621679410215"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-398"></span><span>  </span><span id="local-6989586621679410214"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621679410214"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-399"></span><span>  </span><span id="local-6989586621679410213"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr GraphicsRequirementsD3D11KHR -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679410213"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621679410212"><span class="annot"><span class="annottext">p :: Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410212"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679410211"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679410211"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-400"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410212"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR"><span class="hs-identifier hs-var">TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-401"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410212"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-402"></span><span>    </span><span class="annot"><span class="annottext">Ptr LUID -&gt; LUID -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410212"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr LUID
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#LUID"><span class="hs-identifier hs-type">LUID</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">LUID
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-403"></span><span>    </span><span class="annot"><span class="annottext">Ptr D3D_FEATURE_LEVEL -&gt; D3D_FEATURE_LEVEL -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410212"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr D3D_FEATURE_LEVEL
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#D3D_FEATURE_LEVEL"><span class="hs-identifier hs-type">D3D_FEATURE_LEVEL</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">D3D_FEATURE_LEVEL
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-404"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679410211"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-405"></span><span>
+</span><span id="line-406"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-407"></span><span>  </span><span id="local-6989586621679410209"><span class="annot"><span class="annottext">peekCStruct :: Ptr GraphicsRequirementsD3D11KHR -&gt; IO GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410209"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621679410208"><span class="annot"><span class="annottext">p :: Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410208"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-408"></span><span>    </span><span id="local-6989586621679410207"><span class="annot"><span class="annottext">LUID
+</span><a href="#local-6989586621679410207"><span class="hs-identifier hs-var">adapterLuid</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr LUID -&gt; IO LUID
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#LUID"><span class="hs-identifier hs-type">LUID</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410208"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr LUID
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#LUID"><span class="hs-identifier hs-type">LUID</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-409"></span><span>    </span><span id="local-6989586621679410206"><span class="annot"><span class="annottext">D3D_FEATURE_LEVEL
+</span><a href="#local-6989586621679410206"><span class="hs-identifier hs-var">minFeatureLevel</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr D3D_FEATURE_LEVEL -&gt; IO D3D_FEATURE_LEVEL
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#D3D_FEATURE_LEVEL"><span class="hs-identifier hs-type">D3D_FEATURE_LEVEL</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410208"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; Int -&gt; Ptr D3D_FEATURE_LEVEL
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#D3D_FEATURE_LEVEL"><span class="hs-identifier hs-type">D3D_FEATURE_LEVEL</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-410"></span><span>    </span><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR -&gt; IO GraphicsRequirementsD3D11KHR
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(GraphicsRequirementsD3D11KHR -&gt; IO GraphicsRequirementsD3D11KHR)
+-&gt; GraphicsRequirementsD3D11KHR -&gt; IO GraphicsRequirementsD3D11KHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">LUID -&gt; D3D_FEATURE_LEVEL -&gt; GraphicsRequirementsD3D11KHR
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-var">GraphicsRequirementsD3D11KHR</span></a></span><span>
+</span><span id="line-411"></span><span>             </span><span class="annot"><span class="annottext">LUID
+</span><a href="#local-6989586621679410207"><span class="hs-identifier hs-var">adapterLuid</span></a></span><span> </span><span class="annot"><span class="annottext">D3D_FEATURE_LEVEL
+</span><a href="#local-6989586621679410206"><span class="hs-identifier hs-var">minFeatureLevel</span></a></span><span>
+</span><span id="line-412"></span><span>
+</span><span id="line-413"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679410196"><span id="local-6989586621679410198"><span id="local-6989586621679410200"><span id="local-6989586621679410202"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-414"></span><span>  </span><span id="local-6989586621679410193"><span class="annot"><span class="annottext">sizeOf :: GraphicsRequirementsD3D11KHR -&gt; Int
+</span><a href="#local-6989586621679410193"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-415"></span><span>  </span><span id="local-6989586621679410192"><span class="annot"><span class="annottext">alignment :: GraphicsRequirementsD3D11KHR -&gt; Int
+</span><a href="#local-6989586621679410192"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-416"></span><span>  </span><span id="local-6989586621679410191"><span class="annot"><span class="annottext">peek :: Ptr GraphicsRequirementsD3D11KHR -&gt; IO GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410191"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR -&gt; IO GraphicsRequirementsD3D11KHR
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-417"></span><span>  </span><span id="local-6989586621679410190"><span class="annot"><span class="annottext">poke :: Ptr GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; IO ()
+</span><a href="#local-6989586621679410190"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679410189"><span class="annot"><span class="annottext">ptr :: Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410189"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679410188"><span class="annot"><span class="annottext">poked :: GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410188"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+-&gt; GraphicsRequirementsD3D11KHR -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410189"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410188"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-418"></span><span>
+</span><span id="line-419"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-type">GraphicsRequirementsD3D11KHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-420"></span><span>  </span><span id="local-6989586621679410186"><span class="annot"><span class="annottext">zero :: GraphicsRequirementsD3D11KHR
+</span><a href="#local-6989586621679410186"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LUID -&gt; D3D_FEATURE_LEVEL -&gt; GraphicsRequirementsD3D11KHR
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#GraphicsRequirementsD3D11KHR"><span class="hs-identifier hs-var">GraphicsRequirementsD3D11KHR</span></a></span><span>
+</span><span id="line-421"></span><span>           </span><span class="annot"><span class="annottext">LUID
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-422"></span><span>           </span><span class="annot"><span class="annottext">D3D_FEATURE_LEVEL
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-423"></span><span>
+</span><span id="line-424"></span><span>
+</span><span id="line-425"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_D3D11_enable_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_enable_SPEC_VERSION"><span class="hs-identifier hs-var">KHR_D3D11_enable_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">5</span></span><span>
+</span><span id="line-426"></span><span>
+</span><span id="line-427"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_KHR_D3D11_enable_SPEC_VERSION&quot;</span><span>
+</span><span id="line-428"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_enable_SPEC_VERSION"><span class="hs-identifier hs-type">KHR_D3D11_enable_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679410428"><span class="annot"><a href="#local-6989586621679410428"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679410428"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679410428"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-429"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_D3D11_enable_SPEC_VERSION"><span id="%24mKHR_D3D11_enable_SPEC_VERSION"><span id="KHR_D3D11_enable_SPEC_VERSION"><span class="annot"><span class="annottext">$bKHR_D3D11_enable_SPEC_VERSION :: a
+$mKHR_D3D11_enable_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#%24bKHR_D3D11_enable_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">KHR_D3D11_enable_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">5</span></span><span>
+</span><span id="line-430"></span><span>
+</span><span id="line-431"></span><span>
+</span><span id="line-432"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_D3D11_ENABLE_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_ENABLE_EXTENSION_NAME"><span class="hs-identifier hs-var">KHR_D3D11_ENABLE_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_KHR_D3D11_enable&quot;</span></span><span>
+</span><span id="line-433"></span><span>
+</span><span id="line-434"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_KHR_D3D11_ENABLE_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-435"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#KHR_D3D11_ENABLE_EXTENSION_NAME"><span class="hs-identifier hs-type">KHR_D3D11_ENABLE_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679410424"><span class="annot"><a href="#local-6989586621679410424"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679410424"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679410424"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679410424"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-436"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_D3D11_ENABLE_EXTENSION_NAME"><span id="%24mKHR_D3D11_ENABLE_EXTENSION_NAME"><span id="KHR_D3D11_ENABLE_EXTENSION_NAME"><span class="annot"><span class="annottext">$bKHR_D3D11_ENABLE_EXTENSION_NAME :: a
+$mKHR_D3D11_ENABLE_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#%24bKHR_D3D11_ENABLE_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">KHR_D3D11_ENABLE_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_KHR_D3D11_enable&quot;</span></span><span>
+</span><span id="line-437"></span><span>
+</span><span id="line-438"></span><span>
+</span><span id="line-439"></span><span class="hs-keyword">type</span><span> </span><span id="LUID"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#LUID"><span class="hs-identifier hs-var">LUID</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span>
+</span><span id="line-440"></span><span>
+</span><span id="line-441"></span><span>
+</span><span id="line-442"></span><span class="hs-keyword">type</span><span> </span><span id="D3D_FEATURE_LEVEL"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#D3D_FEATURE_LEVEL"><span class="hs-identifier hs-var">D3D_FEATURE_LEVEL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-443"></span><span>
+</span><span id="line-444"></span><span>
+</span><span id="line-445"></span><span class="hs-keyword">data</span><span> </span><span id="ID3D11Device"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Device"><span class="hs-identifier hs-var">ID3D11Device</span></a></span></span><span>
+</span><span id="line-446"></span><span>
+</span><span id="line-447"></span><span>
+</span><span id="line-448"></span><span class="hs-keyword">data</span><span> </span><span id="ID3D11Texture2D"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_D3D11_enable.html#ID3D11Texture2D"><span class="hs-identifier hs-var">ID3D11Texture2D</span></a></span></span><span>
+</span><span id="line-449"></span><span>
+</span><span id="line-450"></span></pre></body></html>

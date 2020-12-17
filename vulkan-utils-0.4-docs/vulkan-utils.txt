@@ -351,8 +351,12 @@ req :: QuasiQuoter
 -- | Like <a>reqs</a> except that this parses a list of newline separated
 --   requirements
 --   
---   It ignores - Blank lines - Lines beginning with <tt>--</tt> or
---   <tt>#</tt>
+--   It ignores
+--   
+--   <ul>
+--   <li>Blank lines</li>
+--   <li>Lines beginning with <tt>--</tt> or <tt>#</tt></li>
+--   </ul>
 reqs :: QuasiQuoter
 instance (GHC.Show.Show qual, GHC.Show.Show unqual) => GHC.Show.Show (Vulkan.Utils.Requirements.TH.Request qual unqual)
 instance Data.Traversable.Traversable Vulkan.Utils.Requirements.TH.Constraint

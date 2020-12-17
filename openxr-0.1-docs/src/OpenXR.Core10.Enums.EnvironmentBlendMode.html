@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;EnvironmentBlendMode&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.EnvironmentBlendMode</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier">EnvironmentBlendMode</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_OPAQUE"><span class="hs-identifier">ENVIRONMENT_BLEND_MODE_OPAQUE</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_ADDITIVE"><span class="hs-identifier">ENVIRONMENT_BLEND_MODE_ADDITIVE</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_ALPHA_BLEND"><span class="hs-identifier">ENVIRONMENT_BLEND_MODE_ALPHA_BLEND</span></a></span><span>
+</span><span id="line-6"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-7"></span><span>                                                                      </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- | XrEnvironmentBlendMode - Environment blend modes</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- == Enumerant Descriptions</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.FrameEndInfo',</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationLayerInfoMSFT',</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.enumerateEnvironmentBlendModes'</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">newtype</span><span> </span><span id="EnvironmentBlendMode"><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-var">EnvironmentBlendMode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EnvironmentBlendMode"><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-var">EnvironmentBlendMode</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679390173"><span id="local-6989586621679390175"><span class="annot"><span class="annottext">EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+(EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool)
+-&gt; (EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool)
+-&gt; Eq EnvironmentBlendMode
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+$c/= :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+== :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+$c== :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390157"><span id="local-6989586621679390159"><span id="local-6989586621679390161"><span id="local-6989586621679390163"><span id="local-6989586621679390165"><span id="local-6989586621679390167"><span id="local-6989586621679390169"><span class="annot"><span class="annottext">Eq EnvironmentBlendMode
+Eq EnvironmentBlendMode =&gt;
+(EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Ordering)
+-&gt; (EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool)
+-&gt; (EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool)
+-&gt; (EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool)
+-&gt; (EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool)
+-&gt; (EnvironmentBlendMode
+    -&gt; EnvironmentBlendMode -&gt; EnvironmentBlendMode)
+-&gt; (EnvironmentBlendMode
+    -&gt; EnvironmentBlendMode -&gt; EnvironmentBlendMode)
+-&gt; Ord EnvironmentBlendMode
+EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Ordering
+EnvironmentBlendMode
+-&gt; EnvironmentBlendMode -&gt; EnvironmentBlendMode
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: EnvironmentBlendMode
+-&gt; EnvironmentBlendMode -&gt; EnvironmentBlendMode
+$cmin :: EnvironmentBlendMode
+-&gt; EnvironmentBlendMode -&gt; EnvironmentBlendMode
+max :: EnvironmentBlendMode
+-&gt; EnvironmentBlendMode -&gt; EnvironmentBlendMode
+$cmax :: EnvironmentBlendMode
+-&gt; EnvironmentBlendMode -&gt; EnvironmentBlendMode
+&gt;= :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+$c&gt;= :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+&gt; :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+$c&gt; :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+&lt;= :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+$c&lt;= :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+&lt; :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+$c&lt; :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Bool
+compare :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Ordering
+$ccompare :: EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; Ordering
+$cp1Ord :: Eq EnvironmentBlendMode
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390140"><span id="local-6989586621679390142"><span id="local-6989586621679390144"><span id="local-6989586621679390146"><span id="local-6989586621679390148"><span id="local-6989586621679390150"><span id="local-6989586621679390152"><span id="local-6989586621679390154"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO EnvironmentBlendMode
+Ptr b -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ()
+Ptr EnvironmentBlendMode -&gt; IO EnvironmentBlendMode
+Ptr EnvironmentBlendMode -&gt; Int -&gt; IO EnvironmentBlendMode
+Ptr EnvironmentBlendMode -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ()
+Ptr EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; IO ()
+EnvironmentBlendMode -&gt; Int
+(EnvironmentBlendMode -&gt; Int)
+-&gt; (EnvironmentBlendMode -&gt; Int)
+-&gt; (Ptr EnvironmentBlendMode -&gt; Int -&gt; IO EnvironmentBlendMode)
+-&gt; (Ptr EnvironmentBlendMode
+    -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO EnvironmentBlendMode)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ())
+-&gt; (Ptr EnvironmentBlendMode -&gt; IO EnvironmentBlendMode)
+-&gt; (Ptr EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; IO ())
+-&gt; Storable EnvironmentBlendMode
+forall b. Ptr b -&gt; Int -&gt; IO EnvironmentBlendMode
+forall b. Ptr b -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; IO ()
+$cpoke :: Ptr EnvironmentBlendMode -&gt; EnvironmentBlendMode -&gt; IO ()
+peek :: Ptr EnvironmentBlendMode -&gt; IO EnvironmentBlendMode
+$cpeek :: Ptr EnvironmentBlendMode -&gt; IO EnvironmentBlendMode
+pokeByteOff :: Ptr b -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO EnvironmentBlendMode
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO EnvironmentBlendMode
+pokeElemOff :: Ptr EnvironmentBlendMode -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ()
+$cpokeElemOff :: Ptr EnvironmentBlendMode -&gt; Int -&gt; EnvironmentBlendMode -&gt; IO ()
+peekElemOff :: Ptr EnvironmentBlendMode -&gt; Int -&gt; IO EnvironmentBlendMode
+$cpeekElemOff :: Ptr EnvironmentBlendMode -&gt; Int -&gt; IO EnvironmentBlendMode
+alignment :: EnvironmentBlendMode -&gt; Int
+$calignment :: EnvironmentBlendMode -&gt; Int
+sizeOf :: EnvironmentBlendMode -&gt; Int
+$csizeOf :: EnvironmentBlendMode -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390137"><span class="annot"><span class="annottext">EnvironmentBlendMode
+EnvironmentBlendMode -&gt; Zero EnvironmentBlendMode
+forall a. a -&gt; Zero a
+zero :: EnvironmentBlendMode
+$czero :: EnvironmentBlendMode
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error</span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- | 'ENVIRONMENT_BLEND_MODE_OPAQUE'. The composition layers will be</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- displayed with no view of the physical world behind them. The composited</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- image will be interpreted as an RGB image, ignoring the composited alpha</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- channel. This is the typical mode for VR experiences, although this mode</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- can also be supported on devices that support video passthrough.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bENVIRONMENT_BLEND_MODE_OPAQUE"><span id="%24mENVIRONMENT_BLEND_MODE_OPAQUE"><span id="ENVIRONMENT_BLEND_MODE_OPAQUE"><span class="annot"><span class="annottext">$bENVIRONMENT_BLEND_MODE_OPAQUE :: EnvironmentBlendMode
+$mENVIRONMENT_BLEND_MODE_OPAQUE :: forall r. EnvironmentBlendMode -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#%24bENVIRONMENT_BLEND_MODE_OPAQUE"><span class="hs-identifier hs-var hs-var hs-var">ENVIRONMENT_BLEND_MODE_OPAQUE</span></a></span></span></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-type">EnvironmentBlendMode</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- | 'ENVIRONMENT_BLEND_MODE_ADDITIVE'. The composition layers will be</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- additively blended with the real world behind the display. The</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- composited image will be interpreted as an RGB image, ignoring the</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- composited alpha channel during the additive blending. This will cause</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- black composited pixels to appear transparent. This is the typical mode</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- for an AR experience on a see-through headset with an additive display,</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- although this mode can also be supported on devices that support video</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- passthrough.</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bENVIRONMENT_BLEND_MODE_ADDITIVE"><span id="%24mENVIRONMENT_BLEND_MODE_ADDITIVE"><span id="ENVIRONMENT_BLEND_MODE_ADDITIVE"><span class="annot"><span class="annottext">$bENVIRONMENT_BLEND_MODE_ADDITIVE :: EnvironmentBlendMode
+$mENVIRONMENT_BLEND_MODE_ADDITIVE :: forall r. EnvironmentBlendMode -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#%24bENVIRONMENT_BLEND_MODE_ADDITIVE"><span class="hs-identifier hs-var hs-var hs-var">ENVIRONMENT_BLEND_MODE_ADDITIVE</span></a></span></span></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-type">EnvironmentBlendMode</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- | 'ENVIRONMENT_BLEND_MODE_ALPHA_BLEND'. The composition layers will be</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- alpha-blended with the real world behind the display. The composited</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- image will be interpreted as an RGBA image, with the composited alpha</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- channel determining each pixel&#8217;s level of blending with the real world</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- behind the display. This is the typical mode for an AR experience on a</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- phone or headset that supports video passthrough.</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bENVIRONMENT_BLEND_MODE_ALPHA_BLEND"><span id="%24mENVIRONMENT_BLEND_MODE_ALPHA_BLEND"><span id="ENVIRONMENT_BLEND_MODE_ALPHA_BLEND"><span class="annot"><span class="annottext">$bENVIRONMENT_BLEND_MODE_ALPHA_BLEND :: EnvironmentBlendMode
+$mENVIRONMENT_BLEND_MODE_ALPHA_BLEND :: forall r. EnvironmentBlendMode -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#%24bENVIRONMENT_BLEND_MODE_ALPHA_BLEND"><span class="hs-identifier hs-var hs-var hs-var">ENVIRONMENT_BLEND_MODE_ALPHA_BLEND</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-type">EnvironmentBlendMode</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-53"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_OPAQUE"><span class="hs-pragma hs-type">ENVIRONMENT_BLEND_MODE_OPAQUE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-54"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_ADDITIVE"><span class="hs-pragma hs-type">ENVIRONMENT_BLEND_MODE_ADDITIVE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-55"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_ALPHA_BLEND"><span class="hs-pragma hs-type">ENVIRONMENT_BLEND_MODE_ALPHA_BLEND</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-pragma hs-type">EnvironmentBlendMode</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-56"></span><span>
+</span><span id="line-57"></span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#conNameEnvironmentBlendMode"><span class="hs-identifier hs-type">conNameEnvironmentBlendMode</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-58"></span><span id="conNameEnvironmentBlendMode"><span class="annot"><span class="annottext">conNameEnvironmentBlendMode :: String
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#conNameEnvironmentBlendMode"><span class="hs-identifier hs-var hs-var">conNameEnvironmentBlendMode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;EnvironmentBlendMode&quot;</span></span><span>
+</span><span id="line-59"></span><span>
+</span><span id="line-60"></span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#enumPrefixEnvironmentBlendMode"><span class="hs-identifier hs-type">enumPrefixEnvironmentBlendMode</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-61"></span><span id="enumPrefixEnvironmentBlendMode"><span class="annot"><span class="annottext">enumPrefixEnvironmentBlendMode :: String
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#enumPrefixEnvironmentBlendMode"><span class="hs-identifier hs-var hs-var">enumPrefixEnvironmentBlendMode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ENVIRONMENT_BLEND_MODE_&quot;</span></span><span>
+</span><span id="line-62"></span><span>
+</span><span id="line-63"></span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#showTableEnvironmentBlendMode"><span class="hs-identifier hs-type">showTableEnvironmentBlendMode</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-type">EnvironmentBlendMode</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-64"></span><span id="showTableEnvironmentBlendMode"><span class="annot"><span class="annottext">showTableEnvironmentBlendMode :: [(EnvironmentBlendMode, String)]
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#showTableEnvironmentBlendMode"><span class="hs-identifier hs-var hs-var">showTableEnvironmentBlendMode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-65"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">EnvironmentBlendMode
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_OPAQUE"><span class="hs-identifier hs-var">ENVIRONMENT_BLEND_MODE_OPAQUE</span></a></span><span>     </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;OPAQUE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">EnvironmentBlendMode
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_ADDITIVE"><span class="hs-identifier hs-var">ENVIRONMENT_BLEND_MODE_ADDITIVE</span></a></span><span>   </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ADDITIVE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">EnvironmentBlendMode
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#ENVIRONMENT_BLEND_MODE_ALPHA_BLEND"><span class="hs-identifier hs-var">ENVIRONMENT_BLEND_MODE_ALPHA_BLEND</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ALPHA_BLEND&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-69"></span><span>
+</span><span id="line-70"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679390122"><span id="local-6989586621679390124"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-type">EnvironmentBlendMode</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-71"></span><span>  </span><span id="local-6989586621679390120"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; EnvironmentBlendMode -&gt; ShowS
+</span><a href="#local-6989586621679390120"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(EnvironmentBlendMode, String)]
+-&gt; String
+-&gt; (EnvironmentBlendMode -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; EnvironmentBlendMode
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#enumPrefixEnvironmentBlendMode"><span class="hs-identifier hs-var">enumPrefixEnvironmentBlendMode</span></a></span><span>
+</span><span id="line-72"></span><span>                            </span><span class="annot"><span class="annottext">[(EnvironmentBlendMode, String)]
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#showTableEnvironmentBlendMode"><span class="hs-identifier hs-var">showTableEnvironmentBlendMode</span></a></span><span>
+</span><span id="line-73"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#conNameEnvironmentBlendMode"><span class="hs-identifier hs-var">conNameEnvironmentBlendMode</span></a></span><span>
+</span><span id="line-74"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-type">EnvironmentBlendMode</span></a></span><span> </span><span id="local-6989586621679390119"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679390119"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679390119"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>
+</span><span id="line-77"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679390112"><span id="local-6989586621679390115"><span id="local-6989586621679390117"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-type">EnvironmentBlendMode</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-78"></span><span>  </span><span id="local-6989586621679390110"><span class="annot"><span class="annottext">readPrec :: ReadPrec EnvironmentBlendMode
+</span><a href="#local-6989586621679390110"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(EnvironmentBlendMode, String)]
+-&gt; String
+-&gt; (Int32 -&gt; EnvironmentBlendMode)
+-&gt; ReadPrec EnvironmentBlendMode
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#enumPrefixEnvironmentBlendMode"><span class="hs-identifier hs-var">enumPrefixEnvironmentBlendMode</span></a></span><span>
+</span><span id="line-79"></span><span>                          </span><span class="annot"><span class="annottext">[(EnvironmentBlendMode, String)]
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#showTableEnvironmentBlendMode"><span class="hs-identifier hs-var">showTableEnvironmentBlendMode</span></a></span><span>
+</span><span id="line-80"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#conNameEnvironmentBlendMode"><span class="hs-identifier hs-var">conNameEnvironmentBlendMode</span></a></span><span>
+</span><span id="line-81"></span><span>                          </span><span class="annot"><span class="annottext">Int32 -&gt; EnvironmentBlendMode
+</span><a href="OpenXR.Core10.Enums.EnvironmentBlendMode.html#EnvironmentBlendMode"><span class="hs-identifier hs-var">EnvironmentBlendMode</span></a></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span></pre></body></html>

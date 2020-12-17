@@ -1,0 +1,1357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_EXTX_overlay - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXTX_overlay  XR_EXTX_overlay&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 34</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 4</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'EventDataMainSessionVisibilityChangedEXTX',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'SessionCreateInfoOverlayEXTX'</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXTX_overlay OpenXR Specification&gt;</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_EXTX_overlay</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier">SessionCreateInfoOverlayEXTX</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier">OverlayMainSessionFlagsEXTX</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier">OverlaySessionCreateFlagsEXTX</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_overlay_SPEC_VERSION"><span class="hs-identifier">EXTX_overlay_SPEC_VERSION</span></a></span><span>
+</span><span id="line-41"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_overlay_SPEC_VERSION"><span class="hs-identifier">EXTX_overlay_SPEC_VERSION</span></a></span><span>
+</span><span id="line-42"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_OVERLAY_EXTENSION_NAME"><span class="hs-identifier">EXTX_OVERLAY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-43"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_OVERLAY_EXTENSION_NAME"><span class="hs-identifier">EXTX_OVERLAY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-44"></span><span>                                          </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html"><span class="hs-identifier">OpenXR.Core10.OtherTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#EventDataBaseHeader"><span class="hs-identifier">EventDataBaseHeader</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html"><span class="hs-identifier">OpenXR.Core10.OtherTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#IsEventData"><span class="hs-identifier">IsEventData</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX"><span class="hs-identifier">TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX"><span class="hs-identifier">TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- | XrSessionCreateInfoOverlayEXTX - Session creation extension struct</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- providing overlay session parameters</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- -   #VUID-XrSessionCreateInfoOverlayEXTX-extension-notenabled# The @@</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--     extension /must/ be enabled prior to using</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--     'SessionCreateInfoOverlayEXTX'</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- -   #VUID-XrSessionCreateInfoOverlayEXTX-type-type# @type@ /must/ be</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX'</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- -   #VUID-XrSessionCreateInfoOverlayEXTX-next-next# @next@ /must/ be</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--     @NULL@ or a valid pointer to the</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- -   #VUID-XrSessionCreateInfoOverlayEXTX-createFlags-parameter#</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--     @createFlags@ /must/ be a valid combination of</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlaySessionCreateFlagBitsEXTX XrOverlaySessionCreateFlagBitsEXTX&gt;</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--     values</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- -   #VUID-XrSessionCreateInfoOverlayEXTX-createFlags-requiredbitmask#</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--     @createFlags@ /must/ not be @0@</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- 'OverlaySessionCreateFlagsEXTX',</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-110"></span><span class="hs-keyword">data</span><span> </span><span id="SessionCreateInfoOverlayEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-var">SessionCreateInfoOverlayEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SessionCreateInfoOverlayEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-var">SessionCreateInfoOverlayEXTX</span></a></span></span><span>
+</span><span id="line-111"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @createFlags@ is @0@ or one or more</span><span>
+</span><span id="line-112"></span><span>    </span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlaySessionCreateFlagBitsEXTX XrOverlaySessionCreateFlagBitsEXTX&gt;</span><span>
+</span><span id="line-113"></span><span>    </span><span class="hs-comment">-- which indicate various characteristics desired for the overlay session.</span><span>
+</span><span id="line-114"></span><span>    </span><span id="%24sel%3AcreateFlags%3ASessionCreateInfoOverlayEXTX"><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX -&gt; OverlaySessionCreateFlagsEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#%24sel%3AcreateFlags%3ASessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-var hs-var">createFlags</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-115"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @sessionLayersPlacement@ is a value indicating the desired placement of</span><span>
+</span><span id="line-116"></span><span>    </span><span class="hs-comment">-- the session&#8217;s composition layers in terms of other sessions.</span><span>
+</span><span id="line-117"></span><span>    </span><span id="%24sel%3AsessionLayersPlacement%3ASessionCreateInfoOverlayEXTX"><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX -&gt; Word32
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#%24sel%3AsessionLayersPlacement%3ASessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-var hs-var">sessionLayersPlacement</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-118"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-119"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406269"><span id="local-6989586621679406271"><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; Bool
+(SessionCreateInfoOverlayEXTX
+ -&gt; SessionCreateInfoOverlayEXTX -&gt; Bool)
+-&gt; (SessionCreateInfoOverlayEXTX
+    -&gt; SessionCreateInfoOverlayEXTX -&gt; Bool)
+-&gt; Eq SessionCreateInfoOverlayEXTX
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; Bool
+$c/= :: SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; Bool
+== :: SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; Bool
+$c== :: SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">SessionCreateInfoOverlayEXTX</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679406262"><span id="local-6989586621679406264"><span id="local-6989586621679406266"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-type">SessionCreateInfoOverlayEXTX</span></a></span></span></span></span><span>
+</span><span id="line-124"></span><span>
+</span><span id="line-125"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679406257"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-type">SessionCreateInfoOverlayEXTX</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-126"></span><span>  </span><span id="local-6989586621679406252"><span class="annot"><span class="annottext">withCStruct :: SessionCreateInfoOverlayEXTX
+-&gt; (Ptr SessionCreateInfoOverlayEXTX -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></span></span><span> </span><span id="local-6989586621679406250"><span class="annot"><span class="annottext">x :: SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406250"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679406249"><span class="annot"><span class="annottext">f :: Ptr SessionCreateInfoOverlayEXTX -&gt; IO b
+</span><a href="#local-6989586621679406249"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr SessionCreateInfoOverlayEXTX -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr SessionCreateInfoOverlayEXTX -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr SessionCreateInfoOverlayEXTX -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679406248"><span class="annot"><span class="annottext">p :: Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406248"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406248"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406250"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; IO b
+</span><a href="#local-6989586621679406249"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406248"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span>  </span><span id="local-6989586621679406246"><span class="annot"><span class="annottext">pokeCStruct :: Ptr SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679406246"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679406245"><span class="annot"><span class="annottext">p :: Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406245"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679406243"><span id="local-6989586621679406244"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-type">SessionCreateInfoOverlayEXTX</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621679406242"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679406242"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-128"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406245"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX"><span class="hs-identifier hs-var">TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-129"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406245"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span>    </span><span class="annot"><span class="annottext">Ptr OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406245"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+-&gt; Int -&gt; Ptr OverlaySessionCreateFlagsEXTX
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+</span><a href="#local-6989586621679406244"><span class="hs-identifier hs-var">createFlags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406245"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679406243"><span class="hs-identifier hs-var">sessionLayersPlacement</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679406242"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621679406241"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-134"></span><span>  </span><span id="local-6989586621679406239"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-135"></span><span>  </span><span id="local-6989586621679406237"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr SessionCreateInfoOverlayEXTX -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></span></span><span> </span><span id="local-6989586621679406235"><span class="annot"><span class="annottext">p :: Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406235"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679406234"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679406234"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-136"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406235"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX"><span class="hs-identifier hs-var">TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406235"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span>    </span><span class="annot"><span class="annottext">Ptr OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406235"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+-&gt; Int -&gt; Ptr OverlaySessionCreateFlagsEXTX
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406235"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-140"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679406234"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-141"></span><span>
+</span><span id="line-142"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-type">SessionCreateInfoOverlayEXTX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-143"></span><span>  </span><span id="local-6989586621679406230"><span class="annot"><span class="annottext">peekCStruct :: Ptr SessionCreateInfoOverlayEXTX -&gt; IO SessionCreateInfoOverlayEXTX
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></span></span><span> </span><span id="local-6989586621679406228"><span class="annot"><span class="annottext">p :: Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406228"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-144"></span><span>    </span><span id="local-6989586621679406227"><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+</span><a href="#local-6989586621679406227"><span class="hs-identifier hs-var">createFlags</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr OverlaySessionCreateFlagsEXTX
+-&gt; IO OverlaySessionCreateFlagsEXTX
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406228"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+-&gt; Int -&gt; Ptr OverlaySessionCreateFlagsEXTX
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-145"></span><span>    </span><span id="local-6989586621679406226"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679406226"><span class="hs-identifier hs-var">sessionLayersPlacement</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406228"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span>    </span><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX -&gt; IO SessionCreateInfoOverlayEXTX
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(SessionCreateInfoOverlayEXTX -&gt; IO SessionCreateInfoOverlayEXTX)
+-&gt; SessionCreateInfoOverlayEXTX -&gt; IO SessionCreateInfoOverlayEXTX
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+-&gt; Word32 -&gt; SessionCreateInfoOverlayEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-var">SessionCreateInfoOverlayEXTX</span></a></span><span>
+</span><span id="line-147"></span><span>             </span><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+</span><a href="#local-6989586621679406227"><span class="hs-identifier hs-var">createFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679406226"><span class="hs-identifier hs-var">sessionLayersPlacement</span></a></span><span>
+</span><span id="line-148"></span><span>
+</span><span id="line-149"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679406216"><span id="local-6989586621679406218"><span id="local-6989586621679406220"><span id="local-6989586621679406222"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-type">SessionCreateInfoOverlayEXTX</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-150"></span><span>  </span><span id="local-6989586621679406212"><span class="annot"><span class="annottext">sizeOf :: SessionCreateInfoOverlayEXTX -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-151"></span><span>  </span><span id="local-6989586621679406210"><span class="annot"><span class="annottext">alignment :: SessionCreateInfoOverlayEXTX -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-152"></span><span>  </span><span id="local-6989586621679406208"><span class="annot"><span class="annottext">peek :: Ptr SessionCreateInfoOverlayEXTX -&gt; IO SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406208"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX -&gt; IO SessionCreateInfoOverlayEXTX
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-153"></span><span>  </span><span id="local-6989586621679406207"><span class="annot"><span class="annottext">poke :: Ptr SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; IO ()
+</span><a href="#local-6989586621679406207"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679406206"><span class="annot"><span class="annottext">ptr :: Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406206"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679406205"><span class="annot"><span class="annottext">poked :: SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406205"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+-&gt; SessionCreateInfoOverlayEXTX -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406206"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406205"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span>
+</span><span id="line-155"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-type">SessionCreateInfoOverlayEXTX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-156"></span><span>  </span><span id="local-6989586621679406202"><span class="annot"><span class="annottext">zero :: SessionCreateInfoOverlayEXTX
+</span><a href="#local-6989586621679406202"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+-&gt; Word32 -&gt; SessionCreateInfoOverlayEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#SessionCreateInfoOverlayEXTX"><span class="hs-identifier hs-var">SessionCreateInfoOverlayEXTX</span></a></span><span>
+</span><span id="line-157"></span><span>           </span><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-158"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-159"></span><span>
+</span><span id="line-160"></span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- | XrEventDataMainSessionVisibilityChangedEXTX - Event representing main</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- session visibility change</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- Receiving the 'EventDataMainSessionVisibilityChangedEXTX' event</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- structure indicates that the main session has gained or lost visibility.</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- This can occur in many cases, one typical example is when a user</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- switches from one OpenXR application to another. See</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- 'EventDataMainSessionVisibilityChangedEXTX' for more information on the</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- standard behavior. This structure contains additional information on the</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- main session including @flags@ which indicate additional state</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- information of the main session. Currently, the only flag value supplied</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- is</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- @XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX@</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- which indicates if the main session has enabled the</span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_KHR_composition_layer_depth&gt;</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- extension.</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- == Member Descriptions</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- -   @type@ is the 'OpenXR.Core10.Enums.StructureType.StructureType' of</span><span>
+</span><span id="line-183"></span><span class="hs-comment">--     this structure.</span><span>
+</span><span id="line-184"></span><span class="hs-comment">--</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- -   @next@ is @NULL@ or a pointer to the next structure in a structure</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--     chain. No such structures are defined in core OpenXR or this</span><span>
+</span><span id="line-187"></span><span class="hs-comment">--     extension.</span><span>
+</span><span id="line-188"></span><span class="hs-comment">--</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- -   @visible@ is an</span><span>
+</span><span id="line-190"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrBool32 &gt;</span><span>
+</span><span id="line-191"></span><span class="hs-comment">--     which indicates if @session@ is now visible or is not.</span><span>
+</span><span id="line-192"></span><span class="hs-comment">--</span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- -   @flags@ is 0 or one or more</span><span>
+</span><span id="line-194"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlayMainSessionFlagBitsEXTX XrOverlayMainSessionFlagBitsEXTX&gt;</span><span>
+</span><span id="line-195"></span><span class="hs-comment">--     which indicates various state information for the main session.</span><span>
+</span><span id="line-196"></span><span class="hs-comment">--</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-198"></span><span class="hs-comment">--</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-extension-notenabled#</span><span>
+</span><span id="line-200"></span><span class="hs-comment">--     The @@ extension /must/ be enabled prior to using</span><span>
+</span><span id="line-201"></span><span class="hs-comment">--     'EventDataMainSessionVisibilityChangedEXTX'</span><span>
+</span><span id="line-202"></span><span class="hs-comment">--</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-type-type# @type@</span><span>
+</span><span id="line-204"></span><span class="hs-comment">--     /must/ be</span><span>
+</span><span id="line-205"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX'</span><span>
+</span><span id="line-206"></span><span class="hs-comment">--</span><span>
+</span><span id="line-207"></span><span class="hs-comment">-- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-next-next# @next@</span><span>
+</span><span id="line-208"></span><span class="hs-comment">--     /must/ be @NULL@ or a valid pointer to the</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-210"></span><span class="hs-comment">--</span><span>
+</span><span id="line-211"></span><span class="hs-comment">-- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-flags-parameter#</span><span>
+</span><span id="line-212"></span><span class="hs-comment">--     @flags@ /must/ be a valid combination of</span><span>
+</span><span id="line-213"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlayMainSessionFlagBitsEXTX XrOverlayMainSessionFlagBitsEXTX&gt;</span><span>
+</span><span id="line-214"></span><span class="hs-comment">--     values</span><span>
+</span><span id="line-215"></span><span class="hs-comment">--</span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-flags-requiredbitmask#</span><span>
+</span><span id="line-217"></span><span class="hs-comment">--     @flags@ /must/ not be @0@</span><span>
+</span><span id="line-218"></span><span class="hs-comment">--</span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-220"></span><span class="hs-comment">--</span><span>
+</span><span id="line-221"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrBool32 &gt;,</span><span>
+</span><span id="line-222"></span><span class="hs-comment">-- 'OverlayMainSessionFlagsEXTX',</span><span>
+</span><span id="line-223"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-224"></span><span class="hs-keyword">data</span><span> </span><span id="EventDataMainSessionVisibilityChangedEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-var">EventDataMainSessionVisibilityChangedEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EventDataMainSessionVisibilityChangedEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-var">EventDataMainSessionVisibilityChangedEXTX</span></a></span></span><span>
+</span><span id="line-225"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- No documentation found for Nested &quot;XrEventDataMainSessionVisibilityChangedEXTX&quot; &quot;visible&quot;</span><span>
+</span><span id="line-226"></span><span>    </span><span id="%24sel%3Avisible%3AEventDataMainSessionVisibilityChangedEXTX"><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX -&gt; Bool
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#%24sel%3Avisible%3AEventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-var hs-var">visible</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-227"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- No documentation found for Nested &quot;XrEventDataMainSessionVisibilityChangedEXTX&quot; &quot;flags&quot;</span><span>
+</span><span id="line-228"></span><span>    </span><span id="%24sel%3Aflags%3AEventDataMainSessionVisibilityChangedEXTX"><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX
+-&gt; OverlayMainSessionFlagsEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#%24sel%3Aflags%3AEventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-229"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-230"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406195"><span id="local-6989586621679406197"><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; Bool
+(EventDataMainSessionVisibilityChangedEXTX
+ -&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; Bool)
+-&gt; (EventDataMainSessionVisibilityChangedEXTX
+    -&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; Bool)
+-&gt; Eq EventDataMainSessionVisibilityChangedEXTX
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; Bool
+$c/= :: EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; Bool
+== :: EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; Bool
+$c== :: EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">EventDataMainSessionVisibilityChangedEXTX</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679406189"><span id="local-6989586621679406191"><span id="local-6989586621679406193"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span></span></span></span><span>
+</span><span id="line-235"></span><span>
+</span><span id="line-236"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#IsEventData"><span class="hs-identifier hs-type">IsEventData</span></a></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-237"></span><span>  </span><span id="local-6989586621679406185"><span class="annot"><span class="annottext">toEventDataBaseHeader :: EventDataMainSessionVisibilityChangedEXTX -&gt; EventDataBaseHeader
+</span><a href="OpenXR.Core10.OtherTypes.html#toEventDataBaseHeader"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEventDataBaseHeader</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span class="hs-special">{</span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">$WEventDataBaseHeader :: StructureType -&gt; EventDataBaseHeader
+</span><a href="OpenXR.Core10.OtherTypes.html#%24WEventDataBaseHeader"><span class="hs-identifier hs-type hs-type">EventDataBaseHeader</span></a></span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:type':EventDataBaseHeader :: StructureType
+</span><a href="#local-6989586621679406181"><span class="hs-identifier hs-var">type'</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX"><span class="hs-identifier hs-var">TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-238"></span><span>
+</span><span id="line-239"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679406177"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-240"></span><span>  </span><span id="local-6989586621679406173"><span class="annot"><span class="annottext">withCStruct :: EventDataMainSessionVisibilityChangedEXTX
+-&gt; (Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621679406173"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621679406172"><span class="annot"><span class="annottext">x :: EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406172"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679406171"><span class="annot"><span class="annottext">f :: Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; IO b
+</span><a href="#local-6989586621679406171"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679406170"><span class="annot"><span class="annottext">p :: Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406170"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406170"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406172"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; IO b
+</span><a href="#local-6989586621679406171"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406170"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-241"></span><span>  </span><span id="local-6989586621679406169"><span class="annot"><span class="annottext">pokeCStruct :: Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679406169"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679406168"><span class="annot"><span class="annottext">p :: Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406168"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679406166"><span id="local-6989586621679406167"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621679406165"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679406165"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-242"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406168"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX"><span class="hs-identifier hs-var">TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-243"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406168"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-244"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406168"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="OpenXR.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679406167"><span class="hs-identifier hs-var">visible</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-245"></span><span>    </span><span class="annot"><span class="annottext">Ptr OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406168"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; Int -&gt; Ptr OverlayMainSessionFlagsEXTX
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OverlayMainSessionFlagsEXTX
+</span><a href="#local-6989586621679406166"><span class="hs-identifier hs-var">flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-246"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679406165"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-247"></span><span>  </span><span id="local-6989586621679406164"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621679406164"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-248"></span><span>  </span><span id="local-6989586621679406163"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621679406163"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-249"></span><span>  </span><span id="local-6989586621679406162"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679406162"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621679406161"><span class="annot"><span class="annottext">p :: Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406161"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679406160"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679406160"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-250"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406161"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX"><span class="hs-identifier hs-var">TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-251"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406161"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-252"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406161"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="OpenXR.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-253"></span><span>    </span><span class="annot"><span class="annottext">Ptr OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406161"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; Int -&gt; Ptr OverlayMainSessionFlagsEXTX
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OverlayMainSessionFlagsEXTX
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-254"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679406160"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-255"></span><span>
+</span><span id="line-256"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-257"></span><span>  </span><span id="local-6989586621679406158"><span class="annot"><span class="annottext">peekCStruct :: Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; IO EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406158"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621679406157"><span class="annot"><span class="annottext">p :: Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406157"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-258"></span><span>    </span><span id="local-6989586621679406156"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621679406156"><span class="hs-identifier hs-var">visible</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406157"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-259"></span><span>    </span><span id="local-6989586621679406155"><span class="annot"><span class="annottext">OverlayMainSessionFlagsEXTX
+</span><a href="#local-6989586621679406155"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr OverlayMainSessionFlagsEXTX -&gt; IO OverlayMainSessionFlagsEXTX
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406157"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; Int -&gt; Ptr OverlayMainSessionFlagsEXTX
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-260"></span><span>    </span><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX
+-&gt; IO EventDataMainSessionVisibilityChangedEXTX
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(EventDataMainSessionVisibilityChangedEXTX
+ -&gt; IO EventDataMainSessionVisibilityChangedEXTX)
+-&gt; EventDataMainSessionVisibilityChangedEXTX
+-&gt; IO EventDataMainSessionVisibilityChangedEXTX
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool
+-&gt; OverlayMainSessionFlagsEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-var">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span>
+</span><span id="line-261"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="OpenXR.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621679406156"><span class="hs-identifier hs-var">visible</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">OverlayMainSessionFlagsEXTX
+</span><a href="#local-6989586621679406155"><span class="hs-identifier hs-var">flags</span></a></span><span>
+</span><span id="line-262"></span><span>
+</span><span id="line-263"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679406145"><span id="local-6989586621679406147"><span id="local-6989586621679406149"><span id="local-6989586621679406151"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-264"></span><span>  </span><span id="local-6989586621679406142"><span class="annot"><span class="annottext">sizeOf :: EventDataMainSessionVisibilityChangedEXTX -&gt; Int
+</span><a href="#local-6989586621679406142"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-265"></span><span>  </span><span id="local-6989586621679406141"><span class="annot"><span class="annottext">alignment :: EventDataMainSessionVisibilityChangedEXTX -&gt; Int
+</span><a href="#local-6989586621679406141"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-266"></span><span>  </span><span id="local-6989586621679406140"><span class="annot"><span class="annottext">peek :: Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; IO EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406140"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; IO EventDataMainSessionVisibilityChangedEXTX
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-267"></span><span>  </span><span id="local-6989586621679406139"><span class="annot"><span class="annottext">poke :: Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; IO ()
+</span><a href="#local-6989586621679406139"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679406138"><span class="annot"><span class="annottext">ptr :: Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406138"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679406137"><span class="annot"><span class="annottext">poked :: EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406137"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406138"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406137"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-268"></span><span>
+</span><span id="line-269"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-type">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-270"></span><span>  </span><span id="local-6989586621679406135"><span class="annot"><span class="annottext">zero :: EventDataMainSessionVisibilityChangedEXTX
+</span><a href="#local-6989586621679406135"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+-&gt; OverlayMainSessionFlagsEXTX
+-&gt; EventDataMainSessionVisibilityChangedEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EventDataMainSessionVisibilityChangedEXTX"><span class="hs-identifier hs-var">EventDataMainSessionVisibilityChangedEXTX</span></a></span><span>
+</span><span id="line-271"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-272"></span><span>           </span><span class="annot"><span class="annottext">OverlayMainSessionFlagsEXTX
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-273"></span><span>
+</span><span id="line-274"></span><span>
+</span><span id="line-275"></span><span class="hs-comment">-- | XrOverlayMainSessionFlagsEXTX - XrOverlayMainSessionFlagsEXTX</span><span>
+</span><span id="line-276"></span><span class="hs-comment">--</span><span>
+</span><span id="line-277"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-278"></span><span class="hs-comment">--</span><span>
+</span><span id="line-279"></span><span class="hs-comment">-- 'EventDataMainSessionVisibilityChangedEXTX'</span><span>
+</span><span id="line-280"></span><span class="hs-keyword">newtype</span><span> </span><span id="OverlayMainSessionFlagsEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">OverlayMainSessionFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="OverlayMainSessionFlagsEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">OverlayMainSessionFlagsEXTX</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-281"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679406130"><span id="local-6989586621679406132"><span class="annot"><span class="annottext">OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+(OverlayMainSessionFlagsEXTX
+ -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool)
+-&gt; Eq OverlayMainSessionFlagsEXTX
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+$c/= :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+== :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+$c== :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406115"><span id="local-6989586621679406117"><span id="local-6989586621679406119"><span id="local-6989586621679406121"><span id="local-6989586621679406123"><span id="local-6989586621679406125"><span id="local-6989586621679406127"><span class="annot"><span class="annottext">Eq OverlayMainSessionFlagsEXTX
+Eq OverlayMainSessionFlagsEXTX =&gt;
+(OverlayMainSessionFlagsEXTX
+ -&gt; OverlayMainSessionFlagsEXTX -&gt; Ordering)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; Ord OverlayMainSessionFlagsEXTX
+OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; Ordering
+OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+$cmin :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+max :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+$cmax :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+&gt;= :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+$c&gt;= :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+&gt; :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+$c&gt; :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+&lt;= :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+$c&lt;= :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+&lt; :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+$c&lt; :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX -&gt; Bool
+compare :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; Ordering
+$ccompare :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; Ordering
+$cp1Ord :: Eq OverlayMainSessionFlagsEXTX
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406098"><span id="local-6989586621679406100"><span id="local-6989586621679406102"><span id="local-6989586621679406104"><span id="local-6989586621679406106"><span id="local-6989586621679406108"><span id="local-6989586621679406110"><span id="local-6989586621679406112"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX
+Ptr b -&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+Ptr OverlayMainSessionFlagsEXTX -&gt; IO OverlayMainSessionFlagsEXTX
+Ptr OverlayMainSessionFlagsEXTX
+-&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX
+Ptr OverlayMainSessionFlagsEXTX
+-&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+Ptr OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+OverlayMainSessionFlagsEXTX -&gt; Int
+(OverlayMainSessionFlagsEXTX -&gt; Int)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Int)
+-&gt; (Ptr OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX)
+-&gt; (Ptr OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ())
+-&gt; (Ptr OverlayMainSessionFlagsEXTX
+    -&gt; IO OverlayMainSessionFlagsEXTX)
+-&gt; (Ptr OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ())
+-&gt; Storable OverlayMainSessionFlagsEXTX
+forall b. Ptr b -&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX
+forall b. Ptr b -&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+$cpoke :: Ptr OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+peek :: Ptr OverlayMainSessionFlagsEXTX -&gt; IO OverlayMainSessionFlagsEXTX
+$cpeek :: Ptr OverlayMainSessionFlagsEXTX -&gt; IO OverlayMainSessionFlagsEXTX
+pokeByteOff :: Ptr b -&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX
+pokeElemOff :: Ptr OverlayMainSessionFlagsEXTX
+-&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+$cpokeElemOff :: Ptr OverlayMainSessionFlagsEXTX
+-&gt; Int -&gt; OverlayMainSessionFlagsEXTX -&gt; IO ()
+peekElemOff :: Ptr OverlayMainSessionFlagsEXTX
+-&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX
+$cpeekElemOff :: Ptr OverlayMainSessionFlagsEXTX
+-&gt; Int -&gt; IO OverlayMainSessionFlagsEXTX
+alignment :: OverlayMainSessionFlagsEXTX -&gt; Int
+$calignment :: OverlayMainSessionFlagsEXTX -&gt; Int
+sizeOf :: OverlayMainSessionFlagsEXTX -&gt; Int
+$csizeOf :: OverlayMainSessionFlagsEXTX -&gt; Int
+</span><a href="#local-6989586621679406098"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></a></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406096"><span class="annot"><span class="annottext">OverlayMainSessionFlagsEXTX
+OverlayMainSessionFlagsEXTX -&gt; Zero OverlayMainSessionFlagsEXTX
+forall a. a -&gt; Zero a
+zero :: OverlayMainSessionFlagsEXTX
+$czero :: OverlayMainSessionFlagsEXTX
+</span><a href="#local-6989586621679406096"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406051"><span id="local-6989586621679406053"><span id="local-6989586621679406055"><span id="local-6989586621679406057"><span id="local-6989586621679406059"><span id="local-6989586621679406061"><span id="local-6989586621679406063"><span id="local-6989586621679406065"><span id="local-6989586621679406067"><span id="local-6989586621679406069"><span id="local-6989586621679406071"><span id="local-6989586621679406073"><span id="local-6989586621679406075"><span id="local-6989586621679406077"><span id="local-6989586621679406079"><span id="local-6989586621679406081"><span id="local-6989586621679406083"><span id="local-6989586621679406085"><span id="local-6989586621679406087"><span id="local-6989586621679406089"><span id="local-6989586621679406091"><span id="local-6989586621679406093"><span class="annot"><span class="annottext">Eq OverlayMainSessionFlagsEXTX
+OverlayMainSessionFlagsEXTX
+Eq OverlayMainSessionFlagsEXTX =&gt;
+(OverlayMainSessionFlagsEXTX
+ -&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; OverlayMainSessionFlagsEXTX
+-&gt; (Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Int -&gt; Bool)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Maybe Int)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Int)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Bool)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX
+    -&gt; Int -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Int)
+-&gt; Bits OverlayMainSessionFlagsEXTX
+Int -&gt; OverlayMainSessionFlagsEXTX
+OverlayMainSessionFlagsEXTX -&gt; Bool
+OverlayMainSessionFlagsEXTX -&gt; Int
+OverlayMainSessionFlagsEXTX -&gt; Maybe Int
+OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+OverlayMainSessionFlagsEXTX -&gt; Int -&gt; Bool
+OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: OverlayMainSessionFlagsEXTX -&gt; Int
+$cpopCount :: OverlayMainSessionFlagsEXTX -&gt; Int
+rotateR :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$crotateR :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+rotateL :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$crotateL :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+unsafeShiftR :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$cunsafeShiftR :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+shiftR :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$cshiftR :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+unsafeShiftL :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$cunsafeShiftL :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+shiftL :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$cshiftL :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+isSigned :: OverlayMainSessionFlagsEXTX -&gt; Bool
+$cisSigned :: OverlayMainSessionFlagsEXTX -&gt; Bool
+bitSize :: OverlayMainSessionFlagsEXTX -&gt; Int
+$cbitSize :: OverlayMainSessionFlagsEXTX -&gt; Int
+bitSizeMaybe :: OverlayMainSessionFlagsEXTX -&gt; Maybe Int
+$cbitSizeMaybe :: OverlayMainSessionFlagsEXTX -&gt; Maybe Int
+testBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; Bool
+$ctestBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; Bool
+complementBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$ccomplementBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+clearBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$cclearBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+setBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$csetBit :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+bit :: Int -&gt; OverlayMainSessionFlagsEXTX
+$cbit :: Int -&gt; OverlayMainSessionFlagsEXTX
+zeroBits :: OverlayMainSessionFlagsEXTX
+$czeroBits :: OverlayMainSessionFlagsEXTX
+rotate :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$crotate :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+shift :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+$cshift :: OverlayMainSessionFlagsEXTX -&gt; Int -&gt; OverlayMainSessionFlagsEXTX
+complement :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+$ccomplement :: OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+xor :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+$cxor :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+.|. :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+$c.|. :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+.&amp;. :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+$c.&amp;. :: OverlayMainSessionFlagsEXTX
+-&gt; OverlayMainSessionFlagsEXTX -&gt; OverlayMainSessionFlagsEXTX
+$cp1Bits :: Eq OverlayMainSessionFlagsEXTX
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406043"><span id="local-6989586621679406045"><span id="local-6989586621679406047"><span class="annot"><span class="annottext">Bits OverlayMainSessionFlagsEXTX
+Bits OverlayMainSessionFlagsEXTX =&gt;
+(OverlayMainSessionFlagsEXTX -&gt; Int)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Int)
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Int)
+-&gt; FiniteBits OverlayMainSessionFlagsEXTX
+OverlayMainSessionFlagsEXTX -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: OverlayMainSessionFlagsEXTX -&gt; Int
+$ccountTrailingZeros :: OverlayMainSessionFlagsEXTX -&gt; Int
+countLeadingZeros :: OverlayMainSessionFlagsEXTX -&gt; Int
+$ccountLeadingZeros :: OverlayMainSessionFlagsEXTX -&gt; Int
+finiteBitSize :: OverlayMainSessionFlagsEXTX -&gt; Int
+$cfiniteBitSize :: OverlayMainSessionFlagsEXTX -&gt; Int
+$cp1FiniteBits :: Bits OverlayMainSessionFlagsEXTX
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-282"></span><span>
+</span><span id="line-283"></span><span>
+</span><span id="line-284"></span><span>
+</span><span id="line-285"></span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">conNameOverlayMainSessionFlagsEXTX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-286"></span><span id="conNameOverlayMainSessionFlagsEXTX"><span class="annot"><span class="annottext">conNameOverlayMainSessionFlagsEXTX :: String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var hs-var">conNameOverlayMainSessionFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;OverlayMainSessionFlagsEXTX&quot;</span></span><span>
+</span><span id="line-287"></span><span>
+</span><span id="line-288"></span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">enumPrefixOverlayMainSessionFlagsEXTX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-289"></span><span id="enumPrefixOverlayMainSessionFlagsEXTX"><span class="annot"><span class="annottext">enumPrefixOverlayMainSessionFlagsEXTX :: String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var hs-var">enumPrefixOverlayMainSessionFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-290"></span><span>
+</span><span id="line-291"></span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">showTableOverlayMainSessionFlagsEXTX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-292"></span><span id="showTableOverlayMainSessionFlagsEXTX"><span class="annot"><span class="annottext">showTableOverlayMainSessionFlagsEXTX :: [(OverlayMainSessionFlagsEXTX, String)]
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var hs-var">showTableOverlayMainSessionFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-293"></span><span>
+</span><span id="line-294"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679406034"><span id="local-6989586621679406036"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-295"></span><span>  </span><span id="local-6989586621679406033"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; OverlayMainSessionFlagsEXTX -&gt; ShowS
+</span><a href="#local-6989586621679406033"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(OverlayMainSessionFlagsEXTX, String)]
+-&gt; String
+-&gt; (OverlayMainSessionFlagsEXTX -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; OverlayMainSessionFlagsEXTX
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">enumPrefixOverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-296"></span><span>                            </span><span class="annot"><span class="annottext">[(OverlayMainSessionFlagsEXTX, String)]
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">showTableOverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-297"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">conNameOverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-298"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span><span> </span><span id="local-6989586621679406032"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679406032"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679406032"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-299"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679406031"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679406031"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679406031"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-300"></span><span>
+</span><span id="line-301"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679406023"><span id="local-6989586621679406026"><span id="local-6989586621679406028"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-type">OverlayMainSessionFlagsEXTX</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-302"></span><span>  </span><span id="local-6989586621679406021"><span class="annot"><span class="annottext">readPrec :: ReadPrec OverlayMainSessionFlagsEXTX
+</span><a href="#local-6989586621679406021"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(OverlayMainSessionFlagsEXTX, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; OverlayMainSessionFlagsEXTX)
+-&gt; ReadPrec OverlayMainSessionFlagsEXTX
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">enumPrefixOverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-303"></span><span>                          </span><span class="annot"><span class="annottext">[(OverlayMainSessionFlagsEXTX, String)]
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">showTableOverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-304"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">conNameOverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-305"></span><span>                          </span><span class="annot"><span class="annottext">Flags64 -&gt; OverlayMainSessionFlagsEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlayMainSessionFlagsEXTX"><span class="hs-identifier hs-var">OverlayMainSessionFlagsEXTX</span></a></span><span>
+</span><span id="line-306"></span><span>
+</span><span id="line-307"></span><span>
+</span><span id="line-308"></span><span class="hs-comment">-- | XrOverlaySessionCreateFlagsEXTX - XrOverlaySessionCreateFlagsEXTX</span><span>
+</span><span id="line-309"></span><span class="hs-comment">--</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-311"></span><span class="hs-comment">--</span><span>
+</span><span id="line-312"></span><span class="hs-comment">-- 'SessionCreateInfoOverlayEXTX'</span><span>
+</span><span id="line-313"></span><span class="hs-keyword">newtype</span><span> </span><span id="OverlaySessionCreateFlagsEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">OverlaySessionCreateFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="OverlaySessionCreateFlagsEXTX"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">OverlaySessionCreateFlagsEXTX</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-314"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679406016"><span id="local-6989586621679406018"><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+(OverlaySessionCreateFlagsEXTX
+ -&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool)
+-&gt; Eq OverlaySessionCreateFlagsEXTX
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+$c/= :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+== :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+$c== :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679406001"><span id="local-6989586621679406003"><span id="local-6989586621679406005"><span id="local-6989586621679406007"><span id="local-6989586621679406009"><span id="local-6989586621679406011"><span id="local-6989586621679406013"><span class="annot"><span class="annottext">Eq OverlaySessionCreateFlagsEXTX
+Eq OverlaySessionCreateFlagsEXTX =&gt;
+(OverlaySessionCreateFlagsEXTX
+ -&gt; OverlaySessionCreateFlagsEXTX -&gt; Ordering)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; Ord OverlaySessionCreateFlagsEXTX
+OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Ordering
+OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+$cmin :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+max :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+$cmax :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+&gt;= :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+$c&gt;= :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+&gt; :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+$c&gt; :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+&lt;= :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+$c&lt;= :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+&lt; :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+$c&lt; :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Bool
+compare :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Ordering
+$ccompare :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; Ordering
+$cp1Ord :: Eq OverlaySessionCreateFlagsEXTX
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679405985"><span id="local-6989586621679405987"><span id="local-6989586621679405989"><span id="local-6989586621679405991"><span id="local-6989586621679405993"><span id="local-6989586621679405995"><span id="local-6989586621679405997"><span id="local-6989586621679405999"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX
+Ptr b -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+Ptr OverlaySessionCreateFlagsEXTX
+-&gt; IO OverlaySessionCreateFlagsEXTX
+Ptr OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX
+Ptr OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+Ptr OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+OverlaySessionCreateFlagsEXTX -&gt; Int
+(OverlaySessionCreateFlagsEXTX -&gt; Int)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Int)
+-&gt; (Ptr OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX)
+-&gt; (Ptr OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ())
+-&gt; (Ptr OverlaySessionCreateFlagsEXTX
+    -&gt; IO OverlaySessionCreateFlagsEXTX)
+-&gt; (Ptr OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ())
+-&gt; Storable OverlaySessionCreateFlagsEXTX
+forall b. Ptr b -&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX
+forall b. Ptr b -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+$cpoke :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+peek :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; IO OverlaySessionCreateFlagsEXTX
+$cpeek :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; IO OverlaySessionCreateFlagsEXTX
+pokeByteOff :: Ptr b -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX
+pokeElemOff :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+$cpokeElemOff :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; IO ()
+peekElemOff :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX
+$cpeekElemOff :: Ptr OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; IO OverlaySessionCreateFlagsEXTX
+alignment :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$calignment :: OverlaySessionCreateFlagsEXTX -&gt; Int
+sizeOf :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$csizeOf :: OverlaySessionCreateFlagsEXTX -&gt; Int
+</span><a href="#local-6989586621679405985"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></a></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679405983"><span class="annot"><span class="annottext">OverlaySessionCreateFlagsEXTX
+OverlaySessionCreateFlagsEXTX -&gt; Zero OverlaySessionCreateFlagsEXTX
+forall a. a -&gt; Zero a
+zero :: OverlaySessionCreateFlagsEXTX
+$czero :: OverlaySessionCreateFlagsEXTX
+</span><a href="#local-6989586621679405983"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679405938"><span id="local-6989586621679405940"><span id="local-6989586621679405942"><span id="local-6989586621679405944"><span id="local-6989586621679405946"><span id="local-6989586621679405948"><span id="local-6989586621679405950"><span id="local-6989586621679405952"><span id="local-6989586621679405954"><span id="local-6989586621679405956"><span id="local-6989586621679405958"><span id="local-6989586621679405960"><span id="local-6989586621679405962"><span id="local-6989586621679405964"><span id="local-6989586621679405966"><span id="local-6989586621679405968"><span id="local-6989586621679405970"><span id="local-6989586621679405972"><span id="local-6989586621679405974"><span id="local-6989586621679405976"><span id="local-6989586621679405978"><span id="local-6989586621679405980"><span class="annot"><span class="annottext">Eq OverlaySessionCreateFlagsEXTX
+OverlaySessionCreateFlagsEXTX
+Eq OverlaySessionCreateFlagsEXTX =&gt;
+(OverlaySessionCreateFlagsEXTX
+ -&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; OverlaySessionCreateFlagsEXTX
+-&gt; (Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Int -&gt; Bool)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Maybe Int)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Int)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Bool)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX
+    -&gt; Int -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Int)
+-&gt; Bits OverlaySessionCreateFlagsEXTX
+Int -&gt; OverlaySessionCreateFlagsEXTX
+OverlaySessionCreateFlagsEXTX -&gt; Bool
+OverlaySessionCreateFlagsEXTX -&gt; Int
+OverlaySessionCreateFlagsEXTX -&gt; Maybe Int
+OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+OverlaySessionCreateFlagsEXTX -&gt; Int -&gt; Bool
+OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$cpopCount :: OverlaySessionCreateFlagsEXTX -&gt; Int
+rotateR :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$crotateR :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+rotateL :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$crotateL :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+unsafeShiftR :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$cunsafeShiftR :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+shiftR :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$cshiftR :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+unsafeShiftL :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$cunsafeShiftL :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+shiftL :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$cshiftL :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+isSigned :: OverlaySessionCreateFlagsEXTX -&gt; Bool
+$cisSigned :: OverlaySessionCreateFlagsEXTX -&gt; Bool
+bitSize :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$cbitSize :: OverlaySessionCreateFlagsEXTX -&gt; Int
+bitSizeMaybe :: OverlaySessionCreateFlagsEXTX -&gt; Maybe Int
+$cbitSizeMaybe :: OverlaySessionCreateFlagsEXTX -&gt; Maybe Int
+testBit :: OverlaySessionCreateFlagsEXTX -&gt; Int -&gt; Bool
+$ctestBit :: OverlaySessionCreateFlagsEXTX -&gt; Int -&gt; Bool
+complementBit :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$ccomplementBit :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+clearBit :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$cclearBit :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+setBit :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$csetBit :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+bit :: Int -&gt; OverlaySessionCreateFlagsEXTX
+$cbit :: Int -&gt; OverlaySessionCreateFlagsEXTX
+zeroBits :: OverlaySessionCreateFlagsEXTX
+$czeroBits :: OverlaySessionCreateFlagsEXTX
+rotate :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$crotate :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+shift :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+$cshift :: OverlaySessionCreateFlagsEXTX
+-&gt; Int -&gt; OverlaySessionCreateFlagsEXTX
+complement :: OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+$ccomplement :: OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+xor :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+$cxor :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+.|. :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+$c.|. :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+.&amp;. :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+$c.&amp;. :: OverlaySessionCreateFlagsEXTX
+-&gt; OverlaySessionCreateFlagsEXTX -&gt; OverlaySessionCreateFlagsEXTX
+$cp1Bits :: Eq OverlaySessionCreateFlagsEXTX
+</span><a href="#local-6989586621679405938"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679405931"><span id="local-6989586621679405933"><span id="local-6989586621679405935"><span class="annot"><span class="annottext">Bits OverlaySessionCreateFlagsEXTX
+Bits OverlaySessionCreateFlagsEXTX =&gt;
+(OverlaySessionCreateFlagsEXTX -&gt; Int)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Int)
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Int)
+-&gt; FiniteBits OverlaySessionCreateFlagsEXTX
+OverlaySessionCreateFlagsEXTX -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$ccountTrailingZeros :: OverlaySessionCreateFlagsEXTX -&gt; Int
+countLeadingZeros :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$ccountLeadingZeros :: OverlaySessionCreateFlagsEXTX -&gt; Int
+finiteBitSize :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$cfiniteBitSize :: OverlaySessionCreateFlagsEXTX -&gt; Int
+$cp1FiniteBits :: Bits OverlaySessionCreateFlagsEXTX
+</span><a href="#local-6989586621679405931"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></a></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-315"></span><span>
+</span><span id="line-316"></span><span>
+</span><span id="line-317"></span><span>
+</span><span id="line-318"></span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">conNameOverlaySessionCreateFlagsEXTX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-319"></span><span id="conNameOverlaySessionCreateFlagsEXTX"><span class="annot"><span class="annottext">conNameOverlaySessionCreateFlagsEXTX :: String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var hs-var">conNameOverlaySessionCreateFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;OverlaySessionCreateFlagsEXTX&quot;</span></span><span>
+</span><span id="line-320"></span><span>
+</span><span id="line-321"></span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">enumPrefixOverlaySessionCreateFlagsEXTX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-322"></span><span id="enumPrefixOverlaySessionCreateFlagsEXTX"><span class="annot"><span class="annottext">enumPrefixOverlaySessionCreateFlagsEXTX :: String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var hs-var">enumPrefixOverlaySessionCreateFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-323"></span><span>
+</span><span id="line-324"></span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">showTableOverlaySessionCreateFlagsEXTX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-325"></span><span id="showTableOverlaySessionCreateFlagsEXTX"><span class="annot"><span class="annottext">showTableOverlaySessionCreateFlagsEXTX :: [(OverlaySessionCreateFlagsEXTX, String)]
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var hs-var">showTableOverlaySessionCreateFlagsEXTX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-326"></span><span>
+</span><span id="line-327"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679405923"><span id="local-6989586621679405925"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-328"></span><span>  </span><span id="local-6989586621679405922"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; OverlaySessionCreateFlagsEXTX -&gt; ShowS
+</span><a href="#local-6989586621679405922"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(OverlaySessionCreateFlagsEXTX, String)]
+-&gt; String
+-&gt; (OverlaySessionCreateFlagsEXTX -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; OverlaySessionCreateFlagsEXTX
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">enumPrefixOverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-329"></span><span>                            </span><span class="annot"><span class="annottext">[(OverlaySessionCreateFlagsEXTX, String)]
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">showTableOverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-330"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">conNameOverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-331"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span><span> </span><span id="local-6989586621679405921"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679405921"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679405921"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-332"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679405920"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679405920"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679405920"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-333"></span><span>
+</span><span id="line-334"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679405913"><span id="local-6989586621679405916"><span id="local-6989586621679405918"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-type">OverlaySessionCreateFlagsEXTX</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-335"></span><span>  </span><span id="local-6989586621679405912"><span class="annot"><span class="annottext">readPrec :: ReadPrec OverlaySessionCreateFlagsEXTX
+</span><a href="#local-6989586621679405912"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(OverlaySessionCreateFlagsEXTX, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; OverlaySessionCreateFlagsEXTX)
+-&gt; ReadPrec OverlaySessionCreateFlagsEXTX
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#enumPrefixOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">enumPrefixOverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-336"></span><span>                          </span><span class="annot"><span class="annottext">[(OverlaySessionCreateFlagsEXTX, String)]
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#showTableOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">showTableOverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-337"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#conNameOverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">conNameOverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-338"></span><span>                          </span><span class="annot"><span class="annottext">Flags64 -&gt; OverlaySessionCreateFlagsEXTX
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#OverlaySessionCreateFlagsEXTX"><span class="hs-identifier hs-var">OverlaySessionCreateFlagsEXTX</span></a></span><span>
+</span><span id="line-339"></span><span>
+</span><span id="line-340"></span><span>
+</span><span id="line-341"></span><span class="hs-keyword">type</span><span> </span><span id="EXTX_overlay_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_overlay_SPEC_VERSION"><span class="hs-identifier hs-var">EXTX_overlay_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-342"></span><span>
+</span><span id="line-343"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXTX_overlay_SPEC_VERSION&quot;</span><span>
+</span><span id="line-344"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_overlay_SPEC_VERSION"><span class="hs-identifier hs-type">EXTX_overlay_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679406301"><span class="annot"><a href="#local-6989586621679406301"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679406301"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679406301"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-345"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTX_overlay_SPEC_VERSION"><span id="%24mEXTX_overlay_SPEC_VERSION"><span id="EXTX_overlay_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXTX_overlay_SPEC_VERSION :: a
+$mEXTX_overlay_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#%24bEXTX_overlay_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXTX_overlay_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-346"></span><span>
+</span><span id="line-347"></span><span>
+</span><span id="line-348"></span><span class="hs-keyword">type</span><span> </span><span id="EXTX_OVERLAY_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_OVERLAY_EXTENSION_NAME"><span class="hs-identifier hs-var">EXTX_OVERLAY_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXTX_overlay&quot;</span></span><span>
+</span><span id="line-349"></span><span>
+</span><span id="line-350"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXTX_OVERLAY_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-351"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXTX_overlay.html#EXTX_OVERLAY_EXTENSION_NAME"><span class="hs-identifier hs-type">EXTX_OVERLAY_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679406297"><span class="annot"><a href="#local-6989586621679406297"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679406297"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679406297"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679406297"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-352"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTX_OVERLAY_EXTENSION_NAME"><span id="%24mEXTX_OVERLAY_EXTENSION_NAME"><span id="EXTX_OVERLAY_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXTX_OVERLAY_EXTENSION_NAME :: a
+$mEXTX_OVERLAY_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXTX_overlay.html#%24bEXTX_OVERLAY_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXTX_OVERLAY_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXTX_overlay&quot;</span></span><span>
+</span><span id="line-353"></span><span>
+</span><span id="line-354"></span></pre></body></html>

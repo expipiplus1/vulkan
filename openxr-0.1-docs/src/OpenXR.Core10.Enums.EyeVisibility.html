@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;EyeVisibility&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.EyeVisibility</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier">EyeVisibility</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_BOTH"><span class="hs-identifier">EYE_VISIBILITY_BOTH</span></a></span><span>
+</span><span id="line-4"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_LEFT"><span class="hs-identifier">EYE_VISIBILITY_LEFT</span></a></span><span>
+</span><span id="line-5"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_RIGHT"><span class="hs-identifier">EYE_VISIBILITY_RIGHT</span></a></span><span>
+</span><span id="line-6"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-7"></span><span>                                                        </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- | XrEyeVisibility - Eye visibility selector</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- == Enumerant Descriptions</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_cube.CompositionLayerCubeKHR',</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_cylinder.CompositionLayerCylinderKHR',</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_equirect2.CompositionLayerEquirect2KHR',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_equirect.CompositionLayerEquirectKHR',</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerQuad'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="EyeVisibility"><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-var">EyeVisibility</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EyeVisibility"><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-var">EyeVisibility</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679390075"><span id="local-6989586621679390077"><span class="annot"><span class="annottext">EyeVisibility -&gt; EyeVisibility -&gt; Bool
+(EyeVisibility -&gt; EyeVisibility -&gt; Bool)
+-&gt; (EyeVisibility -&gt; EyeVisibility -&gt; Bool) -&gt; Eq EyeVisibility
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+$c/= :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+== :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+$c== :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390059"><span id="local-6989586621679390061"><span id="local-6989586621679390063"><span id="local-6989586621679390065"><span id="local-6989586621679390067"><span id="local-6989586621679390069"><span id="local-6989586621679390071"><span class="annot"><span class="annottext">Eq EyeVisibility
+Eq EyeVisibility =&gt;
+(EyeVisibility -&gt; EyeVisibility -&gt; Ordering)
+-&gt; (EyeVisibility -&gt; EyeVisibility -&gt; Bool)
+-&gt; (EyeVisibility -&gt; EyeVisibility -&gt; Bool)
+-&gt; (EyeVisibility -&gt; EyeVisibility -&gt; Bool)
+-&gt; (EyeVisibility -&gt; EyeVisibility -&gt; Bool)
+-&gt; (EyeVisibility -&gt; EyeVisibility -&gt; EyeVisibility)
+-&gt; (EyeVisibility -&gt; EyeVisibility -&gt; EyeVisibility)
+-&gt; Ord EyeVisibility
+EyeVisibility -&gt; EyeVisibility -&gt; Bool
+EyeVisibility -&gt; EyeVisibility -&gt; Ordering
+EyeVisibility -&gt; EyeVisibility -&gt; EyeVisibility
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: EyeVisibility -&gt; EyeVisibility -&gt; EyeVisibility
+$cmin :: EyeVisibility -&gt; EyeVisibility -&gt; EyeVisibility
+max :: EyeVisibility -&gt; EyeVisibility -&gt; EyeVisibility
+$cmax :: EyeVisibility -&gt; EyeVisibility -&gt; EyeVisibility
+&gt;= :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+$c&gt;= :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+&gt; :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+$c&gt; :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+&lt;= :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+$c&lt;= :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+&lt; :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+$c&lt; :: EyeVisibility -&gt; EyeVisibility -&gt; Bool
+compare :: EyeVisibility -&gt; EyeVisibility -&gt; Ordering
+$ccompare :: EyeVisibility -&gt; EyeVisibility -&gt; Ordering
+$cp1Ord :: Eq EyeVisibility
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390042"><span id="local-6989586621679390044"><span id="local-6989586621679390046"><span id="local-6989586621679390048"><span id="local-6989586621679390050"><span id="local-6989586621679390052"><span id="local-6989586621679390054"><span id="local-6989586621679390056"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO EyeVisibility
+Ptr b -&gt; Int -&gt; EyeVisibility -&gt; IO ()
+Ptr EyeVisibility -&gt; IO EyeVisibility
+Ptr EyeVisibility -&gt; Int -&gt; IO EyeVisibility
+Ptr EyeVisibility -&gt; Int -&gt; EyeVisibility -&gt; IO ()
+Ptr EyeVisibility -&gt; EyeVisibility -&gt; IO ()
+EyeVisibility -&gt; Int
+(EyeVisibility -&gt; Int)
+-&gt; (EyeVisibility -&gt; Int)
+-&gt; (Ptr EyeVisibility -&gt; Int -&gt; IO EyeVisibility)
+-&gt; (Ptr EyeVisibility -&gt; Int -&gt; EyeVisibility -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO EyeVisibility)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; EyeVisibility -&gt; IO ())
+-&gt; (Ptr EyeVisibility -&gt; IO EyeVisibility)
+-&gt; (Ptr EyeVisibility -&gt; EyeVisibility -&gt; IO ())
+-&gt; Storable EyeVisibility
+forall b. Ptr b -&gt; Int -&gt; IO EyeVisibility
+forall b. Ptr b -&gt; Int -&gt; EyeVisibility -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr EyeVisibility -&gt; EyeVisibility -&gt; IO ()
+$cpoke :: Ptr EyeVisibility -&gt; EyeVisibility -&gt; IO ()
+peek :: Ptr EyeVisibility -&gt; IO EyeVisibility
+$cpeek :: Ptr EyeVisibility -&gt; IO EyeVisibility
+pokeByteOff :: Ptr b -&gt; Int -&gt; EyeVisibility -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; EyeVisibility -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO EyeVisibility
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO EyeVisibility
+pokeElemOff :: Ptr EyeVisibility -&gt; Int -&gt; EyeVisibility -&gt; IO ()
+$cpokeElemOff :: Ptr EyeVisibility -&gt; Int -&gt; EyeVisibility -&gt; IO ()
+peekElemOff :: Ptr EyeVisibility -&gt; Int -&gt; IO EyeVisibility
+$cpeekElemOff :: Ptr EyeVisibility -&gt; Int -&gt; IO EyeVisibility
+alignment :: EyeVisibility -&gt; Int
+$calignment :: EyeVisibility -&gt; Int
+sizeOf :: EyeVisibility -&gt; Int
+$csizeOf :: EyeVisibility -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390039"><span class="annot"><span class="annottext">EyeVisibility
+EyeVisibility -&gt; Zero EyeVisibility
+forall a. a -&gt; Zero a
+zero :: EyeVisibility
+$czero :: EyeVisibility
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'EYE_VISIBILITY_BOTH' displays the layer to both eyes.</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEYE_VISIBILITY_BOTH"><span id="%24mEYE_VISIBILITY_BOTH"><span id="EYE_VISIBILITY_BOTH"><span class="annot"><span class="annottext">$bEYE_VISIBILITY_BOTH :: EyeVisibility
+$mEYE_VISIBILITY_BOTH :: forall r. EyeVisibility -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#%24bEYE_VISIBILITY_BOTH"><span class="hs-identifier hs-var hs-var hs-var">EYE_VISIBILITY_BOTH</span></a></span></span></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-type">EyeVisibility</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- | 'EYE_VISIBILITY_LEFT' displays the layer to the viewer&#8217;s physical left</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- eye.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEYE_VISIBILITY_LEFT"><span id="%24mEYE_VISIBILITY_LEFT"><span id="EYE_VISIBILITY_LEFT"><span class="annot"><span class="annottext">$bEYE_VISIBILITY_LEFT :: EyeVisibility
+$mEYE_VISIBILITY_LEFT :: forall r. EyeVisibility -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#%24bEYE_VISIBILITY_LEFT"><span class="hs-identifier hs-var hs-var hs-var">EYE_VISIBILITY_LEFT</span></a></span></span></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-type">EyeVisibility</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- | 'EYE_VISIBILITY_RIGHT' displays the layer to the viewer&#8217;s physical right</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- eye.</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEYE_VISIBILITY_RIGHT"><span id="%24mEYE_VISIBILITY_RIGHT"><span id="EYE_VISIBILITY_RIGHT"><span class="annot"><span class="annottext">$bEYE_VISIBILITY_RIGHT :: EyeVisibility
+$mEYE_VISIBILITY_RIGHT :: forall r. EyeVisibility -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#%24bEYE_VISIBILITY_RIGHT"><span class="hs-identifier hs-var hs-var hs-var">EYE_VISIBILITY_RIGHT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-type">EyeVisibility</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-40"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_BOTH"><span class="hs-pragma hs-type">EYE_VISIBILITY_BOTH</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-41"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_LEFT"><span class="hs-pragma hs-type">EYE_VISIBILITY_LEFT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-42"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_RIGHT"><span class="hs-pragma hs-type">EYE_VISIBILITY_RIGHT</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-pragma hs-type">EyeVisibility</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#conNameEyeVisibility"><span class="hs-identifier hs-type">conNameEyeVisibility</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-45"></span><span id="conNameEyeVisibility"><span class="annot"><span class="annottext">conNameEyeVisibility :: String
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#conNameEyeVisibility"><span class="hs-identifier hs-var hs-var">conNameEyeVisibility</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;EyeVisibility&quot;</span></span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#enumPrefixEyeVisibility"><span class="hs-identifier hs-type">enumPrefixEyeVisibility</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-48"></span><span id="enumPrefixEyeVisibility"><span class="annot"><span class="annottext">enumPrefixEyeVisibility :: String
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#enumPrefixEyeVisibility"><span class="hs-identifier hs-var hs-var">enumPrefixEyeVisibility</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;EYE_VISIBILITY_&quot;</span></span><span>
+</span><span id="line-49"></span><span>
+</span><span id="line-50"></span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#showTableEyeVisibility"><span class="hs-identifier hs-type">showTableEyeVisibility</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-type">EyeVisibility</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-51"></span><span id="showTableEyeVisibility"><span class="annot"><span class="annottext">showTableEyeVisibility :: [(EyeVisibility, String)]
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#showTableEyeVisibility"><span class="hs-identifier hs-var hs-var">showTableEyeVisibility</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-52"></span><span>  </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">EyeVisibility
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_BOTH"><span class="hs-identifier hs-var">EYE_VISIBILITY_BOTH</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;BOTH&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">EyeVisibility
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_LEFT"><span class="hs-identifier hs-var">EYE_VISIBILITY_LEFT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;LEFT&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">EyeVisibility
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#EYE_VISIBILITY_RIGHT"><span class="hs-identifier hs-var">EYE_VISIBILITY_RIGHT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;RIGHT&quot;</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679390024"><span id="local-6989586621679390026"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-type">EyeVisibility</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-55"></span><span>  </span><span id="local-6989586621679390022"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; EyeVisibility -&gt; ShowS
+</span><a href="#local-6989586621679390022"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(EyeVisibility, String)]
+-&gt; String
+-&gt; (EyeVisibility -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; EyeVisibility
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#enumPrefixEyeVisibility"><span class="hs-identifier hs-var">enumPrefixEyeVisibility</span></a></span><span>
+</span><span id="line-56"></span><span>                            </span><span class="annot"><span class="annottext">[(EyeVisibility, String)]
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#showTableEyeVisibility"><span class="hs-identifier hs-var">showTableEyeVisibility</span></a></span><span>
+</span><span id="line-57"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#conNameEyeVisibility"><span class="hs-identifier hs-var">conNameEyeVisibility</span></a></span><span>
+</span><span id="line-58"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-type">EyeVisibility</span></a></span><span> </span><span id="local-6989586621679390021"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679390021"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679390021"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679390014"><span id="local-6989586621679390017"><span id="local-6989586621679390019"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-type">EyeVisibility</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-62"></span><span>  </span><span id="local-6989586621679390012"><span class="annot"><span class="annottext">readPrec :: ReadPrec EyeVisibility
+</span><a href="#local-6989586621679390012"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(EyeVisibility, String)]
+-&gt; String
+-&gt; (Int32 -&gt; EyeVisibility)
+-&gt; ReadPrec EyeVisibility
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#enumPrefixEyeVisibility"><span class="hs-identifier hs-var">enumPrefixEyeVisibility</span></a></span><span> </span><span class="annot"><span class="annottext">[(EyeVisibility, String)]
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#showTableEyeVisibility"><span class="hs-identifier hs-var">showTableEyeVisibility</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#conNameEyeVisibility"><span class="hs-identifier hs-var">conNameEyeVisibility</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; EyeVisibility
+</span><a href="OpenXR.Core10.Enums.EyeVisibility.html#EyeVisibility"><span class="hs-identifier hs-var">EyeVisibility</span></a></span><span>
+</span><span id="line-63"></span><span>
+</span><span id="line-64"></span></pre></body></html>

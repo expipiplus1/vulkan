@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;CompositionLayerFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.CompositionLayerFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier">CompositionLayerFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | XrCompositionLayerFlags - Composition layer flags</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- 'CompositionLayerFlags' specify options for individual composition</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- layers.</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- == Flag Descriptions</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerBaseHeader',</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_cube.CompositionLayerCubeKHR',</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_cylinder.CompositionLayerCylinderKHR',</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_equirect2.CompositionLayerEquirect2KHR',</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_equirect.CompositionLayerEquirectKHR',</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerProjection',</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerQuad'</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">newtype</span><span> </span><span id="CompositionLayerFlags"><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier hs-var">CompositionLayerFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CompositionLayerFlags"><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier hs-var">CompositionLayerFlags</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-35"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679390321"><span id="local-6989586621679390323"><span class="annot"><span class="annottext">CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+(CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool)
+-&gt; (CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool)
+-&gt; Eq CompositionLayerFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+$c/= :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+== :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+$c== :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390305"><span id="local-6989586621679390307"><span id="local-6989586621679390309"><span id="local-6989586621679390311"><span id="local-6989586621679390313"><span id="local-6989586621679390315"><span id="local-6989586621679390317"><span class="annot"><span class="annottext">Eq CompositionLayerFlags
+Eq CompositionLayerFlags =&gt;
+(CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Ordering)
+-&gt; (CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool)
+-&gt; (CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool)
+-&gt; (CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool)
+-&gt; (CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool)
+-&gt; (CompositionLayerFlags
+    -&gt; CompositionLayerFlags -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags
+    -&gt; CompositionLayerFlags -&gt; CompositionLayerFlags)
+-&gt; Ord CompositionLayerFlags
+CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Ordering
+CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+$cmin :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+max :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+$cmax :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+&gt;= :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+$c&gt;= :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+&gt; :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+$c&gt; :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+&lt;= :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+$c&lt;= :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+&lt; :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+$c&lt; :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Bool
+compare :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Ordering
+$ccompare :: CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; Ordering
+$cp1Ord :: Eq CompositionLayerFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390288"><span id="local-6989586621679390290"><span id="local-6989586621679390292"><span id="local-6989586621679390294"><span id="local-6989586621679390296"><span id="local-6989586621679390298"><span id="local-6989586621679390300"><span id="local-6989586621679390302"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO CompositionLayerFlags
+Ptr b -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ()
+Ptr CompositionLayerFlags -&gt; IO CompositionLayerFlags
+Ptr CompositionLayerFlags -&gt; Int -&gt; IO CompositionLayerFlags
+Ptr CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ()
+Ptr CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; IO ()
+CompositionLayerFlags -&gt; Int
+(CompositionLayerFlags -&gt; Int)
+-&gt; (CompositionLayerFlags -&gt; Int)
+-&gt; (Ptr CompositionLayerFlags -&gt; Int -&gt; IO CompositionLayerFlags)
+-&gt; (Ptr CompositionLayerFlags
+    -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO CompositionLayerFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ())
+-&gt; (Ptr CompositionLayerFlags -&gt; IO CompositionLayerFlags)
+-&gt; (Ptr CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; IO ())
+-&gt; Storable CompositionLayerFlags
+forall b. Ptr b -&gt; Int -&gt; IO CompositionLayerFlags
+forall b. Ptr b -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; IO ()
+$cpoke :: Ptr CompositionLayerFlags -&gt; CompositionLayerFlags -&gt; IO ()
+peek :: Ptr CompositionLayerFlags -&gt; IO CompositionLayerFlags
+$cpeek :: Ptr CompositionLayerFlags -&gt; IO CompositionLayerFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO CompositionLayerFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO CompositionLayerFlags
+pokeElemOff :: Ptr CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ()
+$cpokeElemOff :: Ptr CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags -&gt; IO ()
+peekElemOff :: Ptr CompositionLayerFlags -&gt; Int -&gt; IO CompositionLayerFlags
+$cpeekElemOff :: Ptr CompositionLayerFlags -&gt; Int -&gt; IO CompositionLayerFlags
+alignment :: CompositionLayerFlags -&gt; Int
+$calignment :: CompositionLayerFlags -&gt; Int
+sizeOf :: CompositionLayerFlags -&gt; Int
+$csizeOf :: CompositionLayerFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390285"><span class="annot"><span class="annottext">CompositionLayerFlags
+CompositionLayerFlags -&gt; Zero CompositionLayerFlags
+forall a. a -&gt; Zero a
+zero :: CompositionLayerFlags
+$czero :: CompositionLayerFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390239"><span id="local-6989586621679390241"><span id="local-6989586621679390243"><span id="local-6989586621679390245"><span id="local-6989586621679390247"><span id="local-6989586621679390249"><span id="local-6989586621679390251"><span id="local-6989586621679390253"><span id="local-6989586621679390255"><span id="local-6989586621679390257"><span id="local-6989586621679390259"><span id="local-6989586621679390261"><span id="local-6989586621679390263"><span id="local-6989586621679390265"><span id="local-6989586621679390267"><span id="local-6989586621679390269"><span id="local-6989586621679390271"><span id="local-6989586621679390273"><span id="local-6989586621679390275"><span id="local-6989586621679390277"><span id="local-6989586621679390279"><span id="local-6989586621679390281"><span class="annot"><span class="annottext">Eq CompositionLayerFlags
+CompositionLayerFlags
+Eq CompositionLayerFlags =&gt;
+(CompositionLayerFlags
+ -&gt; CompositionLayerFlags -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags
+    -&gt; CompositionLayerFlags -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags
+    -&gt; CompositionLayerFlags -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; CompositionLayerFlags
+-&gt; (Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; Bool)
+-&gt; (CompositionLayerFlags -&gt; Maybe Int)
+-&gt; (CompositionLayerFlags -&gt; Int)
+-&gt; (CompositionLayerFlags -&gt; Bool)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags)
+-&gt; (CompositionLayerFlags -&gt; Int)
+-&gt; Bits CompositionLayerFlags
+Int -&gt; CompositionLayerFlags
+CompositionLayerFlags -&gt; Bool
+CompositionLayerFlags -&gt; Int
+CompositionLayerFlags -&gt; Maybe Int
+CompositionLayerFlags -&gt; CompositionLayerFlags
+CompositionLayerFlags -&gt; Int -&gt; Bool
+CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: CompositionLayerFlags -&gt; Int
+$cpopCount :: CompositionLayerFlags -&gt; Int
+rotateR :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$crotateR :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+rotateL :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$crotateL :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+unsafeShiftR :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$cunsafeShiftR :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+shiftR :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$cshiftR :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+unsafeShiftL :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$cunsafeShiftL :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+shiftL :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$cshiftL :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+isSigned :: CompositionLayerFlags -&gt; Bool
+$cisSigned :: CompositionLayerFlags -&gt; Bool
+bitSize :: CompositionLayerFlags -&gt; Int
+$cbitSize :: CompositionLayerFlags -&gt; Int
+bitSizeMaybe :: CompositionLayerFlags -&gt; Maybe Int
+$cbitSizeMaybe :: CompositionLayerFlags -&gt; Maybe Int
+testBit :: CompositionLayerFlags -&gt; Int -&gt; Bool
+$ctestBit :: CompositionLayerFlags -&gt; Int -&gt; Bool
+complementBit :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$ccomplementBit :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+clearBit :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$cclearBit :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+setBit :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$csetBit :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+bit :: Int -&gt; CompositionLayerFlags
+$cbit :: Int -&gt; CompositionLayerFlags
+zeroBits :: CompositionLayerFlags
+$czeroBits :: CompositionLayerFlags
+rotate :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$crotate :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+shift :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+$cshift :: CompositionLayerFlags -&gt; Int -&gt; CompositionLayerFlags
+complement :: CompositionLayerFlags -&gt; CompositionLayerFlags
+$ccomplement :: CompositionLayerFlags -&gt; CompositionLayerFlags
+xor :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+$cxor :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+.|. :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+$c.|. :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+.&amp;. :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+$c.&amp;. :: CompositionLayerFlags
+-&gt; CompositionLayerFlags -&gt; CompositionLayerFlags
+$cp1Bits :: Eq CompositionLayerFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679390231"><span id="local-6989586621679390233"><span id="local-6989586621679390235"><span class="annot"><span class="annottext">Bits CompositionLayerFlags
+Bits CompositionLayerFlags =&gt;
+(CompositionLayerFlags -&gt; Int)
+-&gt; (CompositionLayerFlags -&gt; Int)
+-&gt; (CompositionLayerFlags -&gt; Int)
+-&gt; FiniteBits CompositionLayerFlags
+CompositionLayerFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: CompositionLayerFlags -&gt; Int
+$ccountTrailingZeros :: CompositionLayerFlags -&gt; Int
+countLeadingZeros :: CompositionLayerFlags -&gt; Int
+$ccountLeadingZeros :: CompositionLayerFlags -&gt; Int
+finiteBitSize :: CompositionLayerFlags -&gt; Int
+$cfiniteBitSize :: CompositionLayerFlags -&gt; Int
+$cp1FiniteBits :: Bits CompositionLayerFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#conNameCompositionLayerFlags"><span class="hs-identifier hs-type">conNameCompositionLayerFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-40"></span><span id="conNameCompositionLayerFlags"><span class="annot"><span class="annottext">conNameCompositionLayerFlags :: String
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#conNameCompositionLayerFlags"><span class="hs-identifier hs-var hs-var">conNameCompositionLayerFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;CompositionLayerFlags&quot;</span></span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#enumPrefixCompositionLayerFlags"><span class="hs-identifier hs-type">enumPrefixCompositionLayerFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-43"></span><span id="enumPrefixCompositionLayerFlags"><span class="annot"><span class="annottext">enumPrefixCompositionLayerFlags :: String
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#enumPrefixCompositionLayerFlags"><span class="hs-identifier hs-var hs-var">enumPrefixCompositionLayerFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#showTableCompositionLayerFlags"><span class="hs-identifier hs-type">showTableCompositionLayerFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier hs-type">CompositionLayerFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-46"></span><span id="showTableCompositionLayerFlags"><span class="annot"><span class="annottext">showTableCompositionLayerFlags :: [(CompositionLayerFlags, String)]
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#showTableCompositionLayerFlags"><span class="hs-identifier hs-var hs-var">showTableCompositionLayerFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679390222"><span id="local-6989586621679390224"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier hs-type">CompositionLayerFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>  </span><span id="local-6989586621679390220"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; CompositionLayerFlags -&gt; ShowS
+</span><a href="#local-6989586621679390220"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(CompositionLayerFlags, String)]
+-&gt; String
+-&gt; (CompositionLayerFlags -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; CompositionLayerFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#enumPrefixCompositionLayerFlags"><span class="hs-identifier hs-var">enumPrefixCompositionLayerFlags</span></a></span><span>
+</span><span id="line-50"></span><span>                            </span><span class="annot"><span class="annottext">[(CompositionLayerFlags, String)]
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#showTableCompositionLayerFlags"><span class="hs-identifier hs-var">showTableCompositionLayerFlags</span></a></span><span>
+</span><span id="line-51"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#conNameCompositionLayerFlags"><span class="hs-identifier hs-var">conNameCompositionLayerFlags</span></a></span><span>
+</span><span id="line-52"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier hs-type">CompositionLayerFlags</span></a></span><span> </span><span id="local-6989586621679390219"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679390219"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679390219"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679390218"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679390218"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679390218"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679390210"><span id="local-6989586621679390213"><span id="local-6989586621679390215"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier hs-type">CompositionLayerFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-56"></span><span>  </span><span id="local-6989586621679390208"><span class="annot"><span class="annottext">readPrec :: ReadPrec CompositionLayerFlags
+</span><a href="#local-6989586621679390208"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(CompositionLayerFlags, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; CompositionLayerFlags)
+-&gt; ReadPrec CompositionLayerFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#enumPrefixCompositionLayerFlags"><span class="hs-identifier hs-var">enumPrefixCompositionLayerFlags</span></a></span><span>
+</span><span id="line-57"></span><span>                          </span><span class="annot"><span class="annottext">[(CompositionLayerFlags, String)]
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#showTableCompositionLayerFlags"><span class="hs-identifier hs-var">showTableCompositionLayerFlags</span></a></span><span>
+</span><span id="line-58"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#conNameCompositionLayerFlags"><span class="hs-identifier hs-var">conNameCompositionLayerFlags</span></a></span><span>
+</span><span id="line-59"></span><span>                          </span><span class="annot"><span class="annottext">Flags64 -&gt; CompositionLayerFlags
+</span><a href="OpenXR.Core10.Enums.CompositionLayerFlags.html#CompositionLayerFlags"><span class="hs-identifier hs-var">CompositionLayerFlags</span></a></span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span></pre></body></html>

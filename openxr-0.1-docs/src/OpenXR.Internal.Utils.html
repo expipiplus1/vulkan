@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE CPP #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Internal.Utils</span><span>
+</span><span id="line-4"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span>
+</span><span id="line-5"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier">traceAroundEvent</span></a></span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Foldable</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Debug.Trace</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span>                       </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">expectP</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadP</span></span><span>   </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">skipSpaces</span></span><span>
+</span><span id="line-13"></span><span>                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">string</span></span><span>
+</span><span id="line-14"></span><span>                                                </span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Text.Read</span></span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- | The common bits of enumeration and bitmask read instances</span><span>
+</span><span id="line-18"></span><span id="local-6989586621679385430"><span id="local-6989586621679385431"><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-type">enumReadPrec</span></a></span><span>
+</span><span id="line-19"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="#local-6989586621679385431"><span class="hs-identifier hs-type">i</span></a></span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-comment">-- ^ The common constructor prefix</span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679385430"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-23"></span><span>  </span><span class="hs-comment">-- ^ The table of values to constructor suffixes</span><span>
+</span><span id="line-24"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-25"></span><span>  </span><span class="hs-comment">-- ^ The newtype constructor name</span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679385431"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679385430"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-comment">-- ^ The newtype constructor</span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadPrec</span></span><span> </span><span class="annot"><a href="#local-6989586621679385430"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-29"></span><span id="enumReadPrec"><span class="annot"><span class="annottext">enumReadPrec :: String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var hs-var">enumReadPrec</span></a></span></span><span> </span><span id="local-6989586621679385429"><span class="annot"><span class="annottext">prefix :: String
+</span><a href="#local-6989586621679385429"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span id="local-6989586621679385428"><span class="annot"><span class="annottext">table :: [(a, String)]
+</span><a href="#local-6989586621679385428"><span class="hs-identifier hs-var">table</span></a></span></span><span> </span><span id="local-6989586621679385427"><span class="annot"><span class="annottext">conName :: String
+</span><a href="#local-6989586621679385427"><span class="hs-identifier hs-var">conName</span></a></span></span><span> </span><span id="local-6989586621679385426"><span class="annot"><span class="annottext">con :: i -&gt; a
+</span><a href="#local-6989586621679385426"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec a -&gt; ReadPrec a
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-special">(</span><span>   </span><span class="annot"><span class="annottext">ReadP a -&gt; ReadPrec a
+forall a. ReadP a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">lift</span></span><span>
+</span><span id="line-31"></span><span>      </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-32"></span><span>        </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span>
+</span><span id="line-33"></span><span>        </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; ReadP String
+</span><span class="hs-identifier hs-var">string</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679385429"><span class="hs-identifier hs-var">prefix</span></a></span><span>
+</span><span id="line-34"></span><span>        </span><span class="annot"><span class="annottext">[ReadP a] -&gt; ReadP a
+forall (t :: * -&gt; *) (f :: * -&gt; *) a.
+(Foldable t, Alternative f) =&gt;
+t (f a) -&gt; f a
+</span><span class="hs-identifier hs-var">asum</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679385422"><span class="annot"><span class="annottext">e :: a
+</span><a href="#local-6989586621679385422"><span class="hs-identifier hs-var">e</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385421"><span class="annot"><span class="annottext">s :: String
+</span><a href="#local-6989586621679385421"><span class="hs-identifier hs-var">s</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679385422"><span class="hs-identifier hs-var">e</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; ReadP String -&gt; ReadP a
+forall (f :: * -&gt; *) a b. Functor f =&gt; a -&gt; f b -&gt; f a
+</span><span class="hs-operator hs-var">&lt;$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ReadP String
+</span><span class="hs-identifier hs-var">string</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679385421"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((a, String) -&gt; ReadP a) -&gt; [(a, String)] -&gt; [ReadP a]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[(a, String)]
+</span><a href="#local-6989586621679385428"><span class="hs-identifier hs-var">table</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span>      </span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span>  </span><span class="annot"><span class="annottext">ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span> </span><span class="annot"><span class="annottext">Prec -&gt; ReadPrec a -&gt; ReadPrec a
+forall a. Prec -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span>
+</span><span id="line-37"></span><span>        </span><span class="annot"><span class="hs-number">10</span></span><span>
+</span><span id="line-38"></span><span>        </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-39"></span><span>          </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679385427"><span class="hs-identifier hs-var">conName</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>          </span><span id="local-6989586621679385415"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679385415"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec i -&gt; ReadPrec i
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec i
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-41"></span><span>          </span><span class="annot"><span class="annottext">a -&gt; ReadPrec a
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i -&gt; a
+</span><a href="#local-6989586621679385426"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679385415"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>        </span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- | The common bits of enumeration and bitmask show instances</span><span>
+</span><span id="line-46"></span><span id="local-6989586621679385411"><span id="local-6989586621679385412"><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-type">enumShowsPrec</span></a></span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679385412"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-48"></span><span>  </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-comment">-- ^ The common constructor prefix</span><span>
+</span><span id="line-50"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679385412"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-51"></span><span>  </span><span class="hs-comment">-- ^ A table of values to constructor suffixes</span><span>
+</span><span id="line-52"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-53"></span><span>  </span><span class="hs-comment">-- ^ The newtype constructor name</span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679385412"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679385411"><span class="hs-identifier hs-type">i</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span>  </span><span class="hs-comment">-- ^ Unpack the newtype</span><span>
+</span><span id="line-56"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679385411"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShowS</span></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-comment">-- ^ Show the underlying value</span><span>
+</span><span id="line-58"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-59"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679385412"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-60"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShowS</span></span></span></span><span>
+</span><span id="line-61"></span><span id="enumShowsPrec"><span class="annot"><span class="annottext">enumShowsPrec :: String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Prec
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var hs-var">enumShowsPrec</span></a></span></span><span> </span><span id="local-6989586621679385410"><span class="annot"><span class="annottext">prefix :: String
+</span><a href="#local-6989586621679385410"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span id="local-6989586621679385409"><span class="annot"><span class="annottext">table :: [(a, String)]
+</span><a href="#local-6989586621679385409"><span class="hs-identifier hs-var">table</span></a></span></span><span> </span><span id="local-6989586621679385408"><span class="annot"><span class="annottext">conName :: String
+</span><a href="#local-6989586621679385408"><span class="hs-identifier hs-var">conName</span></a></span></span><span> </span><span id="local-6989586621679385407"><span class="annot"><span class="annottext">getInternal :: a -&gt; i
+</span><a href="#local-6989586621679385407"><span class="hs-identifier hs-var">getInternal</span></a></span></span><span> </span><span id="local-6989586621679385406"><span class="annot"><span class="annottext">showsInternal :: i -&gt; ShowS
+</span><a href="#local-6989586621679385406"><span class="hs-identifier hs-var">showsInternal</span></a></span></span><span> </span><span id="local-6989586621679385405"><span class="annot"><span class="annottext">p :: Prec
+</span><a href="#local-6989586621679385405"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679385404"><span class="annot"><span class="annottext">e :: a
+</span><a href="#local-6989586621679385404"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-62"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">a -&gt; [(a, String)] -&gt; Maybe String
+forall a b. Eq a =&gt; a -&gt; [(a, b)] -&gt; Maybe b
+</span><span class="hs-identifier hs-var">lookup</span></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679385404"><span class="hs-identifier hs-var">e</span></a></span><span> </span><span class="annot"><span class="annottext">[(a, String)]
+</span><a href="#local-6989586621679385409"><span class="hs-identifier hs-var">table</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-63"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679385402"><span class="annot"><span class="annottext">s :: String
+</span><a href="#local-6989586621679385402"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679385410"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679385402"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-64"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-65"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679385399"><span class="annot"><span class="annottext">x :: i
+</span><a href="#local-6989586621679385399"><span class="hs-identifier hs-var hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; i
+</span><a href="#local-6989586621679385407"><span class="hs-identifier hs-var">getInternal</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679385404"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-66"></span><span>      </span><span class="hs-keyword">in</span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Prec
+</span><a href="#local-6989586621679385405"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Prec -&gt; Prec -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>                    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679385408"><span class="hs-identifier hs-var">conName</span></a></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">i -&gt; ShowS
+</span><a href="#local-6989586621679385406"><span class="hs-identifier hs-var">showsInternal</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621679385399"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- | Wrap an IO action with a pair of 'traceEventIO' using the specified</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- message with &quot;begin&quot; or &quot;end&quot; appended.</span><span>
+</span><span id="line-71"></span><span id="local-6989586621679385397"><span class="annot"><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-type">traceAroundEvent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679385397"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679385397"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-cpp">
+#if defined(TRACE_CALLS)
+</span><span class="hs-identifier">traceAroundEvent</span><span> </span><span class="hs-identifier">msg</span><span> </span><span class="hs-identifier">a</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-identifier">traceEventIO</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">msg</span><span> </span><span class="hs-operator">&lt;&gt;</span><span> </span><span class="hs-string">&quot; begin&quot;</span><span class="hs-special">)</span><span> </span><span class="hs-operator">*&gt;</span><span> </span><span class="hs-identifier">a</span><span> </span><span class="hs-operator">&lt;*</span><span> </span><span class="hs-identifier">traceEventIO</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">msg</span><span> </span><span class="hs-operator">&lt;&gt;</span><span> </span><span class="hs-string">&quot; end&quot;</span><span class="hs-special">)</span><span class="hs-cpp">
+#else
+</span><span id="traceAroundEvent"><span class="annot"><span class="annottext">traceAroundEvent :: String -&gt; IO a -&gt; IO a
+</span><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var hs-var">traceAroundEvent</span></a></span></span><span> </span><span class="hs-identifier">_</span><span> </span><span id="local-6989586621679385396"><span class="annot"><span class="annottext">a :: IO a
+</span><a href="#local-6989586621679385396"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO a
+</span><a href="#local-6989586621679385396"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-cpp">
+#endif
+</span></pre></body></html>

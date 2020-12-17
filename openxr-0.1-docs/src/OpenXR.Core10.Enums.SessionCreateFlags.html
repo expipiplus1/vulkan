@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;SessionCreateFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.SessionCreateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier">SessionCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | XrSessionCreateFlags - Session Creation Flags</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- There are currently no session creation flags. This is reserved for</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- future use.</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.SessionCreateInfo',</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.createSession'</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">newtype</span><span> </span><span id="SessionCreateFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier hs-var">SessionCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SessionCreateFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier hs-var">SessionCreateFlags</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679389001"><span id="local-6989586621679389003"><span class="annot"><span class="annottext">SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+(SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool)
+-&gt; Eq SessionCreateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+$c/= :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+== :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+$c== :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388985"><span id="local-6989586621679388987"><span id="local-6989586621679388989"><span id="local-6989586621679388991"><span id="local-6989586621679388993"><span id="local-6989586621679388995"><span id="local-6989586621679388997"><span class="annot"><span class="annottext">Eq SessionCreateFlags
+Eq SessionCreateFlags =&gt;
+(SessionCreateFlags -&gt; SessionCreateFlags -&gt; Ordering)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags)
+-&gt; Ord SessionCreateFlags
+SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+SessionCreateFlags -&gt; SessionCreateFlags -&gt; Ordering
+SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+$cmin :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+max :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+$cmax :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+&gt;= :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+$c&gt;= :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+&gt; :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+$c&gt; :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+&lt;= :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+$c&lt;= :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+&lt; :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+$c&lt; :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Bool
+compare :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Ordering
+$ccompare :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; Ordering
+$cp1Ord :: Eq SessionCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388968"><span id="local-6989586621679388970"><span id="local-6989586621679388972"><span id="local-6989586621679388974"><span id="local-6989586621679388976"><span id="local-6989586621679388978"><span id="local-6989586621679388980"><span id="local-6989586621679388982"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SessionCreateFlags
+Ptr b -&gt; Int -&gt; SessionCreateFlags -&gt; IO ()
+Ptr SessionCreateFlags -&gt; IO SessionCreateFlags
+Ptr SessionCreateFlags -&gt; Int -&gt; IO SessionCreateFlags
+Ptr SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags -&gt; IO ()
+Ptr SessionCreateFlags -&gt; SessionCreateFlags -&gt; IO ()
+SessionCreateFlags -&gt; Int
+(SessionCreateFlags -&gt; Int)
+-&gt; (SessionCreateFlags -&gt; Int)
+-&gt; (Ptr SessionCreateFlags -&gt; Int -&gt; IO SessionCreateFlags)
+-&gt; (Ptr SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SessionCreateFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SessionCreateFlags -&gt; IO ())
+-&gt; (Ptr SessionCreateFlags -&gt; IO SessionCreateFlags)
+-&gt; (Ptr SessionCreateFlags -&gt; SessionCreateFlags -&gt; IO ())
+-&gt; Storable SessionCreateFlags
+forall b. Ptr b -&gt; Int -&gt; IO SessionCreateFlags
+forall b. Ptr b -&gt; Int -&gt; SessionCreateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SessionCreateFlags -&gt; SessionCreateFlags -&gt; IO ()
+$cpoke :: Ptr SessionCreateFlags -&gt; SessionCreateFlags -&gt; IO ()
+peek :: Ptr SessionCreateFlags -&gt; IO SessionCreateFlags
+$cpeek :: Ptr SessionCreateFlags -&gt; IO SessionCreateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; SessionCreateFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SessionCreateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SessionCreateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SessionCreateFlags
+pokeElemOff :: Ptr SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags -&gt; IO ()
+peekElemOff :: Ptr SessionCreateFlags -&gt; Int -&gt; IO SessionCreateFlags
+$cpeekElemOff :: Ptr SessionCreateFlags -&gt; Int -&gt; IO SessionCreateFlags
+alignment :: SessionCreateFlags -&gt; Int
+$calignment :: SessionCreateFlags -&gt; Int
+sizeOf :: SessionCreateFlags -&gt; Int
+$csizeOf :: SessionCreateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388965"><span class="annot"><span class="annottext">SessionCreateFlags
+SessionCreateFlags -&gt; Zero SessionCreateFlags
+forall a. a -&gt; Zero a
+zero :: SessionCreateFlags
+$czero :: SessionCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388919"><span id="local-6989586621679388921"><span id="local-6989586621679388923"><span id="local-6989586621679388925"><span id="local-6989586621679388927"><span id="local-6989586621679388929"><span id="local-6989586621679388931"><span id="local-6989586621679388933"><span id="local-6989586621679388935"><span id="local-6989586621679388937"><span id="local-6989586621679388939"><span id="local-6989586621679388941"><span id="local-6989586621679388943"><span id="local-6989586621679388945"><span id="local-6989586621679388947"><span id="local-6989586621679388949"><span id="local-6989586621679388951"><span id="local-6989586621679388953"><span id="local-6989586621679388955"><span id="local-6989586621679388957"><span id="local-6989586621679388959"><span id="local-6989586621679388961"><span class="annot"><span class="annottext">Eq SessionCreateFlags
+SessionCreateFlags
+Eq SessionCreateFlags =&gt;
+(SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; SessionCreateFlags
+-&gt; (Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; Bool)
+-&gt; (SessionCreateFlags -&gt; Maybe Int)
+-&gt; (SessionCreateFlags -&gt; Int)
+-&gt; (SessionCreateFlags -&gt; Bool)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags)
+-&gt; (SessionCreateFlags -&gt; Int)
+-&gt; Bits SessionCreateFlags
+Int -&gt; SessionCreateFlags
+SessionCreateFlags -&gt; Bool
+SessionCreateFlags -&gt; Int
+SessionCreateFlags -&gt; Maybe Int
+SessionCreateFlags -&gt; SessionCreateFlags
+SessionCreateFlags -&gt; Int -&gt; Bool
+SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SessionCreateFlags -&gt; Int
+$cpopCount :: SessionCreateFlags -&gt; Int
+rotateR :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$crotateR :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+rotateL :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$crotateL :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+unsafeShiftR :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$cunsafeShiftR :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+shiftR :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$cshiftR :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+unsafeShiftL :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$cunsafeShiftL :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+shiftL :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$cshiftL :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+isSigned :: SessionCreateFlags -&gt; Bool
+$cisSigned :: SessionCreateFlags -&gt; Bool
+bitSize :: SessionCreateFlags -&gt; Int
+$cbitSize :: SessionCreateFlags -&gt; Int
+bitSizeMaybe :: SessionCreateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: SessionCreateFlags -&gt; Maybe Int
+testBit :: SessionCreateFlags -&gt; Int -&gt; Bool
+$ctestBit :: SessionCreateFlags -&gt; Int -&gt; Bool
+complementBit :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$ccomplementBit :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+clearBit :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$cclearBit :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+setBit :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$csetBit :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+bit :: Int -&gt; SessionCreateFlags
+$cbit :: Int -&gt; SessionCreateFlags
+zeroBits :: SessionCreateFlags
+$czeroBits :: SessionCreateFlags
+rotate :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$crotate :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+shift :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+$cshift :: SessionCreateFlags -&gt; Int -&gt; SessionCreateFlags
+complement :: SessionCreateFlags -&gt; SessionCreateFlags
+$ccomplement :: SessionCreateFlags -&gt; SessionCreateFlags
+xor :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+$cxor :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+.|. :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+$c.|. :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+.&amp;. :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+$c.&amp;. :: SessionCreateFlags -&gt; SessionCreateFlags -&gt; SessionCreateFlags
+$cp1Bits :: Eq SessionCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388911"><span id="local-6989586621679388913"><span id="local-6989586621679388915"><span class="annot"><span class="annottext">Bits SessionCreateFlags
+Bits SessionCreateFlags =&gt;
+(SessionCreateFlags -&gt; Int)
+-&gt; (SessionCreateFlags -&gt; Int)
+-&gt; (SessionCreateFlags -&gt; Int)
+-&gt; FiniteBits SessionCreateFlags
+SessionCreateFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: SessionCreateFlags -&gt; Int
+$ccountTrailingZeros :: SessionCreateFlags -&gt; Int
+countLeadingZeros :: SessionCreateFlags -&gt; Int
+$ccountLeadingZeros :: SessionCreateFlags -&gt; Int
+finiteBitSize :: SessionCreateFlags -&gt; Int
+$cfiniteBitSize :: SessionCreateFlags -&gt; Int
+$cp1FiniteBits :: Bits SessionCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#conNameSessionCreateFlags"><span class="hs-identifier hs-type">conNameSessionCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-33"></span><span id="conNameSessionCreateFlags"><span class="annot"><span class="annottext">conNameSessionCreateFlags :: String
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#conNameSessionCreateFlags"><span class="hs-identifier hs-var hs-var">conNameSessionCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SessionCreateFlags&quot;</span></span><span>
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#enumPrefixSessionCreateFlags"><span class="hs-identifier hs-type">enumPrefixSessionCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-36"></span><span id="enumPrefixSessionCreateFlags"><span class="annot"><span class="annottext">enumPrefixSessionCreateFlags :: String
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#enumPrefixSessionCreateFlags"><span class="hs-identifier hs-var hs-var">enumPrefixSessionCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#showTableSessionCreateFlags"><span class="hs-identifier hs-type">showTableSessionCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier hs-type">SessionCreateFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-39"></span><span id="showTableSessionCreateFlags"><span class="annot"><span class="annottext">showTableSessionCreateFlags :: [(SessionCreateFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#showTableSessionCreateFlags"><span class="hs-identifier hs-var hs-var">showTableSessionCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388902"><span id="local-6989586621679388904"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier hs-type">SessionCreateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-42"></span><span>  </span><span id="local-6989586621679388900"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SessionCreateFlags -&gt; ShowS
+</span><a href="#local-6989586621679388900"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SessionCreateFlags, String)]
+-&gt; String
+-&gt; (SessionCreateFlags -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; SessionCreateFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#enumPrefixSessionCreateFlags"><span class="hs-identifier hs-var">enumPrefixSessionCreateFlags</span></a></span><span>
+</span><span id="line-43"></span><span>                            </span><span class="annot"><span class="annottext">[(SessionCreateFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#showTableSessionCreateFlags"><span class="hs-identifier hs-var">showTableSessionCreateFlags</span></a></span><span>
+</span><span id="line-44"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#conNameSessionCreateFlags"><span class="hs-identifier hs-var">conNameSessionCreateFlags</span></a></span><span>
+</span><span id="line-45"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier hs-type">SessionCreateFlags</span></a></span><span> </span><span id="local-6989586621679388899"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679388899"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679388899"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679388898"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679388898"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679388898"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388890"><span id="local-6989586621679388893"><span id="local-6989586621679388895"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier hs-type">SessionCreateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>  </span><span id="local-6989586621679388888"><span class="annot"><span class="annottext">readPrec :: ReadPrec SessionCreateFlags
+</span><a href="#local-6989586621679388888"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(SessionCreateFlags, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; SessionCreateFlags)
+-&gt; ReadPrec SessionCreateFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#enumPrefixSessionCreateFlags"><span class="hs-identifier hs-var">enumPrefixSessionCreateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">[(SessionCreateFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#showTableSessionCreateFlags"><span class="hs-identifier hs-var">showTableSessionCreateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#conNameSessionCreateFlags"><span class="hs-identifier hs-var">conNameSessionCreateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; SessionCreateFlags
+</span><a href="OpenXR.Core10.Enums.SessionCreateFlags.html#SessionCreateFlags"><span class="hs-identifier hs-var">SessionCreateFlags</span></a></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span></pre></body></html>

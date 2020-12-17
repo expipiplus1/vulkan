@@ -1,0 +1,715 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_EXT_thermal_query - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXT_thermal_query  XR_EXT_thermal_query&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 17</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_performance_settings.PerfSettingsDomainEXT',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_performance_settings.PerfSettingsNotificationLevelEXT',</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'thermalGetTemperatureTrendEXT'</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXT_thermal_query OpenXR Specification&gt;</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_EXT_thermal_query</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#thermalGetTemperatureTrendEXT"><span class="hs-identifier">thermalGetTemperatureTrendEXT</span></a></span><span>
+</span><span id="line-38"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_thermal_query_SPEC_VERSION"><span class="hs-identifier">EXT_thermal_query_SPEC_VERSION</span></a></span><span>
+</span><span id="line-39"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_thermal_query_SPEC_VERSION"><span class="hs-identifier">EXT_thermal_query_SPEC_VERSION</span></a></span><span>
+</span><span id="line-40"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_THERMAL_QUERY_EXTENSION_NAME"><span class="hs-identifier">EXT_THERMAL_QUERY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-41"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_THERMAL_QUERY_EXTENSION_NAME"><span class="hs-identifier">EXT_THERMAL_QUERY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-42"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsDomainEXT"><span class="hs-identifier">PerfSettingsDomainEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier">PerfSettingsNotificationLevelEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>                                               </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier">traceAroundEvent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Exception.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bracket</span></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">callocBytes</span></span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">free</span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Coerce</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">coerce</span></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.NamedType.html"><span class="hs-identifier">OpenXR.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html"><span class="hs-identifier">OpenXR.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#pXrThermalGetTemperatureTrendEXT"><span class="hs-identifier">pXrThermalGetTemperatureTrendEXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Exception.html"><span class="hs-identifier">OpenXR.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier">OpenXrException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html"><span class="hs-identifier">OpenXR.Extensions.XR_EXT_performance_settings</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsDomainEXT"><span class="hs-identifier">PerfSettingsDomainEXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html"><span class="hs-identifier">OpenXR.Extensions.XR_EXT_performance_settings</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsDomainEXT"><span class="hs-identifier">PerfSettingsDomainEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html"><span class="hs-identifier">OpenXR.Extensions.XR_EXT_performance_settings</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier">PerfSettingsNotificationLevelEXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html"><span class="hs-identifier">OpenXR.Extensions.XR_EXT_performance_settings</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier">PerfSettingsNotificationLevelEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier">Session</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier">Session</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier">Session_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html"><span class="hs-identifier">OpenXR.Extensions.XR_EXT_performance_settings</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsDomainEXT"><span class="hs-identifier">PerfSettingsDomainEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-83"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html"><span class="hs-identifier">OpenXR.Extensions.XR_EXT_performance_settings</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier">PerfSettingsNotificationLevelEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkXrThermalGetTemperatureTrendEXT"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#mkXrThermalGetTemperatureTrendEXT"><span class="hs-identifier hs-var">mkXrThermalGetTemperatureTrendEXT</span></a></span></span><span>
+</span><span id="line-89"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-type">Session_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsDomainEXT"><span class="hs-identifier hs-type">PerfSettingsDomainEXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier hs-type">PerfSettingsNotificationLevelEXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-type">Session_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsDomainEXT"><span class="hs-identifier hs-type">PerfSettingsDomainEXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier hs-type">PerfSettingsNotificationLevelEXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- | xrThermalGetTemperatureTrendEXT - xrThermalGetTemperatureTrendEXT</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- -   #VUID-xrThermalGetTemperatureTrendEXT-extension-notenabled# The @@</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--     extension /must/ be enabled prior to calling</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--     'thermalGetTemperatureTrendEXT'</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- -   #VUID-xrThermalGetTemperatureTrendEXT-session-parameter# @session@</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- -   #VUID-xrThermalGetTemperatureTrendEXT-domain-parameter# @domain@</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--     /must/ be a valid</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--     'OpenXR.Extensions.XR_EXT_performance_settings.PerfSettingsDomainEXT'</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--     value</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- -   #VUID-xrThermalGetTemperatureTrendEXT-notificationLevel-parameter#</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--     @notificationLevel@ /must/ be a pointer to an</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--     'OpenXR.Extensions.XR_EXT_performance_settings.PerfSettingsNotificationLevelEXT'</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--     value</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- -   #VUID-xrThermalGetTemperatureTrendEXT-tempHeadroom-parameter#</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--     @tempHeadroom@ /must/ be a pointer to a @float@ value</span><span>
+</span><span id="line-114"></span><span class="hs-comment">--</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- -   #VUID-xrThermalGetTemperatureTrendEXT-tempSlope-parameter#</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--     @tempSlope@ /must/ be a pointer to a @float@ value</span><span>
+</span><span id="line-117"></span><span class="hs-comment">--</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.SESSION_LOSS_PENDING'</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-127"></span><span class="hs-comment">--</span><span>
+</span><span id="line-128"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_SESSION_LOST'</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_HANDLE_INVALID'</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--</span><span>
+</span><span id="line-132"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_VALIDATION_FAILURE'</span><span>
+</span><span id="line-133"></span><span class="hs-comment">--</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_RUNTIME_FAILURE'</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--</span><span>
+</span><span id="line-136"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_FUNCTION_UNSUPPORTED'</span><span>
+</span><span id="line-137"></span><span class="hs-comment">--</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_performance_settings.PerfSettingsDomainEXT',</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_performance_settings.PerfSettingsNotificationLevelEXT',</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- 'OpenXR.Core10.Handles.Session'</span><span>
+</span><span id="line-143"></span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#thermalGetTemperatureTrendEXT"><span class="hs-identifier hs-type">thermalGetTemperatureTrendEXT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679405825"><span class="annot"><a href="#local-6989586621679405825"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-144"></span><span>                               </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679405825"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-145"></span><span>                              </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @session@ is a valid 'OpenXR.Core10.Handles.Session' handle.</span><span>
+</span><span id="line-146"></span><span>                                 </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span>
+</span><span id="line-147"></span><span>                              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @domain@ : the processing domain</span><span>
+</span><span id="line-148"></span><span>                                 </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsDomainEXT"><span class="hs-identifier hs-type">PerfSettingsDomainEXT</span></a></span><span>
+</span><span id="line-149"></span><span>                              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679405825"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier hs-type">PerfSettingsNotificationLevelEXT</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;tempHeadroom&quot;</span></span><span> </span><span class="annot"><a href="OpenXR.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;tempSlope&quot;</span></span><span> </span><span class="annot"><a href="OpenXR.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span id="thermalGetTemperatureTrendEXT"><span class="annot"><span class="annottext">thermalGetTemperatureTrendEXT :: Session
+-&gt; PerfSettingsDomainEXT
+-&gt; io
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+</span><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#thermalGetTemperatureTrendEXT"><span class="hs-identifier hs-var hs-var">thermalGetTemperatureTrendEXT</span></a></span></span><span> </span><span id="local-6989586621679405824"><span class="annot"><span class="annottext">session :: Session
+</span><a href="#local-6989586621679405824"><span class="hs-identifier hs-var">session</span></a></span></span><span> </span><span id="local-6989586621679405823"><span class="annot"><span class="annottext">domain :: PerfSettingsDomainEXT
+</span><a href="#local-6989586621679405823"><span class="hs-identifier hs-var">domain</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO
+  (Result, PerfSettingsNotificationLevelEXT,
+   &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+-&gt; io
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO
+   (Result, PerfSettingsNotificationLevelEXT,
+    &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+ -&gt; io
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; (ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+    -&gt; IO
+         (Result, PerfSettingsNotificationLevelEXT,
+          &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+-&gt; io
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT
+  (Result, PerfSettingsNotificationLevelEXT,
+   &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+  IO
+  (Result, PerfSettingsNotificationLevelEXT,
+   &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+-&gt; IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT
+   (Result, PerfSettingsNotificationLevelEXT,
+    &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+   IO
+   (Result, PerfSettingsNotificationLevelEXT,
+    &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+ -&gt; io
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+-&gt; io
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-151"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679405821"><span class="annot"><span class="annottext">xrThermalGetTemperatureTrendEXTPtr :: FunPtr
+  (Ptr Session_T
+   -&gt; PerfSettingsDomainEXT
+   -&gt; Ptr PerfSettingsNotificationLevelEXT
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO Result)
+</span><a href="#local-6989586621679405821"><span class="hs-identifier hs-var hs-var">xrThermalGetTemperatureTrendEXTPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+-&gt; FunPtr
+     (Ptr Session_T
+      -&gt; PerfSettingsDomainEXT
+      -&gt; Ptr PerfSettingsNotificationLevelEXT
+      -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+      -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+      -&gt; IO Result)
+</span><a href="OpenXR.Dynamic.html#pXrThermalGetTemperatureTrendEXT"><span class="hs-identifier hs-var hs-var">pXrThermalGetTemperatureTrendEXT</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3ASession"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session
+</span><a href="#local-6989586621679405824"><span class="hs-identifier hs-var">session</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span>  </span><span class="annot"><span class="annottext">IO ()
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO ()
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      ())
+-&gt; IO ()
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; PerfSettingsDomainEXT
+   -&gt; Ptr PerfSettingsNotificationLevelEXT
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO Result)
+</span><a href="#local-6989586621679405821"><span class="hs-identifier hs-var">xrThermalGetTemperatureTrendEXTPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; PerfSettingsDomainEXT
+   -&gt; Ptr PerfSettingsNotificationLevelEXT
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Session_T
+      -&gt; PerfSettingsDomainEXT
+      -&gt; Ptr PerfSettingsNotificationLevelEXT
+      -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+      -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; PerfSettingsDomainEXT
+   -&gt; Ptr PerfSettingsNotificationLevelEXT
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-153"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for xrThermalGetTemperatureTrendEXT is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-154"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679405816"><span class="annot"><span class="annottext">xrThermalGetTemperatureTrendEXT' :: Ptr Session_T
+-&gt; PerfSettingsDomainEXT
+-&gt; Ptr PerfSettingsNotificationLevelEXT
+-&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; IO Result
+</span><a href="#local-6989586621679405816"><span class="hs-identifier hs-var hs-var">xrThermalGetTemperatureTrendEXT'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; PerfSettingsDomainEXT
+   -&gt; Ptr PerfSettingsNotificationLevelEXT
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO Result)
+-&gt; Ptr Session_T
+-&gt; PerfSettingsDomainEXT
+-&gt; Ptr PerfSettingsNotificationLevelEXT
+-&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; IO Result
+</span><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#mkXrThermalGetTemperatureTrendEXT"><span class="hs-identifier hs-var">mkXrThermalGetTemperatureTrendEXT</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; PerfSettingsDomainEXT
+   -&gt; Ptr PerfSettingsNotificationLevelEXT
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO Result)
+</span><a href="#local-6989586621679405821"><span class="hs-identifier hs-var">xrThermalGetTemperatureTrendEXTPtr</span></a></span><span>
+</span><span id="line-155"></span><span>  </span><span id="local-6989586621679405815"><span class="annot"><span class="annottext">Ptr PerfSettingsNotificationLevelEXT
+</span><a href="#local-6989586621679405815"><span class="hs-identifier hs-var">pNotificationLevel</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">((Ptr PerfSettingsNotificationLevelEXT
+  -&gt; IO
+       (Result, PerfSettingsNotificationLevelEXT,
+        &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+ -&gt; IO
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (Ptr PerfSettingsNotificationLevelEXT)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr PerfSettingsNotificationLevelEXT
+   -&gt; IO
+        (Result, PerfSettingsNotificationLevelEXT,
+         &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+  -&gt; IO
+       (Result, PerfSettingsNotificationLevelEXT,
+        &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      (Ptr PerfSettingsNotificationLevelEXT))
+-&gt; ((Ptr PerfSettingsNotificationLevelEXT
+     -&gt; IO
+          (Result, PerfSettingsNotificationLevelEXT,
+           &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+    -&gt; IO
+         (Result, PerfSettingsNotificationLevelEXT,
+          &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (Ptr PerfSettingsNotificationLevelEXT)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (Ptr PerfSettingsNotificationLevelEXT)
+-&gt; (Ptr PerfSettingsNotificationLevelEXT -&gt; IO ())
+-&gt; (Ptr PerfSettingsNotificationLevelEXT
+    -&gt; IO
+         (Result, PerfSettingsNotificationLevelEXT,
+          &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (Ptr PerfSettingsNotificationLevelEXT)
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier hs-type">PerfSettingsNotificationLevelEXT</span></a></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr PerfSettingsNotificationLevelEXT -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-156"></span><span>  </span><span id="local-6989586621679405813"><span class="annot"><span class="annottext">&quot;tempHeadroom&quot; ::: Ptr CFloat
+</span><a href="#local-6989586621679405813"><span class="hs-identifier hs-var">pTempHeadroom</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+  -&gt; IO
+       (Result, PerfSettingsNotificationLevelEXT,
+        &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+ -&gt; IO
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO
+        (Result, PerfSettingsNotificationLevelEXT,
+         &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+  -&gt; IO
+       (Result, PerfSettingsNotificationLevelEXT,
+        &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      (&quot;tempHeadroom&quot; ::: Ptr CFloat))
+-&gt; (((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+     -&gt; IO
+          (Result, PerfSettingsNotificationLevelEXT,
+           &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+    -&gt; IO
+         (Result, PerfSettingsNotificationLevelEXT,
+          &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; ((&quot;tempHeadroom&quot; ::: Ptr CFloat) -&gt; IO ())
+-&gt; ((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+    -&gt; IO
+         (Result, PerfSettingsNotificationLevelEXT,
+          &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;tempHeadroom&quot; ::: Ptr CFloat) -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-157"></span><span>  </span><span id="local-6989586621679405812"><span class="annot"><span class="annottext">&quot;tempHeadroom&quot; ::: Ptr CFloat
+</span><a href="#local-6989586621679405812"><span class="hs-identifier hs-var">pTempSlope</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+  -&gt; IO
+       (Result, PerfSettingsNotificationLevelEXT,
+        &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+ -&gt; IO
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+   -&gt; IO
+        (Result, PerfSettingsNotificationLevelEXT,
+         &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+  -&gt; IO
+       (Result, PerfSettingsNotificationLevelEXT,
+        &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      (&quot;tempHeadroom&quot; ::: Ptr CFloat))
+-&gt; (((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+     -&gt; IO
+          (Result, PerfSettingsNotificationLevelEXT,
+           &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+    -&gt; IO
+         (Result, PerfSettingsNotificationLevelEXT,
+          &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; ((&quot;tempHeadroom&quot; ::: Ptr CFloat) -&gt; IO ())
+-&gt; ((&quot;tempHeadroom&quot; ::: Ptr CFloat)
+    -&gt; IO
+         (Result, PerfSettingsNotificationLevelEXT,
+          &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;tempHeadroom&quot; ::: Ptr CFloat) -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-158"></span><span>  </span><span id="local-6989586621679405811"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679405811"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      Result)
+-&gt; IO Result
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;xrThermalGetTemperatureTrendEXT&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Session_T
+-&gt; PerfSettingsDomainEXT
+-&gt; Ptr PerfSettingsNotificationLevelEXT
+-&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; (&quot;tempHeadroom&quot; ::: Ptr CFloat)
+-&gt; IO Result
+</span><a href="#local-6989586621679405816"><span class="hs-identifier hs-var">xrThermalGetTemperatureTrendEXT'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session -&gt; Ptr Session_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AsessionHandle%3ASession"><span class="hs-identifier hs-var hs-var">sessionHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session
+</span><a href="#local-6989586621679405824"><span class="hs-identifier hs-var">session</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PerfSettingsDomainEXT
+</span><a href="#local-6989586621679405823"><span class="hs-identifier hs-var">domain</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PerfSettingsNotificationLevelEXT
+</span><a href="#local-6989586621679405815"><span class="hs-identifier hs-var">pNotificationLevel</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;tempHeadroom&quot; ::: Ptr CFloat
+</span><a href="#local-6989586621679405813"><span class="hs-identifier hs-var">pTempHeadroom</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;tempHeadroom&quot; ::: Ptr CFloat
+</span><a href="#local-6989586621679405812"><span class="hs-identifier hs-var">pTempSlope</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-159"></span><span>  </span><span class="annot"><span class="annottext">IO ()
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO ()
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      ())
+-&gt; IO ()
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679405811"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OpenXrException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; OpenXrException
+</span><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-var">OpenXrException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679405811"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-160"></span><span>  </span><span id="local-6989586621679405807"><span class="annot"><span class="annottext">PerfSettingsNotificationLevelEXT
+</span><a href="#local-6989586621679405807"><span class="hs-identifier hs-var">notificationLevel</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO PerfSettingsNotificationLevelEXT
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     PerfSettingsNotificationLevelEXT
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO PerfSettingsNotificationLevelEXT
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      PerfSettingsNotificationLevelEXT)
+-&gt; IO PerfSettingsNotificationLevelEXT
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     PerfSettingsNotificationLevelEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr PerfSettingsNotificationLevelEXT
+-&gt; IO PerfSettingsNotificationLevelEXT
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_performance_settings.html#PerfSettingsNotificationLevelEXT"><span class="hs-identifier hs-type">PerfSettingsNotificationLevelEXT</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PerfSettingsNotificationLevelEXT
+</span><a href="#local-6989586621679405815"><span class="hs-identifier hs-var">pNotificationLevel</span></a></span><span>
+</span><span id="line-161"></span><span>  </span><span id="local-6989586621679405806"><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679405806"><span class="hs-identifier hs-var">tempHeadroom</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO CFloat
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     CFloat
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO CFloat
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      CFloat)
+-&gt; IO CFloat
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     CFloat
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;tempHeadroom&quot; ::: Ptr CFloat) -&gt; IO CFloat
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="annot"><span class="annottext">&quot;tempHeadroom&quot; ::: Ptr CFloat
+</span><a href="#local-6989586621679405813"><span class="hs-identifier hs-var">pTempHeadroom</span></a></span><span>
+</span><span id="line-162"></span><span>  </span><span id="local-6989586621679405805"><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679405805"><span class="hs-identifier hs-var">tempSlope</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO CFloat
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     CFloat
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO CFloat
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      CFloat)
+-&gt; IO CFloat
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     CFloat
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;tempHeadroom&quot; ::: Ptr CFloat) -&gt; IO CFloat
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="annot"><span class="annottext">&quot;tempHeadroom&quot; ::: Ptr CFloat
+</span><a href="#local-6989586621679405812"><span class="hs-identifier hs-var">pTempSlope</span></a></span><span>
+</span><span id="line-163"></span><span>  </span><span class="annot"><span class="annottext">(Result, PerfSettingsNotificationLevelEXT,
+ &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">((Result, PerfSettingsNotificationLevelEXT,
+  &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+ -&gt; ContT
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+      IO
+      (Result, PerfSettingsNotificationLevelEXT,
+       &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float))
+-&gt; (Result, PerfSettingsNotificationLevelEXT,
+    &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+-&gt; ContT
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+     IO
+     (Result, PerfSettingsNotificationLevelEXT,
+      &quot;tempHeadroom&quot; ::: Float, &quot;tempHeadroom&quot; ::: Float)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679405811"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">PerfSettingsNotificationLevelEXT
+</span><a href="#local-6989586621679405807"><span class="hs-identifier hs-var">notificationLevel</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CFloat -&gt; &quot;tempHeadroom&quot; ::: Float
+forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">coerce</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span> </span><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679405806"><span class="hs-identifier hs-var">tempHeadroom</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CFloat -&gt; &quot;tempHeadroom&quot; ::: Float
+forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">coerce</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span> </span><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679405805"><span class="hs-identifier hs-var">tempSlope</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span>
+</span><span id="line-165"></span><span>
+</span><span id="line-166"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_thermal_query_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_thermal_query_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_thermal_query_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-167"></span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXT_thermal_query_SPEC_VERSION&quot;</span><span>
+</span><span id="line-169"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_thermal_query_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_thermal_query_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679405852"><span class="annot"><a href="#local-6989586621679405852"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679405852"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679405852"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-170"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_thermal_query_SPEC_VERSION"><span id="%24mEXT_thermal_query_SPEC_VERSION"><span id="EXT_thermal_query_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_thermal_query_SPEC_VERSION :: a
+$mEXT_thermal_query_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#%24bEXT_thermal_query_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_thermal_query_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-171"></span><span>
+</span><span id="line-172"></span><span>
+</span><span id="line-173"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_THERMAL_QUERY_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_THERMAL_QUERY_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_THERMAL_QUERY_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXT_thermal_query&quot;</span></span><span>
+</span><span id="line-174"></span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXT_THERMAL_QUERY_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-176"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#EXT_THERMAL_QUERY_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_THERMAL_QUERY_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679405848"><span class="annot"><a href="#local-6989586621679405848"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679405848"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679405848"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679405848"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-177"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_THERMAL_QUERY_EXTENSION_NAME"><span id="%24mEXT_THERMAL_QUERY_EXTENSION_NAME"><span id="EXT_THERMAL_QUERY_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_THERMAL_QUERY_EXTENSION_NAME :: a
+$mEXT_THERMAL_QUERY_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXT_thermal_query.html#%24bEXT_THERMAL_QUERY_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_THERMAL_QUERY_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXT_thermal_query&quot;</span></span><span>
+</span><span id="line-178"></span><span>
+</span><span id="line-179"></span></pre></body></html>

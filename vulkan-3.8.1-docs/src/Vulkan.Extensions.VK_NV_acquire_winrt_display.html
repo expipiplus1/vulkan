@@ -1,0 +1,622 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_NV_acquire_winrt_display - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_NV_acquire_winrt_display</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_NV_acquire_winrt_display@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     346</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--     -   Requires @VK_EXT_direct_mode_display@</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--     -   Jeff Juliano</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_acquire_winrt_display:%20&amp;body=@jjuliano%20 &gt;</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--     2020-09-29</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- [__IP Status__]</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--     No known IP claims.</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--     -   Jeff Juliano, NVIDIA</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- This extension allows an application to take exclusive control of a</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- display on Windows 10 provided that the display is not already</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- controlled by a compositor. Examples of compositors include the Windows</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- desktop compositor, other applications using this Vulkan extension, and</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- applications that</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaymanager.tryacquiretarget &#8220;Acquire&#8221;&gt;</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- a</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaytarget &#8220;DisplayTarget&#8221;&gt;</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- using a &lt;https://docs.microsoft.com/en-us/uwp/api/ &#8220;WinRT&#8221;&gt; command such</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- as</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaymanager.tryacquiretarget &#8220;winrt::Windows::Devices::Display::Core::DisplayManager.TryAcquireTarget()&#8221;&gt;.</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- When control is acquired the application has exclusive access to the</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- display until control is released or the application terminates. An</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- application&#8217;s attempt to acquire is denied if a different application</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- has already acquired the display.</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- == New Commands</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- -   'acquireWinrtDisplayNV'</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- -   'getWinrtDisplayNV'</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- -   'NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME'</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- -   'NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION'</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- == Issues</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- 1) What should the platform substring be for this extension:</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- __RESOLVED__: The platform substring is &#8220;Winrt&#8221;.</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- The substring &#8220;Winrt&#8221; matches the fact that the OS API exposing the</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- acquire and release functionality is called &#8220;WinRT&#8221;.</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- The substring &#8220;Win32&#8221; is wrong because the related &#8220;WinRT&#8221; API is</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- explicitly __not__ a &#8220;Win32&#8221; API. &#8220;WinRT&#8221; is a competing API family to</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- the &#8220;Win32&#8221; API family.</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- The substring &#8220;Windows&#8221; is suboptimal because there could be more than</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- one relevant API on the Windows platform. There is preference to use the</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- more-specific substring &#8220;Winrt&#8221;.</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- 2) Should 'acquireWinrtDisplayNV' take a winRT DisplayTarget, or a</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- Vulkan display handle as input?</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- __RESOLVED__: A Vulkan display handle. This matches the design of</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.acquireXlibDisplayEXT'.</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- 3) Should the acquire command be platform-independent named</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- &#8220;vkAcquireDisplayNV&#8221;, or platform-specific named</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- &#8220;vkAcquireWinrtDisplayNV&#8221;?</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- __RESOLVED__: Add a platform-specific command.</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- The inputs to the Acquire command are all Vulkan types. None are WinRT</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- types. This opens the possibility of the winrt extension defining a</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- platform-independent acquire command.</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- The X11 acquire command does need to accept a platform-specific</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- parameter. This could be handled by adding to a platform-independent</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- acquire command a params struct to which platform-dependent types can be</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- chained by pNext pointer.</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- The prevailing opinion is that it would be odd to create a second</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- platform-independent function that is used on the Windows 10 platform,</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- but that is not used for the X11 platform. Since a Windows 10</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- platform-specific command is needed anyway for converting between</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- vkDisplayKHR and platform-native handles, opinion was to create a</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- platform-specific acquire function.</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- 4) Should the 'getWinrtDisplayNV' parameter identifying a display be</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- named &#8220;deviceRelativeId&#8221; or &#8220;adapterRelativeId&#8221;?</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- __RESOLVED__: The WinRT name is &#8220;AdapterRelativeId&#8221;. The name &#8220;adapter&#8221;</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- is the Windows analog to a Vulkan &#8220;physical device&#8221;. Vulkan already has</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- precedent to use the name @deviceLUID@ for the concept that Windows APIs</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- call &#8220;AdapterLuid&#8221;. Keeping form with this precedent, the name</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- &#8220;deviceRelativeId&#8221; is chosen.</span><span>
+</span><span id="line-127"></span><span class="hs-comment">--</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- 5) Does 'acquireWinrtDisplayNV' cause the Windows desktop compositor to</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- release a display?</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- __RESOLVED__: No. 'acquireWinrtDisplayNV' does not itself cause the</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- Windows desktop compositor to release a display. This action must be</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- performed outside of Vulkan.</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- Beginning with Windows 10 version 2004 it is possible to cause the</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- Windows desktop compositor to release a display by using the &#8220;Advanced</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- display settings&#8221; sub-page of the &#8220;Display settings&#8221; control panel. See</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/windows-hardware/drivers/display/specialized-monitors&gt;</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- 6) Where can one find additional information about custom compositors</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- for Windows 10?</span><span>
+</span><span id="line-142"></span><span class="hs-comment">--</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- __RESOLVED__: Relevant references are as follows.</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- According to Microsoft&#8217;s documentation on</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/windows-hardware/drivers/display/specialized-monitors-compositor \&quot;building a custom compositor\&quot;&gt;,</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- the ability to write a custom compositor is not a replacement for a</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- fullscreen desktop window. The feature is for writing compositor apps</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- that drive specialized hardware.</span><span>
+</span><span id="line-150"></span><span class="hs-comment">--</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- Only certain editions of Windows 10 support custom compositors,</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/windows-hardware/drivers/display/specialized-monitors#windows-10-version-2004 \&quot;documented here\&quot;&gt;.</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- The product type can be queried from Windows 10. See</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getproductinfo&gt;</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-157"></span><span class="hs-comment">--</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- -   Revision 1, 2020-09-29 (Jeff Juliano)</span><span>
+</span><span id="line-159"></span><span class="hs-comment">--</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--     -   Initial draft</span><span>
+</span><span id="line-161"></span><span class="hs-comment">--</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- 'acquireWinrtDisplayNV', 'getWinrtDisplayNV'</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-167"></span><span class="hs-comment">--</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_acquire_winrt_display Vulkan Specification&gt;</span><span>
+</span><span id="line-170"></span><span class="hs-comment">--</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-173"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_NV_acquire_winrt_display</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#acquireWinrtDisplayNV"><span class="hs-identifier">acquireWinrtDisplayNV</span></a></span><span>
+</span><span id="line-174"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#getWinrtDisplayNV"><span class="hs-identifier">getWinrtDisplayNV</span></a></span><span>
+</span><span id="line-175"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span class="hs-identifier">NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION</span></a></span><span>
+</span><span id="line-176"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span class="hs-identifier">NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION</span></a></span><span>
+</span><span id="line-177"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span class="hs-identifier">NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-178"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span class="hs-identifier">NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-179"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier">DisplayKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-180"></span><span>                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-181"></span><span>
+</span><span id="line-182"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier">traceAroundEvent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-183"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Exception.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bracket</span></span><span class="hs-special">)</span><span>
+</span><span id="line-184"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-185"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-186"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">callocBytes</span></span><span class="hs-special">)</span><span>
+</span><span id="line-187"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">free</span></span><span class="hs-special">)</span><span>
+</span><span id="line-188"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-189"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-190"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-191"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-192"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-193"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-195"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-196"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-197"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-198"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-199"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-200"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-201"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-202"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-203"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html"><span class="hs-identifier">Vulkan.Extensions.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier">DisplayKHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-204"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html"><span class="hs-identifier">Vulkan.Extensions.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier">DisplayKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#pVkAcquireWinrtDisplayNV"><span class="hs-identifier">pVkAcquireWinrtDisplayNV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-206"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#pVkGetWinrtDisplayNV"><span class="hs-identifier">pVkGetWinrtDisplayNV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-207"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice"><span class="hs-identifier">PhysicalDevice</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice"><span class="hs-identifier">PhysicalDevice</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-209"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice_T"><span class="hs-identifier">PhysicalDevice_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-210"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-211"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-212"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Exception.html"><span class="hs-identifier">Vulkan.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier">VulkanException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-213"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-214"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html"><span class="hs-identifier">Vulkan.Extensions.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier">DisplayKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-215"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkAcquireWinrtDisplayNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#mkVkAcquireWinrtDisplayNV"><span class="hs-identifier hs-var">mkVkAcquireWinrtDisplayNV</span></a></span></span><span>
+</span><span id="line-220"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice_T"><span class="hs-identifier hs-type">PhysicalDevice_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice_T"><span class="hs-identifier hs-type">PhysicalDevice_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-221"></span><span>
+</span><span id="line-222"></span><span class="hs-comment">-- | vkAcquireWinrtDisplayNV - Acquire access to a VkDisplayKHR</span><span>
+</span><span id="line-223"></span><span class="hs-comment">--</span><span>
+</span><span id="line-224"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-225"></span><span class="hs-comment">--</span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- All permissions necessary to control the display are granted to the</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- Vulkan instance associated with @physicalDevice@ until the display is</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- released or the application is terminated. Permission to access the</span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- display /may/ be revoked by events that cause Windows 10 itself to lose</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- access to @display@. If this has happened, operations which require</span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- access to the display /must/ fail with an appropriate error code. If</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- permission to access @display@ has already been acquired by another</span><span>
+</span><span id="line-233"></span><span class="hs-comment">-- entity, the call /must/ return the error code</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.</span><span>
+</span><span id="line-235"></span><span class="hs-comment">--</span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-237"></span><span class="hs-comment">--</span><span>
+</span><span id="line-238"></span><span class="hs-comment">-- The Vulkan instance acquires control of a</span><span>
+</span><span id="line-239"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaytarget &#8220;winrt::Windows::Devices::Display::Core::DisplayTarget&#8221;&gt;</span><span>
+</span><span id="line-240"></span><span class="hs-comment">-- by performing an operation equivalent to</span><span>
+</span><span id="line-241"></span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaymanager.tryacquiretarget &#8220;winrt::Windows::Devices::Display::Core::DisplayManager.TryAcquireTarget()&#8221;&gt;</span><span>
+</span><span id="line-242"></span><span class="hs-comment">-- on the &#8220;DisplayTarget&#8221;.</span><span>
+</span><span id="line-243"></span><span class="hs-comment">--</span><span>
+</span><span id="line-244"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-245"></span><span class="hs-comment">--</span><span>
+</span><span id="line-246"></span><span class="hs-comment">-- One example of when Windows 10 loses access to a display is when the</span><span>
+</span><span id="line-247"></span><span class="hs-comment">-- display is hot-unplugged.</span><span>
+</span><span id="line-248"></span><span class="hs-comment">--</span><span>
+</span><span id="line-249"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-250"></span><span class="hs-comment">--</span><span>
+</span><span id="line-251"></span><span class="hs-comment">-- One example of when a display has already been acquired by another</span><span>
+</span><span id="line-252"></span><span class="hs-comment">-- entity is when the Windows desktop compositor (DWM) is in control of the</span><span>
+</span><span id="line-253"></span><span class="hs-comment">-- display. Beginning with Windows 10 version 2004 it is possible to cause</span><span>
+</span><span id="line-254"></span><span class="hs-comment">-- DWM to release a display by using the &#8220;Advanced display settings&#8221;</span><span>
+</span><span id="line-255"></span><span class="hs-comment">-- sub-page of the &#8220;Display settings&#8221; control panel.</span><span>
+</span><span id="line-256"></span><span class="hs-comment">-- 'acquireWinrtDisplayNV' does not itself cause DWM to release a display;</span><span>
+</span><span id="line-257"></span><span class="hs-comment">-- this action must be performed outside of Vulkan.</span><span>
+</span><span id="line-258"></span><span class="hs-comment">--</span><span>
+</span><span id="line-259"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-260"></span><span class="hs-comment">--</span><span>
+</span><span id="line-261"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-262"></span><span class="hs-comment">--</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-264"></span><span class="hs-comment">--</span><span>
+</span><span id="line-265"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-266"></span><span class="hs-comment">--</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-268"></span><span class="hs-comment">--</span><span>
+</span><span id="line-269"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'</span><span>
+</span><span id="line-270"></span><span class="hs-comment">--</span><span>
+</span><span id="line-271"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'</span><span>
+</span><span id="line-272"></span><span class="hs-comment">--</span><span>
+</span><span id="line-273"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-274"></span><span class="hs-comment">--</span><span>
+</span><span id="line-275"></span><span class="hs-comment">-- 'Vulkan.Extensions.Handles.DisplayKHR',</span><span>
+</span><span id="line-276"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.PhysicalDevice'</span><span>
+</span><span id="line-277"></span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#acquireWinrtDisplayNV"><span class="hs-identifier hs-type">acquireWinrtDisplayNV</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680180898"><span class="annot"><a href="#local-6989586621680180898"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-278"></span><span>                       </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680180898"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-279"></span><span>                      </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @physicalDevice@ The physical device the display is on.</span><span>
+</span><span id="line-280"></span><span>                         </span><span class="hs-comment">--</span><span>
+</span><span id="line-281"></span><span>                         </span><span class="hs-comment">-- #VUID-vkAcquireWinrtDisplayNV-physicalDevice-parameter# @physicalDevice@</span><span>
+</span><span id="line-282"></span><span>                         </span><span class="hs-comment">-- /must/ be a valid 'Vulkan.Core10.Handles.PhysicalDevice' handle</span><span>
+</span><span id="line-283"></span><span>                         </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice"><span class="hs-identifier hs-type">PhysicalDevice</span></a></span><span>
+</span><span id="line-284"></span><span>                      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @display@ The display the caller wishes to control in Vulkan.</span><span>
+</span><span id="line-285"></span><span>                         </span><span class="hs-comment">--</span><span>
+</span><span id="line-286"></span><span>                         </span><span class="hs-comment">-- #VUID-vkAcquireWinrtDisplayNV-display-parameter# @display@ /must/ be a</span><span>
+</span><span id="line-287"></span><span>                         </span><span class="hs-comment">-- valid 'Vulkan.Extensions.Handles.DisplayKHR' handle</span><span>
+</span><span id="line-288"></span><span>                         </span><span class="hs-comment">--</span><span>
+</span><span id="line-289"></span><span>                         </span><span class="hs-comment">-- #VUID-vkAcquireWinrtDisplayNV-display-parent# @display@ /must/ have been</span><span>
+</span><span id="line-290"></span><span>                         </span><span class="hs-comment">-- created, allocated, or retrieved from @physicalDevice@</span><span>
+</span><span id="line-291"></span><span>                         </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span>
+</span><span id="line-292"></span><span>                      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680180898"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-293"></span><span id="acquireWinrtDisplayNV"><span class="annot"><span class="annottext">acquireWinrtDisplayNV :: PhysicalDevice -&gt; DisplayKHR -&gt; io ()
+</span><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#acquireWinrtDisplayNV"><span class="hs-identifier hs-var hs-var">acquireWinrtDisplayNV</span></a></span></span><span> </span><span id="local-6989586621680180897"><span class="annot"><span class="annottext">physicalDevice :: PhysicalDevice
+</span><a href="#local-6989586621680180897"><span class="hs-identifier hs-var">physicalDevice</span></a></span></span><span> </span><span id="local-6989586621680180896"><span class="annot"><span class="annottext">display :: DisplayKHR
+</span><a href="#local-6989586621680180896"><span class="hs-identifier hs-var">display</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-294"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680180895"><span class="annot"><span class="annottext">vkAcquireWinrtDisplayNVPtr :: FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result)
+</span><a href="#local-6989586621680180895"><span class="hs-identifier hs-var hs-var">vkAcquireWinrtDisplayNVPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+-&gt; FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#pVkAcquireWinrtDisplayNV"><span class="hs-identifier hs-var hs-var">pVkAcquireWinrtDisplayNV</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice -&gt; InstanceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AinstanceCmds%3APhysicalDevice"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621680180897"><span class="hs-identifier hs-var">physicalDevice</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice"><span class="hs-identifier hs-type">PhysicalDevice</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-295"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result)
+</span><a href="#local-6989586621680180895"><span class="hs-identifier hs-var">vkAcquireWinrtDisplayNVPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result)
+-&gt; FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result) -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-296"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkAcquireWinrtDisplayNV is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-297"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680180890"><span class="annot"><span class="annottext">vkAcquireWinrtDisplayNV' :: Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result
+</span><a href="#local-6989586621680180890"><span class="hs-identifier hs-var hs-var">vkAcquireWinrtDisplayNV'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result)
+-&gt; Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result
+</span><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#mkVkAcquireWinrtDisplayNV"><span class="hs-identifier hs-var">mkVkAcquireWinrtDisplayNV</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result)
+</span><a href="#local-6989586621680180895"><span class="hs-identifier hs-var">vkAcquireWinrtDisplayNVPtr</span></a></span><span>
+</span><span id="line-298"></span><span>  </span><span id="local-6989586621680180889"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680180889"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="Vulkan.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;vkAcquireWinrtDisplayNV&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevice_T -&gt; DisplayKHR -&gt; IO Result
+</span><a href="#local-6989586621680180890"><span class="hs-identifier hs-var">vkAcquireWinrtDisplayNV'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice -&gt; Ptr PhysicalDevice_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AphysicalDeviceHandle%3APhysicalDevice"><span class="hs-identifier hs-var hs-var">physicalDeviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621680180897"><span class="hs-identifier hs-var">physicalDevice</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DisplayKHR
+</span><a href="#local-6989586621680180896"><span class="hs-identifier hs-var">display</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-299"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680180889"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680180889"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-300"></span><span>
+</span><span id="line-301"></span><span>
+</span><span id="line-302"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetWinrtDisplayNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#mkVkGetWinrtDisplayNV"><span class="hs-identifier hs-var">mkVkGetWinrtDisplayNV</span></a></span></span><span>
+</span><span id="line-307"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice_T"><span class="hs-identifier hs-type">PhysicalDevice_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice_T"><span class="hs-identifier hs-type">PhysicalDevice_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-308"></span><span>
+</span><span id="line-309"></span><span class="hs-comment">-- | vkGetWinrtDisplayNV - Query the VkDisplayKHR corresponding to a WinRT</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- DisplayTarget</span><span>
+</span><span id="line-311"></span><span class="hs-comment">--</span><span>
+</span><span id="line-312"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-313"></span><span class="hs-comment">--</span><span>
+</span><span id="line-314"></span><span class="hs-comment">-- If there is no 'Vulkan.Extensions.Handles.DisplayKHR' corresponding to</span><span>
+</span><span id="line-315"></span><span class="hs-comment">-- @deviceRelativeId@ on @physicalDevice@,</span><span>
+</span><span id="line-316"></span><span class="hs-comment">-- 'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ be returned in</span><span>
+</span><span id="line-317"></span><span class="hs-comment">-- @pDisplay@.</span><span>
+</span><span id="line-318"></span><span class="hs-comment">--</span><span>
+</span><span id="line-319"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-320"></span><span class="hs-comment">--</span><span>
+</span><span id="line-321"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-322"></span><span class="hs-comment">--</span><span>
+</span><span id="line-323"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-324"></span><span class="hs-comment">--</span><span>
+</span><span id="line-325"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-326"></span><span class="hs-comment">--</span><span>
+</span><span id="line-327"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-328"></span><span class="hs-comment">--</span><span>
+</span><span id="line-329"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'</span><span>
+</span><span id="line-330"></span><span class="hs-comment">--</span><span>
+</span><span id="line-331"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'</span><span>
+</span><span id="line-332"></span><span class="hs-comment">--</span><span>
+</span><span id="line-333"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-334"></span><span class="hs-comment">--</span><span>
+</span><span id="line-335"></span><span class="hs-comment">-- 'Vulkan.Extensions.Handles.DisplayKHR',</span><span>
+</span><span id="line-336"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.PhysicalDevice'</span><span>
+</span><span id="line-337"></span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#getWinrtDisplayNV"><span class="hs-identifier hs-type">getWinrtDisplayNV</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680180884"><span class="annot"><a href="#local-6989586621680180884"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-338"></span><span>                   </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680180884"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-339"></span><span>                  </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @physicalDevice@ The physical device on which to query the display</span><span>
+</span><span id="line-340"></span><span>                     </span><span class="hs-comment">-- handle.</span><span>
+</span><span id="line-341"></span><span>                     </span><span class="hs-comment">--</span><span>
+</span><span id="line-342"></span><span>                     </span><span class="hs-comment">-- #VUID-vkGetWinrtDisplayNV-physicalDevice-parameter# @physicalDevice@</span><span>
+</span><span id="line-343"></span><span>                     </span><span class="hs-comment">-- /must/ be a valid 'Vulkan.Core10.Handles.PhysicalDevice' handle</span><span>
+</span><span id="line-344"></span><span>                     </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice"><span class="hs-identifier hs-type">PhysicalDevice</span></a></span><span>
+</span><span id="line-345"></span><span>                  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @deviceRelativeId@ The value of the</span><span>
+</span><span id="line-346"></span><span>                     </span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaytarget.adapterrelativeid &#8220;AdapterRelativeId&#8221;&gt;</span><span>
+</span><span id="line-347"></span><span>                     </span><span class="hs-comment">-- property of a</span><span>
+</span><span id="line-348"></span><span>                     </span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaytarget &#8220;DisplayTarget&#8221;&gt;</span><span>
+</span><span id="line-349"></span><span>                     </span><span class="hs-comment">-- that is enumerated by a</span><span>
+</span><span id="line-350"></span><span>                     </span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displayadapter &#8220;DisplayAdapter&#8221;&gt;</span><span>
+</span><span id="line-351"></span><span>                     </span><span class="hs-comment">-- with an</span><span>
+</span><span id="line-352"></span><span>                     </span><span class="hs-comment">-- &lt;https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displayadapter.id &#8220;Id&#8221;&gt;</span><span>
+</span><span id="line-353"></span><span>                     </span><span class="hs-comment">-- property matching the @deviceLUID@ property of a</span><span>
+</span><span id="line-354"></span><span>                     </span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties'</span><span>
+</span><span id="line-355"></span><span>                     </span><span class="hs-comment">-- for @physicalDevice@.</span><span>
+</span><span id="line-356"></span><span>                     </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;deviceRelativeId&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-357"></span><span>                  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680180884"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-358"></span><span id="getWinrtDisplayNV"><span class="annot"><span class="annottext">getWinrtDisplayNV :: PhysicalDevice -&gt; (&quot;deviceRelativeId&quot; ::: Word32) -&gt; io DisplayKHR
+</span><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#getWinrtDisplayNV"><span class="hs-identifier hs-var hs-var">getWinrtDisplayNV</span></a></span></span><span> </span><span id="local-6989586621680180883"><span class="annot"><span class="annottext">physicalDevice :: PhysicalDevice
+</span><a href="#local-6989586621680180883"><span class="hs-identifier hs-var">physicalDevice</span></a></span></span><span> </span><span id="local-6989586621680180882"><span class="annot"><span class="annottext">deviceRelativeId :: &quot;deviceRelativeId&quot; ::: Word32
+</span><a href="#local-6989586621680180882"><span class="hs-identifier hs-var">deviceRelativeId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO DisplayKHR -&gt; io DisplayKHR
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO DisplayKHR -&gt; io DisplayKHR)
+-&gt; (ContT DisplayKHR IO DisplayKHR -&gt; IO DisplayKHR)
+-&gt; ContT DisplayKHR IO DisplayKHR
+-&gt; io DisplayKHR
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT DisplayKHR IO DisplayKHR -&gt; IO DisplayKHR
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT DisplayKHR IO DisplayKHR -&gt; io DisplayKHR)
+-&gt; ContT DisplayKHR IO DisplayKHR -&gt; io DisplayKHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-359"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680180880"><span class="annot"><span class="annottext">vkGetWinrtDisplayNVPtr :: FunPtr
+  (Ptr PhysicalDevice_T
+   -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+   -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680180880"><span class="hs-identifier hs-var hs-var">vkGetWinrtDisplayNVPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+-&gt; FunPtr
+     (Ptr PhysicalDevice_T
+      -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+      -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+      -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#pVkGetWinrtDisplayNV"><span class="hs-identifier hs-var hs-var">pVkGetWinrtDisplayNV</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice -&gt; InstanceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AinstanceCmds%3APhysicalDevice"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621680180883"><span class="hs-identifier hs-var">physicalDevice</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PhysicalDevice"><span class="hs-identifier hs-type">PhysicalDevice</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-360"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT DisplayKHR IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT DisplayKHR IO ())
+-&gt; IO () -&gt; ContT DisplayKHR IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr PhysicalDevice_T
+   -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+   -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680180880"><span class="hs-identifier hs-var">vkGetWinrtDisplayNVPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr PhysicalDevice_T
+   -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+   -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr PhysicalDevice_T
+      -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+      -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr PhysicalDevice_T
+   -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+   -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-361"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetWinrtDisplayNV is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-362"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680180879"><span class="annot"><span class="annottext">vkGetWinrtDisplayNV' :: Ptr PhysicalDevice_T
+-&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+-&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+-&gt; IO Result
+</span><a href="#local-6989586621680180879"><span class="hs-identifier hs-var hs-var">vkGetWinrtDisplayNV'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr PhysicalDevice_T
+   -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+   -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+   -&gt; IO Result)
+-&gt; Ptr PhysicalDevice_T
+-&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+-&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+-&gt; IO Result
+</span><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#mkVkGetWinrtDisplayNV"><span class="hs-identifier hs-var">mkVkGetWinrtDisplayNV</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr PhysicalDevice_T
+   -&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+   -&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680180880"><span class="hs-identifier hs-var">vkGetWinrtDisplayNVPtr</span></a></span><span>
+</span><span id="line-363"></span><span>  </span><span id="local-6989586621680180878"><span class="annot"><span class="annottext">&quot;pDisplay&quot; ::: Ptr DisplayKHR
+</span><a href="#local-6989586621680180878"><span class="hs-identifier hs-var">pPDisplay</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pDisplay&quot; ::: Ptr DisplayKHR) -&gt; IO DisplayKHR)
+ -&gt; IO DisplayKHR)
+-&gt; ContT DisplayKHR IO (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pDisplay&quot; ::: Ptr DisplayKHR) -&gt; IO DisplayKHR)
+  -&gt; IO DisplayKHR)
+ -&gt; ContT DisplayKHR IO (&quot;pDisplay&quot; ::: Ptr DisplayKHR))
+-&gt; (((&quot;pDisplay&quot; ::: Ptr DisplayKHR) -&gt; IO DisplayKHR)
+    -&gt; IO DisplayKHR)
+-&gt; ContT DisplayKHR IO (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+-&gt; ((&quot;pDisplay&quot; ::: Ptr DisplayKHR) -&gt; IO ())
+-&gt; ((&quot;pDisplay&quot; ::: Ptr DisplayKHR) -&gt; IO DisplayKHR)
+-&gt; IO DisplayKHR
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;pDisplay&quot; ::: Ptr DisplayKHR) -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-364"></span><span>  </span><span id="local-6989586621680180876"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680180876"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; ContT DisplayKHR IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; ContT DisplayKHR IO Result)
+-&gt; IO Result -&gt; ContT DisplayKHR IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="Vulkan.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;vkGetWinrtDisplayNV&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevice_T
+-&gt; (&quot;deviceRelativeId&quot; ::: Word32)
+-&gt; (&quot;pDisplay&quot; ::: Ptr DisplayKHR)
+-&gt; IO Result
+</span><a href="#local-6989586621680180879"><span class="hs-identifier hs-var">vkGetWinrtDisplayNV'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice -&gt; Ptr PhysicalDevice_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AphysicalDeviceHandle%3APhysicalDevice"><span class="hs-identifier hs-var hs-var">physicalDeviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621680180883"><span class="hs-identifier hs-var">physicalDevice</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;deviceRelativeId&quot; ::: Word32
+</span><a href="#local-6989586621680180882"><span class="hs-identifier hs-var">deviceRelativeId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pDisplay&quot; ::: Ptr DisplayKHR
+</span><a href="#local-6989586621680180878"><span class="hs-identifier hs-var">pPDisplay</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-365"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT DisplayKHR IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT DisplayKHR IO ())
+-&gt; IO () -&gt; ContT DisplayKHR IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680180876"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680180876"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-366"></span><span>  </span><span id="local-6989586621680180875"><span class="annot"><span class="annottext">DisplayKHR
+</span><a href="#local-6989586621680180875"><span class="hs-identifier hs-var">pDisplay</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO DisplayKHR -&gt; ContT DisplayKHR IO DisplayKHR
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO DisplayKHR -&gt; ContT DisplayKHR IO DisplayKHR)
+-&gt; IO DisplayKHR -&gt; ContT DisplayKHR IO DisplayKHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pDisplay&quot; ::: Ptr DisplayKHR) -&gt; IO DisplayKHR
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#DisplayKHR"><span class="hs-identifier hs-type">DisplayKHR</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pDisplay&quot; ::: Ptr DisplayKHR
+</span><a href="#local-6989586621680180878"><span class="hs-identifier hs-var">pPDisplay</span></a></span><span>
+</span><span id="line-367"></span><span>  </span><span class="annot"><span class="annottext">DisplayKHR -&gt; ContT DisplayKHR IO DisplayKHR
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(DisplayKHR -&gt; ContT DisplayKHR IO DisplayKHR)
+-&gt; DisplayKHR -&gt; ContT DisplayKHR IO DisplayKHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DisplayKHR
+</span><a href="#local-6989586621680180875"><span class="hs-identifier hs-var">pDisplay</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-368"></span><span>
+</span><span id="line-369"></span><span>
+</span><span id="line-370"></span><span class="hs-keyword">type</span><span> </span><span id="NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span class="hs-identifier hs-var">NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-371"></span><span>
+</span><span id="line-372"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION&quot;</span><span>
+</span><span id="line-373"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span class="hs-identifier hs-type">NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680180927"><span class="annot"><a href="#local-6989586621680180927"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680180927"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680180927"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-374"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span id="%24mNV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span id="NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span class="annot"><span class="annottext">$bNV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION :: a
+$mNV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#%24bNV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">NV_ACQUIRE_WINRT_DISPLAY_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-375"></span><span>
+</span><span id="line-376"></span><span>
+</span><span id="line-377"></span><span class="hs-keyword">type</span><span> </span><span id="NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span class="hs-identifier hs-var">NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_acquire_winrt_display&quot;</span></span><span>
+</span><span id="line-378"></span><span>
+</span><span id="line-379"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-380"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span class="hs-identifier hs-type">NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680180923"><span class="annot"><a href="#local-6989586621680180923"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680180923"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680180923"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680180923"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-381"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span id="%24mNV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span id="NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span class="annot"><span class="annottext">$bNV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME :: a
+$mNV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_acquire_winrt_display.html#%24bNV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_acquire_winrt_display&quot;</span></span><span>
+</span><span id="line-382"></span><span>
+</span><span id="line-383"></span></pre></body></html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;InputSourceLocalizedNameFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.InputSourceLocalizedNameFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier">InputSourceLocalizedNameFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | XrInputSourceLocalizedNameFlags - Input source localized name flags</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- == Flag Descriptions</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.InputSourceLocalizedNameGetInfo',</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.getInputSourceLocalizedName'</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">newtype</span><span> </span><span id="InputSourceLocalizedNameFlags"><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">InputSourceLocalizedNameFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="InputSourceLocalizedNameFlags"><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">InputSourceLocalizedNameFlags</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-25"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679389876"><span id="local-6989586621679389878"><span class="annot"><span class="annottext">InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+(InputSourceLocalizedNameFlags
+ -&gt; InputSourceLocalizedNameFlags -&gt; Bool)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; Bool)
+-&gt; Eq InputSourceLocalizedNameFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+$c/= :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+== :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+$c== :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389860"><span id="local-6989586621679389862"><span id="local-6989586621679389864"><span id="local-6989586621679389866"><span id="local-6989586621679389868"><span id="local-6989586621679389870"><span id="local-6989586621679389872"><span class="annot"><span class="annottext">Eq InputSourceLocalizedNameFlags
+Eq InputSourceLocalizedNameFlags =&gt;
+(InputSourceLocalizedNameFlags
+ -&gt; InputSourceLocalizedNameFlags -&gt; Ordering)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; Bool)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; Bool)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; Bool)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; Bool)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags)
+-&gt; Ord InputSourceLocalizedNameFlags
+InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Ordering
+InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+$cmin :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+max :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+$cmax :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+&gt;= :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+$c&gt;= :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+&gt; :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+$c&gt; :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+&lt;= :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+$c&lt;= :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+&lt; :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+$c&lt; :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Bool
+compare :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Ordering
+$ccompare :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; Ordering
+$cp1Ord :: Eq InputSourceLocalizedNameFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389843"><span id="local-6989586621679389845"><span id="local-6989586621679389847"><span id="local-6989586621679389849"><span id="local-6989586621679389851"><span id="local-6989586621679389853"><span id="local-6989586621679389855"><span id="local-6989586621679389857"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO InputSourceLocalizedNameFlags
+Ptr b -&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+Ptr InputSourceLocalizedNameFlags
+-&gt; IO InputSourceLocalizedNameFlags
+Ptr InputSourceLocalizedNameFlags
+-&gt; Int -&gt; IO InputSourceLocalizedNameFlags
+Ptr InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+Ptr InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+InputSourceLocalizedNameFlags -&gt; Int
+(InputSourceLocalizedNameFlags -&gt; Int)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Int)
+-&gt; (Ptr InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; IO InputSourceLocalizedNameFlags)
+-&gt; (Ptr InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO InputSourceLocalizedNameFlags)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ())
+-&gt; (Ptr InputSourceLocalizedNameFlags
+    -&gt; IO InputSourceLocalizedNameFlags)
+-&gt; (Ptr InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; IO ())
+-&gt; Storable InputSourceLocalizedNameFlags
+forall b. Ptr b -&gt; Int -&gt; IO InputSourceLocalizedNameFlags
+forall b. Ptr b -&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+$cpoke :: Ptr InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+peek :: Ptr InputSourceLocalizedNameFlags
+-&gt; IO InputSourceLocalizedNameFlags
+$cpeek :: Ptr InputSourceLocalizedNameFlags
+-&gt; IO InputSourceLocalizedNameFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO InputSourceLocalizedNameFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO InputSourceLocalizedNameFlags
+pokeElemOff :: Ptr InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+$cpokeElemOff :: Ptr InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags -&gt; IO ()
+peekElemOff :: Ptr InputSourceLocalizedNameFlags
+-&gt; Int -&gt; IO InputSourceLocalizedNameFlags
+$cpeekElemOff :: Ptr InputSourceLocalizedNameFlags
+-&gt; Int -&gt; IO InputSourceLocalizedNameFlags
+alignment :: InputSourceLocalizedNameFlags -&gt; Int
+$calignment :: InputSourceLocalizedNameFlags -&gt; Int
+sizeOf :: InputSourceLocalizedNameFlags -&gt; Int
+$csizeOf :: InputSourceLocalizedNameFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389840"><span class="annot"><span class="annottext">InputSourceLocalizedNameFlags
+InputSourceLocalizedNameFlags -&gt; Zero InputSourceLocalizedNameFlags
+forall a. a -&gt; Zero a
+zero :: InputSourceLocalizedNameFlags
+$czero :: InputSourceLocalizedNameFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389794"><span id="local-6989586621679389796"><span id="local-6989586621679389798"><span id="local-6989586621679389800"><span id="local-6989586621679389802"><span id="local-6989586621679389804"><span id="local-6989586621679389806"><span id="local-6989586621679389808"><span id="local-6989586621679389810"><span id="local-6989586621679389812"><span id="local-6989586621679389814"><span id="local-6989586621679389816"><span id="local-6989586621679389818"><span id="local-6989586621679389820"><span id="local-6989586621679389822"><span id="local-6989586621679389824"><span id="local-6989586621679389826"><span id="local-6989586621679389828"><span id="local-6989586621679389830"><span id="local-6989586621679389832"><span id="local-6989586621679389834"><span id="local-6989586621679389836"><span class="annot"><span class="annottext">Eq InputSourceLocalizedNameFlags
+InputSourceLocalizedNameFlags
+Eq InputSourceLocalizedNameFlags =&gt;
+(InputSourceLocalizedNameFlags
+ -&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; InputSourceLocalizedNameFlags
+-&gt; (Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Int -&gt; Bool)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Maybe Int)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Int)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Bool)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags
+    -&gt; Int -&gt; InputSourceLocalizedNameFlags)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Int)
+-&gt; Bits InputSourceLocalizedNameFlags
+Int -&gt; InputSourceLocalizedNameFlags
+InputSourceLocalizedNameFlags -&gt; Bool
+InputSourceLocalizedNameFlags -&gt; Int
+InputSourceLocalizedNameFlags -&gt; Maybe Int
+InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+InputSourceLocalizedNameFlags -&gt; Int -&gt; Bool
+InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: InputSourceLocalizedNameFlags -&gt; Int
+$cpopCount :: InputSourceLocalizedNameFlags -&gt; Int
+rotateR :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$crotateR :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+rotateL :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$crotateL :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+unsafeShiftR :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$cunsafeShiftR :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+shiftR :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$cshiftR :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+unsafeShiftL :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$cunsafeShiftL :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+shiftL :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$cshiftL :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+isSigned :: InputSourceLocalizedNameFlags -&gt; Bool
+$cisSigned :: InputSourceLocalizedNameFlags -&gt; Bool
+bitSize :: InputSourceLocalizedNameFlags -&gt; Int
+$cbitSize :: InputSourceLocalizedNameFlags -&gt; Int
+bitSizeMaybe :: InputSourceLocalizedNameFlags -&gt; Maybe Int
+$cbitSizeMaybe :: InputSourceLocalizedNameFlags -&gt; Maybe Int
+testBit :: InputSourceLocalizedNameFlags -&gt; Int -&gt; Bool
+$ctestBit :: InputSourceLocalizedNameFlags -&gt; Int -&gt; Bool
+complementBit :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$ccomplementBit :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+clearBit :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$cclearBit :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+setBit :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$csetBit :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+bit :: Int -&gt; InputSourceLocalizedNameFlags
+$cbit :: Int -&gt; InputSourceLocalizedNameFlags
+zeroBits :: InputSourceLocalizedNameFlags
+$czeroBits :: InputSourceLocalizedNameFlags
+rotate :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$crotate :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+shift :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+$cshift :: InputSourceLocalizedNameFlags
+-&gt; Int -&gt; InputSourceLocalizedNameFlags
+complement :: InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+$ccomplement :: InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+xor :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+$cxor :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+.|. :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+$c.|. :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+.&amp;. :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+$c.&amp;. :: InputSourceLocalizedNameFlags
+-&gt; InputSourceLocalizedNameFlags -&gt; InputSourceLocalizedNameFlags
+$cp1Bits :: Eq InputSourceLocalizedNameFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389786"><span id="local-6989586621679389788"><span id="local-6989586621679389790"><span class="annot"><span class="annottext">Bits InputSourceLocalizedNameFlags
+Bits InputSourceLocalizedNameFlags =&gt;
+(InputSourceLocalizedNameFlags -&gt; Int)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Int)
+-&gt; (InputSourceLocalizedNameFlags -&gt; Int)
+-&gt; FiniteBits InputSourceLocalizedNameFlags
+InputSourceLocalizedNameFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: InputSourceLocalizedNameFlags -&gt; Int
+$ccountTrailingZeros :: InputSourceLocalizedNameFlags -&gt; Int
+countLeadingZeros :: InputSourceLocalizedNameFlags -&gt; Int
+$ccountLeadingZeros :: InputSourceLocalizedNameFlags -&gt; Int
+finiteBitSize :: InputSourceLocalizedNameFlags -&gt; Int
+$cfiniteBitSize :: InputSourceLocalizedNameFlags -&gt; Int
+$cp1FiniteBits :: Bits InputSourceLocalizedNameFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#conNameInputSourceLocalizedNameFlags"><span class="hs-identifier hs-type">conNameInputSourceLocalizedNameFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-30"></span><span id="conNameInputSourceLocalizedNameFlags"><span class="annot"><span class="annottext">conNameInputSourceLocalizedNameFlags :: String
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#conNameInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var hs-var">conNameInputSourceLocalizedNameFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;InputSourceLocalizedNameFlags&quot;</span></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#enumPrefixInputSourceLocalizedNameFlags"><span class="hs-identifier hs-type">enumPrefixInputSourceLocalizedNameFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-33"></span><span id="enumPrefixInputSourceLocalizedNameFlags"><span class="annot"><span class="annottext">enumPrefixInputSourceLocalizedNameFlags :: String
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#enumPrefixInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var hs-var">enumPrefixInputSourceLocalizedNameFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#showTableInputSourceLocalizedNameFlags"><span class="hs-identifier hs-type">showTableInputSourceLocalizedNameFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier hs-type">InputSourceLocalizedNameFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-36"></span><span id="showTableInputSourceLocalizedNameFlags"><span class="annot"><span class="annottext">showTableInputSourceLocalizedNameFlags :: [(InputSourceLocalizedNameFlags, String)]
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#showTableInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var hs-var">showTableInputSourceLocalizedNameFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389777"><span id="local-6989586621679389779"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier hs-type">InputSourceLocalizedNameFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621679389775"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; InputSourceLocalizedNameFlags -&gt; ShowS
+</span><a href="#local-6989586621679389775"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(InputSourceLocalizedNameFlags, String)]
+-&gt; String
+-&gt; (InputSourceLocalizedNameFlags -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; InputSourceLocalizedNameFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#enumPrefixInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">enumPrefixInputSourceLocalizedNameFlags</span></a></span><span>
+</span><span id="line-40"></span><span>                            </span><span class="annot"><span class="annottext">[(InputSourceLocalizedNameFlags, String)]
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#showTableInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">showTableInputSourceLocalizedNameFlags</span></a></span><span>
+</span><span id="line-41"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#conNameInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">conNameInputSourceLocalizedNameFlags</span></a></span><span>
+</span><span id="line-42"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier hs-type">InputSourceLocalizedNameFlags</span></a></span><span> </span><span id="local-6989586621679389774"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679389774"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679389774"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679389773"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679389773"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679389773"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389765"><span id="local-6989586621679389768"><span id="local-6989586621679389770"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier hs-type">InputSourceLocalizedNameFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-46"></span><span>  </span><span id="local-6989586621679389763"><span class="annot"><span class="annottext">readPrec :: ReadPrec InputSourceLocalizedNameFlags
+</span><a href="#local-6989586621679389763"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(InputSourceLocalizedNameFlags, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; InputSourceLocalizedNameFlags)
+-&gt; ReadPrec InputSourceLocalizedNameFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#enumPrefixInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">enumPrefixInputSourceLocalizedNameFlags</span></a></span><span>
+</span><span id="line-47"></span><span>                          </span><span class="annot"><span class="annottext">[(InputSourceLocalizedNameFlags, String)]
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#showTableInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">showTableInputSourceLocalizedNameFlags</span></a></span><span>
+</span><span id="line-48"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#conNameInputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">conNameInputSourceLocalizedNameFlags</span></a></span><span>
+</span><span id="line-49"></span><span>                          </span><span class="annot"><span class="annottext">Flags64 -&gt; InputSourceLocalizedNameFlags
+</span><a href="OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.html#InputSourceLocalizedNameFlags"><span class="hs-identifier hs-var">InputSourceLocalizedNameFlags</span></a></span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span></pre></body></html>

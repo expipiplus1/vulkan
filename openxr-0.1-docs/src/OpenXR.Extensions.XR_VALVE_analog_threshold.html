@@ -1,0 +1,589 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_VALVE_analog_threshold - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_VALVE_analog_threshold  XR_VALVE_analog_threshold&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 80</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'InteractionProfileAnalogThresholdVALVE'</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_VALVE_analog_threshold OpenXR Specification&gt;</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_VALVE_analog_threshold</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier">InteractionProfileAnalogThresholdVALVE</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_analog_threshold_SPEC_VERSION"><span class="hs-identifier">VALVE_analog_threshold_SPEC_VERSION</span></a></span><span>
+</span><span id="line-37"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_analog_threshold_SPEC_VERSION"><span class="hs-identifier">VALVE_analog_threshold_SPEC_VERSION</span></a></span><span>
+</span><span id="line-38"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span class="hs-identifier">VALVE_ANALOG_THRESHOLD_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-39"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span class="hs-identifier">VALVE_ANALOG_THRESHOLD_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-40"></span><span>                                                    </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Utils</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">maybePeek</span></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Coerce</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">coerce</span></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.Extends.html"><span class="hs-identifier">OpenXR.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.CStruct.Extends.html#withSomeChild"><span class="hs-identifier">withSomeChild</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier">Action_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Haptics.html"><span class="hs-identifier">OpenXR.Core10.Haptics</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Haptics.html#HapticBaseHeader"><span class="hs-identifier">HapticBaseHeader</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.Extends.html"><span class="hs-identifier">OpenXR.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.CStruct.Extends.html#Inheritable"><span class="hs-identifier">Inheritable</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.CStruct.Extends.html#peekSomeCChild"><span class="hs-identifier">peekSomeCChild</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.SemanticPaths.html"><span class="hs-identifier">OpenXR.Core10.SemanticPaths</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.SemanticPaths.html#Path"><span class="hs-identifier">Path</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.Extends.html"><span class="hs-identifier">OpenXR.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.CStruct.Extends.html#SomeChild"><span class="hs-identifier">SomeChild</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE"><span class="hs-identifier">TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- | XrInteractionProfileAnalogThresholdVALVE - Interaction profile dpad</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- binding</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- == Member Descriptions</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- Applications can chain an 'InteractionProfileAnalogThresholdVALVE'</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- struct on the next chain of any</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.suggestInteractionProfileBindings' call for each</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- analog to boolean conversion for which it wants to set the threshold. If</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- a threshold struct is present for a given conversion, the runtime /must/</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- use those thresholds instead of applying its own whenever it is using</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- the binding suggested by the application.</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- @onThreshold@ and @offThreshold@ permit allow the application to specify</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- that it wants hysteresis to be applied to the threshold operation. If</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- @onThreshold@ is smaller than @offThreshold@, the runtime /must/ return</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.ERROR_VALIDATION_FAILURE'.</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- @onHaptic@ and @offHaptic@ allow the application to specify that it</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- wants automatic haptic feedback to be generated when the boolean output</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- of the threshold operation changes from false to true or vice versa. If</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- these fields are not NULL, the runtime /must/ trigger a haptic output</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- with the specified characteristics. If the device has multiple haptic</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- outputs, the runtime /should/ use the haptic output that is most</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- appropriate for the specified input path.</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- If a suggested binding with @action@ and @binding@ is not in the binding</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- list for this interaction profile, the runtime /must/ return</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.ERROR_PATH_UNSUPPORTED'.</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-extension-notenabled#</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--     The @@ extension /must/ be enabled prior to using</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--     'InteractionProfileAnalogThresholdVALVE'</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-type-type# @type@</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--     /must/ be</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE'</span><span>
+</span><span id="line-114"></span><span class="hs-comment">--</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-next-next# @next@</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--     /must/ be @NULL@ or a valid pointer to the</span><span>
+</span><span id="line-117"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-action-parameter#</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--     @action@ /must/ be a valid 'OpenXR.Core10.Handles.Action' handle</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-onHaptic-parameter#</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--     If @onHaptic@ is not @NULL@, @onHaptic@ /must/ be a pointer to a</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--     valid 'OpenXR.Core10.Haptics.HapticBaseHeader'-based structure. See</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--     also: 'OpenXR.Core10.OtherTypes.HapticVibration'</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-offHaptic-parameter#</span><span>
+</span><span id="line-128"></span><span class="hs-comment">--     If @offHaptic@ is not @NULL@, @offHaptic@ /must/ be a pointer to a</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--     valid 'OpenXR.Core10.Haptics.HapticBaseHeader'-based structure. See</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--     also: 'OpenXR.Core10.OtherTypes.HapticVibration'</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-133"></span><span class="hs-comment">--</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- 'OpenXR.Core10.Handles.Action',</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- 'OpenXR.Core10.Haptics.HapticBaseHeader',</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrPath &gt;,</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">data</span><span> </span><span id="InteractionProfileAnalogThresholdVALVE"><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var">InteractionProfileAnalogThresholdVALVE</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="InteractionProfileAnalogThresholdVALVE"><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var">InteractionProfileAnalogThresholdVALVE</span></a></span></span><span>
+</span><span id="line-139"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @action@ is the handle of an action in the suggested binding list.</span><span>
+</span><span id="line-140"></span><span>    </span><span id="%24sel%3Aaction%3AInteractionProfileAnalogThresholdVALVE"><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE -&gt; Ptr Action_T
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24sel%3Aaction%3AInteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier hs-type">Action_T</span></a></span><span>
+</span><span id="line-141"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @binding@ is the input path used for the specified action in the</span><span>
+</span><span id="line-142"></span><span>    </span><span class="hs-comment">-- suggested binding list.</span><span>
+</span><span id="line-143"></span><span>    </span><span id="%24sel%3Abinding%3AInteractionProfileAnalogThresholdVALVE"><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE -&gt; Path
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24sel%3Abinding%3AInteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var hs-var">binding</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.SemanticPaths.html#Path"><span class="hs-identifier hs-type">Path</span></a></span><span>
+</span><span id="line-144"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @onThreshold@ is the value between 0.0 and 1.0 at which the runtime</span><span>
+</span><span id="line-145"></span><span>    </span><span class="hs-comment">-- /must/ consider the binding to be true. The binding must remain true</span><span>
+</span><span id="line-146"></span><span>    </span><span class="hs-comment">-- until the input analog value falls below @offThreshold@.</span><span>
+</span><span id="line-147"></span><span>    </span><span id="%24sel%3AonThreshold%3AInteractionProfileAnalogThresholdVALVE"><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE -&gt; Float
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24sel%3AonThreshold%3AInteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var hs-var">onThreshold</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span>
+</span><span id="line-148"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @offThreshold@ is the value between 0.0 and 1.0 at which the runtime</span><span>
+</span><span id="line-149"></span><span>    </span><span class="hs-comment">-- /must/ consider the binding to be false if it was previous true.</span><span>
+</span><span id="line-150"></span><span>    </span><span id="%24sel%3AoffThreshold%3AInteractionProfileAnalogThresholdVALVE"><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE -&gt; Float
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24sel%3AoffThreshold%3AInteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var hs-var">offThreshold</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span>
+</span><span id="line-151"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @onHaptic@ is the haptic output that the runtime /must/ trigger when the</span><span>
+</span><span id="line-152"></span><span>    </span><span class="hs-comment">-- binding changes from false to true. If this field is NULL, the runtime</span><span>
+</span><span id="line-153"></span><span>    </span><span class="hs-comment">-- /must/ not trigger any haptic output on the threshold. This field /can/</span><span>
+</span><span id="line-154"></span><span>    </span><span class="hs-comment">-- point to any supported sub-type of</span><span>
+</span><span id="line-155"></span><span>    </span><span class="hs-comment">-- 'OpenXR.Core10.Haptics.HapticBaseHeader'.</span><span>
+</span><span id="line-156"></span><span>    </span><span id="%24sel%3AonHaptic%3AInteractionProfileAnalogThresholdVALVE"><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE
+-&gt; Maybe (SomeChild HapticBaseHeader)
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24sel%3AonHaptic%3AInteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var hs-var">onHaptic</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.CStruct.Extends.html#SomeChild"><span class="hs-identifier hs-type">SomeChild</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Haptics.html#HapticBaseHeader"><span class="hs-identifier hs-type">HapticBaseHeader</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @offHaptic@ is the haptic output that the runtime /must/ trigger when</span><span>
+</span><span id="line-158"></span><span>    </span><span class="hs-comment">-- the binding changes from true to false. If this field is NULL, the</span><span>
+</span><span id="line-159"></span><span>    </span><span class="hs-comment">-- runtime /must/ not trigger any haptic output on the threshold. This</span><span>
+</span><span id="line-160"></span><span>    </span><span class="hs-comment">-- field /can/ point to any supported sub-type of</span><span>
+</span><span id="line-161"></span><span>    </span><span class="hs-comment">-- 'OpenXR.Core10.Haptics.HapticBaseHeader'.</span><span>
+</span><span id="line-162"></span><span>    </span><span id="%24sel%3AoffHaptic%3AInteractionProfileAnalogThresholdVALVE"><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE
+-&gt; Maybe (SomeChild HapticBaseHeader)
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24sel%3AoffHaptic%3AInteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var hs-var">offHaptic</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.CStruct.Extends.html#SomeChild"><span class="hs-identifier hs-type">SomeChild</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Haptics.html#HapticBaseHeader"><span class="hs-identifier hs-type">HapticBaseHeader</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-164"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">InteractionProfileAnalogThresholdVALVE</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679401788"><span id="local-6989586621679401790"><span id="local-6989586621679401792"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-type">InteractionProfileAnalogThresholdVALVE</span></a></span></span></span></span><span>
+</span><span id="line-169"></span><span>
+</span><span id="line-170"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679401783"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-type">InteractionProfileAnalogThresholdVALVE</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-171"></span><span>  </span><span id="local-6989586621679401778"><span class="annot"><span class="annottext">withCStruct :: InteractionProfileAnalogThresholdVALVE
+-&gt; (Ptr InteractionProfileAnalogThresholdVALVE -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></span></span><span> </span><span id="local-6989586621679401776"><span class="annot"><span class="annottext">x :: InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401776"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679401775"><span class="annot"><span class="annottext">f :: Ptr InteractionProfileAnalogThresholdVALVE -&gt; IO b
+</span><a href="#local-6989586621679401775"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr InteractionProfileAnalogThresholdVALVE -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">56</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr InteractionProfileAnalogThresholdVALVE -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr InteractionProfileAnalogThresholdVALVE -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679401774"><span class="annot"><span class="annottext">p :: Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401774"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; InteractionProfileAnalogThresholdVALVE -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401774"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401776"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; IO b
+</span><a href="#local-6989586621679401775"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401774"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-172"></span><span>  </span><span id="local-6989586621679401772"><span class="annot"><span class="annottext">pokeCStruct :: Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; InteractionProfileAnalogThresholdVALVE -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679401772"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679401771"><span class="annot"><span class="annottext">p :: Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679401765"><span id="local-6989586621679401766"><span id="local-6989586621679401767"><span id="local-6989586621679401768"><span id="local-6989586621679401769"><span id="local-6989586621679401770"><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-type">InteractionProfileAnalogThresholdVALVE</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span></span></span></span><span> </span><span id="local-6989586621679401764"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679401764"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-173"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE"><span class="hs-identifier hs-var">TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-174"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-175"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr Action_T) -&gt; Ptr Action_T -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; Int -&gt; Ptr (Ptr Action_T)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier hs-type">Action_T</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Action_T
+</span><a href="#local-6989586621679401770"><span class="hs-identifier hs-var">action</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-176"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Path -&gt; Path -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr Path
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.SemanticPaths.html#Path"><span class="hs-identifier hs-type">Path</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679401769"><span class="hs-identifier hs-var">binding</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-177"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; CFloat -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float -&gt; CFloat
+</span><span class="hs-identifier hs-var">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float
+</span><a href="#local-6989586621679401768"><span class="hs-identifier hs-var">onThreshold</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; CFloat -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">36</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float -&gt; CFloat
+</span><span class="hs-identifier hs-var">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float
+</span><a href="#local-6989586621679401767"><span class="hs-identifier hs-var">offThreshold</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-179"></span><span>    </span><span id="local-6989586621679401763"><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401763"><span class="hs-identifier hs-var">onHaptic''</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401766"><span class="hs-identifier hs-var">onHaptic</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-180"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+-&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader))
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span>
+</span><span id="line-181"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679401762"><span class="annot"><span class="annottext">j :: SomeChild HapticBaseHeader
+</span><a href="#local-6989586621679401762"><span class="hs-identifier hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">((Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b)
+ -&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader)))
+-&gt; ((Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">SomeChild HapticBaseHeader
+-&gt; (Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b
+forall a b. SomeChild a -&gt; (Ptr (SomeChild a) -&gt; IO b) -&gt; IO b
+</span><a href="OpenXR.CStruct.Extends.html#withSomeChild"><span class="hs-identifier hs-var">withSomeChild</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SomeChild HapticBaseHeader
+</span><a href="#local-6989586621679401762"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-182"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr (SomeChild HapticBaseHeader))
+-&gt; Ptr (SomeChild HapticBaseHeader) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr (Ptr _)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">40</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401763"><span class="hs-identifier hs-var">onHaptic''</span></a></span><span>
+</span><span id="line-183"></span><span>    </span><span id="local-6989586621679401760"><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401760"><span class="hs-identifier hs-var">offHaptic''</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401765"><span class="hs-identifier hs-var">offHaptic</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-184"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+-&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader))
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span>
+</span><span id="line-185"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679401759"><span class="annot"><span class="annottext">j :: SomeChild HapticBaseHeader
+</span><a href="#local-6989586621679401759"><span class="hs-identifier hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">((Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b)
+ -&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader)))
+-&gt; ((Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr (SomeChild HapticBaseHeader))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">SomeChild HapticBaseHeader
+-&gt; (Ptr (SomeChild HapticBaseHeader) -&gt; IO b) -&gt; IO b
+forall a b. SomeChild a -&gt; (Ptr (SomeChild a) -&gt; IO b) -&gt; IO b
+</span><a href="OpenXR.CStruct.Extends.html#withSomeChild"><span class="hs-identifier hs-var">withSomeChild</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SomeChild HapticBaseHeader
+</span><a href="#local-6989586621679401759"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-186"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr (SomeChild HapticBaseHeader))
+-&gt; Ptr (SomeChild HapticBaseHeader) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401771"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr (Ptr _)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">48</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401760"><span class="hs-identifier hs-var">offHaptic''</span></a></span><span>
+</span><span id="line-187"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679401764"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-188"></span><span>  </span><span id="local-6989586621679401758"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">56</span></span><span>
+</span><span id="line-189"></span><span>  </span><span id="local-6989586621679401756"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-190"></span><span>  </span><span id="local-6989586621679401754"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr InteractionProfileAnalogThresholdVALVE -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></span></span><span> </span><span id="local-6989586621679401752"><span class="annot"><span class="annottext">p :: Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401752"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679401751"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679401751"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-191"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401752"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE"><span class="hs-identifier hs-var">TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-192"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401752"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-193"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr Action_T) -&gt; Ptr Action_T -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401752"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; Int -&gt; Ptr (Ptr Action_T)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier hs-type">Action_T</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Action_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span>    </span><span class="annot"><span class="annottext">Ptr Path -&gt; Path -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401752"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr Path
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.SemanticPaths.html#Path"><span class="hs-identifier hs-type">Path</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-195"></span><span>    </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; CFloat -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401752"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float -&gt; CFloat
+</span><span class="hs-identifier hs-var">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-196"></span><span>    </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; CFloat -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401752"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">36</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float -&gt; CFloat
+</span><span class="hs-identifier hs-var">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-197"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679401751"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-198"></span><span>
+</span><span id="line-199"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-type">InteractionProfileAnalogThresholdVALVE</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-200"></span><span>  </span><span id="local-6989586621679401747"><span class="annot"><span class="annottext">peekCStruct :: Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; IO InteractionProfileAnalogThresholdVALVE
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></span></span><span> </span><span id="local-6989586621679401745"><span class="annot"><span class="annottext">p :: Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401745"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-201"></span><span>    </span><span id="local-6989586621679401744"><span class="annot"><span class="annottext">Ptr Action_T
+</span><a href="#local-6989586621679401744"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr Action_T) -&gt; IO (Ptr Action_T)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier hs-type">Action_T</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+-&gt; Int -&gt; Ptr (Ptr Action_T)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier hs-type">Action_T</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-202"></span><span>    </span><span id="local-6989586621679401743"><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679401743"><span class="hs-identifier hs-var">binding</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Path -&gt; IO Path
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Core10.SemanticPaths.html#Path"><span class="hs-identifier hs-type">Path</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr Path
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.SemanticPaths.html#Path"><span class="hs-identifier hs-type">Path</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-203"></span><span>    </span><span id="local-6989586621679401742"><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679401742"><span class="hs-identifier hs-var">onThreshold</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; IO CFloat
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-204"></span><span>    </span><span id="local-6989586621679401741"><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679401741"><span class="hs-identifier hs-var">offThreshold</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; IO CFloat
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">36</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span>    </span><span id="local-6989586621679401740"><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401740"><span class="hs-identifier hs-var">onHaptic</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr (SomeChild HapticBaseHeader))
+-&gt; IO (Ptr (SomeChild HapticBaseHeader))
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr (Ptr _)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">40</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-206"></span><span>    </span><span id="local-6989586621679401739"><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401739"><span class="hs-identifier hs-var">onHaptic'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Ptr (SomeChild HapticBaseHeader)
+ -&gt; IO (SomeChild HapticBaseHeader))
+-&gt; Ptr (SomeChild HapticBaseHeader)
+-&gt; IO (Maybe (SomeChild HapticBaseHeader))
+forall a b. (Ptr a -&gt; IO b) -&gt; Ptr a -&gt; IO (Maybe b)
+</span><span class="hs-identifier hs-var">maybePeek</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679401738"><span class="annot"><span class="annottext">j :: Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401738"><span class="hs-identifier hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader) -&gt; IO (SomeChild HapticBaseHeader)
+forall a. Inheritable a =&gt; Ptr (SomeChild a) -&gt; IO (SomeChild a)
+</span><a href="OpenXR.CStruct.Extends.html#peekSomeCChild"><span class="hs-identifier hs-var">peekSomeCChild</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401738"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401740"><span class="hs-identifier hs-var">onHaptic</span></a></span><span>
+</span><span id="line-207"></span><span>    </span><span id="local-6989586621679401737"><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401737"><span class="hs-identifier hs-var">offHaptic</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr (SomeChild HapticBaseHeader))
+-&gt; IO (Ptr (SomeChild HapticBaseHeader))
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr InteractionProfileAnalogThresholdVALVE -&gt; Int -&gt; Ptr (Ptr _)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">48</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span>    </span><span id="local-6989586621679401736"><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401736"><span class="hs-identifier hs-var">offHaptic'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Ptr (SomeChild HapticBaseHeader)
+ -&gt; IO (SomeChild HapticBaseHeader))
+-&gt; Ptr (SomeChild HapticBaseHeader)
+-&gt; IO (Maybe (SomeChild HapticBaseHeader))
+forall a b. (Ptr a -&gt; IO b) -&gt; Ptr a -&gt; IO (Maybe b)
+</span><span class="hs-identifier hs-var">maybePeek</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679401735"><span class="annot"><span class="annottext">j :: Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401735"><span class="hs-identifier hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader) -&gt; IO (SomeChild HapticBaseHeader)
+forall a. Inheritable a =&gt; Ptr (SomeChild a) -&gt; IO (SomeChild a)
+</span><a href="OpenXR.CStruct.Extends.html#peekSomeCChild"><span class="hs-identifier hs-var">peekSomeCChild</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401735"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401737"><span class="hs-identifier hs-var">offHaptic</span></a></span><span>
+</span><span id="line-209"></span><span>    </span><span class="annot"><span class="annottext">InteractionProfileAnalogThresholdVALVE
+-&gt; IO InteractionProfileAnalogThresholdVALVE
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(InteractionProfileAnalogThresholdVALVE
+ -&gt; IO InteractionProfileAnalogThresholdVALVE)
+-&gt; InteractionProfileAnalogThresholdVALVE
+-&gt; IO InteractionProfileAnalogThresholdVALVE
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Action_T
+-&gt; Path
+-&gt; Float
+-&gt; Float
+-&gt; Maybe (SomeChild HapticBaseHeader)
+-&gt; Maybe (SomeChild HapticBaseHeader)
+-&gt; InteractionProfileAnalogThresholdVALVE
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var">InteractionProfileAnalogThresholdVALVE</span></a></span><span>
+</span><span id="line-210"></span><span>             </span><span class="annot"><span class="annottext">Ptr Action_T
+</span><a href="#local-6989586621679401744"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679401743"><span class="hs-identifier hs-var">binding</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CFloat -&gt; Float
+forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">coerce</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span> </span><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679401742"><span class="hs-identifier hs-var">onThreshold</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CFloat -&gt; Float
+forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">coerce</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span> </span><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621679401741"><span class="hs-identifier hs-var">offThreshold</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401739"><span class="hs-identifier hs-var">onHaptic'</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+</span><a href="#local-6989586621679401736"><span class="hs-identifier hs-var">offHaptic'</span></a></span><span>
+</span><span id="line-211"></span><span>
+</span><span id="line-212"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-type">InteractionProfileAnalogThresholdVALVE</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-213"></span><span>  </span><span id="local-6989586621679401732"><span class="annot"><span class="annottext">zero :: InteractionProfileAnalogThresholdVALVE
+</span><a href="#local-6989586621679401732"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr Action_T
+-&gt; Path
+-&gt; Float
+-&gt; Float
+-&gt; Maybe (SomeChild HapticBaseHeader)
+-&gt; Maybe (SomeChild HapticBaseHeader)
+-&gt; InteractionProfileAnalogThresholdVALVE
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#InteractionProfileAnalogThresholdVALVE"><span class="hs-identifier hs-var">InteractionProfileAnalogThresholdVALVE</span></a></span><span>
+</span><span id="line-214"></span><span>           </span><span class="annot"><span class="annottext">Ptr Action_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-215"></span><span>           </span><span class="annot"><span class="annottext">Path
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-216"></span><span>           </span><span class="annot"><span class="annottext">Float
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-217"></span><span>           </span><span class="annot"><span class="annottext">Float
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-218"></span><span>           </span><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-219"></span><span>           </span><span class="annot"><span class="annottext">Maybe (SomeChild HapticBaseHeader)
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-220"></span><span>
+</span><span id="line-221"></span><span>
+</span><span id="line-222"></span><span class="hs-keyword">type</span><span> </span><span id="VALVE_analog_threshold_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_analog_threshold_SPEC_VERSION"><span class="hs-identifier hs-var">VALVE_analog_threshold_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-223"></span><span>
+</span><span id="line-224"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_VALVE_analog_threshold_SPEC_VERSION&quot;</span><span>
+</span><span id="line-225"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_analog_threshold_SPEC_VERSION"><span class="hs-identifier hs-type">VALVE_analog_threshold_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679401823"><span class="annot"><a href="#local-6989586621679401823"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679401823"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679401823"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-226"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVALVE_analog_threshold_SPEC_VERSION"><span id="%24mVALVE_analog_threshold_SPEC_VERSION"><span id="VALVE_analog_threshold_SPEC_VERSION"><span class="annot"><span class="annottext">$bVALVE_analog_threshold_SPEC_VERSION :: a
+$mVALVE_analog_threshold_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24bVALVE_analog_threshold_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">VALVE_analog_threshold_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-227"></span><span>
+</span><span id="line-228"></span><span>
+</span><span id="line-229"></span><span class="hs-keyword">type</span><span> </span><span id="VALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span class="hs-identifier hs-var">VALVE_ANALOG_THRESHOLD_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_VALVE_analog_threshold&quot;</span></span><span>
+</span><span id="line-230"></span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_VALVE_ANALOG_THRESHOLD_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-232"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#VALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span class="hs-identifier hs-type">VALVE_ANALOG_THRESHOLD_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679401819"><span class="annot"><a href="#local-6989586621679401819"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679401819"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679401819"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679401819"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-233"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span id="%24mVALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span id="VALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span class="annot"><span class="annottext">$bVALVE_ANALOG_THRESHOLD_EXTENSION_NAME :: a
+$mVALVE_ANALOG_THRESHOLD_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_VALVE_analog_threshold.html#%24bVALVE_ANALOG_THRESHOLD_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">VALVE_ANALOG_THRESHOLD_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_VALVE_analog_threshold&quot;</span></span><span>
+</span><span id="line-234"></span><span>
+</span><span id="line-235"></span></pre></body></html>

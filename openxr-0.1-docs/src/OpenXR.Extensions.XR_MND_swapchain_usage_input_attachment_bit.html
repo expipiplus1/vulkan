@@ -1,0 +1,452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_MND_swapchain_usage_input_attachment_bit - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_MND_swapchain_usage_input_attachment_bit  XR_MND_swapchain_usage_input_attachment_bit&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 97</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 2</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- No cross-references are available</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_MND_swapchain_usage_input_attachment_bit OpenXR Specification&gt;</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier">SwapchainUsageFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT"><span class="hs-identifier">SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT</span></a></span><span>
+</span><span id="line-36"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"><span class="hs-identifier">SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT</span></a></span><span>
+</span><span id="line-37"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT"><span class="hs-identifier">SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT</span></a></span><span>
+</span><span id="line-38"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_TRANSFER_SRC_BIT"><span class="hs-identifier">SWAPCHAIN_USAGE_TRANSFER_SRC_BIT</span></a></span><span>
+</span><span id="line-39"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_TRANSFER_DST_BIT"><span class="hs-identifier">SWAPCHAIN_USAGE_TRANSFER_DST_BIT</span></a></span><span>
+</span><span id="line-40"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_SAMPLED_BIT"><span class="hs-identifier">SWAPCHAIN_USAGE_SAMPLED_BIT</span></a></span><span>
+</span><span id="line-41"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT"><span class="hs-identifier">SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT</span></a></span><span>
+</span><span id="line-42"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND"><span class="hs-identifier">SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND</span></a></span><span>
+</span><span id="line-43"></span><span>                                                                                              </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-44"></span><span>                                                                                              </span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span class="hs-identifier">MND_swapchain_usage_input_attachment_bit_SPEC_VERSION</span></a></span><span>
+</span><span id="line-46"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span class="hs-identifier">MND_swapchain_usage_input_attachment_bit_SPEC_VERSION</span></a></span><span>
+</span><span id="line-47"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span class="hs-identifier">MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-48"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span class="hs-identifier">MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-49"></span><span>                                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XrSwapchainUsageFlagBits&quot;</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">newtype</span><span> </span><span id="SwapchainUsageFlagBits"><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-var">SwapchainUsageFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SwapchainUsageFlagBits"><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-var">SwapchainUsageFlagBits</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-65"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679386544"><span id="local-6989586621679386546"><span class="annot"><span class="annottext">SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+(SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool)
+-&gt; (SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool)
+-&gt; Eq SwapchainUsageFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+$c/= :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+== :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+$c== :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386528"><span id="local-6989586621679386530"><span id="local-6989586621679386532"><span id="local-6989586621679386534"><span id="local-6989586621679386536"><span id="local-6989586621679386538"><span id="local-6989586621679386540"><span class="annot"><span class="annottext">Eq SwapchainUsageFlagBits
+Eq SwapchainUsageFlagBits =&gt;
+(SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Ordering)
+-&gt; (SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool)
+-&gt; (SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool)
+-&gt; (SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool)
+-&gt; (SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool)
+-&gt; (SwapchainUsageFlagBits
+    -&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits
+    -&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits)
+-&gt; Ord SwapchainUsageFlagBits
+SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Ordering
+SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+$cmin :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+max :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+$cmax :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+&gt;= :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+$c&gt;= :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+&gt; :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+$c&gt; :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+&lt;= :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+$c&lt;= :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+&lt; :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+$c&lt; :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Bool
+compare :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Ordering
+$ccompare :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; Ordering
+$cp1Ord :: Eq SwapchainUsageFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386511"><span id="local-6989586621679386513"><span id="local-6989586621679386515"><span id="local-6989586621679386517"><span id="local-6989586621679386519"><span id="local-6989586621679386521"><span id="local-6989586621679386523"><span id="local-6989586621679386525"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SwapchainUsageFlagBits
+Ptr b -&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ()
+Ptr SwapchainUsageFlagBits -&gt; IO SwapchainUsageFlagBits
+Ptr SwapchainUsageFlagBits -&gt; Int -&gt; IO SwapchainUsageFlagBits
+Ptr SwapchainUsageFlagBits
+-&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ()
+Ptr SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; IO ()
+SwapchainUsageFlagBits -&gt; Int
+(SwapchainUsageFlagBits -&gt; Int)
+-&gt; (SwapchainUsageFlagBits -&gt; Int)
+-&gt; (Ptr SwapchainUsageFlagBits -&gt; Int -&gt; IO SwapchainUsageFlagBits)
+-&gt; (Ptr SwapchainUsageFlagBits
+    -&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SwapchainUsageFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ())
+-&gt; (Ptr SwapchainUsageFlagBits -&gt; IO SwapchainUsageFlagBits)
+-&gt; (Ptr SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; IO ())
+-&gt; Storable SwapchainUsageFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO SwapchainUsageFlagBits
+forall b. Ptr b -&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; IO ()
+$cpoke :: Ptr SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits -&gt; IO ()
+peek :: Ptr SwapchainUsageFlagBits -&gt; IO SwapchainUsageFlagBits
+$cpeek :: Ptr SwapchainUsageFlagBits -&gt; IO SwapchainUsageFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SwapchainUsageFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SwapchainUsageFlagBits
+pokeElemOff :: Ptr SwapchainUsageFlagBits
+-&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr SwapchainUsageFlagBits
+-&gt; Int -&gt; SwapchainUsageFlagBits -&gt; IO ()
+peekElemOff :: Ptr SwapchainUsageFlagBits -&gt; Int -&gt; IO SwapchainUsageFlagBits
+$cpeekElemOff :: Ptr SwapchainUsageFlagBits -&gt; Int -&gt; IO SwapchainUsageFlagBits
+alignment :: SwapchainUsageFlagBits -&gt; Int
+$calignment :: SwapchainUsageFlagBits -&gt; Int
+sizeOf :: SwapchainUsageFlagBits -&gt; Int
+$csizeOf :: SwapchainUsageFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386508"><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+SwapchainUsageFlagBits -&gt; Zero SwapchainUsageFlagBits
+forall a. a -&gt; Zero a
+zero :: SwapchainUsageFlagBits
+$czero :: SwapchainUsageFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386462"><span id="local-6989586621679386464"><span id="local-6989586621679386466"><span id="local-6989586621679386468"><span id="local-6989586621679386470"><span id="local-6989586621679386472"><span id="local-6989586621679386474"><span id="local-6989586621679386476"><span id="local-6989586621679386478"><span id="local-6989586621679386480"><span id="local-6989586621679386482"><span id="local-6989586621679386484"><span id="local-6989586621679386486"><span id="local-6989586621679386488"><span id="local-6989586621679386490"><span id="local-6989586621679386492"><span id="local-6989586621679386494"><span id="local-6989586621679386496"><span id="local-6989586621679386498"><span id="local-6989586621679386500"><span id="local-6989586621679386502"><span id="local-6989586621679386504"><span class="annot"><span class="annottext">Eq SwapchainUsageFlagBits
+SwapchainUsageFlagBits
+Eq SwapchainUsageFlagBits =&gt;
+(SwapchainUsageFlagBits
+ -&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits
+    -&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits
+    -&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; SwapchainUsageFlagBits
+-&gt; (Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; Bool)
+-&gt; (SwapchainUsageFlagBits -&gt; Maybe Int)
+-&gt; (SwapchainUsageFlagBits -&gt; Int)
+-&gt; (SwapchainUsageFlagBits -&gt; Bool)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits)
+-&gt; (SwapchainUsageFlagBits -&gt; Int)
+-&gt; Bits SwapchainUsageFlagBits
+Int -&gt; SwapchainUsageFlagBits
+SwapchainUsageFlagBits -&gt; Bool
+SwapchainUsageFlagBits -&gt; Int
+SwapchainUsageFlagBits -&gt; Maybe Int
+SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+SwapchainUsageFlagBits -&gt; Int -&gt; Bool
+SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SwapchainUsageFlagBits -&gt; Int
+$cpopCount :: SwapchainUsageFlagBits -&gt; Int
+rotateR :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$crotateR :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+rotateL :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$crotateL :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+unsafeShiftR :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$cunsafeShiftR :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+shiftR :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$cshiftR :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+unsafeShiftL :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$cunsafeShiftL :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+shiftL :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$cshiftL :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+isSigned :: SwapchainUsageFlagBits -&gt; Bool
+$cisSigned :: SwapchainUsageFlagBits -&gt; Bool
+bitSize :: SwapchainUsageFlagBits -&gt; Int
+$cbitSize :: SwapchainUsageFlagBits -&gt; Int
+bitSizeMaybe :: SwapchainUsageFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: SwapchainUsageFlagBits -&gt; Maybe Int
+testBit :: SwapchainUsageFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: SwapchainUsageFlagBits -&gt; Int -&gt; Bool
+complementBit :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$ccomplementBit :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+clearBit :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$cclearBit :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+setBit :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$csetBit :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+bit :: Int -&gt; SwapchainUsageFlagBits
+$cbit :: Int -&gt; SwapchainUsageFlagBits
+zeroBits :: SwapchainUsageFlagBits
+$czeroBits :: SwapchainUsageFlagBits
+rotate :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$crotate :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+shift :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+$cshift :: SwapchainUsageFlagBits -&gt; Int -&gt; SwapchainUsageFlagBits
+complement :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+$ccomplement :: SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+xor :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+$cxor :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+.|. :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+$c.|. :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+.&amp;. :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+$c.&amp;. :: SwapchainUsageFlagBits
+-&gt; SwapchainUsageFlagBits -&gt; SwapchainUsageFlagBits
+$cp1Bits :: Eq SwapchainUsageFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386454"><span id="local-6989586621679386456"><span id="local-6989586621679386458"><span class="annot"><span class="annottext">Bits SwapchainUsageFlagBits
+Bits SwapchainUsageFlagBits =&gt;
+(SwapchainUsageFlagBits -&gt; Int)
+-&gt; (SwapchainUsageFlagBits -&gt; Int)
+-&gt; (SwapchainUsageFlagBits -&gt; Int)
+-&gt; FiniteBits SwapchainUsageFlagBits
+SwapchainUsageFlagBits -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: SwapchainUsageFlagBits -&gt; Int
+$ccountTrailingZeros :: SwapchainUsageFlagBits -&gt; Int
+countLeadingZeros :: SwapchainUsageFlagBits -&gt; Int
+$ccountLeadingZeros :: SwapchainUsageFlagBits -&gt; Int
+finiteBitSize :: SwapchainUsageFlagBits -&gt; Int
+$cfiniteBitSize :: SwapchainUsageFlagBits -&gt; Int
+$cp1FiniteBits :: Bits SwapchainUsageFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT&quot;</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT"><span id="%24mSWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT"><span id="SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT</span></a></span></span></span></span><span>         </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT&quot;</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"><span id="%24mSWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"><span id="SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT&quot;</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT"><span id="%24mSWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT"><span id="SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT</span></a></span></span></span></span><span>         </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000004</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT&quot;</span><span>
+</span><span id="line-74"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_TRANSFER_SRC_BIT"><span id="%24mSWAPCHAIN_USAGE_TRANSFER_SRC_BIT"><span id="SWAPCHAIN_USAGE_TRANSFER_SRC_BIT"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_TRANSFER_SRC_BIT :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_TRANSFER_SRC_BIT :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_TRANSFER_SRC_BIT"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_TRANSFER_SRC_BIT</span></a></span></span></span></span><span>             </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000008</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT&quot;</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_TRANSFER_DST_BIT"><span id="%24mSWAPCHAIN_USAGE_TRANSFER_DST_BIT"><span id="SWAPCHAIN_USAGE_TRANSFER_DST_BIT"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_TRANSFER_DST_BIT :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_TRANSFER_DST_BIT :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_TRANSFER_DST_BIT"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_TRANSFER_DST_BIT</span></a></span></span></span></span><span>             </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000010</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_SAMPLED_BIT&quot;</span><span>
+</span><span id="line-78"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_SAMPLED_BIT"><span id="%24mSWAPCHAIN_USAGE_SAMPLED_BIT"><span id="SWAPCHAIN_USAGE_SAMPLED_BIT"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_SAMPLED_BIT :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_SAMPLED_BIT :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_SAMPLED_BIT"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_SAMPLED_BIT</span></a></span></span></span></span><span>                  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000020</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT&quot;</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT"><span id="%24mSWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT"><span id="SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT</span></a></span></span></span></span><span>           </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000040</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrSwapchainUsageFlagBits&quot; &quot;XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND&quot;</span><span>
+</span><span id="line-82"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND"><span id="%24mSWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND"><span id="SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND"><span class="annot"><span class="annottext">$bSWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND :: SwapchainUsageFlagBits
+$mSWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND :: forall r.
+SwapchainUsageFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bSWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND"><span class="hs-identifier hs-var hs-var hs-var">SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND</span></a></span></span></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-number">0x00000080</span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#conNameSwapchainUsageFlagBits"><span class="hs-identifier hs-type">conNameSwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-85"></span><span id="conNameSwapchainUsageFlagBits"><span class="annot"><span class="annottext">conNameSwapchainUsageFlagBits :: String
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#conNameSwapchainUsageFlagBits"><span class="hs-identifier hs-var hs-var">conNameSwapchainUsageFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SwapchainUsageFlagBits&quot;</span></span><span>
+</span><span id="line-86"></span><span>
+</span><span id="line-87"></span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#enumPrefixSwapchainUsageFlagBits"><span class="hs-identifier hs-type">enumPrefixSwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-88"></span><span id="enumPrefixSwapchainUsageFlagBits"><span class="annot"><span class="annottext">enumPrefixSwapchainUsageFlagBits :: String
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#enumPrefixSwapchainUsageFlagBits"><span class="hs-identifier hs-var hs-var">enumPrefixSwapchainUsageFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SWAPCHAIN_USAGE_&quot;</span></span><span>
+</span><span id="line-89"></span><span>
+</span><span id="line-90"></span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#showTableSwapchainUsageFlagBits"><span class="hs-identifier hs-type">showTableSwapchainUsageFlagBits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-91"></span><span id="showTableSwapchainUsageFlagBits"><span class="annot"><span class="annottext">showTableSwapchainUsageFlagBits :: [(SwapchainUsageFlagBits, String)]
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#showTableSwapchainUsageFlagBits"><span class="hs-identifier hs-var hs-var">showTableSwapchainUsageFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-92"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT</span></a></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;COLOR_ATTACHMENT_BIT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;DEPTH_STENCIL_ATTACHMENT_BIT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT</span></a></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UNORDERED_ACCESS_BIT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_TRANSFER_SRC_BIT"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_TRANSFER_SRC_BIT</span></a></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;TRANSFER_SRC_BIT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_TRANSFER_DST_BIT"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_TRANSFER_DST_BIT</span></a></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;TRANSFER_DST_BIT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_SAMPLED_BIT"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_SAMPLED_BIT</span></a></span><span>                 </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SAMPLED_BIT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT</span></a></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;MUTABLE_FORMAT_BIT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND"><span class="hs-identifier hs-var">SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND</span></a></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;INPUT_ATTACHMENT_BIT_MND&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386429"><span id="local-6989586621679386431"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-103"></span><span>  </span><span id="local-6989586621679386427"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SwapchainUsageFlagBits -&gt; ShowS
+</span><a href="#local-6989586621679386427"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SwapchainUsageFlagBits, String)]
+-&gt; String
+-&gt; (SwapchainUsageFlagBits -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; SwapchainUsageFlagBits
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#enumPrefixSwapchainUsageFlagBits"><span class="hs-identifier hs-var">enumPrefixSwapchainUsageFlagBits</span></a></span><span>
+</span><span id="line-104"></span><span>                            </span><span class="annot"><span class="annottext">[(SwapchainUsageFlagBits, String)]
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#showTableSwapchainUsageFlagBits"><span class="hs-identifier hs-var">showTableSwapchainUsageFlagBits</span></a></span><span>
+</span><span id="line-105"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#conNameSwapchainUsageFlagBits"><span class="hs-identifier hs-var">conNameSwapchainUsageFlagBits</span></a></span><span>
+</span><span id="line-106"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span><span> </span><span id="local-6989586621679386426"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679386426"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679386426"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679386425"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679386425"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679386425"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span>
+</span><span id="line-109"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386417"><span id="local-6989586621679386420"><span id="local-6989586621679386422"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-type">SwapchainUsageFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-110"></span><span>  </span><span id="local-6989586621679386415"><span class="annot"><span class="annottext">readPrec :: ReadPrec SwapchainUsageFlagBits
+</span><a href="#local-6989586621679386415"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SwapchainUsageFlagBits, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; SwapchainUsageFlagBits)
+-&gt; ReadPrec SwapchainUsageFlagBits
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#enumPrefixSwapchainUsageFlagBits"><span class="hs-identifier hs-var">enumPrefixSwapchainUsageFlagBits</span></a></span><span>
+</span><span id="line-111"></span><span>                          </span><span class="annot"><span class="annottext">[(SwapchainUsageFlagBits, String)]
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#showTableSwapchainUsageFlagBits"><span class="hs-identifier hs-var">showTableSwapchainUsageFlagBits</span></a></span><span>
+</span><span id="line-112"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#conNameSwapchainUsageFlagBits"><span class="hs-identifier hs-var">conNameSwapchainUsageFlagBits</span></a></span><span>
+</span><span id="line-113"></span><span>                          </span><span class="annot"><span class="annottext">Flags64 -&gt; SwapchainUsageFlagBits
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#SwapchainUsageFlagBits"><span class="hs-identifier hs-var">SwapchainUsageFlagBits</span></a></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span class="hs-keyword">type</span><span> </span><span id="MND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span class="hs-identifier hs-var">MND_swapchain_usage_input_attachment_bit_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-117"></span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_MND_swapchain_usage_input_attachment_bit_SPEC_VERSION&quot;</span><span>
+</span><span id="line-119"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span class="hs-identifier hs-type">MND_swapchain_usage_input_attachment_bit_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679386573"><span class="annot"><a href="#local-6989586621679386573"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679386573"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679386573"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-120"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bMND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span id="%24mMND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span id="MND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span class="annot"><span class="annottext">$bMND_swapchain_usage_input_attachment_bit_SPEC_VERSION :: a
+$mMND_swapchain_usage_input_attachment_bit_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bMND_swapchain_usage_input_attachment_bit_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">MND_swapchain_usage_input_attachment_bit_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-121"></span><span>
+</span><span id="line-122"></span><span>
+</span><span id="line-123"></span><span class="hs-keyword">type</span><span> </span><span id="MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span class="hs-identifier hs-var">MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_MND_swapchain_usage_input_attachment_bit&quot;</span></span><span>
+</span><span id="line-124"></span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-126"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span class="hs-identifier hs-type">MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679386569"><span class="annot"><a href="#local-6989586621679386569"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679386569"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679386569"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679386569"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-127"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bMND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span id="%24mMND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span id="MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span class="annot"><span class="annottext">$bMND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME :: a
+$mMND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.html#%24bMND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_MND_swapchain_usage_input_attachment_bit&quot;</span></span><span>
+</span><span id="line-128"></span><span>
+</span><span id="line-129"></span></pre></body></html>

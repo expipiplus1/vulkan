@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_EXT_win32_appcontainer_compatible - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXT_win32_appcontainer_compatible  XR_EXT_win32_appcontainer_compatible&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 58</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- No cross-references are available</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXT_win32_appcontainer_compatible OpenXR Specification&gt;</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_win32_appcontainer_compatible_SPEC_VERSION"><span class="hs-identifier">EXT_win32_appcontainer_compatible_SPEC_VERSION</span></a></span><span>
+</span><span id="line-36"></span><span>                                                               </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_win32_appcontainer_compatible_SPEC_VERSION"><span class="hs-identifier">EXT_win32_appcontainer_compatible_SPEC_VERSION</span></a></span><span>
+</span><span id="line-37"></span><span>                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span class="hs-identifier">EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-38"></span><span>                                                               </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span class="hs-identifier">EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-39"></span><span>                                                               </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_win32_appcontainer_compatible_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_win32_appcontainer_compatible_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_win32_appcontainer_compatible_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXT_win32_appcontainer_compatible_SPEC_VERSION&quot;</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_win32_appcontainer_compatible_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_win32_appcontainer_compatible_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679385266"><span class="annot"><a href="#local-6989586621679385266"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679385266"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679385266"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_win32_appcontainer_compatible_SPEC_VERSION"><span id="%24mEXT_win32_appcontainer_compatible_SPEC_VERSION"><span id="EXT_win32_appcontainer_compatible_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_win32_appcontainer_compatible_SPEC_VERSION :: a
+$mEXT_win32_appcontainer_compatible_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#%24bEXT_win32_appcontainer_compatible_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_win32_appcontainer_compatible_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span>
+</span><span id="line-50"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXT_win32_appcontainer_compatible&quot;</span></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679385262"><span class="annot"><a href="#local-6989586621679385262"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679385262"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679385262"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679385262"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-54"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span id="%24mEXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span id="EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME :: a
+$mEXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXT_win32_appcontainer_compatible.html#%24bEXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXT_win32_appcontainer_compatible&quot;</span></span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span></pre></body></html>

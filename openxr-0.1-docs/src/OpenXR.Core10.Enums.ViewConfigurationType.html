@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;ViewConfigurationType&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.ViewConfigurationType</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier">ViewConfigurationType</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_MONO"><span class="hs-identifier">VIEW_CONFIGURATION_TYPE_PRIMARY_MONO</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO"><span class="hs-identifier">VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"><span class="hs-identifier">VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT</span></a></span><span>
+</span><span id="line-6"></span><span>                                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"><span class="hs-identifier">VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO</span></a></span><span>
+</span><span id="line-7"></span><span>                                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-8"></span><span>                                                                        </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- | XrViewConfigurationType - Supported view configuration type</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- The application selects its primary view configuration type when calling</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.beginSession', and that configuration remains</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- constant for the lifetime of the session, until</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.endSession' is called.</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- The number of views and the semantic meaning of each view index within a</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- given view configuration is well-defined, specified below for all core</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- view configurations. The predefined primary view configuration types</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- are:</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- == Enumerant Descriptions</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_visibility_mask.EventDataVisibilityMaskChangedKHR',</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationLayerInfoMSFT',</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationSessionBeginInfoMSFT',</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationStateMSFT',</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationSwapchainCreateInfoMSFT',</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.SessionBeginInfo',</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.ViewConfigurationProperties',</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.ViewLocateInfo',</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.enumerateEnvironmentBlendModes',</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.enumerateViewConfigurationViews',</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.enumerateViewConfigurations',</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.getViewConfigurationProperties',</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_visibility_mask.getVisibilityMaskKHR'</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">newtype</span><span> </span><span id="ViewConfigurationType"><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-var">ViewConfigurationType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ViewConfigurationType"><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-var">ViewConfigurationType</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-51"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679386826"><span id="local-6989586621679386828"><span class="annot"><span class="annottext">ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+(ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool)
+-&gt; (ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool)
+-&gt; Eq ViewConfigurationType
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+$c/= :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+== :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+$c== :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386810"><span id="local-6989586621679386812"><span id="local-6989586621679386814"><span id="local-6989586621679386816"><span id="local-6989586621679386818"><span id="local-6989586621679386820"><span id="local-6989586621679386822"><span class="annot"><span class="annottext">Eq ViewConfigurationType
+Eq ViewConfigurationType =&gt;
+(ViewConfigurationType -&gt; ViewConfigurationType -&gt; Ordering)
+-&gt; (ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool)
+-&gt; (ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool)
+-&gt; (ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool)
+-&gt; (ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool)
+-&gt; (ViewConfigurationType
+    -&gt; ViewConfigurationType -&gt; ViewConfigurationType)
+-&gt; (ViewConfigurationType
+    -&gt; ViewConfigurationType -&gt; ViewConfigurationType)
+-&gt; Ord ViewConfigurationType
+ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+ViewConfigurationType -&gt; ViewConfigurationType -&gt; Ordering
+ViewConfigurationType
+-&gt; ViewConfigurationType -&gt; ViewConfigurationType
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ViewConfigurationType
+-&gt; ViewConfigurationType -&gt; ViewConfigurationType
+$cmin :: ViewConfigurationType
+-&gt; ViewConfigurationType -&gt; ViewConfigurationType
+max :: ViewConfigurationType
+-&gt; ViewConfigurationType -&gt; ViewConfigurationType
+$cmax :: ViewConfigurationType
+-&gt; ViewConfigurationType -&gt; ViewConfigurationType
+&gt;= :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+$c&gt;= :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+&gt; :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+$c&gt; :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+&lt;= :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+$c&lt;= :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+&lt; :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+$c&lt; :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Bool
+compare :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Ordering
+$ccompare :: ViewConfigurationType -&gt; ViewConfigurationType -&gt; Ordering
+$cp1Ord :: Eq ViewConfigurationType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386793"><span id="local-6989586621679386795"><span id="local-6989586621679386797"><span id="local-6989586621679386799"><span id="local-6989586621679386801"><span id="local-6989586621679386803"><span id="local-6989586621679386805"><span id="local-6989586621679386807"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ViewConfigurationType
+Ptr b -&gt; Int -&gt; ViewConfigurationType -&gt; IO ()
+Ptr ViewConfigurationType -&gt; IO ViewConfigurationType
+Ptr ViewConfigurationType -&gt; Int -&gt; IO ViewConfigurationType
+Ptr ViewConfigurationType -&gt; Int -&gt; ViewConfigurationType -&gt; IO ()
+Ptr ViewConfigurationType -&gt; ViewConfigurationType -&gt; IO ()
+ViewConfigurationType -&gt; Int
+(ViewConfigurationType -&gt; Int)
+-&gt; (ViewConfigurationType -&gt; Int)
+-&gt; (Ptr ViewConfigurationType -&gt; Int -&gt; IO ViewConfigurationType)
+-&gt; (Ptr ViewConfigurationType
+    -&gt; Int -&gt; ViewConfigurationType -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ViewConfigurationType)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; ViewConfigurationType -&gt; IO ())
+-&gt; (Ptr ViewConfigurationType -&gt; IO ViewConfigurationType)
+-&gt; (Ptr ViewConfigurationType -&gt; ViewConfigurationType -&gt; IO ())
+-&gt; Storable ViewConfigurationType
+forall b. Ptr b -&gt; Int -&gt; IO ViewConfigurationType
+forall b. Ptr b -&gt; Int -&gt; ViewConfigurationType -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ViewConfigurationType -&gt; ViewConfigurationType -&gt; IO ()
+$cpoke :: Ptr ViewConfigurationType -&gt; ViewConfigurationType -&gt; IO ()
+peek :: Ptr ViewConfigurationType -&gt; IO ViewConfigurationType
+$cpeek :: Ptr ViewConfigurationType -&gt; IO ViewConfigurationType
+pokeByteOff :: Ptr b -&gt; Int -&gt; ViewConfigurationType -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ViewConfigurationType -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ViewConfigurationType
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ViewConfigurationType
+pokeElemOff :: Ptr ViewConfigurationType -&gt; Int -&gt; ViewConfigurationType -&gt; IO ()
+$cpokeElemOff :: Ptr ViewConfigurationType -&gt; Int -&gt; ViewConfigurationType -&gt; IO ()
+peekElemOff :: Ptr ViewConfigurationType -&gt; Int -&gt; IO ViewConfigurationType
+$cpeekElemOff :: Ptr ViewConfigurationType -&gt; Int -&gt; IO ViewConfigurationType
+alignment :: ViewConfigurationType -&gt; Int
+$calignment :: ViewConfigurationType -&gt; Int
+sizeOf :: ViewConfigurationType -&gt; Int
+$csizeOf :: ViewConfigurationType -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386790"><span class="annot"><span class="annottext">ViewConfigurationType
+ViewConfigurationType -&gt; Zero ViewConfigurationType
+forall a. a -&gt; Zero a
+zero :: ViewConfigurationType
+$czero :: ViewConfigurationType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error</span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- | 'VIEW_CONFIGURATION_TYPE_PRIMARY_MONO'. One view representing the form</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- factor&#8217;s one primary display. For example, an AR phone&#8217;s screen. This</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- configuration requires one element in</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.ViewConfigurationProperties' and one</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- projection in each 'OpenXR.Core10.OtherTypes.CompositionLayerProjection'</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- layer.</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVIEW_CONFIGURATION_TYPE_PRIMARY_MONO"><span id="%24mVIEW_CONFIGURATION_TYPE_PRIMARY_MONO"><span id="VIEW_CONFIGURATION_TYPE_PRIMARY_MONO"><span class="annot"><span class="annottext">$bVIEW_CONFIGURATION_TYPE_PRIMARY_MONO :: ViewConfigurationType
+$mVIEW_CONFIGURATION_TYPE_PRIMARY_MONO :: forall r.
+ViewConfigurationType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#%24bVIEW_CONFIGURATION_TYPE_PRIMARY_MONO"><span class="hs-identifier hs-var hs-var hs-var">VIEW_CONFIGURATION_TYPE_PRIMARY_MONO</span></a></span></span></span></span><span>                              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- | 'VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO'. Two views representing the</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- form factor&#8217;s two primary displays, which map to a left-eye and</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- right-eye view. This configuration requires two views in</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.ViewConfigurationProperties' and two</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- views in each 'OpenXR.Core10.OtherTypes.CompositionLayerProjection'</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- layer. View index 0 /must/ represent the left eye and view index 1</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- /must/ represent the right eye.</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVIEW_CONFIGURATION_TYPE_PRIMARY_STEREO"><span id="%24mVIEW_CONFIGURATION_TYPE_PRIMARY_STEREO"><span id="VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO"><span class="annot"><span class="annottext">$bVIEW_CONFIGURATION_TYPE_PRIMARY_STEREO :: ViewConfigurationType
+$mVIEW_CONFIGURATION_TYPE_PRIMARY_STEREO :: forall r.
+ViewConfigurationType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#%24bVIEW_CONFIGURATION_TYPE_PRIMARY_STEREO"><span class="hs-identifier hs-var hs-var hs-var">VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO</span></a></span></span></span></span><span>                            </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrViewConfigurationType&quot; &quot;XR_VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT&quot;</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"><span id="%24mVIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"><span id="VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"><span class="annot"><span class="annottext">$bVIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT :: ViewConfigurationType
+$mVIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT :: forall r.
+ViewConfigurationType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#%24bVIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"><span class="hs-identifier hs-var hs-var hs-var">VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span><span> </span><span class="hs-number">1000054000</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrViewConfigurationType&quot; &quot;XR_VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO&quot;</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"><span id="%24mVIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"><span id="VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"><span class="annot"><span class="annottext">$bVIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO :: ViewConfigurationType
+$mVIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO :: forall r.
+ViewConfigurationType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#%24bVIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"><span class="hs-identifier hs-var hs-var hs-var">VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO</span></a></span></span></span></span><span>                        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span><span> </span><span class="hs-number">1000037000</span><span>
+</span><span id="line-73"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_MONO"><span class="hs-pragma hs-type">VIEW_CONFIGURATION_TYPE_PRIMARY_MONO</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-74"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO"><span class="hs-pragma hs-type">VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-75"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"><span class="hs-pragma hs-type">VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-76"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"><span class="hs-pragma hs-type">VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-pragma hs-type">ViewConfigurationType</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-77"></span><span>
+</span><span id="line-78"></span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#conNameViewConfigurationType"><span class="hs-identifier hs-type">conNameViewConfigurationType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-79"></span><span id="conNameViewConfigurationType"><span class="annot"><span class="annottext">conNameViewConfigurationType :: String
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#conNameViewConfigurationType"><span class="hs-identifier hs-var hs-var">conNameViewConfigurationType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ViewConfigurationType&quot;</span></span><span>
+</span><span id="line-80"></span><span>
+</span><span id="line-81"></span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#enumPrefixViewConfigurationType"><span class="hs-identifier hs-type">enumPrefixViewConfigurationType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-82"></span><span id="enumPrefixViewConfigurationType"><span class="annot"><span class="annottext">enumPrefixViewConfigurationType :: String
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#enumPrefixViewConfigurationType"><span class="hs-identifier hs-var hs-var">enumPrefixViewConfigurationType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VIEW_CONFIGURATION_TYPE_&quot;</span></span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#showTableViewConfigurationType"><span class="hs-identifier hs-type">showTableViewConfigurationType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-85"></span><span id="showTableViewConfigurationType"><span class="annot"><span class="annottext">showTableViewConfigurationType :: [(ViewConfigurationType, String)]
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#showTableViewConfigurationType"><span class="hs-identifier hs-var hs-var">showTableViewConfigurationType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-86"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ViewConfigurationType
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_MONO"><span class="hs-identifier hs-var">VIEW_CONFIGURATION_TYPE_PRIMARY_MONO</span></a></span><span>                             </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;PRIMARY_MONO&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ViewConfigurationType
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO"><span class="hs-identifier hs-var">VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO</span></a></span><span>                           </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;PRIMARY_STEREO&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ViewConfigurationType
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"><span class="hs-identifier hs-var">VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-89"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ViewConfigurationType
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"><span class="hs-identifier hs-var">VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO</span></a></span><span>                       </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;PRIMARY_QUAD_VARJO&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-91"></span><span>
+</span><span id="line-92"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386773"><span id="local-6989586621679386775"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-93"></span><span>  </span><span id="local-6989586621679386771"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ViewConfigurationType -&gt; ShowS
+</span><a href="#local-6989586621679386771"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ViewConfigurationType, String)]
+-&gt; String
+-&gt; (ViewConfigurationType -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; ViewConfigurationType
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#enumPrefixViewConfigurationType"><span class="hs-identifier hs-var">enumPrefixViewConfigurationType</span></a></span><span>
+</span><span id="line-94"></span><span>                            </span><span class="annot"><span class="annottext">[(ViewConfigurationType, String)]
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#showTableViewConfigurationType"><span class="hs-identifier hs-var">showTableViewConfigurationType</span></a></span><span>
+</span><span id="line-95"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#conNameViewConfigurationType"><span class="hs-identifier hs-var">conNameViewConfigurationType</span></a></span><span>
+</span><span id="line-96"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span><span> </span><span id="local-6989586621679386770"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679386770"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679386770"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span>
+</span><span id="line-99"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386763"><span id="local-6989586621679386766"><span id="local-6989586621679386768"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-type">ViewConfigurationType</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-100"></span><span>  </span><span id="local-6989586621679386761"><span class="annot"><span class="annottext">readPrec :: ReadPrec ViewConfigurationType
+</span><a href="#local-6989586621679386761"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ViewConfigurationType, String)]
+-&gt; String
+-&gt; (Int32 -&gt; ViewConfigurationType)
+-&gt; ReadPrec ViewConfigurationType
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#enumPrefixViewConfigurationType"><span class="hs-identifier hs-var">enumPrefixViewConfigurationType</span></a></span><span>
+</span><span id="line-101"></span><span>                          </span><span class="annot"><span class="annottext">[(ViewConfigurationType, String)]
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#showTableViewConfigurationType"><span class="hs-identifier hs-var">showTableViewConfigurationType</span></a></span><span>
+</span><span id="line-102"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#conNameViewConfigurationType"><span class="hs-identifier hs-var">conNameViewConfigurationType</span></a></span><span>
+</span><span id="line-103"></span><span>                          </span><span class="annot"><span class="annottext">Int32 -&gt; ViewConfigurationType
+</span><a href="OpenXR.Core10.Enums.ViewConfigurationType.html#ViewConfigurationType"><span class="hs-identifier hs-var">ViewConfigurationType</span></a></span><span>
+</span><span id="line-104"></span><span>
+</span><span id="line-105"></span></pre></body></html>

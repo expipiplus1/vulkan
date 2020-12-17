@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;Handles&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.Handles</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT"><span class="hs-identifier">DebugUtilsMessengerEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT_T"><span class="hs-identifier">DebugUtilsMessengerEXT_T</span></a></span><span>
+</span><span id="line-5"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT"><span class="hs-identifier">SpatialAnchorMSFT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT_T"><span class="hs-identifier">SpatialAnchorMSFT_T</span></a></span><span>
+</span><span id="line-7"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT"><span class="hs-identifier">HandTrackerEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT_T"><span class="hs-identifier">HandTrackerEXT_T</span></a></span><span>
+</span><span id="line-9"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier">Instance</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier">Session</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier">Action</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier">Swapchain</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span>                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier">Space</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span>                                  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-15"></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ptrToWordPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><span class="hs-identifier">WordPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html"><span class="hs-identifier">OpenXR.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier">HasObjectType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html"><span class="hs-identifier">OpenXR.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html"><span class="hs-identifier">OpenXR.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#IsHandle"><span class="hs-identifier">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span class="hs-identifier">OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_HAND_TRACKER_EXT"><span class="hs-identifier">OBJECT_TYPE_HAND_TRACKER_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span class="hs-identifier">OBJECT_TYPE_SPATIAL_ANCHOR_MSFT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier">Action</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier">Instance</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier">Session</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier">Space</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier">Swapchain</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrDebugUtilsMessengerEXT handles</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">data</span><span> </span><span id="DebugUtilsMessengerEXT_T"><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT_T"><span class="hs-identifier hs-var">DebugUtilsMessengerEXT_T</span></a></span></span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- | XrDebugUtilsMessengerEXT - Callback for debug data</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- 'DebugUtilsMessengerEXT' represents a callback function and associated</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- filters registered with the runtime.</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.createDebugUtilsMessengerEXT',</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.destroyDebugUtilsMessengerEXT'</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">data</span><span> </span><span id="DebugUtilsMessengerEXT"><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT"><span class="hs-identifier hs-var">DebugUtilsMessengerEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DebugUtilsMessengerEXT"><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT"><span class="hs-identifier hs-var">DebugUtilsMessengerEXT</span></a></span></span><span>
+</span><span id="line-45"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AdebugUtilsMessengerEXTHandle%3ADebugUtilsMessengerEXT"><span class="annot"><span class="annottext">DebugUtilsMessengerEXT -&gt; Ptr DebugUtilsMessengerEXT_T
+</span><a href="OpenXR.Extensions.Handles.html#%24sel%3AdebugUtilsMessengerEXTHandle%3ADebugUtilsMessengerEXT"><span class="hs-identifier hs-var hs-var">debugUtilsMessengerEXTHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT_T"><span class="hs-identifier hs-type">DebugUtilsMessengerEXT_T</span></a></span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3ADebugUtilsMessengerEXT"><span class="annot"><span class="annottext">DebugUtilsMessengerEXT -&gt; InstanceCmds
+</span><a href="OpenXR.Extensions.Handles.html#%24sel%3AinstanceCmds%3ADebugUtilsMessengerEXT"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-48"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679393088"><span id="local-6989586621679393090"><span class="annot"><span class="annottext">DebugUtilsMessengerEXT -&gt; DebugUtilsMessengerEXT -&gt; Bool
+(DebugUtilsMessengerEXT -&gt; DebugUtilsMessengerEXT -&gt; Bool)
+-&gt; (DebugUtilsMessengerEXT -&gt; DebugUtilsMessengerEXT -&gt; Bool)
+-&gt; Eq DebugUtilsMessengerEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DebugUtilsMessengerEXT -&gt; DebugUtilsMessengerEXT -&gt; Bool
+$c/= :: DebugUtilsMessengerEXT -&gt; DebugUtilsMessengerEXT -&gt; Bool
+== :: DebugUtilsMessengerEXT -&gt; DebugUtilsMessengerEXT -&gt; Bool
+$c== :: DebugUtilsMessengerEXT -&gt; DebugUtilsMessengerEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679393081"><span id="local-6989586621679393083"><span id="local-6989586621679393085"><span class="annot"><span class="annottext">Int -&gt; DebugUtilsMessengerEXT -&gt; ShowS
+[DebugUtilsMessengerEXT] -&gt; ShowS
+DebugUtilsMessengerEXT -&gt; String
+(Int -&gt; DebugUtilsMessengerEXT -&gt; ShowS)
+-&gt; (DebugUtilsMessengerEXT -&gt; String)
+-&gt; ([DebugUtilsMessengerEXT] -&gt; ShowS)
+-&gt; Show DebugUtilsMessengerEXT
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [DebugUtilsMessengerEXT] -&gt; ShowS
+$cshowList :: [DebugUtilsMessengerEXT] -&gt; ShowS
+show :: DebugUtilsMessengerEXT -&gt; String
+$cshow :: DebugUtilsMessengerEXT -&gt; String
+showsPrec :: Int -&gt; DebugUtilsMessengerEXT -&gt; ShowS
+$cshowsPrec :: Int -&gt; DebugUtilsMessengerEXT -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq DebugUtilsMessengerEXT
+Zero DebugUtilsMessengerEXT
+(Eq DebugUtilsMessengerEXT, Zero DebugUtilsMessengerEXT) =&gt;
+IsHandle DebugUtilsMessengerEXT
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero DebugUtilsMessengerEXT
+$cp1IsHandle :: Eq DebugUtilsMessengerEXT
+</span><a href="OpenXR.Core10.APIConstants.html#C%3AIsHandle"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT"><span class="hs-identifier hs-type">DebugUtilsMessengerEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-51"></span><span>  </span><span id="local-6989586621679393074"><span class="annot"><span class="annottext">zero :: DebugUtilsMessengerEXT
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DebugUtilsMessengerEXT_T
+-&gt; InstanceCmds -&gt; DebugUtilsMessengerEXT
+</span><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT"><span class="hs-identifier hs-var">DebugUtilsMessengerEXT</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DebugUtilsMessengerEXT_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-52"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT"><span class="hs-identifier hs-type">DebugUtilsMessengerEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-53"></span><span>  </span><span id="local-6989586621679393070"><span class="annot"><span class="annottext">objectTypeAndHandle :: DebugUtilsMessengerEXT -&gt; (ObjectType, Word64)
+</span><a href="OpenXR.Core10.APIConstants.html#objectTypeAndHandle"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.Handles.html#DebugUtilsMessengerEXT"><span class="hs-identifier hs-type">DebugUtilsMessengerEXT</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DebugUtilsMessengerEXT_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679393068"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679393068"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span class="hs-identifier hs-var">OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679393068"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrSpatialAnchorMSFT handles</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">data</span><span> </span><span id="SpatialAnchorMSFT_T"><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT_T"><span class="hs-identifier hs-var">SpatialAnchorMSFT_T</span></a></span></span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- | XrSpatialAnchorMSFT - Represents a spatial anchor</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- Spatial anchors are often used in combination with an @UNBOUNDED_MSFT@</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- reference space. @UNBOUNDED_MSFT@ reference spaces adjust their origin</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- as necessary to keep the viewer&#8217;s coordinates relative to the space&#8217;s</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- origin stable. Such adjustments maintain the visual stability of content</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- currently near the viewer, but may cause content placed far from the</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- viewer to drift in its alignment to the real world by the time the user</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- moves close again. By creating an 'SpatialAnchorMSFT' where a piece of</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- content is placed and then always rendering that content relative to its</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- anchor&#8217;s space, an application can ensure that each piece of content</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- stays at a fixed location in the environment.</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_anchor.SpatialAnchorSpaceCreateInfoMSFT',</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_perception_anchor_interop.createSpatialAnchorFromPerceptionAnchorMSFT',</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_anchor.createSpatialAnchorMSFT',</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_anchor.destroySpatialAnchorMSFT',</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_perception_anchor_interop.tryGetPerceptionAnchorFromSpatialAnchorMSFT'</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">data</span><span> </span><span id="SpatialAnchorMSFT"><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT"><span class="hs-identifier hs-var">SpatialAnchorMSFT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SpatialAnchorMSFT"><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT"><span class="hs-identifier hs-var">SpatialAnchorMSFT</span></a></span></span><span>
+</span><span id="line-81"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AspatialAnchorMSFTHandle%3ASpatialAnchorMSFT"><span class="annot"><span class="annottext">SpatialAnchorMSFT -&gt; Ptr SpatialAnchorMSFT_T
+</span><a href="OpenXR.Extensions.Handles.html#%24sel%3AspatialAnchorMSFTHandle%3ASpatialAnchorMSFT"><span class="hs-identifier hs-var hs-var">spatialAnchorMSFTHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT_T"><span class="hs-identifier hs-type">SpatialAnchorMSFT_T</span></a></span><span>
+</span><span id="line-82"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3ASpatialAnchorMSFT"><span class="annot"><span class="annottext">SpatialAnchorMSFT -&gt; InstanceCmds
+</span><a href="OpenXR.Extensions.Handles.html#%24sel%3AinstanceCmds%3ASpatialAnchorMSFT"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-83"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-84"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679393061"><span id="local-6989586621679393063"><span class="annot"><span class="annottext">SpatialAnchorMSFT -&gt; SpatialAnchorMSFT -&gt; Bool
+(SpatialAnchorMSFT -&gt; SpatialAnchorMSFT -&gt; Bool)
+-&gt; (SpatialAnchorMSFT -&gt; SpatialAnchorMSFT -&gt; Bool)
+-&gt; Eq SpatialAnchorMSFT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SpatialAnchorMSFT -&gt; SpatialAnchorMSFT -&gt; Bool
+$c/= :: SpatialAnchorMSFT -&gt; SpatialAnchorMSFT -&gt; Bool
+== :: SpatialAnchorMSFT -&gt; SpatialAnchorMSFT -&gt; Bool
+$c== :: SpatialAnchorMSFT -&gt; SpatialAnchorMSFT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679393055"><span id="local-6989586621679393057"><span id="local-6989586621679393059"><span class="annot"><span class="annottext">Int -&gt; SpatialAnchorMSFT -&gt; ShowS
+[SpatialAnchorMSFT] -&gt; ShowS
+SpatialAnchorMSFT -&gt; String
+(Int -&gt; SpatialAnchorMSFT -&gt; ShowS)
+-&gt; (SpatialAnchorMSFT -&gt; String)
+-&gt; ([SpatialAnchorMSFT] -&gt; ShowS)
+-&gt; Show SpatialAnchorMSFT
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [SpatialAnchorMSFT] -&gt; ShowS
+$cshowList :: [SpatialAnchorMSFT] -&gt; ShowS
+show :: SpatialAnchorMSFT -&gt; String
+$cshow :: SpatialAnchorMSFT -&gt; String
+showsPrec :: Int -&gt; SpatialAnchorMSFT -&gt; ShowS
+$cshowsPrec :: Int -&gt; SpatialAnchorMSFT -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-85"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq SpatialAnchorMSFT
+Zero SpatialAnchorMSFT
+(Eq SpatialAnchorMSFT, Zero SpatialAnchorMSFT) =&gt;
+IsHandle SpatialAnchorMSFT
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero SpatialAnchorMSFT
+$cp1IsHandle :: Eq SpatialAnchorMSFT
+</span><a href="#local-6989586621679393053"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT"><span class="hs-identifier hs-type">SpatialAnchorMSFT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-87"></span><span>  </span><span id="local-6989586621679393051"><span class="annot"><span class="annottext">zero :: SpatialAnchorMSFT
+</span><a href="#local-6989586621679393051"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SpatialAnchorMSFT_T -&gt; InstanceCmds -&gt; SpatialAnchorMSFT
+</span><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT"><span class="hs-identifier hs-var">SpatialAnchorMSFT</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SpatialAnchorMSFT_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-88"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT"><span class="hs-identifier hs-type">SpatialAnchorMSFT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-89"></span><span>  </span><span id="local-6989586621679393049"><span class="annot"><span class="annottext">objectTypeAndHandle :: SpatialAnchorMSFT -&gt; (ObjectType, Word64)
+</span><a href="#local-6989586621679393049"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.Handles.html#SpatialAnchorMSFT"><span class="hs-identifier hs-type">SpatialAnchorMSFT</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SpatialAnchorMSFT_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679393048"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679393048"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span class="hs-identifier hs-var">OBJECT_TYPE_SPATIAL_ANCHOR_MSFT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679393048"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrHandTrackerEXT handles</span><span>
+</span><span id="line-93"></span><span class="hs-keyword">data</span><span> </span><span id="HandTrackerEXT_T"><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT_T"><span class="hs-identifier hs-var">HandTrackerEXT_T</span></a></span></span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- | XrHandTrackerEXT - Represents a tracker for a hand joints.</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- An application creates separate 'HandTrackerEXT' handles for left and</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- right hands. This handle can be used to locate hand joints using</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.locateHandJointsEXT' function.</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- A hand tracker provides accurate fidelity to the user&#8217;s actual hand</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- shape. When the hand tracking input requires the user to be holding a</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- controller in their hand, the hand tracking input will appear as the</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- user holding the controller. This input can be used to render the hand</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- shape together with rendering the controller in the hand.</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_hand_tracking_mesh.createHandMeshSpaceMSFT',</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.createHandTrackerEXT',</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.destroyHandTrackerEXT',</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.locateHandJointsEXT',</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_hand_tracking_mesh.updateHandMeshMSFT'</span><span>
+</span><span id="line-115"></span><span class="hs-keyword">data</span><span> </span><span id="HandTrackerEXT"><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT"><span class="hs-identifier hs-var">HandTrackerEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="HandTrackerEXT"><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT"><span class="hs-identifier hs-var">HandTrackerEXT</span></a></span></span><span>
+</span><span id="line-116"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AhandTrackerEXTHandle%3AHandTrackerEXT"><span class="annot"><span class="annottext">HandTrackerEXT -&gt; Ptr HandTrackerEXT_T
+</span><a href="OpenXR.Extensions.Handles.html#%24sel%3AhandTrackerEXTHandle%3AHandTrackerEXT"><span class="hs-identifier hs-var hs-var">handTrackerEXTHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT_T"><span class="hs-identifier hs-type">HandTrackerEXT_T</span></a></span><span>
+</span><span id="line-117"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3AHandTrackerEXT"><span class="annot"><span class="annottext">HandTrackerEXT -&gt; InstanceCmds
+</span><a href="OpenXR.Extensions.Handles.html#%24sel%3AinstanceCmds%3AHandTrackerEXT"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-118"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-119"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679393041"><span id="local-6989586621679393043"><span class="annot"><span class="annottext">HandTrackerEXT -&gt; HandTrackerEXT -&gt; Bool
+(HandTrackerEXT -&gt; HandTrackerEXT -&gt; Bool)
+-&gt; (HandTrackerEXT -&gt; HandTrackerEXT -&gt; Bool) -&gt; Eq HandTrackerEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: HandTrackerEXT -&gt; HandTrackerEXT -&gt; Bool
+$c/= :: HandTrackerEXT -&gt; HandTrackerEXT -&gt; Bool
+== :: HandTrackerEXT -&gt; HandTrackerEXT -&gt; Bool
+$c== :: HandTrackerEXT -&gt; HandTrackerEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679393035"><span id="local-6989586621679393037"><span id="local-6989586621679393039"><span class="annot"><span class="annottext">Int -&gt; HandTrackerEXT -&gt; ShowS
+[HandTrackerEXT] -&gt; ShowS
+HandTrackerEXT -&gt; String
+(Int -&gt; HandTrackerEXT -&gt; ShowS)
+-&gt; (HandTrackerEXT -&gt; String)
+-&gt; ([HandTrackerEXT] -&gt; ShowS)
+-&gt; Show HandTrackerEXT
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [HandTrackerEXT] -&gt; ShowS
+$cshowList :: [HandTrackerEXT] -&gt; ShowS
+show :: HandTrackerEXT -&gt; String
+$cshow :: HandTrackerEXT -&gt; String
+showsPrec :: Int -&gt; HandTrackerEXT -&gt; ShowS
+$cshowsPrec :: Int -&gt; HandTrackerEXT -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq HandTrackerEXT
+Zero HandTrackerEXT
+(Eq HandTrackerEXT, Zero HandTrackerEXT) =&gt; IsHandle HandTrackerEXT
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero HandTrackerEXT
+$cp1IsHandle :: Eq HandTrackerEXT
+</span><a href="#local-6989586621679393033"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT"><span class="hs-identifier hs-type">HandTrackerEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-122"></span><span>  </span><span id="local-6989586621679393031"><span class="annot"><span class="annottext">zero :: HandTrackerEXT
+</span><a href="#local-6989586621679393031"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr HandTrackerEXT_T -&gt; InstanceCmds -&gt; HandTrackerEXT
+</span><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT"><span class="hs-identifier hs-var">HandTrackerEXT</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr HandTrackerEXT_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-123"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT"><span class="hs-identifier hs-type">HandTrackerEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-124"></span><span>  </span><span id="local-6989586621679393029"><span class="annot"><span class="annottext">objectTypeAndHandle :: HandTrackerEXT -&gt; (ObjectType, Word64)
+</span><a href="#local-6989586621679393029"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.Handles.html#HandTrackerEXT"><span class="hs-identifier hs-type">HandTrackerEXT</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr HandTrackerEXT_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679393028"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679393028"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_HAND_TRACKER_EXT"><span class="hs-identifier hs-var">OBJECT_TYPE_HAND_TRACKER_EXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679393028"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span></pre></body></html>

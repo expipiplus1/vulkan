@@ -1,0 +1,639 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_EXT_filter_cubic - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_EXT_filter_cubic</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_EXT_filter_cubic@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     171</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     3</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--     -   Bill Licea-Kane</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_filter_cubic:%20&amp;body=@wwlk%20 &gt;</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--     2019-12-13</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--     -   Bill Licea-Kane, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--     -   Andrew Garrard, Samsung</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--     -   Daniel Koch, NVIDIA</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--     -   Donald Scorgie, Imagination Technologies</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--     -   Graeme Leese, Broadcom</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--     -   Jan-Herald Fredericksen, ARM</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--     -   Jeff Leger, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--     -   Tobias Hector, AMD</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--     -   Tom Olson, ARM</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--     -   Stuart Smith, Imagination Technologies</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- @VK_EXT_filter_cubic@ extends @VK_IMG_filter_cubic@.</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- It documents cubic filtering of other image view types. It adds new</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- structures that /can/ be added to the @pNext@ chain of</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- and</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- that /can/ be used to determine which image types and which image view</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- types support cubic filtering.</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2':</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--     -   'FilterCubicImageViewImageFormatPropertiesEXT'</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-76"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2':</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--     -   'PhysicalDeviceImageViewImageFormatInfoEXT'</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- -   'EXT_FILTER_CUBIC_EXTENSION_NAME'</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- -   'EXT_FILTER_CUBIC_SPEC_VERSION'</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.Filter.Filter':</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--     -   'FILTER_CUBIC_EXT'</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--     -   'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT'</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT'</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- -   Revision 3, 2019-12-13 (wwlk)</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--     -   Delete requirement to cubic filter the formats USCALED_PACKED32,</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--         SSCALED_PACKED32, UINT_PACK32, and SINT_PACK32 (cut\/paste</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--         error)</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- -   Revision 2, 2019-06-05 (wwlk)</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--     -   Clarify 1D optional</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- -   Revision 1, 2019-01-24 (wwlk)</span><span>
+</span><span id="line-114"></span><span class="hs-comment">--</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--     -   Initial version</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- 'FilterCubicImageViewImageFormatPropertiesEXT',</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- 'PhysicalDeviceImageViewImageFormatInfoEXT'</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic Vulkan Specification&gt;</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-129"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_filter_cubic</span><span>  </span><span class="hs-special">(</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FILTER_CUBIC_EXT"><span class="hs-identifier">FILTER_CUBIC_EXT</span></a></span><span>
+</span><span id="line-130"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"><span class="hs-identifier">FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT</span></a></span><span>
+</span><span id="line-131"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-133"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_SPEC_VERSION"><span class="hs-identifier">EXT_FILTER_CUBIC_SPEC_VERSION</span></a></span><span>
+</span><span id="line-134"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_SPEC_VERSION"><span class="hs-identifier">EXT_FILTER_CUBIC_SPEC_VERSION</span></a></span><span>
+</span><span id="line-135"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_EXTENSION_NAME"><span class="hs-identifier">EXT_FILTER_CUBIC_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-136"></span><span>                                              </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_EXTENSION_NAME"><span class="hs-identifier">EXT_FILTER_CUBIC_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-137"></span><span>                                              </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-138"></span><span>
+</span><span id="line-139"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-140"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-141"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-143"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-147"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-148"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-149"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-153"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-155"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-156"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-158"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-159"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ImageViewType.html"><span class="hs-identifier">Vulkan.Core10.Enums.ImageViewType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.ImageViewType.html#ImageViewType"><span class="hs-identifier">ImageViewType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-160"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-161"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Filter.html"><span class="hs-identifier">Vulkan.Core10.Enums.Filter</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Filter.html#Filter"><span class="hs-identifier">Filter</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Filter.html#FILTER_CUBIC_IMG"><span class="hs-identifier">FILTER_CUBIC_IMG</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FormatFeatureFlagBits.html"><span class="hs-identifier">Vulkan.Core10.Enums.FormatFeatureFlagBits</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.FormatFeatureFlagBits.html#FormatFeatureFlags"><span class="hs-identifier">FormatFeatureFlags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FormatFeatureFlagBits.html"><span class="hs-identifier">Vulkan.Core10.Enums.FormatFeatureFlagBits</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.FormatFeatureFlagBits.html#FormatFeatureFlagBits"><span class="hs-identifier">FormatFeatureFlagBits</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.FormatFeatureFlagBits.html#FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"><span class="hs-identifier">FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-165"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_FILTER_CUBIC_EXT&quot;</span><span>
+</span><span id="line-167"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bFILTER_CUBIC_EXT"><span id="%24mFILTER_CUBIC_EXT"><span id="FILTER_CUBIC_EXT"><span class="annot"><span class="annottext">$bFILTER_CUBIC_EXT :: Filter
+$mFILTER_CUBIC_EXT :: forall r. Filter -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#%24bFILTER_CUBIC_EXT"><span class="hs-identifier hs-var hs-var hs-var">FILTER_CUBIC_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Filter.html#FILTER_CUBIC_IMG"><span class="hs-identifier hs-type">FILTER_CUBIC_IMG</span></a></span><span>
+</span><span id="line-168"></span><span>
+</span><span id="line-169"></span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT&quot;</span><span>
+</span><span id="line-171"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bFORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"><span id="%24mFORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"><span id="FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"><span class="annot"><span class="annottext">$bFORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT :: FormatFeatureFlagBits
+$mFORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT :: forall r.
+FormatFeatureFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#%24bFORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FormatFeatureFlagBits.html#FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"><span class="hs-identifier hs-type">FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG</span></a></span><span>
+</span><span id="line-172"></span><span>
+</span><span id="line-173"></span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- | VkPhysicalDeviceImageViewImageFormatInfoEXT - Structure for providing</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- image view type</span><span>
+</span><span id="line-176"></span><span class="hs-comment">--</span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-178"></span><span class="hs-comment">--</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-180"></span><span class="hs-comment">--</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType',</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-183"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceImageViewImageFormatInfoEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-var">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceImageViewImageFormatInfoEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-var">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span></span><span>
+</span><span id="line-184"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @imageViewType@ is a 'Vulkan.Core10.Enums.ImageViewType.ImageViewType'</span><span>
+</span><span id="line-185"></span><span>    </span><span class="hs-comment">-- value specifying the type of the image view.</span><span>
+</span><span id="line-186"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-187"></span><span>    </span><span class="hs-comment">-- #VUID-VkPhysicalDeviceImageViewImageFormatInfoEXT-imageViewType-parameter#</span><span>
+</span><span id="line-188"></span><span>    </span><span class="hs-comment">-- @imageViewType@ /must/ be a valid</span><span>
+</span><span id="line-189"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value</span><span>
+</span><span id="line-190"></span><span>    </span><span id="%24sel%3AimageViewType%3APhysicalDeviceImageViewImageFormatInfoEXT"><span class="annot"><span class="annottext">PhysicalDeviceImageViewImageFormatInfoEXT -&gt; ImageViewType
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#%24sel%3AimageViewType%3APhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-var hs-var">imageViewType</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ImageViewType.html#ImageViewType"><span class="hs-identifier hs-type">ImageViewType</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-191"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680146291"><span id="local-6989586621680146293"><span class="annot"><span class="annottext">PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Bool
+(PhysicalDeviceImageViewImageFormatInfoEXT
+ -&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Bool)
+-&gt; (PhysicalDeviceImageViewImageFormatInfoEXT
+    -&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Bool)
+-&gt; Eq PhysicalDeviceImageViewImageFormatInfoEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Bool
+$c/= :: PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Bool
+== :: PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Bool
+$c== :: PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceImageViewImageFormatInfoEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680146284"><span id="local-6989586621680146286"><span id="local-6989586621680146288"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-type">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span></span></span></span><span>
+</span><span id="line-196"></span><span>
+</span><span id="line-197"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680146279"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-type">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-198"></span><span>  </span><span id="local-6989586621680146274"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; (Ptr PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680146272"><span class="annot"><span class="annottext">x :: PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146272"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680146271"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b
+</span><a href="#local-6989586621680146271"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680146270"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146270"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146270"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146272"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b
+</span><a href="#local-6989586621680146271"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146270"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-199"></span><span>  </span><span id="local-6989586621680146268"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680146268"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680146267"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146267"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680146266"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-type">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680146265"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680146265"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-200"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146267"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-201"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146267"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-202"></span><span>    </span><span class="annot"><span class="annottext">Ptr ImageViewType -&gt; ImageViewType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146267"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; Int -&gt; Ptr ImageViewType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ImageViewType.html#ImageViewType"><span class="hs-identifier hs-type">ImageViewType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ImageViewType
+</span><a href="#local-6989586621680146266"><span class="hs-identifier hs-var">imageViewType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-203"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680146265"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-204"></span><span>  </span><span id="local-6989586621680146264"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-205"></span><span>  </span><span id="local-6989586621680146262"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-206"></span><span>  </span><span id="local-6989586621680146260"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680146258"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146258"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680146257"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680146257"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-207"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146258"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146258"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-209"></span><span>    </span><span class="annot"><span class="annottext">Ptr ImageViewType -&gt; ImageViewType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146258"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; Int -&gt; Ptr ImageViewType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ImageViewType.html#ImageViewType"><span class="hs-identifier hs-type">ImageViewType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ImageViewType
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-210"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680146257"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-211"></span><span>
+</span><span id="line-212"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-type">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-213"></span><span>  </span><span id="local-6989586621680146253"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; IO PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680146251"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146251"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-214"></span><span>    </span><span id="local-6989586621680146250"><span class="annot"><span class="annottext">ImageViewType
+</span><a href="#local-6989586621680146250"><span class="hs-identifier hs-var">imageViewType</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr ImageViewType -&gt; IO ImageViewType
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Enums.ImageViewType.html#ImageViewType"><span class="hs-identifier hs-type">ImageViewType</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146251"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; Int -&gt; Ptr ImageViewType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ImageViewType.html#ImageViewType"><span class="hs-identifier hs-type">ImageViewType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-215"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; IO PhysicalDeviceImageViewImageFormatInfoEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceImageViewImageFormatInfoEXT
+ -&gt; IO PhysicalDeviceImageViewImageFormatInfoEXT)
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; IO PhysicalDeviceImageViewImageFormatInfoEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ImageViewType -&gt; PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-var">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span><span>
+</span><span id="line-216"></span><span>             </span><span class="annot"><span class="annottext">ImageViewType
+</span><a href="#local-6989586621680146250"><span class="hs-identifier hs-var">imageViewType</span></a></span><span>
+</span><span id="line-217"></span><span>
+</span><span id="line-218"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680146240"><span id="local-6989586621680146242"><span id="local-6989586621680146244"><span id="local-6989586621680146246"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-type">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-219"></span><span>  </span><span id="local-6989586621680146236"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceImageViewImageFormatInfoEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-220"></span><span>  </span><span id="local-6989586621680146234"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceImageViewImageFormatInfoEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceImageViewImageFormatInfoEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-221"></span><span>  </span><span id="local-6989586621680146232"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; IO PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146232"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; IO PhysicalDeviceImageViewImageFormatInfoEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-222"></span><span>  </span><span id="local-6989586621680146231"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO ()
+</span><a href="#local-6989586621680146231"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680146230"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146230"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680146229"><span class="annot"><span class="annottext">poked :: PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146229"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+-&gt; PhysicalDeviceImageViewImageFormatInfoEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146230"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146229"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-223"></span><span>
+</span><span id="line-224"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-type">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-225"></span><span>  </span><span id="local-6989586621680146226"><span class="annot"><span class="annottext">zero :: PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="#local-6989586621680146226"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ImageViewType -&gt; PhysicalDeviceImageViewImageFormatInfoEXT
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#PhysicalDeviceImageViewImageFormatInfoEXT"><span class="hs-identifier hs-var">PhysicalDeviceImageViewImageFormatInfoEXT</span></a></span><span>
+</span><span id="line-226"></span><span>           </span><span class="annot"><span class="annottext">ImageViewType
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-227"></span><span>
+</span><span id="line-228"></span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- | VkFilterCubicImageViewImageFormatPropertiesEXT - Structure for querying</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- cubic filtering capabilities of an image view type</span><span>
+</span><span id="line-231"></span><span class="hs-comment">--</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-233"></span><span class="hs-comment">--</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- -   #VUID-VkFilterCubicImageViewImageFormatPropertiesEXT-sType-sType#</span><span>
+</span><span id="line-235"></span><span class="hs-comment">--     @sType@ /must/ be</span><span>
+</span><span id="line-236"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT'</span><span>
+</span><span id="line-237"></span><span class="hs-comment">--</span><span>
+</span><span id="line-238"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-239"></span><span class="hs-comment">--</span><span>
+</span><span id="line-240"></span><span class="hs-comment">-- -   #VUID-VkFilterCubicImageViewImageFormatPropertiesEXT-pNext-02627# If</span><span>
+</span><span id="line-241"></span><span class="hs-comment">--     the @pNext@ chain of the</span><span>
+</span><span id="line-242"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'</span><span>
+</span><span id="line-243"></span><span class="hs-comment">--     structure includes a 'FilterCubicImageViewImageFormatPropertiesEXT'</span><span>
+</span><span id="line-244"></span><span class="hs-comment">--     structure, the @pNext@ chain of the</span><span>
+</span><span id="line-245"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'</span><span>
+</span><span id="line-246"></span><span class="hs-comment">--     structure /must/ include a</span><span>
+</span><span id="line-247"></span><span class="hs-comment">--     'PhysicalDeviceImageViewImageFormatInfoEXT' structure with an</span><span>
+</span><span id="line-248"></span><span class="hs-comment">--     @imageViewType@ that is compatible with @imageType@</span><span>
+</span><span id="line-249"></span><span class="hs-comment">--</span><span>
+</span><span id="line-250"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-251"></span><span class="hs-comment">--</span><span>
+</span><span id="line-252"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-253"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-254"></span><span class="hs-keyword">data</span><span> </span><span id="FilterCubicImageViewImageFormatPropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-var">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="FilterCubicImageViewImageFormatPropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-var">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span></span><span>
+</span><span id="line-255"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @filterCubic@ tells if image format, image type and image view type</span><span>
+</span><span id="line-256"></span><span>    </span><span class="hs-comment">-- /can/ be used with cubic filtering. This field is set by the</span><span>
+</span><span id="line-257"></span><span>    </span><span class="hs-comment">-- implementation. User-specified value is ignored.</span><span>
+</span><span id="line-258"></span><span>    </span><span id="%24sel%3AfilterCubic%3AFilterCubicImageViewImageFormatPropertiesEXT"><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#%24sel%3AfilterCubic%3AFilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-var hs-var">filterCubic</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-259"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @filterCubicMinmax@ tells if image format, image type and image view</span><span>
+</span><span id="line-260"></span><span>    </span><span class="hs-comment">-- type /can/ be used with cubic filtering and minmax filtering. This field</span><span>
+</span><span id="line-261"></span><span>    </span><span class="hs-comment">-- is set by the implementation. User-specified value is ignored.</span><span>
+</span><span id="line-262"></span><span>    </span><span id="%24sel%3AfilterCubicMinmax%3AFilterCubicImageViewImageFormatPropertiesEXT"><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#%24sel%3AfilterCubicMinmax%3AFilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-var hs-var">filterCubicMinmax</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-263"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-264"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680146219"><span id="local-6989586621680146221"><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool
+(FilterCubicImageViewImageFormatPropertiesEXT
+ -&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool)
+-&gt; (FilterCubicImageViewImageFormatPropertiesEXT
+    -&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool)
+-&gt; Eq FilterCubicImageViewImageFormatPropertiesEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool
+$c/= :: FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool
+== :: FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool
+$c== :: FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">FilterCubicImageViewImageFormatPropertiesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680146213"><span id="local-6989586621680146215"><span id="local-6989586621680146217"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-type">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span></span></span></span><span>
+</span><span id="line-269"></span><span>
+</span><span id="line-270"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680146209"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-type">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-271"></span><span>  </span><span id="local-6989586621680146205"><span class="annot"><span class="annottext">withCStruct :: FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; (Ptr FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b)
+-&gt; IO b
+</span><a href="#local-6989586621680146205"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680146204"><span class="annot"><span class="annottext">x :: FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146204"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680146203"><span class="annot"><span class="annottext">f :: Ptr FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680146203"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b)
+ -&gt; IO b)
+-&gt; (Ptr FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680146202"><span class="annot"><span class="annottext">p :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146202"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146202"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146204"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680146203"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146202"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-272"></span><span>  </span><span id="local-6989586621680146201"><span class="annot"><span class="annottext">pokeCStruct :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680146201"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680146200"><span class="annot"><span class="annottext">p :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146200"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680146198"><span id="local-6989586621680146199"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-type">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680146197"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680146197"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-273"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146200"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-274"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146200"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-275"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146200"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680146199"><span class="hs-identifier hs-var">filterCubic</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-276"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146200"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680146198"><span class="hs-identifier hs-var">filterCubicMinmax</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-277"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680146197"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-278"></span><span>  </span><span id="local-6989586621680146196"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680146196"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-279"></span><span>  </span><span id="local-6989586621680146195"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680146195"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-280"></span><span>  </span><span id="local-6989586621680146194"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680146194"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680146193"><span class="annot"><span class="annottext">p :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146193"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680146192"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680146192"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-281"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146193"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-282"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146193"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-283"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146193"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-284"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146193"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-285"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680146192"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-286"></span><span>
+</span><span id="line-287"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-type">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-288"></span><span>  </span><span id="local-6989586621680146190"><span class="annot"><span class="annottext">peekCStruct :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; IO FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146190"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680146189"><span class="annot"><span class="annottext">p :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146189"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-289"></span><span>    </span><span id="local-6989586621680146188"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680146188"><span class="hs-identifier hs-var">filterCubic</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146189"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-290"></span><span>    </span><span id="local-6989586621680146187"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680146187"><span class="hs-identifier hs-var">filterCubicMinmax</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146189"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-291"></span><span>    </span><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; IO FilterCubicImageViewImageFormatPropertiesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(FilterCubicImageViewImageFormatPropertiesEXT
+ -&gt; IO FilterCubicImageViewImageFormatPropertiesEXT)
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; IO FilterCubicImageViewImageFormatPropertiesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-var">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span><span>
+</span><span id="line-292"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680146188"><span class="hs-identifier hs-var">filterCubic</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680146187"><span class="hs-identifier hs-var">filterCubicMinmax</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-293"></span><span>
+</span><span id="line-294"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680146177"><span id="local-6989586621680146179"><span id="local-6989586621680146181"><span id="local-6989586621680146183"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-type">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-295"></span><span>  </span><span id="local-6989586621680146174"><span class="annot"><span class="annottext">sizeOf :: FilterCubicImageViewImageFormatPropertiesEXT -&gt; Int
+</span><a href="#local-6989586621680146174"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-296"></span><span>  </span><span id="local-6989586621680146173"><span class="annot"><span class="annottext">alignment :: FilterCubicImageViewImageFormatPropertiesEXT -&gt; Int
+</span><a href="#local-6989586621680146173"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-297"></span><span>  </span><span id="local-6989586621680146172"><span class="annot"><span class="annottext">peek :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; IO FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146172"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; IO FilterCubicImageViewImageFormatPropertiesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-298"></span><span>  </span><span id="local-6989586621680146171"><span class="annot"><span class="annottext">poke :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO ()
+</span><a href="#local-6989586621680146171"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680146170"><span class="annot"><span class="annottext">ptr :: Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146170"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680146169"><span class="annot"><span class="annottext">poked :: FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146169"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+-&gt; FilterCubicImageViewImageFormatPropertiesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146170"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146169"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-299"></span><span>
+</span><span id="line-300"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-type">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-301"></span><span>  </span><span id="local-6989586621680146167"><span class="annot"><span class="annottext">zero :: FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="#local-6989586621680146167"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; FilterCubicImageViewImageFormatPropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#FilterCubicImageViewImageFormatPropertiesEXT"><span class="hs-identifier hs-var">FilterCubicImageViewImageFormatPropertiesEXT</span></a></span><span>
+</span><span id="line-302"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-303"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-304"></span><span>
+</span><span id="line-305"></span><span>
+</span><span id="line-306"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_FILTER_CUBIC_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_FILTER_CUBIC_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">3</span></span><span>
+</span><span id="line-307"></span><span>
+</span><span id="line-308"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_FILTER_CUBIC_SPEC_VERSION&quot;</span><span>
+</span><span id="line-309"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_FILTER_CUBIC_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680146325"><span class="annot"><a href="#local-6989586621680146325"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680146325"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680146325"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-310"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_FILTER_CUBIC_SPEC_VERSION"><span id="%24mEXT_FILTER_CUBIC_SPEC_VERSION"><span id="EXT_FILTER_CUBIC_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_FILTER_CUBIC_SPEC_VERSION :: a
+$mEXT_FILTER_CUBIC_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#%24bEXT_FILTER_CUBIC_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_FILTER_CUBIC_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">3</span></span><span>
+</span><span id="line-311"></span><span>
+</span><span id="line-312"></span><span>
+</span><span id="line-313"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_FILTER_CUBIC_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_FILTER_CUBIC_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_filter_cubic&quot;</span></span><span>
+</span><span id="line-314"></span><span>
+</span><span id="line-315"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_FILTER_CUBIC_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-316"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#EXT_FILTER_CUBIC_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_FILTER_CUBIC_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680146321"><span class="annot"><a href="#local-6989586621680146321"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680146321"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680146321"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680146321"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-317"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_FILTER_CUBIC_EXTENSION_NAME"><span id="%24mEXT_FILTER_CUBIC_EXTENSION_NAME"><span id="EXT_FILTER_CUBIC_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_FILTER_CUBIC_EXTENSION_NAME :: a
+$mEXT_FILTER_CUBIC_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_filter_cubic.html#%24bEXT_FILTER_CUBIC_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_FILTER_CUBIC_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_filter_cubic&quot;</span></span><span>
+</span><span id="line-318"></span><span>
+</span><span id="line-319"></span></pre></body></html>

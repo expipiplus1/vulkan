@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;FormFactor&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.FormFactor</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier">FormFactor</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FORM_FACTOR_HEAD_MOUNTED_DISPLAY"><span class="hs-identifier">FORM_FACTOR_HEAD_MOUNTED_DISPLAY</span></a></span><span>
+</span><span id="line-4"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FORM_FACTOR_HANDHELD_DISPLAY"><span class="hs-identifier">FORM_FACTOR_HANDHELD_DISPLAY</span></a></span><span>
+</span><span id="line-5"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-6"></span><span>                                                  </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- | XrFormFactor - Supported form factors</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- The predefined form factors which /may/ be supported by OpenXR runtimes</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- are:</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- == Enumerant Descriptions</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'OpenXR.Core10.APIConstants.NULL_SYSTEM_ID',</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.SystemGetInfo',</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId &gt;,</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.getSystem'</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">newtype</span><span> </span><span id="FormFactor"><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-var">FormFactor</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="FormFactor"><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-var">FormFactor</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-33"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679389978"><span id="local-6989586621679389980"><span class="annot"><span class="annottext">FormFactor -&gt; FormFactor -&gt; Bool
+(FormFactor -&gt; FormFactor -&gt; Bool)
+-&gt; (FormFactor -&gt; FormFactor -&gt; Bool) -&gt; Eq FormFactor
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: FormFactor -&gt; FormFactor -&gt; Bool
+$c/= :: FormFactor -&gt; FormFactor -&gt; Bool
+== :: FormFactor -&gt; FormFactor -&gt; Bool
+$c== :: FormFactor -&gt; FormFactor -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389962"><span id="local-6989586621679389964"><span id="local-6989586621679389966"><span id="local-6989586621679389968"><span id="local-6989586621679389970"><span id="local-6989586621679389972"><span id="local-6989586621679389974"><span class="annot"><span class="annottext">Eq FormFactor
+Eq FormFactor =&gt;
+(FormFactor -&gt; FormFactor -&gt; Ordering)
+-&gt; (FormFactor -&gt; FormFactor -&gt; Bool)
+-&gt; (FormFactor -&gt; FormFactor -&gt; Bool)
+-&gt; (FormFactor -&gt; FormFactor -&gt; Bool)
+-&gt; (FormFactor -&gt; FormFactor -&gt; Bool)
+-&gt; (FormFactor -&gt; FormFactor -&gt; FormFactor)
+-&gt; (FormFactor -&gt; FormFactor -&gt; FormFactor)
+-&gt; Ord FormFactor
+FormFactor -&gt; FormFactor -&gt; Bool
+FormFactor -&gt; FormFactor -&gt; Ordering
+FormFactor -&gt; FormFactor -&gt; FormFactor
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: FormFactor -&gt; FormFactor -&gt; FormFactor
+$cmin :: FormFactor -&gt; FormFactor -&gt; FormFactor
+max :: FormFactor -&gt; FormFactor -&gt; FormFactor
+$cmax :: FormFactor -&gt; FormFactor -&gt; FormFactor
+&gt;= :: FormFactor -&gt; FormFactor -&gt; Bool
+$c&gt;= :: FormFactor -&gt; FormFactor -&gt; Bool
+&gt; :: FormFactor -&gt; FormFactor -&gt; Bool
+$c&gt; :: FormFactor -&gt; FormFactor -&gt; Bool
+&lt;= :: FormFactor -&gt; FormFactor -&gt; Bool
+$c&lt;= :: FormFactor -&gt; FormFactor -&gt; Bool
+&lt; :: FormFactor -&gt; FormFactor -&gt; Bool
+$c&lt; :: FormFactor -&gt; FormFactor -&gt; Bool
+compare :: FormFactor -&gt; FormFactor -&gt; Ordering
+$ccompare :: FormFactor -&gt; FormFactor -&gt; Ordering
+$cp1Ord :: Eq FormFactor
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389945"><span id="local-6989586621679389947"><span id="local-6989586621679389949"><span id="local-6989586621679389951"><span id="local-6989586621679389953"><span id="local-6989586621679389955"><span id="local-6989586621679389957"><span id="local-6989586621679389959"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO FormFactor
+Ptr b -&gt; Int -&gt; FormFactor -&gt; IO ()
+Ptr FormFactor -&gt; IO FormFactor
+Ptr FormFactor -&gt; Int -&gt; IO FormFactor
+Ptr FormFactor -&gt; Int -&gt; FormFactor -&gt; IO ()
+Ptr FormFactor -&gt; FormFactor -&gt; IO ()
+FormFactor -&gt; Int
+(FormFactor -&gt; Int)
+-&gt; (FormFactor -&gt; Int)
+-&gt; (Ptr FormFactor -&gt; Int -&gt; IO FormFactor)
+-&gt; (Ptr FormFactor -&gt; Int -&gt; FormFactor -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO FormFactor)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; FormFactor -&gt; IO ())
+-&gt; (Ptr FormFactor -&gt; IO FormFactor)
+-&gt; (Ptr FormFactor -&gt; FormFactor -&gt; IO ())
+-&gt; Storable FormFactor
+forall b. Ptr b -&gt; Int -&gt; IO FormFactor
+forall b. Ptr b -&gt; Int -&gt; FormFactor -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr FormFactor -&gt; FormFactor -&gt; IO ()
+$cpoke :: Ptr FormFactor -&gt; FormFactor -&gt; IO ()
+peek :: Ptr FormFactor -&gt; IO FormFactor
+$cpeek :: Ptr FormFactor -&gt; IO FormFactor
+pokeByteOff :: Ptr b -&gt; Int -&gt; FormFactor -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; FormFactor -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO FormFactor
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO FormFactor
+pokeElemOff :: Ptr FormFactor -&gt; Int -&gt; FormFactor -&gt; IO ()
+$cpokeElemOff :: Ptr FormFactor -&gt; Int -&gt; FormFactor -&gt; IO ()
+peekElemOff :: Ptr FormFactor -&gt; Int -&gt; IO FormFactor
+$cpeekElemOff :: Ptr FormFactor -&gt; Int -&gt; IO FormFactor
+alignment :: FormFactor -&gt; Int
+$calignment :: FormFactor -&gt; Int
+sizeOf :: FormFactor -&gt; Int
+$csizeOf :: FormFactor -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389942"><span class="annot"><span class="annottext">FormFactor
+FormFactor -&gt; Zero FormFactor
+forall a. a -&gt; Zero a
+zero :: FormFactor
+$czero :: FormFactor
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- | 'FORM_FACTOR_HEAD_MOUNTED_DISPLAY'. The tracked display is attached to</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- the user&#8217;s head. The user cannot touch the display itself. A VR headset</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- would be an example of this form factor.</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bFORM_FACTOR_HEAD_MOUNTED_DISPLAY"><span id="%24mFORM_FACTOR_HEAD_MOUNTED_DISPLAY"><span id="FORM_FACTOR_HEAD_MOUNTED_DISPLAY"><span class="annot"><span class="annottext">$bFORM_FACTOR_HEAD_MOUNTED_DISPLAY :: FormFactor
+$mFORM_FACTOR_HEAD_MOUNTED_DISPLAY :: forall r. FormFactor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#%24bFORM_FACTOR_HEAD_MOUNTED_DISPLAY"><span class="hs-identifier hs-var hs-var hs-var">FORM_FACTOR_HEAD_MOUNTED_DISPLAY</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-type">FormFactor</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- | 'FORM_FACTOR_HANDHELD_DISPLAY'. The tracked display is held in the</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- user&#8217;s hand, independent from the user&#8217;s head. The user /may/ be able to</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- touch the display, allowing for screen-space UI. A mobile phone running</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- an AR experience using pass-through video would be an example of this</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- form factor.</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bFORM_FACTOR_HANDHELD_DISPLAY"><span id="%24mFORM_FACTOR_HANDHELD_DISPLAY"><span id="FORM_FACTOR_HANDHELD_DISPLAY"><span class="annot"><span class="annottext">$bFORM_FACTOR_HANDHELD_DISPLAY :: FormFactor
+$mFORM_FACTOR_HANDHELD_DISPLAY :: forall r. FormFactor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#%24bFORM_FACTOR_HANDHELD_DISPLAY"><span class="hs-identifier hs-var hs-var hs-var">FORM_FACTOR_HANDHELD_DISPLAY</span></a></span></span></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-type">FormFactor</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-46"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FORM_FACTOR_HEAD_MOUNTED_DISPLAY"><span class="hs-pragma hs-type">FORM_FACTOR_HEAD_MOUNTED_DISPLAY</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-47"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FORM_FACTOR_HANDHELD_DISPLAY"><span class="hs-pragma hs-type">FORM_FACTOR_HANDHELD_DISPLAY</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-pragma hs-type">FormFactor</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#conNameFormFactor"><span class="hs-identifier hs-type">conNameFormFactor</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-50"></span><span id="conNameFormFactor"><span class="annot"><span class="annottext">conNameFormFactor :: String
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#conNameFormFactor"><span class="hs-identifier hs-var hs-var">conNameFormFactor</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;FormFactor&quot;</span></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#enumPrefixFormFactor"><span class="hs-identifier hs-type">enumPrefixFormFactor</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-53"></span><span id="enumPrefixFormFactor"><span class="annot"><span class="annottext">enumPrefixFormFactor :: String
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#enumPrefixFormFactor"><span class="hs-identifier hs-var hs-var">enumPrefixFormFactor</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;FORM_FACTOR_H&quot;</span></span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#showTableFormFactor"><span class="hs-identifier hs-type">showTableFormFactor</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-type">FormFactor</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-56"></span><span id="showTableFormFactor"><span class="annot"><span class="annottext">showTableFormFactor :: [(FormFactor, String)]
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#showTableFormFactor"><span class="hs-identifier hs-var hs-var">showTableFormFactor</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">FormFactor
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#FORM_FACTOR_HEAD_MOUNTED_DISPLAY"><span class="hs-identifier hs-var">FORM_FACTOR_HEAD_MOUNTED_DISPLAY</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;EAD_MOUNTED_DISPLAY&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FormFactor
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#FORM_FACTOR_HANDHELD_DISPLAY"><span class="hs-identifier hs-var">FORM_FACTOR_HANDHELD_DISPLAY</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ANDHELD_DISPLAY&quot;</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389929"><span id="local-6989586621679389931"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-type">FormFactor</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-60"></span><span>  </span><span id="local-6989586621679389927"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; FormFactor -&gt; ShowS
+</span><a href="#local-6989586621679389927"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-61"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(FormFactor, String)]
+-&gt; String
+-&gt; (FormFactor -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; FormFactor
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#enumPrefixFormFactor"><span class="hs-identifier hs-var">enumPrefixFormFactor</span></a></span><span> </span><span class="annot"><span class="annottext">[(FormFactor, String)]
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#showTableFormFactor"><span class="hs-identifier hs-var">showTableFormFactor</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#conNameFormFactor"><span class="hs-identifier hs-var">conNameFormFactor</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-type">FormFactor</span></a></span><span> </span><span id="local-6989586621679389926"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679389926"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679389926"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>
+</span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389919"><span id="local-6989586621679389922"><span id="local-6989586621679389924"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-type">FormFactor</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-64"></span><span>  </span><span id="local-6989586621679389917"><span class="annot"><span class="annottext">readPrec :: ReadPrec FormFactor
+</span><a href="#local-6989586621679389917"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(FormFactor, String)]
+-&gt; String
+-&gt; (Int32 -&gt; FormFactor)
+-&gt; ReadPrec FormFactor
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#enumPrefixFormFactor"><span class="hs-identifier hs-var">enumPrefixFormFactor</span></a></span><span> </span><span class="annot"><span class="annottext">[(FormFactor, String)]
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#showTableFormFactor"><span class="hs-identifier hs-var">showTableFormFactor</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#conNameFormFactor"><span class="hs-identifier hs-var">conNameFormFactor</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; FormFactor
+</span><a href="OpenXR.Core10.Enums.FormFactor.html#FormFactor"><span class="hs-identifier hs-var">FormFactor</span></a></span><span>
+</span><span id="line-65"></span><span>
+</span><span id="line-66"></span></pre></body></html>

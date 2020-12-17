@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;ViewStateFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.ViewStateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier">ViewStateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | XrViewStateFlags - View state flags</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- == Flag Descriptions</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.View',</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.ViewState',</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.locateViews'</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">newtype</span><span> </span><span id="ViewStateFlags"><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier hs-var">ViewStateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ViewStateFlags"><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier hs-var">ViewStateFlags</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679386720"><span id="local-6989586621679386722"><span class="annot"><span class="annottext">ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+(ViewStateFlags -&gt; ViewStateFlags -&gt; Bool)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; Bool) -&gt; Eq ViewStateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+$c/= :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+== :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+$c== :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386704"><span id="local-6989586621679386706"><span id="local-6989586621679386708"><span id="local-6989586621679386710"><span id="local-6989586621679386712"><span id="local-6989586621679386714"><span id="local-6989586621679386716"><span class="annot"><span class="annottext">Eq ViewStateFlags
+Eq ViewStateFlags =&gt;
+(ViewStateFlags -&gt; ViewStateFlags -&gt; Ordering)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; Bool)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; Bool)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; Bool)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; Bool)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags)
+-&gt; Ord ViewStateFlags
+ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+ViewStateFlags -&gt; ViewStateFlags -&gt; Ordering
+ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+$cmin :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+max :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+$cmax :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+&gt;= :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+$c&gt;= :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+&gt; :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+$c&gt; :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+&lt;= :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+$c&lt;= :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+&lt; :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+$c&lt; :: ViewStateFlags -&gt; ViewStateFlags -&gt; Bool
+compare :: ViewStateFlags -&gt; ViewStateFlags -&gt; Ordering
+$ccompare :: ViewStateFlags -&gt; ViewStateFlags -&gt; Ordering
+$cp1Ord :: Eq ViewStateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386687"><span id="local-6989586621679386689"><span id="local-6989586621679386691"><span id="local-6989586621679386693"><span id="local-6989586621679386695"><span id="local-6989586621679386697"><span id="local-6989586621679386699"><span id="local-6989586621679386701"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ViewStateFlags
+Ptr b -&gt; Int -&gt; ViewStateFlags -&gt; IO ()
+Ptr ViewStateFlags -&gt; IO ViewStateFlags
+Ptr ViewStateFlags -&gt; Int -&gt; IO ViewStateFlags
+Ptr ViewStateFlags -&gt; Int -&gt; ViewStateFlags -&gt; IO ()
+Ptr ViewStateFlags -&gt; ViewStateFlags -&gt; IO ()
+ViewStateFlags -&gt; Int
+(ViewStateFlags -&gt; Int)
+-&gt; (ViewStateFlags -&gt; Int)
+-&gt; (Ptr ViewStateFlags -&gt; Int -&gt; IO ViewStateFlags)
+-&gt; (Ptr ViewStateFlags -&gt; Int -&gt; ViewStateFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ViewStateFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; ViewStateFlags -&gt; IO ())
+-&gt; (Ptr ViewStateFlags -&gt; IO ViewStateFlags)
+-&gt; (Ptr ViewStateFlags -&gt; ViewStateFlags -&gt; IO ())
+-&gt; Storable ViewStateFlags
+forall b. Ptr b -&gt; Int -&gt; IO ViewStateFlags
+forall b. Ptr b -&gt; Int -&gt; ViewStateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ViewStateFlags -&gt; ViewStateFlags -&gt; IO ()
+$cpoke :: Ptr ViewStateFlags -&gt; ViewStateFlags -&gt; IO ()
+peek :: Ptr ViewStateFlags -&gt; IO ViewStateFlags
+$cpeek :: Ptr ViewStateFlags -&gt; IO ViewStateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; ViewStateFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ViewStateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ViewStateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ViewStateFlags
+pokeElemOff :: Ptr ViewStateFlags -&gt; Int -&gt; ViewStateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr ViewStateFlags -&gt; Int -&gt; ViewStateFlags -&gt; IO ()
+peekElemOff :: Ptr ViewStateFlags -&gt; Int -&gt; IO ViewStateFlags
+$cpeekElemOff :: Ptr ViewStateFlags -&gt; Int -&gt; IO ViewStateFlags
+alignment :: ViewStateFlags -&gt; Int
+$calignment :: ViewStateFlags -&gt; Int
+sizeOf :: ViewStateFlags -&gt; Int
+$csizeOf :: ViewStateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386684"><span class="annot"><span class="annottext">ViewStateFlags
+ViewStateFlags -&gt; Zero ViewStateFlags
+forall a. a -&gt; Zero a
+zero :: ViewStateFlags
+$czero :: ViewStateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386638"><span id="local-6989586621679386640"><span id="local-6989586621679386642"><span id="local-6989586621679386644"><span id="local-6989586621679386646"><span id="local-6989586621679386648"><span id="local-6989586621679386650"><span id="local-6989586621679386652"><span id="local-6989586621679386654"><span id="local-6989586621679386656"><span id="local-6989586621679386658"><span id="local-6989586621679386660"><span id="local-6989586621679386662"><span id="local-6989586621679386664"><span id="local-6989586621679386666"><span id="local-6989586621679386668"><span id="local-6989586621679386670"><span id="local-6989586621679386672"><span id="local-6989586621679386674"><span id="local-6989586621679386676"><span id="local-6989586621679386678"><span id="local-6989586621679386680"><span class="annot"><span class="annottext">Eq ViewStateFlags
+ViewStateFlags
+Eq ViewStateFlags =&gt;
+(ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; ViewStateFlags
+-&gt; (Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; Bool)
+-&gt; (ViewStateFlags -&gt; Maybe Int)
+-&gt; (ViewStateFlags -&gt; Int)
+-&gt; (ViewStateFlags -&gt; Bool)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int -&gt; ViewStateFlags)
+-&gt; (ViewStateFlags -&gt; Int)
+-&gt; Bits ViewStateFlags
+Int -&gt; ViewStateFlags
+ViewStateFlags -&gt; Bool
+ViewStateFlags -&gt; Int
+ViewStateFlags -&gt; Maybe Int
+ViewStateFlags -&gt; ViewStateFlags
+ViewStateFlags -&gt; Int -&gt; Bool
+ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: ViewStateFlags -&gt; Int
+$cpopCount :: ViewStateFlags -&gt; Int
+rotateR :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$crotateR :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+rotateL :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$crotateL :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+unsafeShiftR :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$cunsafeShiftR :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+shiftR :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$cshiftR :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+unsafeShiftL :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$cunsafeShiftL :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+shiftL :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$cshiftL :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+isSigned :: ViewStateFlags -&gt; Bool
+$cisSigned :: ViewStateFlags -&gt; Bool
+bitSize :: ViewStateFlags -&gt; Int
+$cbitSize :: ViewStateFlags -&gt; Int
+bitSizeMaybe :: ViewStateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: ViewStateFlags -&gt; Maybe Int
+testBit :: ViewStateFlags -&gt; Int -&gt; Bool
+$ctestBit :: ViewStateFlags -&gt; Int -&gt; Bool
+complementBit :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$ccomplementBit :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+clearBit :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$cclearBit :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+setBit :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$csetBit :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+bit :: Int -&gt; ViewStateFlags
+$cbit :: Int -&gt; ViewStateFlags
+zeroBits :: ViewStateFlags
+$czeroBits :: ViewStateFlags
+rotate :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$crotate :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+shift :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+$cshift :: ViewStateFlags -&gt; Int -&gt; ViewStateFlags
+complement :: ViewStateFlags -&gt; ViewStateFlags
+$ccomplement :: ViewStateFlags -&gt; ViewStateFlags
+xor :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+$cxor :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+.|. :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+$c.|. :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+.&amp;. :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+$c.&amp;. :: ViewStateFlags -&gt; ViewStateFlags -&gt; ViewStateFlags
+$cp1Bits :: Eq ViewStateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386630"><span id="local-6989586621679386632"><span id="local-6989586621679386634"><span class="annot"><span class="annottext">Bits ViewStateFlags
+Bits ViewStateFlags =&gt;
+(ViewStateFlags -&gt; Int)
+-&gt; (ViewStateFlags -&gt; Int)
+-&gt; (ViewStateFlags -&gt; Int)
+-&gt; FiniteBits ViewStateFlags
+ViewStateFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: ViewStateFlags -&gt; Int
+$ccountTrailingZeros :: ViewStateFlags -&gt; Int
+countLeadingZeros :: ViewStateFlags -&gt; Int
+$ccountLeadingZeros :: ViewStateFlags -&gt; Int
+finiteBitSize :: ViewStateFlags -&gt; Int
+$cfiniteBitSize :: ViewStateFlags -&gt; Int
+$cp1FiniteBits :: Bits ViewStateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#conNameViewStateFlags"><span class="hs-identifier hs-type">conNameViewStateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-31"></span><span id="conNameViewStateFlags"><span class="annot"><span class="annottext">conNameViewStateFlags :: String
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#conNameViewStateFlags"><span class="hs-identifier hs-var hs-var">conNameViewStateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ViewStateFlags&quot;</span></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#enumPrefixViewStateFlags"><span class="hs-identifier hs-type">enumPrefixViewStateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-34"></span><span id="enumPrefixViewStateFlags"><span class="annot"><span class="annottext">enumPrefixViewStateFlags :: String
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#enumPrefixViewStateFlags"><span class="hs-identifier hs-var hs-var">enumPrefixViewStateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#showTableViewStateFlags"><span class="hs-identifier hs-type">showTableViewStateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier hs-type">ViewStateFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-37"></span><span id="showTableViewStateFlags"><span class="annot"><span class="annottext">showTableViewStateFlags :: [(ViewStateFlags, String)]
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#showTableViewStateFlags"><span class="hs-identifier hs-var hs-var">showTableViewStateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386621"><span id="local-6989586621679386623"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier hs-type">ViewStateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>  </span><span id="local-6989586621679386619"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ViewStateFlags -&gt; ShowS
+</span><a href="#local-6989586621679386619"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ViewStateFlags, String)]
+-&gt; String
+-&gt; (ViewStateFlags -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; ViewStateFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#enumPrefixViewStateFlags"><span class="hs-identifier hs-var">enumPrefixViewStateFlags</span></a></span><span>
+</span><span id="line-41"></span><span>                            </span><span class="annot"><span class="annottext">[(ViewStateFlags, String)]
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#showTableViewStateFlags"><span class="hs-identifier hs-var">showTableViewStateFlags</span></a></span><span>
+</span><span id="line-42"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#conNameViewStateFlags"><span class="hs-identifier hs-var">conNameViewStateFlags</span></a></span><span>
+</span><span id="line-43"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier hs-type">ViewStateFlags</span></a></span><span> </span><span id="local-6989586621679386618"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679386618"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679386618"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679386617"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679386617"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679386617"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386609"><span id="local-6989586621679386612"><span id="local-6989586621679386614"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier hs-type">ViewStateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621679386607"><span class="annot"><span class="annottext">readPrec :: ReadPrec ViewStateFlags
+</span><a href="#local-6989586621679386607"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ViewStateFlags, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; ViewStateFlags)
+-&gt; ReadPrec ViewStateFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#enumPrefixViewStateFlags"><span class="hs-identifier hs-var">enumPrefixViewStateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">[(ViewStateFlags, String)]
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#showTableViewStateFlags"><span class="hs-identifier hs-var">showTableViewStateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#conNameViewStateFlags"><span class="hs-identifier hs-var">conNameViewStateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ViewStateFlags
+</span><a href="OpenXR.Core10.Enums.ViewStateFlags.html#ViewStateFlags"><span class="hs-identifier hs-var">ViewStateFlags</span></a></span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span></pre></body></html>

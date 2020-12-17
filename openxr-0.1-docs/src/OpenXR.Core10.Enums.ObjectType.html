@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;ObjectType&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_UNKNOWN"><span class="hs-identifier">OBJECT_TYPE_UNKNOWN</span></a></span><span>
+</span><span id="line-4"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_INSTANCE"><span class="hs-identifier">OBJECT_TYPE_INSTANCE</span></a></span><span>
+</span><span id="line-5"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SESSION"><span class="hs-identifier">OBJECT_TYPE_SESSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SWAPCHAIN"><span class="hs-identifier">OBJECT_TYPE_SWAPCHAIN</span></a></span><span>
+</span><span id="line-7"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPACE"><span class="hs-identifier">OBJECT_TYPE_SPACE</span></a></span><span>
+</span><span id="line-8"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION_SET"><span class="hs-identifier">OBJECT_TYPE_ACTION_SET</span></a></span><span>
+</span><span id="line-9"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION"><span class="hs-identifier">OBJECT_TYPE_ACTION</span></a></span><span>
+</span><span id="line-10"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_HAND_TRACKER_EXT"><span class="hs-identifier">OBJECT_TYPE_HAND_TRACKER_EXT</span></a></span><span>
+</span><span id="line-11"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span class="hs-identifier">OBJECT_TYPE_SPATIAL_ANCHOR_MSFT</span></a></span><span>
+</span><span id="line-12"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span class="hs-identifier">OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT</span></a></span><span>
+</span><span id="line-13"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-14"></span><span>                                                  </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-15"></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- | XrObjectType - Specify an enumeration to track object handle types</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- The 'ObjectType' enumeration defines values, each of which corresponds</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- to a specific OpenXR handle type. These values /can/ be used to</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- associate debug information with a particular type of object through one</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- or more extensions.</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- The following table defines 'ObjectType' and OpenXR Handle</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- relationships:</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- | 'ObjectType'                             | OpenXR Handle Type                |</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- +==========================================+===================================+</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- | 'OBJECT_TYPE_UNKNOWN'                    | Unknown\/Undefined Handle         |</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- | 'OBJECT_TYPE_INSTANCE'                   | 'OpenXR.Core10.Handles.Instance'  |</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- | 'OBJECT_TYPE_SESSION'                    | 'OpenXR.Core10.Handles.Session'   |</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- | 'OBJECT_TYPE_SWAPCHAIN'                  | 'OpenXR.Core10.Handles.Swapchain' |</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- | 'OBJECT_TYPE_SPACE'                      | 'OpenXR.Core10.Handles.Space'     |</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- | 'OBJECT_TYPE_ACTION_SET'                 | 'OpenXR.Core10.Handles.ActionSet' |</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- | 'OBJECT_TYPE_ACTION'                     | 'OpenXR.Core10.Handles.Action'    |</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.DebugUtilsObjectNameInfoEXT'</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">newtype</span><span> </span><span id="ObjectType"><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-var">ObjectType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ObjectType"><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-var">ObjectType</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-59"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679389567"><span id="local-6989586621679389569"><span class="annot"><span class="annottext">ObjectType -&gt; ObjectType -&gt; Bool
+(ObjectType -&gt; ObjectType -&gt; Bool)
+-&gt; (ObjectType -&gt; ObjectType -&gt; Bool) -&gt; Eq ObjectType
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ObjectType -&gt; ObjectType -&gt; Bool
+$c/= :: ObjectType -&gt; ObjectType -&gt; Bool
+== :: ObjectType -&gt; ObjectType -&gt; Bool
+$c== :: ObjectType -&gt; ObjectType -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389551"><span id="local-6989586621679389553"><span id="local-6989586621679389555"><span id="local-6989586621679389557"><span id="local-6989586621679389559"><span id="local-6989586621679389561"><span id="local-6989586621679389563"><span class="annot"><span class="annottext">Eq ObjectType
+Eq ObjectType =&gt;
+(ObjectType -&gt; ObjectType -&gt; Ordering)
+-&gt; (ObjectType -&gt; ObjectType -&gt; Bool)
+-&gt; (ObjectType -&gt; ObjectType -&gt; Bool)
+-&gt; (ObjectType -&gt; ObjectType -&gt; Bool)
+-&gt; (ObjectType -&gt; ObjectType -&gt; Bool)
+-&gt; (ObjectType -&gt; ObjectType -&gt; ObjectType)
+-&gt; (ObjectType -&gt; ObjectType -&gt; ObjectType)
+-&gt; Ord ObjectType
+ObjectType -&gt; ObjectType -&gt; Bool
+ObjectType -&gt; ObjectType -&gt; Ordering
+ObjectType -&gt; ObjectType -&gt; ObjectType
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ObjectType -&gt; ObjectType -&gt; ObjectType
+$cmin :: ObjectType -&gt; ObjectType -&gt; ObjectType
+max :: ObjectType -&gt; ObjectType -&gt; ObjectType
+$cmax :: ObjectType -&gt; ObjectType -&gt; ObjectType
+&gt;= :: ObjectType -&gt; ObjectType -&gt; Bool
+$c&gt;= :: ObjectType -&gt; ObjectType -&gt; Bool
+&gt; :: ObjectType -&gt; ObjectType -&gt; Bool
+$c&gt; :: ObjectType -&gt; ObjectType -&gt; Bool
+&lt;= :: ObjectType -&gt; ObjectType -&gt; Bool
+$c&lt;= :: ObjectType -&gt; ObjectType -&gt; Bool
+&lt; :: ObjectType -&gt; ObjectType -&gt; Bool
+$c&lt; :: ObjectType -&gt; ObjectType -&gt; Bool
+compare :: ObjectType -&gt; ObjectType -&gt; Ordering
+$ccompare :: ObjectType -&gt; ObjectType -&gt; Ordering
+$cp1Ord :: Eq ObjectType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389534"><span id="local-6989586621679389536"><span id="local-6989586621679389538"><span id="local-6989586621679389540"><span id="local-6989586621679389542"><span id="local-6989586621679389544"><span id="local-6989586621679389546"><span id="local-6989586621679389548"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ObjectType
+Ptr b -&gt; Int -&gt; ObjectType -&gt; IO ()
+Ptr ObjectType -&gt; IO ObjectType
+Ptr ObjectType -&gt; Int -&gt; IO ObjectType
+Ptr ObjectType -&gt; Int -&gt; ObjectType -&gt; IO ()
+Ptr ObjectType -&gt; ObjectType -&gt; IO ()
+ObjectType -&gt; Int
+(ObjectType -&gt; Int)
+-&gt; (ObjectType -&gt; Int)
+-&gt; (Ptr ObjectType -&gt; Int -&gt; IO ObjectType)
+-&gt; (Ptr ObjectType -&gt; Int -&gt; ObjectType -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ObjectType)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; ObjectType -&gt; IO ())
+-&gt; (Ptr ObjectType -&gt; IO ObjectType)
+-&gt; (Ptr ObjectType -&gt; ObjectType -&gt; IO ())
+-&gt; Storable ObjectType
+forall b. Ptr b -&gt; Int -&gt; IO ObjectType
+forall b. Ptr b -&gt; Int -&gt; ObjectType -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ObjectType -&gt; ObjectType -&gt; IO ()
+$cpoke :: Ptr ObjectType -&gt; ObjectType -&gt; IO ()
+peek :: Ptr ObjectType -&gt; IO ObjectType
+$cpeek :: Ptr ObjectType -&gt; IO ObjectType
+pokeByteOff :: Ptr b -&gt; Int -&gt; ObjectType -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ObjectType -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ObjectType
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ObjectType
+pokeElemOff :: Ptr ObjectType -&gt; Int -&gt; ObjectType -&gt; IO ()
+$cpokeElemOff :: Ptr ObjectType -&gt; Int -&gt; ObjectType -&gt; IO ()
+peekElemOff :: Ptr ObjectType -&gt; Int -&gt; IO ObjectType
+$cpeekElemOff :: Ptr ObjectType -&gt; Int -&gt; IO ObjectType
+alignment :: ObjectType -&gt; Int
+$calignment :: ObjectType -&gt; Int
+sizeOf :: ObjectType -&gt; Int
+$csizeOf :: ObjectType -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389531"><span class="annot"><span class="annottext">ObjectType
+ObjectType -&gt; Zero ObjectType
+forall a. a -&gt; Zero a
+zero :: ObjectType
+$czero :: ObjectType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_UNKNOWN&quot;</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_UNKNOWN"><span id="%24mOBJECT_TYPE_UNKNOWN"><span id="OBJECT_TYPE_UNKNOWN"><span class="annot"><span class="annottext">$bOBJECT_TYPE_UNKNOWN :: ObjectType
+$mOBJECT_TYPE_UNKNOWN :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_UNKNOWN"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_UNKNOWN</span></a></span></span></span></span><span>                   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_INSTANCE&quot;</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_INSTANCE"><span id="%24mOBJECT_TYPE_INSTANCE"><span id="OBJECT_TYPE_INSTANCE"><span class="annot"><span class="annottext">$bOBJECT_TYPE_INSTANCE :: ObjectType
+$mOBJECT_TYPE_INSTANCE :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_INSTANCE"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_INSTANCE</span></a></span></span></span></span><span>                  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_SESSION&quot;</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_SESSION"><span id="%24mOBJECT_TYPE_SESSION"><span id="OBJECT_TYPE_SESSION"><span class="annot"><span class="annottext">$bOBJECT_TYPE_SESSION :: ObjectType
+$mOBJECT_TYPE_SESSION :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_SESSION"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_SESSION</span></a></span></span></span></span><span>                   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_SWAPCHAIN&quot;</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_SWAPCHAIN"><span id="%24mOBJECT_TYPE_SWAPCHAIN"><span id="OBJECT_TYPE_SWAPCHAIN"><span class="annot"><span class="annottext">$bOBJECT_TYPE_SWAPCHAIN :: ObjectType
+$mOBJECT_TYPE_SWAPCHAIN :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_SWAPCHAIN"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_SWAPCHAIN</span></a></span></span></span></span><span>                 </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_SPACE&quot;</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_SPACE"><span id="%24mOBJECT_TYPE_SPACE"><span id="OBJECT_TYPE_SPACE"><span class="annot"><span class="annottext">$bOBJECT_TYPE_SPACE :: ObjectType
+$mOBJECT_TYPE_SPACE :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_SPACE"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_SPACE</span></a></span></span></span></span><span>                     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">4</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_ACTION_SET&quot;</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_ACTION_SET"><span id="%24mOBJECT_TYPE_ACTION_SET"><span id="OBJECT_TYPE_ACTION_SET"><span class="annot"><span class="annottext">$bOBJECT_TYPE_ACTION_SET :: ObjectType
+$mOBJECT_TYPE_ACTION_SET :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_ACTION_SET"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_ACTION_SET</span></a></span></span></span></span><span>                </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">5</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_ACTION&quot;</span><span>
+</span><span id="line-74"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_ACTION"><span id="%24mOBJECT_TYPE_ACTION"><span id="OBJECT_TYPE_ACTION"><span class="annot"><span class="annottext">$bOBJECT_TYPE_ACTION :: ObjectType
+$mOBJECT_TYPE_ACTION :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_ACTION"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_ACTION</span></a></span></span></span></span><span>                    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">6</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_HAND_TRACKER_EXT&quot;</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_HAND_TRACKER_EXT"><span id="%24mOBJECT_TYPE_HAND_TRACKER_EXT"><span id="OBJECT_TYPE_HAND_TRACKER_EXT"><span class="annot"><span class="annottext">$bOBJECT_TYPE_HAND_TRACKER_EXT :: ObjectType
+$mOBJECT_TYPE_HAND_TRACKER_EXT :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_HAND_TRACKER_EXT"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_HAND_TRACKER_EXT</span></a></span></span></span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">1000051000</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_SPATIAL_ANCHOR_MSFT&quot;</span><span>
+</span><span id="line-78"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span id="%24mOBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span id="OBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span class="annot"><span class="annottext">$bOBJECT_TYPE_SPATIAL_ANCHOR_MSFT :: ObjectType
+$mOBJECT_TYPE_SPATIAL_ANCHOR_MSFT :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_SPATIAL_ANCHOR_MSFT</span></a></span></span></span></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">1000039000</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrObjectType&quot; &quot;XR_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT&quot;</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span id="%24mOBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span id="OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span class="annot"><span class="annottext">$bOBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT :: ObjectType
+$mOBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT :: forall r. ObjectType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#%24bOBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span class="hs-identifier hs-var hs-var hs-var">OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span class="hs-number">1000019000</span><span>
+</span><span id="line-81"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_UNKNOWN"><span class="hs-pragma hs-type">OBJECT_TYPE_UNKNOWN</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-82"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_INSTANCE"><span class="hs-pragma hs-type">OBJECT_TYPE_INSTANCE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-83"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SESSION"><span class="hs-pragma hs-type">OBJECT_TYPE_SESSION</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-84"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SWAPCHAIN"><span class="hs-pragma hs-type">OBJECT_TYPE_SWAPCHAIN</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-85"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPACE"><span class="hs-pragma hs-type">OBJECT_TYPE_SPACE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-86"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION_SET"><span class="hs-pragma hs-type">OBJECT_TYPE_ACTION_SET</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-87"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION"><span class="hs-pragma hs-type">OBJECT_TYPE_ACTION</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-88"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_HAND_TRACKER_EXT"><span class="hs-pragma hs-type">OBJECT_TYPE_HAND_TRACKER_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-89"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span class="hs-pragma hs-type">OBJECT_TYPE_SPATIAL_ANCHOR_MSFT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-90"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span class="hs-pragma hs-type">OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-pragma hs-type">ObjectType</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-91"></span><span>
+</span><span id="line-92"></span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#conNameObjectType"><span class="hs-identifier hs-type">conNameObjectType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-93"></span><span id="conNameObjectType"><span class="annot"><span class="annottext">conNameObjectType :: String
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#conNameObjectType"><span class="hs-identifier hs-var hs-var">conNameObjectType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ObjectType&quot;</span></span><span>
+</span><span id="line-94"></span><span>
+</span><span id="line-95"></span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#enumPrefixObjectType"><span class="hs-identifier hs-type">enumPrefixObjectType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-96"></span><span id="enumPrefixObjectType"><span class="annot"><span class="annottext">enumPrefixObjectType :: String
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#enumPrefixObjectType"><span class="hs-identifier hs-var hs-var">enumPrefixObjectType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;OBJECT_TYPE_&quot;</span></span><span>
+</span><span id="line-97"></span><span>
+</span><span id="line-98"></span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#showTableObjectType"><span class="hs-identifier hs-type">showTableObjectType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-99"></span><span id="showTableObjectType"><span class="annot"><span class="annottext">showTableObjectType :: [(ObjectType, String)]
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#showTableObjectType"><span class="hs-identifier hs-var hs-var">showTableObjectType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-100"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_UNKNOWN"><span class="hs-identifier hs-var">OBJECT_TYPE_UNKNOWN</span></a></span><span>                  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UNKNOWN&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_INSTANCE"><span class="hs-identifier hs-var">OBJECT_TYPE_INSTANCE</span></a></span><span>                 </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;INSTANCE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-102"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SESSION"><span class="hs-identifier hs-var">OBJECT_TYPE_SESSION</span></a></span><span>                  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SESSION&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-103"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SWAPCHAIN"><span class="hs-identifier hs-var">OBJECT_TYPE_SWAPCHAIN</span></a></span><span>                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SWAPCHAIN&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-104"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPACE"><span class="hs-identifier hs-var">OBJECT_TYPE_SPACE</span></a></span><span>                    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SPACE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-105"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION_SET"><span class="hs-identifier hs-var">OBJECT_TYPE_ACTION_SET</span></a></span><span>               </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ACTION_SET&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION"><span class="hs-identifier hs-var">OBJECT_TYPE_ACTION</span></a></span><span>                   </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ACTION&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_HAND_TRACKER_EXT"><span class="hs-identifier hs-var">OBJECT_TYPE_HAND_TRACKER_EXT</span></a></span><span>         </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;HAND_TRACKER_EXT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPATIAL_ANCHOR_MSFT"><span class="hs-identifier hs-var">OBJECT_TYPE_SPATIAL_ANCHOR_MSFT</span></a></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SPATIAL_ANCHOR_MSFT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-109"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"><span class="hs-identifier hs-var">OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;DEBUG_UTILS_MESSENGER_EXT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-110"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-111"></span><span>
+</span><span id="line-112"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389502"><span id="local-6989586621679389504"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-113"></span><span>  </span><span id="local-6989586621679389500"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ObjectType -&gt; ShowS
+</span><a href="#local-6989586621679389500"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-114"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(ObjectType, String)]
+-&gt; String
+-&gt; (ObjectType -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; ObjectType
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#enumPrefixObjectType"><span class="hs-identifier hs-var">enumPrefixObjectType</span></a></span><span> </span><span class="annot"><span class="annottext">[(ObjectType, String)]
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#showTableObjectType"><span class="hs-identifier hs-var">showTableObjectType</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#conNameObjectType"><span class="hs-identifier hs-var">conNameObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span><span> </span><span id="local-6989586621679389499"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679389499"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679389499"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389492"><span id="local-6989586621679389495"><span id="local-6989586621679389497"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-type">ObjectType</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-117"></span><span>  </span><span id="local-6989586621679389490"><span class="annot"><span class="annottext">readPrec :: ReadPrec ObjectType
+</span><a href="#local-6989586621679389490"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ObjectType, String)]
+-&gt; String
+-&gt; (Int32 -&gt; ObjectType)
+-&gt; ReadPrec ObjectType
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#enumPrefixObjectType"><span class="hs-identifier hs-var">enumPrefixObjectType</span></a></span><span> </span><span class="annot"><span class="annottext">[(ObjectType, String)]
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#showTableObjectType"><span class="hs-identifier hs-var">showTableObjectType</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#conNameObjectType"><span class="hs-identifier hs-var">conNameObjectType</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier hs-var">ObjectType</span></a></span><span>
+</span><span id="line-118"></span><span>
+</span><span id="line-119"></span></pre></body></html>

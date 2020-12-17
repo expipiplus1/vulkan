@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;Version&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Version</span><span>  </span><span class="hs-special">(</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Version.html#CURRENT_API_VERSION"><span class="hs-identifier">CURRENT_API_VERSION</span></a></span><span>
+</span><span id="line-4"></span><span>                       </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Version.html#MAKE_VERSION"><span class="hs-identifier">MAKE_VERSION</span></a></span><span>
+</span><span id="line-5"></span><span>                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Version.html#_VERSION_MAJOR"><span class="hs-identifier">_VERSION_MAJOR</span></a></span><span>
+</span><span id="line-6"></span><span>                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Version.html#_VERSION_MINOR"><span class="hs-identifier">_VERSION_MINOR</span></a></span><span>
+</span><span id="line-7"></span><span>                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Version.html#_VERSION_PATCH"><span class="hs-identifier">_VERSION_PATCH</span></a></span><span>
+</span><span id="line-8"></span><span>                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier">Version</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span>                       </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(.&amp;.)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(.|.)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">shiftL</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">shiftR</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word16</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word64</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Version.html#CURRENT_API_VERSION"><span class="hs-identifier hs-type">CURRENT_API_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCURRENT_API_VERSION"><span id="%24mCURRENT_API_VERSION"><span id="CURRENT_API_VERSION"><span class="annot"><span class="annottext">$bCURRENT_API_VERSION :: Version
+$mCURRENT_API_VERSION :: forall r. Version -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Version.html#%24bCURRENT_API_VERSION"><span class="hs-identifier hs-var hs-var hs-var">CURRENT_API_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Version.html#MAKE_VERSION"><span class="hs-identifier hs-type">MAKE_VERSION</span></a></span><span> </span><span class="hs-number">1</span><span> </span><span class="hs-number">0</span><span> </span><span class="hs-number">13</span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Version.html#MAKE_VERSION"><span class="hs-identifier hs-type">MAKE_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word16</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word16</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span>
+</span><span id="line-28"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bMAKE_VERSION"><span id="%24mMAKE_VERSION"><span id="MAKE_VERSION"><span class="annot"><span class="annottext">$bMAKE_VERSION :: Word16 -&gt; Word16 -&gt; Word32 -&gt; Version
+$mMAKE_VERSION :: forall r.
+Version -&gt; (Word16 -&gt; Word16 -&gt; Word32 -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Version.html#%24bMAKE_VERSION"><span class="hs-identifier hs-var hs-var hs-var hs-var">MAKE_VERSION</span></a></span></span></span></span><span> </span><span class="annot"><a href="#local-6989586621679385843"><span class="hs-identifier hs-type">major</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679385842"><span class="hs-identifier hs-type">minor</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679385841"><span class="hs-identifier hs-type">patch</span></a></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679385840"><span class="annot"><a href="#local-6989586621679385840"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Version.html#_VERSION_MAJOR"><span class="hs-identifier hs-type">_VERSION_MAJOR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679385840"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Version.html#_VERSION_MINOR"><span class="hs-identifier hs-type">_VERSION_MINOR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679385840"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Version.html#_VERSION_PATCH"><span class="hs-identifier hs-type">_VERSION_PATCH</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679385840"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679385843"><span class="annot"><a href="#local-6989586621679385843"><span class="hs-identifier hs-var">major</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385842"><span class="annot"><a href="#local-6989586621679385842"><span class="hs-identifier hs-var">minor</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385841"><span class="annot"><a href="#local-6989586621679385841"><span class="hs-identifier hs-var">patch</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="OpenXR.Version.html#MAKE_VERSION"><span class="hs-identifier hs-var">MAKE_VERSION</span></a></span><span> </span><span id="local-6989586621679385839"><span class="annot"><span class="annottext">major :: Word16
+</span><a href="#local-6989586621679385839"><span class="hs-identifier hs-var">major</span></a></span></span><span> </span><span id="local-6989586621679385838"><span class="annot"><span class="annottext">minor :: Word16
+</span><a href="#local-6989586621679385838"><span class="hs-identifier hs-var">minor</span></a></span></span><span> </span><span id="local-6989586621679385837"><span class="annot"><span class="annottext">patch :: Word32
+</span><a href="#local-6989586621679385837"><span class="hs-identifier hs-var">patch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Version
+</span><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-var">Version</span></a></span><span>
+</span><span id="line-31"></span><span>                              </span><span class="annot"><span class="annottext">(Word64 -&gt; Version) -&gt; Word64 -&gt; Version
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Word16 -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word16
+</span><a href="#local-6989586621679385839"><span class="hs-identifier hs-var">major</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Int -&gt; Word64
+forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><span class="hs-operator hs-var">`shiftL`</span></span><span> </span><span class="annot"><span class="hs-number">48</span></span><span>
+</span><span id="line-32"></span><span>                            </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Word64
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.|.</span></span><span> </span><span class="annot"><span class="annottext">Word16 -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word16
+</span><a href="#local-6989586621679385838"><span class="hs-identifier hs-var">minor</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Int -&gt; Word64
+forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><span class="hs-operator hs-var">`shiftL`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-33"></span><span>                            </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Word64
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.|.</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679385837"><span class="hs-identifier hs-var">patch</span></a></span><span>
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="annot"><a href="OpenXR.Version.html#_VERSION_MAJOR"><span class="hs-identifier hs-type">_VERSION_MAJOR</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word16</span></span><span>
+</span><span id="line-36"></span><span id="_VERSION_MAJOR"><span class="annot"><span class="annottext">_VERSION_MAJOR :: Version -&gt; Word16
+</span><a href="OpenXR.Version.html#_VERSION_MAJOR"><span class="hs-identifier hs-var hs-var">_VERSION_MAJOR</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span id="local-6989586621679385835"><span class="annot"><span class="annottext">v :: Word64
+</span><a href="#local-6989586621679385835"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word16
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">(Word64 -&gt; Word16) -&gt; Word64 -&gt; Word16
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621679385835"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Int -&gt; Word64
+forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><span class="hs-operator hs-var">`shiftR`</span></span><span> </span><span class="annot"><span class="hs-number">48</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Word64
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="hs-number">0xffff</span></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="annot"><a href="OpenXR.Version.html#_VERSION_MINOR"><span class="hs-identifier hs-type">_VERSION_MINOR</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word16</span></span><span>
+</span><span id="line-39"></span><span id="_VERSION_MINOR"><span class="annot"><span class="annottext">_VERSION_MINOR :: Version -&gt; Word16
+</span><a href="OpenXR.Version.html#_VERSION_MINOR"><span class="hs-identifier hs-var hs-var">_VERSION_MINOR</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span id="local-6989586621679385834"><span class="annot"><span class="annottext">v :: Word64
+</span><a href="#local-6989586621679385834"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word16
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">(Word64 -&gt; Word16) -&gt; Word64 -&gt; Word16
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621679385834"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Int -&gt; Word64
+forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><span class="hs-operator hs-var">`shiftR`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Word64
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="hs-number">0xffff</span></span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="annot"><a href="OpenXR.Version.html#_VERSION_PATCH"><span class="hs-identifier hs-type">_VERSION_PATCH</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-42"></span><span id="_VERSION_PATCH"><span class="annot"><span class="annottext">_VERSION_PATCH :: Version -&gt; Word32
+</span><a href="OpenXR.Version.html#_VERSION_PATCH"><span class="hs-identifier hs-var hs-var">_VERSION_PATCH</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span id="local-6989586621679385833"><span class="annot"><span class="annottext">v :: Word64
+</span><a href="#local-6989586621679385833"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word32
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">(Word64 -&gt; Word32) -&gt; Word64 -&gt; Word32
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621679385833"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Word64
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="hs-number">0xffffffff</span></span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- | XrVersion - Type indicating multi-part version packed into 64-bit</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- integer</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- In each such use, the API major version number, minor version number,</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- and patch version number are packed into a 64-bit integer, referred to</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- as</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrVersion &gt;,</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- as follows:</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- == Version Numbers</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- -   The major version number is a 16-bit integer packed into bits 63-48.</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- -   The minor version number is a 16-bit integer packed into bits 47-32.</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- -   The patch version number is a 32-bit integer packed into bits 31-0.</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.ApiLayerProperties',</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.ApplicationInfo',</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_opengl_es_enable.GraphicsRequirementsOpenGLESKHR',</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_opengl_enable.GraphicsRequirementsOpenGLKHR',</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable.GraphicsRequirementsVulkanKHR',</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.InstanceProperties'</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">newtype</span><span> </span><span id="Version"><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-var">Version</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Version"><span class="annot"><a href="OpenXR.Version.html#Version"><span class="hs-identifier hs-var">Version</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AunVersion%3AVersion"><span class="annot"><span class="annottext">Version -&gt; Word64
+</span><a href="OpenXR.Version.html#%24sel%3AunVersion%3AVersion"><span class="hs-identifier hs-var hs-var">unVersion</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-73"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385828"><span id="local-6989586621679385830"><span class="annot"><span class="annottext">Version -&gt; Version -&gt; Bool
+(Version -&gt; Version -&gt; Bool)
+-&gt; (Version -&gt; Version -&gt; Bool) -&gt; Eq Version
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Version -&gt; Version -&gt; Bool
+$c/= :: Version -&gt; Version -&gt; Bool
+== :: Version -&gt; Version -&gt; Bool
+$c== :: Version -&gt; Version -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385812"><span id="local-6989586621679385814"><span id="local-6989586621679385816"><span id="local-6989586621679385818"><span id="local-6989586621679385820"><span id="local-6989586621679385822"><span id="local-6989586621679385824"><span class="annot"><span class="annottext">Eq Version
+Eq Version =&gt;
+(Version -&gt; Version -&gt; Ordering)
+-&gt; (Version -&gt; Version -&gt; Bool)
+-&gt; (Version -&gt; Version -&gt; Bool)
+-&gt; (Version -&gt; Version -&gt; Bool)
+-&gt; (Version -&gt; Version -&gt; Bool)
+-&gt; (Version -&gt; Version -&gt; Version)
+-&gt; (Version -&gt; Version -&gt; Version)
+-&gt; Ord Version
+Version -&gt; Version -&gt; Bool
+Version -&gt; Version -&gt; Ordering
+Version -&gt; Version -&gt; Version
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: Version -&gt; Version -&gt; Version
+$cmin :: Version -&gt; Version -&gt; Version
+max :: Version -&gt; Version -&gt; Version
+$cmax :: Version -&gt; Version -&gt; Version
+&gt;= :: Version -&gt; Version -&gt; Bool
+$c&gt;= :: Version -&gt; Version -&gt; Bool
+&gt; :: Version -&gt; Version -&gt; Bool
+$c&gt; :: Version -&gt; Version -&gt; Bool
+&lt;= :: Version -&gt; Version -&gt; Bool
+$c&lt;= :: Version -&gt; Version -&gt; Bool
+&lt; :: Version -&gt; Version -&gt; Bool
+$c&lt; :: Version -&gt; Version -&gt; Bool
+compare :: Version -&gt; Version -&gt; Ordering
+$ccompare :: Version -&gt; Version -&gt; Ordering
+$cp1Ord :: Eq Version
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385805"><span id="local-6989586621679385807"><span id="local-6989586621679385809"><span class="annot"><span class="annottext">Int -&gt; Version -&gt; ShowS
+[Version] -&gt; ShowS
+Version -&gt; String
+(Int -&gt; Version -&gt; ShowS)
+-&gt; (Version -&gt; String) -&gt; ([Version] -&gt; ShowS) -&gt; Show Version
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Version] -&gt; ShowS
+$cshowList :: [Version] -&gt; ShowS
+show :: Version -&gt; String
+$cshow :: Version -&gt; String
+showsPrec :: Int -&gt; Version -&gt; ShowS
+$cshowsPrec :: Int -&gt; Version -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385796"><span id="local-6989586621679385798"><span id="local-6989586621679385800"><span id="local-6989586621679385802"><span class="annot"><span class="annottext">ReadPrec [Version]
+ReadPrec Version
+Int -&gt; ReadS Version
+ReadS [Version]
+(Int -&gt; ReadS Version)
+-&gt; ReadS [Version]
+-&gt; ReadPrec Version
+-&gt; ReadPrec [Version]
+-&gt; Read Version
+forall a.
+(Int -&gt; ReadS a)
+-&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
+readListPrec :: ReadPrec [Version]
+$creadListPrec :: ReadPrec [Version]
+readPrec :: ReadPrec Version
+$creadPrec :: ReadPrec Version
+readList :: ReadS [Version]
+$creadList :: ReadS [Version]
+readsPrec :: Int -&gt; ReadS Version
+$creadsPrec :: Int -&gt; ReadS Version
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679385779"><span id="local-6989586621679385781"><span id="local-6989586621679385783"><span id="local-6989586621679385785"><span id="local-6989586621679385787"><span id="local-6989586621679385789"><span id="local-6989586621679385791"><span id="local-6989586621679385793"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO Version
+Ptr b -&gt; Int -&gt; Version -&gt; IO ()
+Ptr Version -&gt; IO Version
+Ptr Version -&gt; Int -&gt; IO Version
+Ptr Version -&gt; Int -&gt; Version -&gt; IO ()
+Ptr Version -&gt; Version -&gt; IO ()
+Version -&gt; Int
+(Version -&gt; Int)
+-&gt; (Version -&gt; Int)
+-&gt; (Ptr Version -&gt; Int -&gt; IO Version)
+-&gt; (Ptr Version -&gt; Int -&gt; Version -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO Version)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; Version -&gt; IO ())
+-&gt; (Ptr Version -&gt; IO Version)
+-&gt; (Ptr Version -&gt; Version -&gt; IO ())
+-&gt; Storable Version
+forall b. Ptr b -&gt; Int -&gt; IO Version
+forall b. Ptr b -&gt; Int -&gt; Version -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr Version -&gt; Version -&gt; IO ()
+$cpoke :: Ptr Version -&gt; Version -&gt; IO ()
+peek :: Ptr Version -&gt; IO Version
+$cpeek :: Ptr Version -&gt; IO Version
+pokeByteOff :: Ptr b -&gt; Int -&gt; Version -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; Version -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO Version
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO Version
+pokeElemOff :: Ptr Version -&gt; Int -&gt; Version -&gt; IO ()
+$cpokeElemOff :: Ptr Version -&gt; Int -&gt; Version -&gt; IO ()
+peekElemOff :: Ptr Version -&gt; Int -&gt; IO Version
+$cpeekElemOff :: Ptr Version -&gt; Int -&gt; IO Version
+alignment :: Version -&gt; Int
+$calignment :: Version -&gt; Int
+sizeOf :: Version -&gt; Int
+$csizeOf :: Version -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679385776"><span class="annot"><span class="annottext">Version
+Version -&gt; Zero Version
+forall a. a -&gt; Zero a
+zero :: Version
+$czero :: Version
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-identifier">Version</span><span class="hs-cpp">
+#endif
+</span><span>
+</span><span id="line-79"></span></pre></body></html>

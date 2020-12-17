@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;Exception&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Exception</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier">OpenXrException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Exception.Type</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Exception</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- | This exception is thrown from calls to marshalled Vulkan commands</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- which return a negative VkResult.</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">newtype</span><span> </span><span id="OpenXrException"><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-var">OpenXrException</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="OpenXrException"><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-var">OpenXrException</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AvulkanExceptionResult%3AOpenXrException"><span class="annot"><span class="annottext">OpenXrException -&gt; Result
+</span><a href="OpenXR.Exception.html#%24sel%3AvulkanExceptionResult%3AOpenXrException"><span class="hs-identifier hs-var hs-var">vulkanExceptionResult</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-11"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679389369"><span id="local-6989586621679389371"><span class="annot"><span class="annottext">OpenXrException -&gt; OpenXrException -&gt; Bool
+(OpenXrException -&gt; OpenXrException -&gt; Bool)
+-&gt; (OpenXrException -&gt; OpenXrException -&gt; Bool)
+-&gt; Eq OpenXrException
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: OpenXrException -&gt; OpenXrException -&gt; Bool
+$c/= :: OpenXrException -&gt; OpenXrException -&gt; Bool
+== :: OpenXrException -&gt; OpenXrException -&gt; Bool
+$c== :: OpenXrException -&gt; OpenXrException -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389353"><span id="local-6989586621679389355"><span id="local-6989586621679389357"><span id="local-6989586621679389359"><span id="local-6989586621679389361"><span id="local-6989586621679389363"><span id="local-6989586621679389365"><span class="annot"><span class="annottext">Eq OpenXrException
+Eq OpenXrException =&gt;
+(OpenXrException -&gt; OpenXrException -&gt; Ordering)
+-&gt; (OpenXrException -&gt; OpenXrException -&gt; Bool)
+-&gt; (OpenXrException -&gt; OpenXrException -&gt; Bool)
+-&gt; (OpenXrException -&gt; OpenXrException -&gt; Bool)
+-&gt; (OpenXrException -&gt; OpenXrException -&gt; Bool)
+-&gt; (OpenXrException -&gt; OpenXrException -&gt; OpenXrException)
+-&gt; (OpenXrException -&gt; OpenXrException -&gt; OpenXrException)
+-&gt; Ord OpenXrException
+OpenXrException -&gt; OpenXrException -&gt; Bool
+OpenXrException -&gt; OpenXrException -&gt; Ordering
+OpenXrException -&gt; OpenXrException -&gt; OpenXrException
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: OpenXrException -&gt; OpenXrException -&gt; OpenXrException
+$cmin :: OpenXrException -&gt; OpenXrException -&gt; OpenXrException
+max :: OpenXrException -&gt; OpenXrException -&gt; OpenXrException
+$cmax :: OpenXrException -&gt; OpenXrException -&gt; OpenXrException
+&gt;= :: OpenXrException -&gt; OpenXrException -&gt; Bool
+$c&gt;= :: OpenXrException -&gt; OpenXrException -&gt; Bool
+&gt; :: OpenXrException -&gt; OpenXrException -&gt; Bool
+$c&gt; :: OpenXrException -&gt; OpenXrException -&gt; Bool
+&lt;= :: OpenXrException -&gt; OpenXrException -&gt; Bool
+$c&lt;= :: OpenXrException -&gt; OpenXrException -&gt; Bool
+&lt; :: OpenXrException -&gt; OpenXrException -&gt; Bool
+$c&lt; :: OpenXrException -&gt; OpenXrException -&gt; Bool
+compare :: OpenXrException -&gt; OpenXrException -&gt; Ordering
+$ccompare :: OpenXrException -&gt; OpenXrException -&gt; Ordering
+$cp1Ord :: Eq OpenXrException
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389344"><span id="local-6989586621679389346"><span id="local-6989586621679389348"><span id="local-6989586621679389350"><span class="annot"><span class="annottext">ReadPrec [OpenXrException]
+ReadPrec OpenXrException
+Int -&gt; ReadS OpenXrException
+ReadS [OpenXrException]
+(Int -&gt; ReadS OpenXrException)
+-&gt; ReadS [OpenXrException]
+-&gt; ReadPrec OpenXrException
+-&gt; ReadPrec [OpenXrException]
+-&gt; Read OpenXrException
+forall a.
+(Int -&gt; ReadS a)
+-&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
+readListPrec :: ReadPrec [OpenXrException]
+$creadListPrec :: ReadPrec [OpenXrException]
+readPrec :: ReadPrec OpenXrException
+$creadPrec :: ReadPrec OpenXrException
+readList :: ReadS [OpenXrException]
+$creadList :: ReadS [OpenXrException]
+readsPrec :: Int -&gt; ReadS OpenXrException
+$creadsPrec :: Int -&gt; ReadS OpenXrException
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389337"><span id="local-6989586621679389339"><span id="local-6989586621679389341"><span class="annot"><span class="annottext">Int -&gt; OpenXrException -&gt; ShowS
+[OpenXrException] -&gt; ShowS
+OpenXrException -&gt; String
+(Int -&gt; OpenXrException -&gt; ShowS)
+-&gt; (OpenXrException -&gt; String)
+-&gt; ([OpenXrException] -&gt; ShowS)
+-&gt; Show OpenXrException
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [OpenXrException] -&gt; ShowS
+$cshowList :: [OpenXrException] -&gt; ShowS
+show :: OpenXrException -&gt; String
+$cshow :: OpenXrException -&gt; String
+showsPrec :: Int -&gt; OpenXrException -&gt; ShowS
+$cshowsPrec :: Int -&gt; OpenXrException -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389330"><span id="local-6989586621679389332"><span class="annot"><span class="hs-identifier hs-type">Exception</span></span><span> </span><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-type">OpenXrException</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-14"></span><span>  </span><span id="local-6989586621679389327"><span class="annot"><span class="annottext">displayException :: OpenXrException -&gt; String
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">displayException</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-type">OpenXrException</span></a></span><span> </span><span id="local-6989586621679389325"><span class="annot"><span class="annottext">r :: Result
+</span><a href="#local-6989586621679389325"><span class="hs-identifier hs-var">r</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Result -&gt; String
+forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679389325"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="hs-string">&quot;: &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Result -&gt; String
+</span><a href="OpenXR.Exception.html#resultString"><span class="hs-identifier hs-var">resultString</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679389325"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-15"></span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | A human understandable message for each VkResult</span><span>
+</span><span id="line-17"></span><span class="annot"><a href="OpenXR.Exception.html#resultString"><span class="hs-identifier hs-type">resultString</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-18"></span><span id="resultString"><span class="annot"><span class="annottext">resultString :: Result -&gt; String
+</span><a href="OpenXR.Exception.html#resultString"><span class="hs-identifier hs-var hs-var">resultString</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-19"></span><span>  </span><span>
+</span><span id="line-20"></span><span>  </span><span id="local-6989586621679389322"><span class="annot"><span class="annottext">r :: Result
+</span><a href="#local-6989586621679389322"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Result -&gt; String
+forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679389322"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-21"></span><span>
+</span><span id="line-22"></span></pre></body></html>

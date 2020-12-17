@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_EXT_eye_gaze_interaction - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXT_eye_gaze_interaction  XR_EXT_eye_gaze_interaction&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 31</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'EyeGazeSampleTimeEXT', 'SystemEyeGazeInteractionPropertiesEXT'</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_EXT_eye_gaze_interaction OpenXR Specification&gt;</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_EXT_eye_gaze_interaction</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier">SystemEyeGazeInteractionPropertiesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier">EyeGazeSampleTimeEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_eye_gaze_interaction_SPEC_VERSION"><span class="hs-identifier">EXT_eye_gaze_interaction_SPEC_VERSION</span></a></span><span>
+</span><span id="line-38"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_eye_gaze_interaction_SPEC_VERSION"><span class="hs-identifier">EXT_eye_gaze_interaction_SPEC_VERSION</span></a></span><span>
+</span><span id="line-39"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span class="hs-identifier">EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-40"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span class="hs-identifier">EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-41"></span><span>                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Time"><span class="hs-identifier">Time</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_EYE_GAZE_SAMPLE_TIME_EXT"><span class="hs-identifier">TYPE_EYE_GAZE_SAMPLE_TIME_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT"><span class="hs-identifier">TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- | XrSystemEyeGazeInteractionPropertiesEXT - Eye gaze interaction system</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- properties</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- -   #VUID-XrSystemEyeGazeInteractionPropertiesEXT-extension-notenabled#</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--     The @@ extension /must/ be enabled prior to using</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--     'SystemEyeGazeInteractionPropertiesEXT'</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- -   #VUID-XrSystemEyeGazeInteractionPropertiesEXT-type-type# @type@</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--     /must/ be</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT'</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- -   #VUID-XrSystemEyeGazeInteractionPropertiesEXT-next-next# @next@</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--     /must/ be @NULL@ or a valid pointer to the</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrBool32 &gt;,</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-88"></span><span class="hs-keyword">data</span><span> </span><span id="SystemEyeGazeInteractionPropertiesEXT"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-var">SystemEyeGazeInteractionPropertiesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SystemEyeGazeInteractionPropertiesEXT"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-var">SystemEyeGazeInteractionPropertiesEXT</span></a></span></span><span>
+</span><span id="line-89"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @supportsEyeGazeInteraction@ the runtime /must/ set this value to</span><span>
+</span><span id="line-90"></span><span>    </span><span class="hs-comment">-- 'OpenXR.Core10.FundamentalTypes.TRUE' when eye gaze sufficient for use</span><span>
+</span><span id="line-91"></span><span>    </span><span class="hs-comment">-- cases such as aiming or targeting is supported by the current device,</span><span>
+</span><span id="line-92"></span><span>    </span><span class="hs-comment">-- otherwise the runtime /must/ set this to</span><span>
+</span><span id="line-93"></span><span>    </span><span class="hs-comment">-- 'OpenXR.Core10.FundamentalTypes.FALSE'.</span><span>
+</span><span id="line-94"></span><span>    </span><span id="%24sel%3AsupportsEyeGazeInteraction%3ASystemEyeGazeInteractionPropertiesEXT"><span class="annot"><span class="annottext">SystemEyeGazeInteractionPropertiesEXT -&gt; Bool
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#%24sel%3AsupportsEyeGazeInteraction%3ASystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-var hs-var">supportsEyeGazeInteraction</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-95"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388392"><span id="local-6989586621679388394"><span class="annot"><span class="annottext">SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; Bool
+(SystemEyeGazeInteractionPropertiesEXT
+ -&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; Bool)
+-&gt; (SystemEyeGazeInteractionPropertiesEXT
+    -&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; Bool)
+-&gt; Eq SystemEyeGazeInteractionPropertiesEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; Bool
+$c/= :: SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; Bool
+== :: SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; Bool
+$c== :: SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">SystemEyeGazeInteractionPropertiesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679388385"><span id="local-6989586621679388387"><span id="local-6989586621679388389"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-type">SystemEyeGazeInteractionPropertiesEXT</span></a></span></span></span></span><span>
+</span><span id="line-100"></span><span>
+</span><span id="line-101"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388380"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-type">SystemEyeGazeInteractionPropertiesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-102"></span><span>  </span><span id="local-6989586621679388375"><span class="annot"><span class="annottext">withCStruct :: SystemEyeGazeInteractionPropertiesEXT
+-&gt; (Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></span></span><span> </span><span id="local-6989586621679388373"><span class="annot"><span class="annottext">x :: SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388373"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679388372"><span class="annot"><span class="annottext">f :: Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621679388372"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679388371"><span class="annot"><span class="annottext">p :: Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388371"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388371"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388373"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621679388372"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388371"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-103"></span><span>  </span><span id="local-6989586621679388369"><span class="annot"><span class="annottext">pokeCStruct :: Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679388369"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679388368"><span class="annot"><span class="annottext">p :: Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388368"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679388367"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-type">SystemEyeGazeInteractionPropertiesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621679388366"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679388366"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-104"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388368"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT"><span class="hs-identifier hs-var">TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-105"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388368"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388368"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="OpenXR.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679388367"><span class="hs-identifier hs-var">supportsEyeGazeInteraction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679388366"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-108"></span><span>  </span><span id="local-6989586621679388365"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-109"></span><span>  </span><span id="local-6989586621679388363"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-110"></span><span>  </span><span id="local-6989586621679388361"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></span></span><span> </span><span id="local-6989586621679388359"><span class="annot"><span class="annottext">p :: Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388359"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679388358"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679388358"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-111"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388359"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT"><span class="hs-identifier hs-var">TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388359"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-113"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388359"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="OpenXR.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-114"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679388358"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-type">SystemEyeGazeInteractionPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-117"></span><span>  </span><span id="local-6989586621679388354"><span class="annot"><span class="annottext">peekCStruct :: Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; IO SystemEyeGazeInteractionPropertiesEXT
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></span></span><span> </span><span id="local-6989586621679388352"><span class="annot"><span class="annottext">p :: Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388352"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-118"></span><span>    </span><span id="local-6989586621679388351"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621679388351"><span class="hs-identifier hs-var">supportsEyeGazeInteraction</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388352"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-119"></span><span>    </span><span class="annot"><span class="annottext">SystemEyeGazeInteractionPropertiesEXT
+-&gt; IO SystemEyeGazeInteractionPropertiesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(SystemEyeGazeInteractionPropertiesEXT
+ -&gt; IO SystemEyeGazeInteractionPropertiesEXT)
+-&gt; SystemEyeGazeInteractionPropertiesEXT
+-&gt; IO SystemEyeGazeInteractionPropertiesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; SystemEyeGazeInteractionPropertiesEXT
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-var">SystemEyeGazeInteractionPropertiesEXT</span></a></span><span>
+</span><span id="line-120"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="OpenXR.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621679388351"><span class="hs-identifier hs-var">supportsEyeGazeInteraction</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span>
+</span><span id="line-122"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388341"><span id="local-6989586621679388343"><span id="local-6989586621679388345"><span id="local-6989586621679388347"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-type">SystemEyeGazeInteractionPropertiesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-123"></span><span>  </span><span id="local-6989586621679388337"><span class="annot"><span class="annottext">sizeOf :: SystemEyeGazeInteractionPropertiesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SystemEyeGazeInteractionPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-124"></span><span>  </span><span id="local-6989586621679388335"><span class="annot"><span class="annottext">alignment :: SystemEyeGazeInteractionPropertiesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SystemEyeGazeInteractionPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-125"></span><span>  </span><span id="local-6989586621679388333"><span class="annot"><span class="annottext">peek :: Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; IO SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388333"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; IO SystemEyeGazeInteractionPropertiesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-126"></span><span>  </span><span id="local-6989586621679388332"><span class="annot"><span class="annottext">poke :: Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; IO ()
+</span><a href="#local-6989586621679388332"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679388331"><span class="annot"><span class="annottext">ptr :: Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388331"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679388330"><span class="annot"><span class="annottext">poked :: SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388330"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+-&gt; SystemEyeGazeInteractionPropertiesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388331"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388330"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span>
+</span><span id="line-128"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-type">SystemEyeGazeInteractionPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-129"></span><span>  </span><span id="local-6989586621679388327"><span class="annot"><span class="annottext">zero :: SystemEyeGazeInteractionPropertiesEXT
+</span><a href="#local-6989586621679388327"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; SystemEyeGazeInteractionPropertiesEXT
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#SystemEyeGazeInteractionPropertiesEXT"><span class="hs-identifier hs-var">SystemEyeGazeInteractionPropertiesEXT</span></a></span><span>
+</span><span id="line-130"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-131"></span><span>
+</span><span id="line-132"></span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- | XrEyeGazeSampleTimeEXT - Eye gaze sample time structure</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-136"></span><span class="hs-comment">--</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- -   #VUID-XrEyeGazeSampleTimeEXT-extension-notenabled# The @@ extension</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--     /must/ be enabled prior to using 'EyeGazeSampleTimeEXT'</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- -   #VUID-XrEyeGazeSampleTimeEXT-type-type# @type@ /must/ be</span><span>
+</span><span id="line-141"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_EYE_GAZE_SAMPLE_TIME_EXT'</span><span>
+</span><span id="line-142"></span><span class="hs-comment">--</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- -   #VUID-XrEyeGazeSampleTimeEXT-next-next# @next@ /must/ be @NULL@ or a</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--     valid pointer to the</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-146"></span><span class="hs-comment">--</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-148"></span><span class="hs-comment">--</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrTime &gt;</span><span>
+</span><span id="line-151"></span><span class="hs-keyword">data</span><span> </span><span id="EyeGazeSampleTimeEXT"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-var">EyeGazeSampleTimeEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EyeGazeSampleTimeEXT"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-var">EyeGazeSampleTimeEXT</span></a></span></span><span>
+</span><span id="line-152"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @time@ is when in time the eye gaze pose is expressed.</span><span>
+</span><span id="line-153"></span><span>    </span><span id="%24sel%3Atime%3AEyeGazeSampleTimeEXT"><span class="annot"><span class="annottext">EyeGazeSampleTimeEXT -&gt; Time
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#%24sel%3Atime%3AEyeGazeSampleTimeEXT"><span class="hs-identifier hs-var hs-var">time</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Time"><span class="hs-identifier hs-type">Time</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-154"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388321"><span id="local-6989586621679388323"><span class="annot"><span class="annottext">EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; Bool
+(EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; Bool)
+-&gt; (EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; Bool)
+-&gt; Eq EyeGazeSampleTimeEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; Bool
+$c/= :: EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; Bool
+== :: EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; Bool
+$c== :: EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">EyeGazeSampleTimeEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679388315"><span id="local-6989586621679388317"><span id="local-6989586621679388319"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-type">EyeGazeSampleTimeEXT</span></a></span></span></span></span><span>
+</span><span id="line-159"></span><span>
+</span><span id="line-160"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388311"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-type">EyeGazeSampleTimeEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-161"></span><span>  </span><span id="local-6989586621679388307"><span class="annot"><span class="annottext">withCStruct :: EyeGazeSampleTimeEXT -&gt; (Ptr EyeGazeSampleTimeEXT -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621679388307"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621679388306"><span class="annot"><span class="annottext">x :: EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388306"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679388305"><span class="annot"><span class="annottext">f :: Ptr EyeGazeSampleTimeEXT -&gt; IO b
+</span><a href="#local-6989586621679388305"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr EyeGazeSampleTimeEXT -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr EyeGazeSampleTimeEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr EyeGazeSampleTimeEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679388304"><span class="annot"><span class="annottext">p :: Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388304"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388304"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388306"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; IO b
+</span><a href="#local-6989586621679388305"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388304"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span>  </span><span id="local-6989586621679388303"><span class="annot"><span class="annottext">pokeCStruct :: Ptr EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679388303"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679388302"><span class="annot"><span class="annottext">p :: Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388302"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679388301"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-type">EyeGazeSampleTimeEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621679388300"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679388300"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-163"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388302"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_EYE_GAZE_SAMPLE_TIME_EXT"><span class="hs-identifier hs-var">TYPE_EYE_GAZE_SAMPLE_TIME_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388302"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-165"></span><span>    </span><span class="annot"><span class="annottext">Ptr Time -&gt; Time -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388302"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; Int -&gt; Ptr Time
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Time"><span class="hs-identifier hs-type">Time</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Time
+</span><a href="#local-6989586621679388301"><span class="hs-identifier hs-var">time</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-166"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679388300"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-167"></span><span>  </span><span id="local-6989586621679388299"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621679388299"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-168"></span><span>  </span><span id="local-6989586621679388298"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621679388298"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-169"></span><span>  </span><span id="local-6989586621679388297"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr EyeGazeSampleTimeEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679388297"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621679388296"><span class="annot"><span class="annottext">p :: Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388296"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679388295"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679388295"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-170"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388296"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_EYE_GAZE_SAMPLE_TIME_EXT"><span class="hs-identifier hs-var">TYPE_EYE_GAZE_SAMPLE_TIME_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-171"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388296"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-172"></span><span>    </span><span class="annot"><span class="annottext">Ptr Time -&gt; Time -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388296"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; Int -&gt; Ptr Time
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Time"><span class="hs-identifier hs-type">Time</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Time
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-173"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679388295"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-174"></span><span>
+</span><span id="line-175"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-type">EyeGazeSampleTimeEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-176"></span><span>  </span><span id="local-6989586621679388293"><span class="annot"><span class="annottext">peekCStruct :: Ptr EyeGazeSampleTimeEXT -&gt; IO EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388293"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621679388292"><span class="annot"><span class="annottext">p :: Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388292"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-177"></span><span>    </span><span id="local-6989586621679388291"><span class="annot"><span class="annottext">Time
+</span><a href="#local-6989586621679388291"><span class="hs-identifier hs-var">time</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Time -&gt; IO Time
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Time"><span class="hs-identifier hs-type">Time</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388292"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; Int -&gt; Ptr Time
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Time"><span class="hs-identifier hs-type">Time</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>    </span><span class="annot"><span class="annottext">EyeGazeSampleTimeEXT -&gt; IO EyeGazeSampleTimeEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(EyeGazeSampleTimeEXT -&gt; IO EyeGazeSampleTimeEXT)
+-&gt; EyeGazeSampleTimeEXT -&gt; IO EyeGazeSampleTimeEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Time -&gt; EyeGazeSampleTimeEXT
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-var">EyeGazeSampleTimeEXT</span></a></span><span>
+</span><span id="line-179"></span><span>             </span><span class="annot"><span class="annottext">Time
+</span><a href="#local-6989586621679388291"><span class="hs-identifier hs-var">time</span></a></span><span>
+</span><span id="line-180"></span><span>
+</span><span id="line-181"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388281"><span id="local-6989586621679388283"><span id="local-6989586621679388285"><span id="local-6989586621679388287"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-type">EyeGazeSampleTimeEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-182"></span><span>  </span><span id="local-6989586621679388278"><span class="annot"><span class="annottext">sizeOf :: EyeGazeSampleTimeEXT -&gt; Int
+</span><a href="#local-6989586621679388278"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">EyeGazeSampleTimeEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-183"></span><span>  </span><span id="local-6989586621679388277"><span class="annot"><span class="annottext">alignment :: EyeGazeSampleTimeEXT -&gt; Int
+</span><a href="#local-6989586621679388277"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">EyeGazeSampleTimeEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-184"></span><span>  </span><span id="local-6989586621679388276"><span class="annot"><span class="annottext">peek :: Ptr EyeGazeSampleTimeEXT -&gt; IO EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388276"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; IO EyeGazeSampleTimeEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-185"></span><span>  </span><span id="local-6989586621679388275"><span class="annot"><span class="annottext">poke :: Ptr EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; IO ()
+</span><a href="#local-6989586621679388275"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679388274"><span class="annot"><span class="annottext">ptr :: Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388274"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679388273"><span class="annot"><span class="annottext">poked :: EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388273"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT -&gt; EyeGazeSampleTimeEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388274"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388273"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-186"></span><span>
+</span><span id="line-187"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-type">EyeGazeSampleTimeEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-188"></span><span>  </span><span id="local-6989586621679388271"><span class="annot"><span class="annottext">zero :: EyeGazeSampleTimeEXT
+</span><a href="#local-6989586621679388271"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Time -&gt; EyeGazeSampleTimeEXT
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EyeGazeSampleTimeEXT"><span class="hs-identifier hs-var">EyeGazeSampleTimeEXT</span></a></span><span>
+</span><span id="line-189"></span><span>           </span><span class="annot"><span class="annottext">Time
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-190"></span><span>
+</span><span id="line-191"></span><span>
+</span><span id="line-192"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_eye_gaze_interaction_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_eye_gaze_interaction_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_eye_gaze_interaction_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-193"></span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXT_eye_gaze_interaction_SPEC_VERSION&quot;</span><span>
+</span><span id="line-195"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_eye_gaze_interaction_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_eye_gaze_interaction_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679388417"><span class="annot"><a href="#local-6989586621679388417"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679388417"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679388417"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-196"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_eye_gaze_interaction_SPEC_VERSION"><span id="%24mEXT_eye_gaze_interaction_SPEC_VERSION"><span id="EXT_eye_gaze_interaction_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_eye_gaze_interaction_SPEC_VERSION :: a
+$mEXT_eye_gaze_interaction_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#%24bEXT_eye_gaze_interaction_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_eye_gaze_interaction_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-197"></span><span>
+</span><span id="line-198"></span><span>
+</span><span id="line-199"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXT_eye_gaze_interaction&quot;</span></span><span>
+</span><span id="line-200"></span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-202"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679388413"><span class="annot"><a href="#local-6989586621679388413"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679388413"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679388413"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679388413"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-203"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span id="%24mEXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span id="EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_EYE_GAZE_INTERACTION_EXTENSION_NAME :: a
+$mEXT_EYE_GAZE_INTERACTION_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_EXT_eye_gaze_interaction.html#%24bEXT_EYE_GAZE_INTERACTION_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_EXT_eye_gaze_interaction&quot;</span></span><span>
+</span><span id="line-204"></span><span>
+</span><span id="line-205"></span></pre></body></html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;SwapchainUsageFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.SwapchainUsageFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier">SwapchainUsageFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | XrSwapchainUsageFlags - Swapchain usage flags</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- == Flag Descriptions</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.SwapchainCreateInfo',</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.createSwapchain',</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.enumerateSwapchainFormats'</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">newtype</span><span> </span><span id="SwapchainUsageFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier hs-var">SwapchainUsageFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SwapchainUsageFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier hs-var">SwapchainUsageFlags</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679386975"><span id="local-6989586621679386977"><span class="annot"><span class="annottext">SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+(SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool)
+-&gt; (SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool)
+-&gt; Eq SwapchainUsageFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+$c/= :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+== :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+$c== :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386959"><span id="local-6989586621679386961"><span id="local-6989586621679386963"><span id="local-6989586621679386965"><span id="local-6989586621679386967"><span id="local-6989586621679386969"><span id="local-6989586621679386971"><span class="annot"><span class="annottext">Eq SwapchainUsageFlags
+Eq SwapchainUsageFlags =&gt;
+(SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Ordering)
+-&gt; (SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool)
+-&gt; (SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool)
+-&gt; (SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool)
+-&gt; (SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool)
+-&gt; (SwapchainUsageFlags
+    -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags
+    -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags)
+-&gt; Ord SwapchainUsageFlags
+SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Ordering
+SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+$cmin :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+max :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+$cmax :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+&gt;= :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+$c&gt;= :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+&gt; :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+$c&gt; :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+&lt;= :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+$c&lt;= :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+&lt; :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+$c&lt; :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Bool
+compare :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Ordering
+$ccompare :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; Ordering
+$cp1Ord :: Eq SwapchainUsageFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386942"><span id="local-6989586621679386944"><span id="local-6989586621679386946"><span id="local-6989586621679386948"><span id="local-6989586621679386950"><span id="local-6989586621679386952"><span id="local-6989586621679386954"><span id="local-6989586621679386956"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SwapchainUsageFlags
+Ptr b -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ()
+Ptr SwapchainUsageFlags -&gt; IO SwapchainUsageFlags
+Ptr SwapchainUsageFlags -&gt; Int -&gt; IO SwapchainUsageFlags
+Ptr SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ()
+Ptr SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; IO ()
+SwapchainUsageFlags -&gt; Int
+(SwapchainUsageFlags -&gt; Int)
+-&gt; (SwapchainUsageFlags -&gt; Int)
+-&gt; (Ptr SwapchainUsageFlags -&gt; Int -&gt; IO SwapchainUsageFlags)
+-&gt; (Ptr SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SwapchainUsageFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ())
+-&gt; (Ptr SwapchainUsageFlags -&gt; IO SwapchainUsageFlags)
+-&gt; (Ptr SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; IO ())
+-&gt; Storable SwapchainUsageFlags
+forall b. Ptr b -&gt; Int -&gt; IO SwapchainUsageFlags
+forall b. Ptr b -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; IO ()
+$cpoke :: Ptr SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; IO ()
+peek :: Ptr SwapchainUsageFlags -&gt; IO SwapchainUsageFlags
+$cpeek :: Ptr SwapchainUsageFlags -&gt; IO SwapchainUsageFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SwapchainUsageFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SwapchainUsageFlags
+pokeElemOff :: Ptr SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ()
+$cpokeElemOff :: Ptr SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags -&gt; IO ()
+peekElemOff :: Ptr SwapchainUsageFlags -&gt; Int -&gt; IO SwapchainUsageFlags
+$cpeekElemOff :: Ptr SwapchainUsageFlags -&gt; Int -&gt; IO SwapchainUsageFlags
+alignment :: SwapchainUsageFlags -&gt; Int
+$calignment :: SwapchainUsageFlags -&gt; Int
+sizeOf :: SwapchainUsageFlags -&gt; Int
+$csizeOf :: SwapchainUsageFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386939"><span class="annot"><span class="annottext">SwapchainUsageFlags
+SwapchainUsageFlags -&gt; Zero SwapchainUsageFlags
+forall a. a -&gt; Zero a
+zero :: SwapchainUsageFlags
+$czero :: SwapchainUsageFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386893"><span id="local-6989586621679386895"><span id="local-6989586621679386897"><span id="local-6989586621679386899"><span id="local-6989586621679386901"><span id="local-6989586621679386903"><span id="local-6989586621679386905"><span id="local-6989586621679386907"><span id="local-6989586621679386909"><span id="local-6989586621679386911"><span id="local-6989586621679386913"><span id="local-6989586621679386915"><span id="local-6989586621679386917"><span id="local-6989586621679386919"><span id="local-6989586621679386921"><span id="local-6989586621679386923"><span id="local-6989586621679386925"><span id="local-6989586621679386927"><span id="local-6989586621679386929"><span id="local-6989586621679386931"><span id="local-6989586621679386933"><span id="local-6989586621679386935"><span class="annot"><span class="annottext">Eq SwapchainUsageFlags
+SwapchainUsageFlags
+Eq SwapchainUsageFlags =&gt;
+(SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags
+    -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags
+    -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; SwapchainUsageFlags
+-&gt; (Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; Bool)
+-&gt; (SwapchainUsageFlags -&gt; Maybe Int)
+-&gt; (SwapchainUsageFlags -&gt; Int)
+-&gt; (SwapchainUsageFlags -&gt; Bool)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags)
+-&gt; (SwapchainUsageFlags -&gt; Int)
+-&gt; Bits SwapchainUsageFlags
+Int -&gt; SwapchainUsageFlags
+SwapchainUsageFlags -&gt; Bool
+SwapchainUsageFlags -&gt; Int
+SwapchainUsageFlags -&gt; Maybe Int
+SwapchainUsageFlags -&gt; SwapchainUsageFlags
+SwapchainUsageFlags -&gt; Int -&gt; Bool
+SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SwapchainUsageFlags -&gt; Int
+$cpopCount :: SwapchainUsageFlags -&gt; Int
+rotateR :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$crotateR :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+rotateL :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$crotateL :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+unsafeShiftR :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$cunsafeShiftR :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+shiftR :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$cshiftR :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+unsafeShiftL :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$cunsafeShiftL :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+shiftL :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$cshiftL :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+isSigned :: SwapchainUsageFlags -&gt; Bool
+$cisSigned :: SwapchainUsageFlags -&gt; Bool
+bitSize :: SwapchainUsageFlags -&gt; Int
+$cbitSize :: SwapchainUsageFlags -&gt; Int
+bitSizeMaybe :: SwapchainUsageFlags -&gt; Maybe Int
+$cbitSizeMaybe :: SwapchainUsageFlags -&gt; Maybe Int
+testBit :: SwapchainUsageFlags -&gt; Int -&gt; Bool
+$ctestBit :: SwapchainUsageFlags -&gt; Int -&gt; Bool
+complementBit :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$ccomplementBit :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+clearBit :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$cclearBit :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+setBit :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$csetBit :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+bit :: Int -&gt; SwapchainUsageFlags
+$cbit :: Int -&gt; SwapchainUsageFlags
+zeroBits :: SwapchainUsageFlags
+$czeroBits :: SwapchainUsageFlags
+rotate :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$crotate :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+shift :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+$cshift :: SwapchainUsageFlags -&gt; Int -&gt; SwapchainUsageFlags
+complement :: SwapchainUsageFlags -&gt; SwapchainUsageFlags
+$ccomplement :: SwapchainUsageFlags -&gt; SwapchainUsageFlags
+xor :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+$cxor :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+.|. :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+$c.|. :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+.&amp;. :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+$c.&amp;. :: SwapchainUsageFlags -&gt; SwapchainUsageFlags -&gt; SwapchainUsageFlags
+$cp1Bits :: Eq SwapchainUsageFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679386885"><span id="local-6989586621679386887"><span id="local-6989586621679386889"><span class="annot"><span class="annottext">Bits SwapchainUsageFlags
+Bits SwapchainUsageFlags =&gt;
+(SwapchainUsageFlags -&gt; Int)
+-&gt; (SwapchainUsageFlags -&gt; Int)
+-&gt; (SwapchainUsageFlags -&gt; Int)
+-&gt; FiniteBits SwapchainUsageFlags
+SwapchainUsageFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: SwapchainUsageFlags -&gt; Int
+$ccountTrailingZeros :: SwapchainUsageFlags -&gt; Int
+countLeadingZeros :: SwapchainUsageFlags -&gt; Int
+$ccountLeadingZeros :: SwapchainUsageFlags -&gt; Int
+finiteBitSize :: SwapchainUsageFlags -&gt; Int
+$cfiniteBitSize :: SwapchainUsageFlags -&gt; Int
+$cp1FiniteBits :: Bits SwapchainUsageFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#conNameSwapchainUsageFlags"><span class="hs-identifier hs-type">conNameSwapchainUsageFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-31"></span><span id="conNameSwapchainUsageFlags"><span class="annot"><span class="annottext">conNameSwapchainUsageFlags :: String
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#conNameSwapchainUsageFlags"><span class="hs-identifier hs-var hs-var">conNameSwapchainUsageFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SwapchainUsageFlags&quot;</span></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#enumPrefixSwapchainUsageFlags"><span class="hs-identifier hs-type">enumPrefixSwapchainUsageFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-34"></span><span id="enumPrefixSwapchainUsageFlags"><span class="annot"><span class="annottext">enumPrefixSwapchainUsageFlags :: String
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#enumPrefixSwapchainUsageFlags"><span class="hs-identifier hs-var hs-var">enumPrefixSwapchainUsageFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#showTableSwapchainUsageFlags"><span class="hs-identifier hs-type">showTableSwapchainUsageFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier hs-type">SwapchainUsageFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-37"></span><span id="showTableSwapchainUsageFlags"><span class="annot"><span class="annottext">showTableSwapchainUsageFlags :: [(SwapchainUsageFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#showTableSwapchainUsageFlags"><span class="hs-identifier hs-var hs-var">showTableSwapchainUsageFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386876"><span id="local-6989586621679386878"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier hs-type">SwapchainUsageFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>  </span><span id="local-6989586621679386874"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SwapchainUsageFlags -&gt; ShowS
+</span><a href="#local-6989586621679386874"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SwapchainUsageFlags, String)]
+-&gt; String
+-&gt; (SwapchainUsageFlags -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; SwapchainUsageFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#enumPrefixSwapchainUsageFlags"><span class="hs-identifier hs-var">enumPrefixSwapchainUsageFlags</span></a></span><span>
+</span><span id="line-41"></span><span>                            </span><span class="annot"><span class="annottext">[(SwapchainUsageFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#showTableSwapchainUsageFlags"><span class="hs-identifier hs-var">showTableSwapchainUsageFlags</span></a></span><span>
+</span><span id="line-42"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#conNameSwapchainUsageFlags"><span class="hs-identifier hs-var">conNameSwapchainUsageFlags</span></a></span><span>
+</span><span id="line-43"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier hs-type">SwapchainUsageFlags</span></a></span><span> </span><span id="local-6989586621679386873"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679386873"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679386873"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679386872"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679386872"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679386872"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679386864"><span id="local-6989586621679386867"><span id="local-6989586621679386869"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier hs-type">SwapchainUsageFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621679386862"><span class="annot"><span class="annottext">readPrec :: ReadPrec SwapchainUsageFlags
+</span><a href="#local-6989586621679386862"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SwapchainUsageFlags, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; SwapchainUsageFlags)
+-&gt; ReadPrec SwapchainUsageFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#enumPrefixSwapchainUsageFlags"><span class="hs-identifier hs-var">enumPrefixSwapchainUsageFlags</span></a></span><span>
+</span><span id="line-48"></span><span>                          </span><span class="annot"><span class="annottext">[(SwapchainUsageFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#showTableSwapchainUsageFlags"><span class="hs-identifier hs-var">showTableSwapchainUsageFlags</span></a></span><span>
+</span><span id="line-49"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#conNameSwapchainUsageFlags"><span class="hs-identifier hs-var">conNameSwapchainUsageFlags</span></a></span><span>
+</span><span id="line-50"></span><span>                          </span><span class="annot"><span class="annottext">Flags64 -&gt; SwapchainUsageFlags
+</span><a href="OpenXR.Core10.Enums.SwapchainUsageFlags.html#SwapchainUsageFlags"><span class="hs-identifier hs-var">SwapchainUsageFlags</span></a></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span></pre></body></html>

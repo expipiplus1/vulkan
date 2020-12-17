@@ -1,0 +1,1072 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_NVX_image_view_handle - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_NVX_image_view_handle</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_NVX_image_view_handle@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     31</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     2</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--     -   Eric Werness</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_image_view_handle:%20&amp;body=@ewerness%20 &gt;</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--     2020-04-03</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--     -   Eric Werness, NVIDIA</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--     -   Jeff Bolz, NVIDIA</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--     -   Daniel Koch, NVIDIA</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- This extension allows applications to query an opaque handle from an</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- image view for use as a sampled image or storage image. This provides no</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- direct functionality itself.</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- == New Commands</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- -   'getImageViewAddressNVX'</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- -   'getImageViewHandleNVX'</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- -   'ImageViewAddressPropertiesNVX'</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- -   'ImageViewHandleInfoNVX'</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- -   'NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME'</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- -   'NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION'</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX'</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- -   Revision 2, 2020-04-03 (Piers Daniell)</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">--     -   Add 'getImageViewAddressNVX'</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- -   Revision 1, 2018-12-07 (Eric Werness)</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--     -   Internal revisions</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- 'ImageViewAddressPropertiesNVX', 'ImageViewHandleInfoNVX',</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- 'getImageViewAddressNVX', 'getImageViewHandleNVX'</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle Vulkan Specification&gt;</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-94"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_NVX_image_view_handle</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#getImageViewHandleNVX"><span class="hs-identifier">getImageViewHandleNVX</span></a></span><span>
+</span><span id="line-95"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#getImageViewAddressNVX"><span class="hs-identifier">getImageViewAddressNVX</span></a></span><span>
+</span><span id="line-96"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier">ImageViewHandleInfoNVX</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier">ImageViewAddressPropertiesNVX</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span class="hs-identifier">NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION</span></a></span><span>
+</span><span id="line-99"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span class="hs-identifier">NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION</span></a></span><span>
+</span><span id="line-100"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span class="hs-identifier">NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-101"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span class="hs-identifier">NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-102"></span><span>                                                   </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-103"></span><span>
+</span><span id="line-104"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier">traceAroundEvent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-105"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-109"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-110"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-113"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-114"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-115"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-116"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-117"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-118"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-119"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-122"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-123"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-125"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-126"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-128"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-129"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-133"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-134"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-135"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DescriptorType.html"><span class="hs-identifier">Vulkan.Core10.Enums.DescriptorType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.DescriptorType.html#DescriptorType"><span class="hs-identifier">DescriptorType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-136"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceAddress"><span class="hs-identifier">DeviceAddress</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#pVkGetImageViewAddressNVX"><span class="hs-identifier">pVkGetImageViewAddressNVX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-140"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#pVkGetImageViewHandleNVX"><span class="hs-identifier">pVkGetImageViewHandleNVX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-141"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier">DeviceSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier">Device_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-143"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier">ImageView</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier">ImageView</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-147"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Sampler"><span class="hs-identifier">Sampler</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-148"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-149"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Exception.html"><span class="hs-identifier">Vulkan.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier">VulkanException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX"><span class="hs-identifier">STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX"><span class="hs-identifier">STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-153"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetImageViewHandleNVX"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#mkVkGetImageViewHandleNVX"><span class="hs-identifier hs-var">mkVkGetImageViewHandleNVX</span></a></span></span><span>
+</span><span id="line-158"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-159"></span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- | vkGetImageViewHandleNVX - Get the handle for an image view for a</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- specific descriptor type</span><span>
+</span><span id="line-162"></span><span class="hs-comment">--</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-164"></span><span class="hs-comment">--</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-166"></span><span class="hs-comment">--</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'</span><span>
+</span><span id="line-168"></span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#getImageViewHandleNVX"><span class="hs-identifier hs-type">getImageViewHandleNVX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680162704"><span class="annot"><a href="#local-6989586621680162704"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-169"></span><span>                       </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680162704"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-170"></span><span>                      </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the image view.</span><span>
+</span><span id="line-171"></span><span>                         </span><span class="hs-comment">--</span><span>
+</span><span id="line-172"></span><span>                         </span><span class="hs-comment">-- #VUID-vkGetImageViewHandleNVX-device-parameter# @device@ /must/ be a</span><span>
+</span><span id="line-173"></span><span>                         </span><span class="hs-comment">-- valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-174"></span><span>                         </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-175"></span><span>                      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @pInfo@ describes the image view to query and type of handle.</span><span>
+</span><span id="line-176"></span><span>                         </span><span class="hs-comment">--</span><span>
+</span><span id="line-177"></span><span>                         </span><span class="hs-comment">-- #VUID-vkGetImageViewHandleNVX-pInfo-parameter# @pInfo@ /must/ be a valid</span><span>
+</span><span id="line-178"></span><span>                         </span><span class="hs-comment">-- pointer to a valid 'ImageViewHandleInfoNVX' structure</span><span>
+</span><span id="line-179"></span><span>                         </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span><span>
+</span><span id="line-180"></span><span>                      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680162704"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-181"></span><span id="getImageViewHandleNVX"><span class="annot"><span class="annottext">getImageViewHandleNVX :: Device -&gt; ImageViewHandleInfoNVX -&gt; io Word32
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#getImageViewHandleNVX"><span class="hs-identifier hs-var hs-var">getImageViewHandleNVX</span></a></span></span><span> </span><span id="local-6989586621680162703"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680162703"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680162702"><span class="annot"><span class="annottext">info :: ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162702"><span class="hs-identifier hs-var">info</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO Word32 -&gt; io Word32
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO Word32 -&gt; io Word32)
+-&gt; (ContT Word32 IO Word32 -&gt; IO Word32)
+-&gt; ContT Word32 IO Word32
+-&gt; io Word32
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT Word32 IO Word32 -&gt; IO Word32
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT Word32 IO Word32 -&gt; io Word32)
+-&gt; ContT Word32 IO Word32 -&gt; io Word32
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-182"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680162700"><span class="annot"><span class="annottext">vkGetImageViewHandleNVXPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+</span><a href="#local-6989586621680162700"><span class="hs-identifier hs-var hs-var">vkGetImageViewHandleNVXPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+</span><a href="Vulkan.Dynamic.html#pVkGetImageViewHandleNVX"><span class="hs-identifier hs-var hs-var">pVkGetImageViewHandleNVX</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680162703"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-183"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT Word32 IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT Word32 IO ()) -&gt; IO () -&gt; ContT Word32 IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+</span><a href="#local-6989586621680162700"><span class="hs-identifier hs-var">vkGetImageViewHandleNVXPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-184"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetImageViewHandleNVX is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-185"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680162695"><span class="annot"><span class="annottext">vkGetImageViewHandleNVX' :: Ptr Device_T
+-&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32
+</span><a href="#local-6989586621680162695"><span class="hs-identifier hs-var hs-var">vkGetImageViewHandleNVX'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+-&gt; Ptr Device_T
+-&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; IO Word32
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#mkVkGetImageViewHandleNVX"><span class="hs-identifier hs-var">mkVkGetImageViewHandleNVX</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+</span><a href="#local-6989586621680162700"><span class="hs-identifier hs-var">vkGetImageViewHandleNVXPtr</span></a></span><span>
+</span><span id="line-186"></span><span>  </span><span id="local-6989586621680162694"><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162694"><span class="hs-identifier hs-var">pInfo</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+ -&gt; IO Word32)
+-&gt; ContT Word32 IO (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+  -&gt; IO Word32)
+ -&gt; ContT Word32 IO (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX))
+-&gt; (((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+    -&gt; IO Word32)
+-&gt; ContT Word32 IO (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ImageViewHandleInfoNVX
+-&gt; ((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32)
+-&gt; IO Word32
+forall a b. ToCStruct a =&gt; a -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var">withCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162702"><span class="hs-identifier hs-var">info</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-187"></span><span>  </span><span id="local-6989586621680162691"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680162691"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Word32 -&gt; ContT Word32 IO Word32
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Word32 -&gt; ContT Word32 IO Word32)
+-&gt; IO Word32 -&gt; ContT Word32 IO Word32
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Word32 -&gt; IO Word32
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="Vulkan.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;vkGetImageViewHandleNVX&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO Word32
+</span><a href="#local-6989586621680162695"><span class="hs-identifier hs-var">vkGetImageViewHandleNVX'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680162703"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162694"><span class="hs-identifier hs-var">pInfo</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-188"></span><span>  </span><span class="annot"><span class="annottext">Word32 -&gt; ContT Word32 IO Word32
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Word32 -&gt; ContT Word32 IO Word32)
+-&gt; Word32 -&gt; ContT Word32 IO Word32
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680162691"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-189"></span><span>
+</span><span id="line-190"></span><span>
+</span><span id="line-191"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetImageViewAddressNVX"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#mkVkGetImageViewAddressNVX"><span class="hs-identifier hs-var">mkVkGetImageViewAddressNVX</span></a></span></span><span>
+</span><span id="line-196"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-197"></span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- | vkGetImageViewAddressNVX - Get the device address of an image view</span><span>
+</span><span id="line-199"></span><span class="hs-comment">--</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-201"></span><span class="hs-comment">--</span><span>
+</span><span id="line-202"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-203"></span><span class="hs-comment">--</span><span>
+</span><span id="line-204"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-205"></span><span class="hs-comment">--</span><span>
+</span><span id="line-206"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-207"></span><span class="hs-comment">--</span><span>
+</span><span id="line-208"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--</span><span>
+</span><span id="line-210"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'</span><span>
+</span><span id="line-211"></span><span class="hs-comment">--</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-213"></span><span class="hs-comment">--</span><span>
+</span><span id="line-214"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- 'ImageViewAddressPropertiesNVX'</span><span>
+</span><span id="line-216"></span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#getImageViewAddressNVX"><span class="hs-identifier hs-type">getImageViewAddressNVX</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680162688"><span class="annot"><a href="#local-6989586621680162688"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-217"></span><span>                        </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680162688"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-218"></span><span>                       </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the image view.</span><span>
+</span><span id="line-219"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-220"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetImageViewAddressNVX-device-parameter# @device@ /must/ be a</span><span>
+</span><span id="line-221"></span><span>                          </span><span class="hs-comment">-- valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-222"></span><span>                          </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-223"></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @imageView@ is a handle to the image view.</span><span>
+</span><span id="line-224"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-225"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetImageViewAddressNVX-imageView-parameter# @imageView@ /must/</span><span>
+</span><span id="line-226"></span><span>                          </span><span class="hs-comment">-- be a valid 'Vulkan.Core10.Handles.ImageView' handle</span><span>
+</span><span id="line-227"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-228"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetImageViewAddressNVX-imageView-parent# @imageView@ /must/ have</span><span>
+</span><span id="line-229"></span><span>                          </span><span class="hs-comment">-- been created, allocated, or retrieved from @device@</span><span>
+</span><span id="line-230"></span><span>                          </span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span>
+</span><span id="line-231"></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680162688"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-232"></span><span id="getImageViewAddressNVX"><span class="annot"><span class="annottext">getImageViewAddressNVX :: Device -&gt; ImageView -&gt; io ImageViewAddressPropertiesNVX
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#getImageViewAddressNVX"><span class="hs-identifier hs-var hs-var">getImageViewAddressNVX</span></a></span></span><span> </span><span id="local-6989586621680162687"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680162687"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680162686"><span class="annot"><span class="annottext">imageView :: ImageView
+</span><a href="#local-6989586621680162686"><span class="hs-identifier hs-var">imageView</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO ImageViewAddressPropertiesNVX
+-&gt; io ImageViewAddressPropertiesNVX
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO ImageViewAddressPropertiesNVX
+ -&gt; io ImageViewAddressPropertiesNVX)
+-&gt; (ContT
+      ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+    -&gt; IO ImageViewAddressPropertiesNVX)
+-&gt; ContT
+     ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+-&gt; io ImageViewAddressPropertiesNVX
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT
+  ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+-&gt; IO ImageViewAddressPropertiesNVX
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT
+   ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+ -&gt; io ImageViewAddressPropertiesNVX)
+-&gt; ContT
+     ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+-&gt; io ImageViewAddressPropertiesNVX
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-233"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680162685"><span class="annot"><span class="annottext">vkGetImageViewAddressNVXPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; ImageView
+   -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680162685"><span class="hs-identifier hs-var hs-var">vkGetImageViewAddressNVXPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; ImageView
+      -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+      -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#pVkGetImageViewAddressNVX"><span class="hs-identifier hs-var hs-var">pVkGetImageViewAddressNVX</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680162687"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-234"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT ImageViewAddressPropertiesNVX IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT ImageViewAddressPropertiesNVX IO ())
+-&gt; IO () -&gt; ContT ImageViewAddressPropertiesNVX IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; ImageView
+   -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680162685"><span class="hs-identifier hs-var">vkGetImageViewAddressNVXPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; ImageView
+   -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; ImageView
+      -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; ImageView
+   -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-235"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetImageViewAddressNVX is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-236"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680162684"><span class="annot"><span class="annottext">vkGetImageViewAddressNVX' :: Ptr Device_T
+-&gt; ImageView
+-&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO Result
+</span><a href="#local-6989586621680162684"><span class="hs-identifier hs-var hs-var">vkGetImageViewAddressNVX'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; ImageView
+   -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+   -&gt; IO Result)
+-&gt; Ptr Device_T
+-&gt; ImageView
+-&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO Result
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#mkVkGetImageViewAddressNVX"><span class="hs-identifier hs-var">mkVkGetImageViewAddressNVX</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; ImageView
+   -&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680162685"><span class="hs-identifier hs-var">vkGetImageViewAddressNVXPtr</span></a></span><span>
+</span><span id="line-237"></span><span>  </span><span id="local-6989586621680162683"><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162683"><span class="hs-identifier hs-var">pPProperties</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+  -&gt; IO ImageViewAddressPropertiesNVX)
+ -&gt; IO ImageViewAddressPropertiesNVX)
+-&gt; ContT
+     ImageViewAddressPropertiesNVX
+     IO
+     (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b.
+ToCStruct ImageViewAddressPropertiesNVX =&gt;
+((&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX) -&gt; IO b)
+-&gt; IO b
+forall a b. ToCStruct a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withZeroCStruct"><span class="hs-identifier hs-var">withZeroCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-238"></span><span>  </span><span id="local-6989586621680162681"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680162681"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; ContT ImageViewAddressPropertiesNVX IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; ContT ImageViewAddressPropertiesNVX IO Result)
+-&gt; IO Result -&gt; ContT ImageViewAddressPropertiesNVX IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="Vulkan.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;vkGetImageViewAddressNVX&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; ImageView
+-&gt; (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO Result
+</span><a href="#local-6989586621680162684"><span class="hs-identifier hs-var">vkGetImageViewAddressNVX'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680162687"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ImageView
+</span><a href="#local-6989586621680162686"><span class="hs-identifier hs-var">imageView</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162683"><span class="hs-identifier hs-var">pPProperties</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-239"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT ImageViewAddressPropertiesNVX IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT ImageViewAddressPropertiesNVX IO ())
+-&gt; IO () -&gt; ContT ImageViewAddressPropertiesNVX IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680162681"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680162681"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-240"></span><span>  </span><span id="local-6989586621680162678"><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162678"><span class="hs-identifier hs-var">pProperties</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO ImageViewAddressPropertiesNVX
+-&gt; ContT
+     ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO ImageViewAddressPropertiesNVX
+ -&gt; ContT
+      ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX)
+-&gt; IO ImageViewAddressPropertiesNVX
+-&gt; ContT
+     ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO ImageViewAddressPropertiesNVX
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162683"><span class="hs-identifier hs-var">pPProperties</span></a></span><span>
+</span><span id="line-241"></span><span>  </span><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+-&gt; ContT
+     ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(ImageViewAddressPropertiesNVX
+ -&gt; ContT
+      ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX)
+-&gt; ImageViewAddressPropertiesNVX
+-&gt; ContT
+     ImageViewAddressPropertiesNVX IO ImageViewAddressPropertiesNVX
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162678"><span class="hs-identifier hs-var">pProperties</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-242"></span><span>
+</span><span id="line-243"></span><span>
+</span><span id="line-244"></span><span class="hs-comment">-- | VkImageViewHandleInfoNVX - Structure specifying the image view for</span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- handle queries</span><span>
+</span><span id="line-246"></span><span class="hs-comment">--</span><span>
+</span><span id="line-247"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-248"></span><span class="hs-comment">--</span><span>
+</span><span id="line-249"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-descriptorType-02654#</span><span>
+</span><span id="line-250"></span><span class="hs-comment">--     @descriptorType@ /must/ be</span><span>
+</span><span id="line-251"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',</span><span>
+</span><span id="line-252"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',</span><span>
+</span><span id="line-253"></span><span class="hs-comment">--     or</span><span>
+</span><span id="line-254"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'</span><span>
+</span><span id="line-255"></span><span class="hs-comment">--</span><span>
+</span><span id="line-256"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-sampler-02655# @sampler@ /must/ be a</span><span>
+</span><span id="line-257"></span><span class="hs-comment">--     valid 'Vulkan.Core10.Handles.Sampler' if @descriptorType@ is</span><span>
+</span><span id="line-258"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'</span><span>
+</span><span id="line-259"></span><span class="hs-comment">--</span><span>
+</span><span id="line-260"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-imageView-02656# If descriptorType is</span><span>
+</span><span id="line-261"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'</span><span>
+</span><span id="line-262"></span><span class="hs-comment">--     or</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',</span><span>
+</span><span id="line-264"></span><span class="hs-comment">--     the image that @imageView@ was created from /must/ have been created</span><span>
+</span><span id="line-265"></span><span class="hs-comment">--     with the</span><span>
+</span><span id="line-266"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--     usage bit set</span><span>
+</span><span id="line-268"></span><span class="hs-comment">--</span><span>
+</span><span id="line-269"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-imageView-02657# If descriptorType is</span><span>
+</span><span id="line-270"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',</span><span>
+</span><span id="line-271"></span><span class="hs-comment">--     the image that @imageView@ was created from /must/ have been created</span><span>
+</span><span id="line-272"></span><span class="hs-comment">--     with the</span><span>
+</span><span id="line-273"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT'</span><span>
+</span><span id="line-274"></span><span class="hs-comment">--     usage bit set</span><span>
+</span><span id="line-275"></span><span class="hs-comment">--</span><span>
+</span><span id="line-276"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-277"></span><span class="hs-comment">--</span><span>
+</span><span id="line-278"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-sType-sType# @sType@ /must/ be</span><span>
+</span><span id="line-279"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'</span><span>
+</span><span id="line-280"></span><span class="hs-comment">--</span><span>
+</span><span id="line-281"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@</span><span>
+</span><span id="line-282"></span><span class="hs-comment">--</span><span>
+</span><span id="line-283"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-imageView-parameter# @imageView@</span><span>
+</span><span id="line-284"></span><span class="hs-comment">--     /must/ be a valid 'Vulkan.Core10.Handles.ImageView' handle</span><span>
+</span><span id="line-285"></span><span class="hs-comment">--</span><span>
+</span><span id="line-286"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-descriptorType-parameter#</span><span>
+</span><span id="line-287"></span><span class="hs-comment">--     @descriptorType@ /must/ be a valid</span><span>
+</span><span id="line-288"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value</span><span>
+</span><span id="line-289"></span><span class="hs-comment">--</span><span>
+</span><span id="line-290"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-sampler-parameter# If @sampler@ is</span><span>
+</span><span id="line-291"></span><span class="hs-comment">--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @sampler@ /must/ be a</span><span>
+</span><span id="line-292"></span><span class="hs-comment">--     valid 'Vulkan.Core10.Handles.Sampler' handle</span><span>
+</span><span id="line-293"></span><span class="hs-comment">--</span><span>
+</span><span id="line-294"></span><span class="hs-comment">-- -   #VUID-VkImageViewHandleInfoNVX-commonparent# Both of @imageView@,</span><span>
+</span><span id="line-295"></span><span class="hs-comment">--     and @sampler@ that are valid handles of non-ignored parameters</span><span>
+</span><span id="line-296"></span><span class="hs-comment">--     /must/ have been created, allocated, or retrieved from the same</span><span>
+</span><span id="line-297"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.Device'</span><span>
+</span><span id="line-298"></span><span class="hs-comment">--</span><span>
+</span><span id="line-299"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-300"></span><span class="hs-comment">--</span><span>
+</span><span id="line-301"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',</span><span>
+</span><span id="line-302"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',</span><span>
+</span><span id="line-303"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-304"></span><span class="hs-comment">-- 'getImageViewHandleNVX'</span><span>
+</span><span id="line-305"></span><span class="hs-keyword">data</span><span> </span><span id="ImageViewHandleInfoNVX"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-var">ImageViewHandleInfoNVX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ImageViewHandleInfoNVX"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-var">ImageViewHandleInfoNVX</span></a></span></span><span>
+</span><span id="line-306"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @imageView@ is the image view to query.</span><span>
+</span><span id="line-307"></span><span>    </span><span id="%24sel%3AimageView%3AImageViewHandleInfoNVX"><span class="annot"><span class="annottext">ImageViewHandleInfoNVX -&gt; ImageView
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#%24sel%3AimageView%3AImageViewHandleInfoNVX"><span class="hs-identifier hs-var hs-var">imageView</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span>
+</span><span id="line-308"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @descriptorType@ is the type of descriptor for which to query a handle.</span><span>
+</span><span id="line-309"></span><span>    </span><span id="%24sel%3AdescriptorType%3AImageViewHandleInfoNVX"><span class="annot"><span class="annottext">ImageViewHandleInfoNVX -&gt; DescriptorType
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#%24sel%3AdescriptorType%3AImageViewHandleInfoNVX"><span class="hs-identifier hs-var hs-var">descriptorType</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DescriptorType.html#DescriptorType"><span class="hs-identifier hs-type">DescriptorType</span></a></span><span>
+</span><span id="line-310"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @sampler@ is the sampler to combine with the image view when generating</span><span>
+</span><span id="line-311"></span><span>    </span><span class="hs-comment">-- the handle.</span><span>
+</span><span id="line-312"></span><span>    </span><span id="%24sel%3Asampler%3AImageViewHandleInfoNVX"><span class="annot"><span class="annottext">ImageViewHandleInfoNVX -&gt; Sampler
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#%24sel%3Asampler%3AImageViewHandleInfoNVX"><span class="hs-identifier hs-var hs-var">sampler</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Sampler"><span class="hs-identifier hs-type">Sampler</span></a></span><span>
+</span><span id="line-313"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-314"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680162669"><span id="local-6989586621680162671"><span class="annot"><span class="annottext">ImageViewHandleInfoNVX -&gt; ImageViewHandleInfoNVX -&gt; Bool
+(ImageViewHandleInfoNVX -&gt; ImageViewHandleInfoNVX -&gt; Bool)
+-&gt; (ImageViewHandleInfoNVX -&gt; ImageViewHandleInfoNVX -&gt; Bool)
+-&gt; Eq ImageViewHandleInfoNVX
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ImageViewHandleInfoNVX -&gt; ImageViewHandleInfoNVX -&gt; Bool
+$c/= :: ImageViewHandleInfoNVX -&gt; ImageViewHandleInfoNVX -&gt; Bool
+== :: ImageViewHandleInfoNVX -&gt; ImageViewHandleInfoNVX -&gt; Bool
+$c== :: ImageViewHandleInfoNVX -&gt; ImageViewHandleInfoNVX -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">ImageViewHandleInfoNVX</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680162662"><span id="local-6989586621680162664"><span id="local-6989586621680162666"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span></span></span></span><span>
+</span><span id="line-319"></span><span>
+</span><span id="line-320"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680162657"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-321"></span><span>  </span><span id="local-6989586621680162652"><span class="annot"><span class="annottext">withCStruct :: ImageViewHandleInfoNVX
+-&gt; ((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680162652"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680162651"><span class="annot"><span class="annottext">x :: ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162651"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680162650"><span class="annot"><span class="annottext">f :: (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO b
+</span><a href="#local-6989586621680162650"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; ((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">40</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">(((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO b) -&gt; IO b)
+-&gt; ((&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680162649"><span class="annot"><span class="annottext">p :: &quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162649"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; ImageViewHandleInfoNVX -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162649"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162651"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO b
+</span><a href="#local-6989586621680162650"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162649"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-322"></span><span>  </span><span id="local-6989586621680162647"><span class="annot"><span class="annottext">pokeCStruct :: (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; ImageViewHandleInfoNVX -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680162647"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680162646"><span class="annot"><span class="annottext">p :: &quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162646"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680162643"><span id="local-6989586621680162644"><span id="local-6989586621680162645"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span><span> </span><span id="local-6989586621680162642"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680162642"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-323"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162646"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX"><span class="hs-identifier hs-var">STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-324"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162646"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-325"></span><span>    </span><span class="annot"><span class="annottext">Ptr ImageView -&gt; ImageView -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162646"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; Int -&gt; Ptr ImageView
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ImageView
+</span><a href="#local-6989586621680162645"><span class="hs-identifier hs-var">imageView</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-326"></span><span>    </span><span class="annot"><span class="annottext">Ptr DescriptorType -&gt; DescriptorType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162646"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; Int -&gt; Ptr DescriptorType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DescriptorType.html#DescriptorType"><span class="hs-identifier hs-type">DescriptorType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DescriptorType
+</span><a href="#local-6989586621680162644"><span class="hs-identifier hs-var">descriptorType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-327"></span><span>    </span><span class="annot"><span class="annottext">Ptr Sampler -&gt; Sampler -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162646"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; Int -&gt; Ptr Sampler
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Sampler"><span class="hs-identifier hs-type">Sampler</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Sampler
+</span><a href="#local-6989586621680162643"><span class="hs-identifier hs-var">sampler</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-328"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680162642"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-329"></span><span>  </span><span id="local-6989586621680162641"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">40</span></span><span>
+</span><span id="line-330"></span><span>  </span><span id="local-6989586621680162639"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-331"></span><span>  </span><span id="local-6989586621680162637"><span class="annot"><span class="annottext">pokeZeroCStruct :: (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680162635"><span class="annot"><span class="annottext">p :: &quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162635"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680162634"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680162634"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-332"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162635"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX"><span class="hs-identifier hs-var">STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-333"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162635"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-334"></span><span>    </span><span class="annot"><span class="annottext">Ptr ImageView -&gt; ImageView -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162635"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; Int -&gt; Ptr ImageView
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ImageView
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-335"></span><span>    </span><span class="annot"><span class="annottext">Ptr DescriptorType -&gt; DescriptorType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162635"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; Int -&gt; Ptr DescriptorType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DescriptorType.html#DescriptorType"><span class="hs-identifier hs-type">DescriptorType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DescriptorType
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-336"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680162634"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-337"></span><span>
+</span><span id="line-338"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-339"></span><span>  </span><span id="local-6989586621680162630"><span class="annot"><span class="annottext">peekCStruct :: (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; IO ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162630"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680162629"><span class="annot"><span class="annottext">p :: &quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162629"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-340"></span><span>    </span><span id="local-6989586621680162628"><span class="annot"><span class="annottext">ImageView
+</span><a href="#local-6989586621680162628"><span class="hs-identifier hs-var">imageView</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr ImageView -&gt; IO ImageView
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162629"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; Int -&gt; Ptr ImageView
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#ImageView"><span class="hs-identifier hs-type">ImageView</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-341"></span><span>    </span><span id="local-6989586621680162627"><span class="annot"><span class="annottext">DescriptorType
+</span><a href="#local-6989586621680162627"><span class="hs-identifier hs-var">descriptorType</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr DescriptorType -&gt; IO DescriptorType
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Enums.DescriptorType.html#DescriptorType"><span class="hs-identifier hs-type">DescriptorType</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162629"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; Int -&gt; Ptr DescriptorType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DescriptorType.html#DescriptorType"><span class="hs-identifier hs-type">DescriptorType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-342"></span><span>    </span><span id="local-6989586621680162626"><span class="annot"><span class="annottext">Sampler
+</span><a href="#local-6989586621680162626"><span class="hs-identifier hs-var">sampler</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Sampler -&gt; IO Sampler
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Sampler"><span class="hs-identifier hs-type">Sampler</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162629"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX) -&gt; Int -&gt; Ptr Sampler
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Sampler"><span class="hs-identifier hs-type">Sampler</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-343"></span><span>    </span><span class="annot"><span class="annottext">ImageViewHandleInfoNVX -&gt; IO ImageViewHandleInfoNVX
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(ImageViewHandleInfoNVX -&gt; IO ImageViewHandleInfoNVX)
+-&gt; ImageViewHandleInfoNVX -&gt; IO ImageViewHandleInfoNVX
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ImageView -&gt; DescriptorType -&gt; Sampler -&gt; ImageViewHandleInfoNVX
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-var">ImageViewHandleInfoNVX</span></a></span><span>
+</span><span id="line-344"></span><span>             </span><span class="annot"><span class="annottext">ImageView
+</span><a href="#local-6989586621680162628"><span class="hs-identifier hs-var">imageView</span></a></span><span> </span><span class="annot"><span class="annottext">DescriptorType
+</span><a href="#local-6989586621680162627"><span class="hs-identifier hs-var">descriptorType</span></a></span><span> </span><span class="annot"><span class="annottext">Sampler
+</span><a href="#local-6989586621680162626"><span class="hs-identifier hs-var">sampler</span></a></span><span>
+</span><span id="line-345"></span><span>
+</span><span id="line-346"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680162616"><span id="local-6989586621680162618"><span id="local-6989586621680162620"><span id="local-6989586621680162622"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-347"></span><span>  </span><span id="local-6989586621680162612"><span class="annot"><span class="annottext">sizeOf :: ImageViewHandleInfoNVX -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ImageViewHandleInfoNVX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">40</span></span><span>
+</span><span id="line-348"></span><span>  </span><span id="local-6989586621680162610"><span class="annot"><span class="annottext">alignment :: ImageViewHandleInfoNVX -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ImageViewHandleInfoNVX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-349"></span><span>  </span><span id="local-6989586621680162608"><span class="annot"><span class="annottext">peek :: (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; IO ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162608"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; IO ImageViewHandleInfoNVX
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-350"></span><span>  </span><span id="local-6989586621680162607"><span class="annot"><span class="annottext">poke :: (&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; ImageViewHandleInfoNVX -&gt; IO ()
+</span><a href="#local-6989586621680162607"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680162606"><span class="annot"><span class="annottext">ptr :: &quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162606"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680162605"><span class="annot"><span class="annottext">poked :: ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162605"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX)
+-&gt; ImageViewHandleInfoNVX -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pInfo&quot; ::: Ptr ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162606"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162605"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-351"></span><span>
+</span><span id="line-352"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-type">ImageViewHandleInfoNVX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-353"></span><span>  </span><span id="local-6989586621680162602"><span class="annot"><span class="annottext">zero :: ImageViewHandleInfoNVX
+</span><a href="#local-6989586621680162602"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ImageView -&gt; DescriptorType -&gt; Sampler -&gt; ImageViewHandleInfoNVX
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewHandleInfoNVX"><span class="hs-identifier hs-var">ImageViewHandleInfoNVX</span></a></span><span>
+</span><span id="line-354"></span><span>           </span><span class="annot"><span class="annottext">ImageView
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-355"></span><span>           </span><span class="annot"><span class="annottext">DescriptorType
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-356"></span><span>           </span><span class="annot"><span class="annottext">Sampler
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-357"></span><span>
+</span><span id="line-358"></span><span>
+</span><span id="line-359"></span><span class="hs-comment">-- | VkImageViewAddressPropertiesNVX - Structure specifying the image view</span><span>
+</span><span id="line-360"></span><span class="hs-comment">-- for handle queries</span><span>
+</span><span id="line-361"></span><span class="hs-comment">--</span><span>
+</span><span id="line-362"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-363"></span><span class="hs-comment">--</span><span>
+</span><span id="line-364"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-365"></span><span class="hs-comment">--</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',</span><span>
+</span><span id="line-367"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',</span><span>
+</span><span id="line-368"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-369"></span><span class="hs-comment">-- 'getImageViewAddressNVX'</span><span>
+</span><span id="line-370"></span><span class="hs-keyword">data</span><span> </span><span id="ImageViewAddressPropertiesNVX"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-var">ImageViewAddressPropertiesNVX</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ImageViewAddressPropertiesNVX"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-var">ImageViewAddressPropertiesNVX</span></a></span></span><span>
+</span><span id="line-371"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @deviceAddress@ is the device address of the image view.</span><span>
+</span><span id="line-372"></span><span>    </span><span id="%24sel%3AdeviceAddress%3AImageViewAddressPropertiesNVX"><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX -&gt; DeviceAddress
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#%24sel%3AdeviceAddress%3AImageViewAddressPropertiesNVX"><span class="hs-identifier hs-var hs-var">deviceAddress</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceAddress"><span class="hs-identifier hs-type">DeviceAddress</span></a></span><span>
+</span><span id="line-373"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @size@ is the size in bytes of the image view device memory.</span><span>
+</span><span id="line-374"></span><span>    </span><span id="%24sel%3Asize%3AImageViewAddressPropertiesNVX"><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX -&gt; DeviceAddress
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#%24sel%3Asize%3AImageViewAddressPropertiesNVX"><span class="hs-identifier hs-var hs-var">size</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span>
+</span><span id="line-375"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-376"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680162595"><span id="local-6989586621680162597"><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+-&gt; ImageViewAddressPropertiesNVX -&gt; Bool
+(ImageViewAddressPropertiesNVX
+ -&gt; ImageViewAddressPropertiesNVX -&gt; Bool)
+-&gt; (ImageViewAddressPropertiesNVX
+    -&gt; ImageViewAddressPropertiesNVX -&gt; Bool)
+-&gt; Eq ImageViewAddressPropertiesNVX
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ImageViewAddressPropertiesNVX
+-&gt; ImageViewAddressPropertiesNVX -&gt; Bool
+$c/= :: ImageViewAddressPropertiesNVX
+-&gt; ImageViewAddressPropertiesNVX -&gt; Bool
+== :: ImageViewAddressPropertiesNVX
+-&gt; ImageViewAddressPropertiesNVX -&gt; Bool
+$c== :: ImageViewAddressPropertiesNVX
+-&gt; ImageViewAddressPropertiesNVX -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">ImageViewAddressPropertiesNVX</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680162589"><span id="local-6989586621680162591"><span id="local-6989586621680162593"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span></span></span></span><span>
+</span><span id="line-381"></span><span>
+</span><span id="line-382"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680162585"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-383"></span><span>  </span><span id="local-6989586621680162581"><span class="annot"><span class="annottext">withCStruct :: ImageViewAddressPropertiesNVX
+-&gt; ((&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX) -&gt; IO b)
+-&gt; IO b
+</span><a href="#local-6989586621680162581"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680162580"><span class="annot"><span class="annottext">x :: ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162580"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680162579"><span class="annot"><span class="annottext">f :: (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX) -&gt; IO b
+</span><a href="#local-6989586621680162579"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; ((&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX) -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">(((&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX) -&gt; IO b)
+ -&gt; IO b)
+-&gt; ((&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX) -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680162578"><span class="annot"><span class="annottext">p :: &quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162578"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; ImageViewAddressPropertiesNVX -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162578"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162580"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX) -&gt; IO b
+</span><a href="#local-6989586621680162579"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162578"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-384"></span><span>  </span><span id="local-6989586621680162577"><span class="annot"><span class="annottext">pokeCStruct :: (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; ImageViewAddressPropertiesNVX -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680162577"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680162576"><span class="annot"><span class="annottext">p :: &quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162576"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680162574"><span id="local-6989586621680162575"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680162573"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680162573"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-385"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162576"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX"><span class="hs-identifier hs-var">STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-386"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162576"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-387"></span><span>    </span><span class="annot"><span class="annottext">Ptr DeviceAddress -&gt; DeviceAddress -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162576"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr DeviceAddress
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceAddress"><span class="hs-identifier hs-type">DeviceAddress</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceAddress
+</span><a href="#local-6989586621680162575"><span class="hs-identifier hs-var">deviceAddress</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-388"></span><span>    </span><span class="annot"><span class="annottext">Ptr DeviceAddress -&gt; DeviceAddress -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162576"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr DeviceAddress
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceAddress
+</span><a href="#local-6989586621680162574"><span class="hs-identifier hs-var">size</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-389"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680162573"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-390"></span><span>  </span><span id="local-6989586621680162572"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680162572"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-391"></span><span>  </span><span id="local-6989586621680162571"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680162571"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-392"></span><span>  </span><span id="local-6989586621680162570"><span class="annot"><span class="annottext">pokeZeroCStruct :: (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680162570"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680162569"><span class="annot"><span class="annottext">p :: &quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162569"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680162568"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680162568"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-393"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162569"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX"><span class="hs-identifier hs-var">STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-394"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162569"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-395"></span><span>    </span><span class="annot"><span class="annottext">Ptr DeviceAddress -&gt; DeviceAddress -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162569"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr DeviceAddress
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceAddress"><span class="hs-identifier hs-type">DeviceAddress</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceAddress
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-396"></span><span>    </span><span class="annot"><span class="annottext">Ptr DeviceAddress -&gt; DeviceAddress -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162569"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr DeviceAddress
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceAddress
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-397"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680162568"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-398"></span><span>
+</span><span id="line-399"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-400"></span><span>  </span><span id="local-6989586621680162566"><span class="annot"><span class="annottext">peekCStruct :: (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162566"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680162565"><span class="annot"><span class="annottext">p :: &quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162565"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-401"></span><span>    </span><span id="local-6989586621680162564"><span class="annot"><span class="annottext">DeviceAddress
+</span><a href="#local-6989586621680162564"><span class="hs-identifier hs-var">deviceAddress</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceAddress -&gt; IO DeviceAddress
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceAddress"><span class="hs-identifier hs-type">DeviceAddress</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162565"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr DeviceAddress
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceAddress"><span class="hs-identifier hs-type">DeviceAddress</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-402"></span><span>    </span><span id="local-6989586621680162563"><span class="annot"><span class="annottext">DeviceAddress
+</span><a href="#local-6989586621680162563"><span class="hs-identifier hs-var">size</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceAddress -&gt; IO DeviceAddress
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162565"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; Int -&gt; Ptr DeviceAddress
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-403"></span><span>    </span><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX -&gt; IO ImageViewAddressPropertiesNVX
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(ImageViewAddressPropertiesNVX -&gt; IO ImageViewAddressPropertiesNVX)
+-&gt; ImageViewAddressPropertiesNVX
+-&gt; IO ImageViewAddressPropertiesNVX
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">DeviceAddress -&gt; DeviceAddress -&gt; ImageViewAddressPropertiesNVX
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-var">ImageViewAddressPropertiesNVX</span></a></span><span>
+</span><span id="line-404"></span><span>             </span><span class="annot"><span class="annottext">DeviceAddress
+</span><a href="#local-6989586621680162564"><span class="hs-identifier hs-var">deviceAddress</span></a></span><span> </span><span class="annot"><span class="annottext">DeviceAddress
+</span><a href="#local-6989586621680162563"><span class="hs-identifier hs-var">size</span></a></span><span>
+</span><span id="line-405"></span><span>
+</span><span id="line-406"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680162553"><span id="local-6989586621680162555"><span id="local-6989586621680162557"><span id="local-6989586621680162559"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-407"></span><span>  </span><span id="local-6989586621680162550"><span class="annot"><span class="annottext">sizeOf :: ImageViewAddressPropertiesNVX -&gt; Int
+</span><a href="#local-6989586621680162550"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-408"></span><span>  </span><span id="local-6989586621680162549"><span class="annot"><span class="annottext">alignment :: ImageViewAddressPropertiesNVX -&gt; Int
+</span><a href="#local-6989586621680162549"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-409"></span><span>  </span><span id="local-6989586621680162548"><span class="annot"><span class="annottext">peek :: (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162548"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; IO ImageViewAddressPropertiesNVX
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-410"></span><span>  </span><span id="local-6989586621680162547"><span class="annot"><span class="annottext">poke :: (&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; ImageViewAddressPropertiesNVX -&gt; IO ()
+</span><a href="#local-6989586621680162547"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680162546"><span class="annot"><span class="annottext">ptr :: &quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162546"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680162545"><span class="annot"><span class="annottext">poked :: ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162545"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX)
+-&gt; ImageViewAddressPropertiesNVX -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pProperties&quot; ::: Ptr ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162546"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162545"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-411"></span><span>
+</span><span id="line-412"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-type">ImageViewAddressPropertiesNVX</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-413"></span><span>  </span><span id="local-6989586621680162543"><span class="annot"><span class="annottext">zero :: ImageViewAddressPropertiesNVX
+</span><a href="#local-6989586621680162543"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceAddress -&gt; DeviceAddress -&gt; ImageViewAddressPropertiesNVX
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#ImageViewAddressPropertiesNVX"><span class="hs-identifier hs-var">ImageViewAddressPropertiesNVX</span></a></span><span>
+</span><span id="line-414"></span><span>           </span><span class="annot"><span class="annottext">DeviceAddress
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-415"></span><span>           </span><span class="annot"><span class="annottext">DeviceAddress
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-416"></span><span>
+</span><span id="line-417"></span><span>
+</span><span id="line-418"></span><span class="hs-keyword">type</span><span> </span><span id="NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span class="hs-identifier hs-var">NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-419"></span><span>
+</span><span id="line-420"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION&quot;</span><span>
+</span><span id="line-421"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span class="hs-identifier hs-type">NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680162737"><span class="annot"><a href="#local-6989586621680162737"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680162737"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680162737"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-422"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span id="%24mNVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span id="NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span class="annot"><span class="annottext">$bNVX_IMAGE_VIEW_HANDLE_SPEC_VERSION :: a
+$mNVX_IMAGE_VIEW_HANDLE_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#%24bNVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-423"></span><span>
+</span><span id="line-424"></span><span>
+</span><span id="line-425"></span><span class="hs-keyword">type</span><span> </span><span id="NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span class="hs-identifier hs-var">NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NVX_image_view_handle&quot;</span></span><span>
+</span><span id="line-426"></span><span>
+</span><span id="line-427"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-428"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span class="hs-identifier hs-type">NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680162733"><span class="annot"><a href="#local-6989586621680162733"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680162733"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680162733"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680162733"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-429"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span id="%24mNVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span id="NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span class="annot"><span class="annottext">$bNVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME :: a
+$mNVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NVX_image_view_handle.html#%24bNVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NVX_image_view_handle&quot;</span></span><span>
+</span><span id="line-430"></span><span>
+</span><span id="line-431"></span></pre></body></html>

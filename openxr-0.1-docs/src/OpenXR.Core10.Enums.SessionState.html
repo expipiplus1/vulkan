@@ -1,0 +1,389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;SessionState&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.SessionState</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier">SessionState</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_UNKNOWN"><span class="hs-identifier">SESSION_STATE_UNKNOWN</span></a></span><span>
+</span><span id="line-4"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_IDLE"><span class="hs-identifier">SESSION_STATE_IDLE</span></a></span><span>
+</span><span id="line-5"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_READY"><span class="hs-identifier">SESSION_STATE_READY</span></a></span><span>
+</span><span id="line-6"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_SYNCHRONIZED"><span class="hs-identifier">SESSION_STATE_SYNCHRONIZED</span></a></span><span>
+</span><span id="line-7"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_VISIBLE"><span class="hs-identifier">SESSION_STATE_VISIBLE</span></a></span><span>
+</span><span id="line-8"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_FOCUSED"><span class="hs-identifier">SESSION_STATE_FOCUSED</span></a></span><span>
+</span><span id="line-9"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_STOPPING"><span class="hs-identifier">SESSION_STATE_STOPPING</span></a></span><span>
+</span><span id="line-10"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_LOSS_PENDING"><span class="hs-identifier">SESSION_STATE_LOSS_PENDING</span></a></span><span>
+</span><span id="line-11"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_EXITING"><span class="hs-identifier">SESSION_STATE_EXITING</span></a></span><span>
+</span><span id="line-12"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-13"></span><span>                                                      </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | XrSessionState - Session lifecycle state</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- == Enumerant Descriptions</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- The 'SESSION_STATE_UNKNOWN' state /must/ not be returned by the runtime,</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- and is only defined to avoid @0@ being a valid state.</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_IDLE' state indicates that the runtime</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- considers the session is idle. Applications in this state /should/</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- minimize resource consumption but continue to call</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.pollEvent' at some reasonable cadence.</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_READY' state indicates that the runtime</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- desires the application to prepare rendering resources, begin its</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- session and synchronize its frame loop with the runtime.</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- #sync_frame_loop# The application does this by successfully calling</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.beginSession' and then running its frame loop by</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- calling 'OpenXR.Core10.DisplayTiming.waitFrame',</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.beginFrame' and</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.endFrame' in a loop. If the runtime wishes</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- to return the session to the 'SESSION_STATE_IDLE' state, it /must/ wait</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- until the application calls 'OpenXR.Core10.Session.beginSession'. After</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- returning from the 'OpenXR.Core10.Session.beginSession' call, the</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- runtime may then immediately transition forward through the</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- 'SESSION_STATE_SYNCHRONIZED' state to the 'SESSION_STATE_STOPPING'</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- state, to request that the application end this session. If the system</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- supports a user engagement sensor and runtime is in 'SESSION_STATE_IDLE'</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- state, the runtime /should/ not transition to the 'SESSION_STATE_READY'</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- state until the user starts engaging with the device.</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_SYNCHRONIZED' state indicates that the</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- application has</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop synchronized its frame loop with the runtime&gt;,</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- but its frames are not visible to the user. The application /should/</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- continue running its frame loop by calling</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.waitFrame',</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.beginFrame' and</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.endFrame', although it should avoid heavy</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- GPU work so that other visible applications can take CPU and GPU</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- precedence. The application can save resources here by skipping</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- rendering and not submitting any composition layers until</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.waitFrame' returns an</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.FrameState' with @shouldRender@ set to</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- true. A runtime /may/ use this frame synchronization to facilitate</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- seamless switching from a previous XR application to this application on</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- a frame boundary.</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_VISIBLE' state indicates that the</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- application has</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop synchronized its frame loop with the runtime&gt;,</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- and the session&#8217;s frames will be visible to the user, but the session is</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- not eligible to receive XR input. An application may be visible but not</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- have focus, for example when the runtime is composing a modal pop-up on</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- top of the application&#8217;s rendered frames. The application /should/</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- continue running its frame loop, rendering and submitting its</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- composition layers, although it may wish to pause its experience, as</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- users cannot interact with the application at this time. It is important</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- for applications to continue rendering when visible, even when they do</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- not have focus, so the user continues to see something reasonable</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- underneath modal pop-ups. Runtimes /should/ make input actions inactive</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- while the application is unfocused, and applications should react to an</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- inactive input action by skipping rendering of that action&#8217;s input</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- avatar (depictions of hands or other tracked objects controlled by the</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- user).</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_FOCUSED' state indicates that the</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- application has</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop synchronized its frame loop with the runtime&gt;,</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- the session&#8217;s frames will be visible to the user, and the session is</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- eligible to receive XR input. The runtime /should/ only give one session</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- XR input focus at any given time. The application /should/ be running</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- its frame loop, rendering and submitting composition layers, including</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- input avatars (depictions of hands or other tracked objects controlled</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- by the user) for any input actions that are active. The runtime /should/</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- avoid rendering its own input avatars when an application is focused,</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- unless input from a given source is being captured by the runtime at the</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- moment.</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_STOPPING' state indicates that the runtime</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- has determined that the application should halt its rendering loop.</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- Applications /should/ exit their rendering loop and call</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.endSession' when in this state. A possible reason</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- for this would be to minimize contention between multiple applications.</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- If the system supports a user engagement sensor and the session is</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- running, the runtime /should/ transition to the 'SESSION_STATE_STOPPING'</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- state when the user stops engaging with the device.</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_EXITING' state indicates the runtime wishes</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- the application to terminate its XR experience, typically due to a user</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- request via a runtime user interface. Applications /should/ gracefully</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- end their process when in this state if they do not have a non-XR user</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- experience.</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- Receiving the 'SESSION_STATE_LOSS_PENDING' state indicates the runtime</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- is no longer able to operate with the current session, for example due</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- to the loss of a display hardware connection. An application /should/</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- call 'OpenXR.Core10.Device.destroySession' and /may/ end its process or</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- decide to poll 'OpenXR.Core10.Device.getSystem' at some reasonable</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- cadence to get a new</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId &gt;,</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- and re-initialize all graphics resources related to the new system, and</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- then create a new session using 'OpenXR.Core10.Device.createSession'.</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- After the event is queued, subsequent calls to functions that accept</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- 'OpenXR.Core10.Handles.Session' parameters /must/ no longer return any</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- success code other than</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.SESSION_LOSS_PENDING' for the given</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- 'OpenXR.Core10.Handles.Session' handle. The</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.SESSION_LOSS_PENDING' success result is</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- returned for an unspecified grace period of time, and the functions that</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- return it simulate success in their behavior. If the runtime has no</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- reasonable way to successfully complete a given function (e.g.</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.createSwapchain') when a lost session is pending,</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- or if the runtime is not able to provide the application a grace period,</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- the runtime /may/ return</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.ERROR_SESSION_LOST'. Thereafter, functions</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- which accept 'OpenXR.Core10.Handles.Session' parameters for the lost</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- session /may/ return 'OpenXR.Core10.Enums.Result.ERROR_SESSION_LOST' to</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- indicate that the function failed and the given session was lost. The</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- 'OpenXR.Core10.Handles.Session' handle and child handles are henceforth</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- unusable and /should/ be destroyed by the application in order to</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- immediately free up resources associated with those handles.</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-147"></span><span class="hs-comment">--</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataSessionStateChanged',</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.pollEvent'</span><span>
+</span><span id="line-150"></span><span class="hs-keyword">newtype</span><span> </span><span id="SessionState"><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-var">SessionState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SessionState"><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-var">SessionState</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-151"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679388847"><span id="local-6989586621679388849"><span class="annot"><span class="annottext">SessionState -&gt; SessionState -&gt; Bool
+(SessionState -&gt; SessionState -&gt; Bool)
+-&gt; (SessionState -&gt; SessionState -&gt; Bool) -&gt; Eq SessionState
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SessionState -&gt; SessionState -&gt; Bool
+$c/= :: SessionState -&gt; SessionState -&gt; Bool
+== :: SessionState -&gt; SessionState -&gt; Bool
+$c== :: SessionState -&gt; SessionState -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388831"><span id="local-6989586621679388833"><span id="local-6989586621679388835"><span id="local-6989586621679388837"><span id="local-6989586621679388839"><span id="local-6989586621679388841"><span id="local-6989586621679388843"><span class="annot"><span class="annottext">Eq SessionState
+Eq SessionState =&gt;
+(SessionState -&gt; SessionState -&gt; Ordering)
+-&gt; (SessionState -&gt; SessionState -&gt; Bool)
+-&gt; (SessionState -&gt; SessionState -&gt; Bool)
+-&gt; (SessionState -&gt; SessionState -&gt; Bool)
+-&gt; (SessionState -&gt; SessionState -&gt; Bool)
+-&gt; (SessionState -&gt; SessionState -&gt; SessionState)
+-&gt; (SessionState -&gt; SessionState -&gt; SessionState)
+-&gt; Ord SessionState
+SessionState -&gt; SessionState -&gt; Bool
+SessionState -&gt; SessionState -&gt; Ordering
+SessionState -&gt; SessionState -&gt; SessionState
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SessionState -&gt; SessionState -&gt; SessionState
+$cmin :: SessionState -&gt; SessionState -&gt; SessionState
+max :: SessionState -&gt; SessionState -&gt; SessionState
+$cmax :: SessionState -&gt; SessionState -&gt; SessionState
+&gt;= :: SessionState -&gt; SessionState -&gt; Bool
+$c&gt;= :: SessionState -&gt; SessionState -&gt; Bool
+&gt; :: SessionState -&gt; SessionState -&gt; Bool
+$c&gt; :: SessionState -&gt; SessionState -&gt; Bool
+&lt;= :: SessionState -&gt; SessionState -&gt; Bool
+$c&lt;= :: SessionState -&gt; SessionState -&gt; Bool
+&lt; :: SessionState -&gt; SessionState -&gt; Bool
+$c&lt; :: SessionState -&gt; SessionState -&gt; Bool
+compare :: SessionState -&gt; SessionState -&gt; Ordering
+$ccompare :: SessionState -&gt; SessionState -&gt; Ordering
+$cp1Ord :: Eq SessionState
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388814"><span id="local-6989586621679388816"><span id="local-6989586621679388818"><span id="local-6989586621679388820"><span id="local-6989586621679388822"><span id="local-6989586621679388824"><span id="local-6989586621679388826"><span id="local-6989586621679388828"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SessionState
+Ptr b -&gt; Int -&gt; SessionState -&gt; IO ()
+Ptr SessionState -&gt; IO SessionState
+Ptr SessionState -&gt; Int -&gt; IO SessionState
+Ptr SessionState -&gt; Int -&gt; SessionState -&gt; IO ()
+Ptr SessionState -&gt; SessionState -&gt; IO ()
+SessionState -&gt; Int
+(SessionState -&gt; Int)
+-&gt; (SessionState -&gt; Int)
+-&gt; (Ptr SessionState -&gt; Int -&gt; IO SessionState)
+-&gt; (Ptr SessionState -&gt; Int -&gt; SessionState -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SessionState)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SessionState -&gt; IO ())
+-&gt; (Ptr SessionState -&gt; IO SessionState)
+-&gt; (Ptr SessionState -&gt; SessionState -&gt; IO ())
+-&gt; Storable SessionState
+forall b. Ptr b -&gt; Int -&gt; IO SessionState
+forall b. Ptr b -&gt; Int -&gt; SessionState -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SessionState -&gt; SessionState -&gt; IO ()
+$cpoke :: Ptr SessionState -&gt; SessionState -&gt; IO ()
+peek :: Ptr SessionState -&gt; IO SessionState
+$cpeek :: Ptr SessionState -&gt; IO SessionState
+pokeByteOff :: Ptr b -&gt; Int -&gt; SessionState -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SessionState -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SessionState
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SessionState
+pokeElemOff :: Ptr SessionState -&gt; Int -&gt; SessionState -&gt; IO ()
+$cpokeElemOff :: Ptr SessionState -&gt; Int -&gt; SessionState -&gt; IO ()
+peekElemOff :: Ptr SessionState -&gt; Int -&gt; IO SessionState
+$cpeekElemOff :: Ptr SessionState -&gt; Int -&gt; IO SessionState
+alignment :: SessionState -&gt; Int
+$calignment :: SessionState -&gt; Int
+sizeOf :: SessionState -&gt; Int
+$csizeOf :: SessionState -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388811"><span class="annot"><span class="annottext">SessionState
+SessionState -&gt; Zero SessionState
+forall a. a -&gt; Zero a
+zero :: SessionState
+$czero :: SessionState
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- | 'SESSION_STATE_UNKNOWN'. An unknown state. The runtime /must/ not return</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- this value in an 'OpenXR.Core10.OtherTypes.EventDataSessionStateChanged'</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- event.</span><span>
+</span><span id="line-156"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_UNKNOWN"><span id="%24mSESSION_STATE_UNKNOWN"><span id="SESSION_STATE_UNKNOWN"><span class="annot"><span class="annottext">$bSESSION_STATE_UNKNOWN :: SessionState
+$mSESSION_STATE_UNKNOWN :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_UNKNOWN"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_UNKNOWN</span></a></span></span></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- | 'SESSION_STATE_IDLE'. The initial state after calling</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.createSession' or returned to after calling</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.endSession'.</span><span>
+</span><span id="line-160"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_IDLE"><span id="%24mSESSION_STATE_IDLE"><span id="SESSION_STATE_IDLE"><span class="annot"><span class="annottext">$bSESSION_STATE_IDLE :: SessionState
+$mSESSION_STATE_IDLE :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_IDLE"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_IDLE</span></a></span></span></span></span><span>         </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- | 'SESSION_STATE_READY'. The application is ready to call</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.beginSession' and</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop sync its frame loop with the runtime.&gt;</span><span>
+</span><span id="line-164"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_READY"><span id="%24mSESSION_STATE_READY"><span id="SESSION_STATE_READY"><span class="annot"><span class="annottext">$bSESSION_STATE_READY :: SessionState
+$mSESSION_STATE_READY :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_READY"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_READY</span></a></span></span></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- | 'SESSION_STATE_SYNCHRONIZED'. The application has synced its frame loop</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- with the runtime but is not visible to the user.</span><span>
+</span><span id="line-167"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_SYNCHRONIZED"><span id="%24mSESSION_STATE_SYNCHRONIZED"><span id="SESSION_STATE_SYNCHRONIZED"><span class="annot"><span class="annottext">$bSESSION_STATE_SYNCHRONIZED :: SessionState
+$mSESSION_STATE_SYNCHRONIZED :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_SYNCHRONIZED"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_SYNCHRONIZED</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- | 'SESSION_STATE_VISIBLE'. The application has</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop synced its frame loop with the runtime&gt;</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- and is visible to the user but cannot receive XR input.</span><span>
+</span><span id="line-171"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_VISIBLE"><span id="%24mSESSION_STATE_VISIBLE"><span id="SESSION_STATE_VISIBLE"><span class="annot"><span class="annottext">$bSESSION_STATE_VISIBLE :: SessionState
+$mSESSION_STATE_VISIBLE :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_VISIBLE"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_VISIBLE</span></a></span></span></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">4</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- | 'SESSION_STATE_FOCUSED'. The application has</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop synced its frame loop with the runtime&gt;,</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- is visible to the user and can receive XR input.</span><span>
+</span><span id="line-175"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_FOCUSED"><span id="%24mSESSION_STATE_FOCUSED"><span id="SESSION_STATE_FOCUSED"><span class="annot"><span class="annottext">$bSESSION_STATE_FOCUSED :: SessionState
+$mSESSION_STATE_FOCUSED :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_FOCUSED"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_FOCUSED</span></a></span></span></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">5</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- | 'SESSION_STATE_STOPPING'. The application should exit its frame loop and</span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- call 'OpenXR.Core10.Session.endSession'.</span><span>
+</span><span id="line-178"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_STOPPING"><span id="%24mSESSION_STATE_STOPPING"><span id="SESSION_STATE_STOPPING"><span class="annot"><span class="annottext">$bSESSION_STATE_STOPPING :: SessionState
+$mSESSION_STATE_STOPPING :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_STOPPING"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_STOPPING</span></a></span></span></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">6</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- | 'SESSION_STATE_LOSS_PENDING'. The session is in the process of being</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- lost. The application should destroy the current session and can</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- optionally recreate it.</span><span>
+</span><span id="line-182"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_LOSS_PENDING"><span id="%24mSESSION_STATE_LOSS_PENDING"><span id="SESSION_STATE_LOSS_PENDING"><span class="annot"><span class="annottext">$bSESSION_STATE_LOSS_PENDING :: SessionState
+$mSESSION_STATE_LOSS_PENDING :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_LOSS_PENDING"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_LOSS_PENDING</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">7</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- | 'SESSION_STATE_EXITING'. The application should end its XR experience</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- and not automatically restart it.</span><span>
+</span><span id="line-185"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSESSION_STATE_EXITING"><span id="%24mSESSION_STATE_EXITING"><span id="SESSION_STATE_EXITING"><span class="annot"><span class="annottext">$bSESSION_STATE_EXITING :: SessionState
+$mSESSION_STATE_EXITING :: forall r. SessionState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.SessionState.html#%24bSESSION_STATE_EXITING"><span class="hs-identifier hs-var hs-var hs-var">SESSION_STATE_EXITING</span></a></span></span></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span class="hs-number">8</span><span>
+</span><span id="line-186"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_UNKNOWN"><span class="hs-pragma hs-type">SESSION_STATE_UNKNOWN</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-187"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_IDLE"><span class="hs-pragma hs-type">SESSION_STATE_IDLE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-188"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_READY"><span class="hs-pragma hs-type">SESSION_STATE_READY</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-189"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_SYNCHRONIZED"><span class="hs-pragma hs-type">SESSION_STATE_SYNCHRONIZED</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-190"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_VISIBLE"><span class="hs-pragma hs-type">SESSION_STATE_VISIBLE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-191"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_FOCUSED"><span class="hs-pragma hs-type">SESSION_STATE_FOCUSED</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-192"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_STOPPING"><span class="hs-pragma hs-type">SESSION_STATE_STOPPING</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-193"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_LOSS_PENDING"><span class="hs-pragma hs-type">SESSION_STATE_LOSS_PENDING</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-194"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_EXITING"><span class="hs-pragma hs-type">SESSION_STATE_EXITING</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-pragma hs-type">SessionState</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-195"></span><span>
+</span><span id="line-196"></span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#conNameSessionState"><span class="hs-identifier hs-type">conNameSessionState</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-197"></span><span id="conNameSessionState"><span class="annot"><span class="annottext">conNameSessionState :: String
+</span><a href="OpenXR.Core10.Enums.SessionState.html#conNameSessionState"><span class="hs-identifier hs-var hs-var">conNameSessionState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SessionState&quot;</span></span><span>
+</span><span id="line-198"></span><span>
+</span><span id="line-199"></span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#enumPrefixSessionState"><span class="hs-identifier hs-type">enumPrefixSessionState</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-200"></span><span id="enumPrefixSessionState"><span class="annot"><span class="annottext">enumPrefixSessionState :: String
+</span><a href="OpenXR.Core10.Enums.SessionState.html#enumPrefixSessionState"><span class="hs-identifier hs-var hs-var">enumPrefixSessionState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SESSION_STATE_&quot;</span></span><span>
+</span><span id="line-201"></span><span>
+</span><span id="line-202"></span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#showTableSessionState"><span class="hs-identifier hs-type">showTableSessionState</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-203"></span><span id="showTableSessionState"><span class="annot"><span class="annottext">showTableSessionState :: [(SessionState, String)]
+</span><a href="OpenXR.Core10.Enums.SessionState.html#showTableSessionState"><span class="hs-identifier hs-var hs-var">showTableSessionState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-204"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_UNKNOWN"><span class="hs-identifier hs-var">SESSION_STATE_UNKNOWN</span></a></span><span>     </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UNKNOWN&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_IDLE"><span class="hs-identifier hs-var">SESSION_STATE_IDLE</span></a></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;IDLE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-206"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_READY"><span class="hs-identifier hs-var">SESSION_STATE_READY</span></a></span><span>       </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;READY&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-207"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_SYNCHRONIZED"><span class="hs-identifier hs-var">SESSION_STATE_SYNCHRONIZED</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SYNCHRONIZED&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_VISIBLE"><span class="hs-identifier hs-var">SESSION_STATE_VISIBLE</span></a></span><span>     </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;VISIBLE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-209"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_FOCUSED"><span class="hs-identifier hs-var">SESSION_STATE_FOCUSED</span></a></span><span>     </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;FOCUSED&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-210"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_STOPPING"><span class="hs-identifier hs-var">SESSION_STATE_STOPPING</span></a></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;STOPPING&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-211"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_LOSS_PENDING"><span class="hs-identifier hs-var">SESSION_STATE_LOSS_PENDING</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;LOSS_PENDING&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-212"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SESSION_STATE_EXITING"><span class="hs-identifier hs-var">SESSION_STATE_EXITING</span></a></span><span>     </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;EXITING&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-213"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-214"></span><span>
+</span><span id="line-215"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388784"><span id="local-6989586621679388786"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-216"></span><span>  </span><span id="local-6989586621679388782"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SessionState -&gt; ShowS
+</span><a href="#local-6989586621679388782"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SessionState, String)]
+-&gt; String
+-&gt; (SessionState -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; SessionState
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionState.html#enumPrefixSessionState"><span class="hs-identifier hs-var">enumPrefixSessionState</span></a></span><span>
+</span><span id="line-217"></span><span>                            </span><span class="annot"><span class="annottext">[(SessionState, String)]
+</span><a href="OpenXR.Core10.Enums.SessionState.html#showTableSessionState"><span class="hs-identifier hs-var">showTableSessionState</span></a></span><span>
+</span><span id="line-218"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionState.html#conNameSessionState"><span class="hs-identifier hs-var">conNameSessionState</span></a></span><span>
+</span><span id="line-219"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span><span> </span><span id="local-6989586621679388781"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679388781"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679388781"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-220"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-221"></span><span>
+</span><span id="line-222"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388774"><span id="local-6989586621679388777"><span id="local-6989586621679388779"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-type">SessionState</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-223"></span><span>  </span><span id="local-6989586621679388772"><span class="annot"><span class="annottext">readPrec :: ReadPrec SessionState
+</span><a href="#local-6989586621679388772"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SessionState, String)]
+-&gt; String
+-&gt; (Int32 -&gt; SessionState)
+-&gt; ReadPrec SessionState
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionState.html#enumPrefixSessionState"><span class="hs-identifier hs-var">enumPrefixSessionState</span></a></span><span> </span><span class="annot"><span class="annottext">[(SessionState, String)]
+</span><a href="OpenXR.Core10.Enums.SessionState.html#showTableSessionState"><span class="hs-identifier hs-var">showTableSessionState</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SessionState.html#conNameSessionState"><span class="hs-identifier hs-var">conNameSessionState</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; SessionState
+</span><a href="OpenXR.Core10.Enums.SessionState.html#SessionState"><span class="hs-identifier hs-var">SessionState</span></a></span><span>
+</span><span id="line-224"></span><span>
+</span><span id="line-225"></span></pre></body></html>

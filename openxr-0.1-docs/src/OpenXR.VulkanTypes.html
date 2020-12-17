@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE CPP #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.VulkanTypes</span><span>
+</span><span id="line-4"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">Instance_T</span></span><span>
+</span><span id="line-5"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">PhysicalDevice_T</span></span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Device_T</span></span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Image</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Result</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Format</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">InstanceCreateInfo</span></span><span>
+</span><span id="line-11"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">DeviceCreateInfo</span></span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">AllocationCallbacks</span></span><span>
+</span><span id="line-13"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.VulkanTypes.html#PFN_vkGetInstanceProcAddr"><span class="hs-identifier">PFN_vkGetInstanceProcAddr</span></a></span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">SomeStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span class="hs-cpp">
+
+#if defined(USE_VULKAN_TYPES)
+</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.CStruct.Extends</span></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Foreign.C.String</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">type</span><span> </span><span id="PFN_vkGetInstanceProcAddr"><span class="annot"><a href="OpenXR.VulkanTypes.html#PFN_vkGetInstanceProcAddr"><span class="hs-identifier hs-var">PFN_vkGetInstanceProcAddr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">CString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-cpp">
+
+#else
+</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data.Kind</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data.Word</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Foreign.C.String</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Foreign.Ptr</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Foreign.Storable</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">OpenXR.Zero</span><span>
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="hs-keyword">data</span><span> </span><span class="hs-identifier">Instance_T</span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span class="hs-keyword">data</span><span> </span><span class="hs-identifier">PhysicalDevice_T</span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-keyword">data</span><span> </span><span class="hs-identifier">Device_T</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="hs-keyword">newtype</span><span> </span><span class="hs-identifier">Image</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">Image</span><span> </span><span class="hs-identifier">Word64</span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">stock</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Eq</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">Show</span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">newtype</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Zero</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">Storable</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="hs-keyword">newtype</span><span> </span><span class="hs-identifier">Result</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">Result</span><span> </span><span class="hs-identifier">Word32</span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">stock</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Eq</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">Show</span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">newtype</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Zero</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">Storable</span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-keyword">newtype</span><span> </span><span class="hs-identifier">Format</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">Format</span><span> </span><span class="hs-identifier">Word32</span><span>
+</span><span id="line-50"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">stock</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Eq</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">Show</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">newtype</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Zero</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">Storable</span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span><span class="hs-keyword">data</span><span> </span><span class="hs-identifier">InstanceCreateInfo</span><span> </span><span class="hs-identifier">es</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">data</span><span> </span><span class="hs-identifier">DeviceCreateInfo</span><span> </span><span class="hs-identifier">es</span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span class="hs-keyword">data</span><span> </span><span class="hs-identifier">AllocationCallbacks</span><span>
+</span><span id="line-57"></span><span>
+</span><span id="line-58"></span><span class="hs-keyword">type</span><span> </span><span class="hs-identifier">PFN_vkGetInstanceProcAddr</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">FunPtr</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">CString</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">IO</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">FunPtr</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span>
+</span><span id="line-60"></span><span class="hs-keyword">data</span><span> </span><span class="hs-identifier">SomeStruct</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">a</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-identifier">Type</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">Type</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-identifier">SomeStruct</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span class="hs-identifier">a</span><span> </span><span class="hs-identifier">es</span><span class="hs-operator">.</span><span> </span><span class="hs-identifier">a</span><span> </span><span class="hs-identifier">es</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">SomeStruct</span><span> </span><span class="hs-identifier">a</span><span class="hs-cpp">
+
+#endif
+</span></pre></body></html>

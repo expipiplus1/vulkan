@@ -1,0 +1,742 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;Handles&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Handles</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier">Instance</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance_T"><span class="hs-identifier">Instance_T</span></a></span><span>
+</span><span id="line-5"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier">Session</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier">Session_T</span></a></span><span>
+</span><span id="line-7"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet"><span class="hs-identifier">ActionSet</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet_T"><span class="hs-identifier">ActionSet_T</span></a></span><span>
+</span><span id="line-9"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier">Action</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier">Action_T</span></a></span><span>
+</span><span id="line-11"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier">Swapchain</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain_T"><span class="hs-identifier">Swapchain_T</span></a></span><span>
+</span><span id="line-13"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier">Space</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space_T"><span class="hs-identifier">Space_T</span></a></span><span>
+</span><span id="line-15"></span><span>                              </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ptrToWordPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><span class="hs-identifier">WordPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html"><span class="hs-identifier">OpenXR.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier">HasObjectType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html"><span class="hs-identifier">OpenXR.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html"><span class="hs-identifier">OpenXR.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#IsHandle"><span class="hs-identifier">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION"><span class="hs-identifier">OBJECT_TYPE_ACTION</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION_SET"><span class="hs-identifier">OBJECT_TYPE_ACTION_SET</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_INSTANCE"><span class="hs-identifier">OBJECT_TYPE_INSTANCE</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SESSION"><span class="hs-identifier">OBJECT_TYPE_SESSION</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPACE"><span class="hs-identifier">OBJECT_TYPE_SPACE</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html"><span class="hs-identifier">OpenXR.Core10.Enums.ObjectType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#ObjectType"><span class="hs-identifier">ObjectType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SWAPCHAIN"><span class="hs-identifier">OBJECT_TYPE_SWAPCHAIN</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrInstance handles</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">data</span><span> </span><span id="Instance_T"><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance_T"><span class="hs-identifier hs-var">Instance_T</span></a></span></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | XrInstance - Opaque handle to an instance object</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- An OpenXR instance is an object that allows an OpenXR application to</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- communicate with an OpenXR runtime. The application accomplishes this</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- communication by calling 'OpenXR.Core10.Instance.createInstance' and</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- receiving a handle to the resulting 'Instance' object.</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- The 'Instance' object stores and tracks OpenXR-related application</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- state, without storing any such state in the application&#8217;s global</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- address space. This allows the application to create multiple instances</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- as well as safely encapsulate the application&#8217;s OpenXR state since this</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- object is opaque to the application. OpenXR runtimes /may/ limit the</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- number of simultaneous 'Instance' objects that may be created and used,</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- but they /must/ support the creation and usage of at least one</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- 'Instance' object per process.</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- Physically, this state /may/ be stored in any of the OpenXR loader,</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- OpenXR API layers or the OpenXR runtime components. The exact storage</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- and distribution of this saved state is implementation-dependent, except</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- where indicated by this specification.</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.InstanceCreateInfo',</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.InstanceProperties',</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_convert_timespec_time.convertTimeToTimespecTimeKHR',</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_win32_convert_performance_counter_time.convertTimeToWin32PerformanceCounterKHR',</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_convert_timespec_time.convertTimespecTimeToTimeKHR',</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_win32_convert_performance_counter_time.convertWin32PerformanceCounterToTimeKHR',</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.createActionSet',</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.createDebugUtilsMessengerEXT',</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.createInstance',</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.createSession',</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable2.createVulkanDeviceKHR',</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable2.createVulkanInstanceKHR',</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.destroyInstance',</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.enumerateEnvironmentBlendModes',</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.enumerateViewConfigurationViews',</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.enumerateViewConfigurations',</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_D3D11_enable.getD3D11GraphicsRequirementsKHR',</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_D3D12_enable.getD3D12GraphicsRequirementsKHR',</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.getInstanceProcAddr',</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.getInstanceProperties',</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_opengl_es_enable.getOpenGLESGraphicsRequirementsKHR',</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_opengl_enable.getOpenGLGraphicsRequirementsKHR',</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.getSystem',</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.getSystemProperties',</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- 'OpenXR.Core10.ViewConfigurations.getViewConfigurationProperties',</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable.getVulkanDeviceExtensionsKHR',</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable2.getVulkanGraphicsDevice2KHR',</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable.getVulkanGraphicsDeviceKHR',</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable2.getVulkanGraphicsRequirements2KHR',</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable.getVulkanGraphicsRequirementsKHR',</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_vulkan_enable.getVulkanInstanceExtensionsKHR',</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- 'OpenXR.Core10.SemanticPaths.pathToString',</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.pollEvent',</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.resultToString',</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.setDebugUtilsObjectNameEXT',</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- 'OpenXR.Core10.SemanticPaths.stringToPath',</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- 'OpenXR.Core10.Instance.structureTypeToString',</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.submitDebugUtilsMessageEXT',</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.suggestInteractionProfileBindings'</span><span>
+</span><span id="line-96"></span><span class="hs-keyword">data</span><span> </span><span id="Instance"><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-var">Instance</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Instance"><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-var">Instance</span></a></span></span><span>
+</span><span id="line-97"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AinstanceHandle%3AInstance"><span class="annot"><span class="annottext">Instance -&gt; Ptr Instance_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceHandle%3AInstance"><span class="hs-identifier hs-var hs-var">instanceHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance_T"><span class="hs-identifier hs-type">Instance_T</span></a></span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3AInstance"><span class="annot"><span class="annottext">Instance -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3AInstance"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-99"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-100"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679392148"><span id="local-6989586621679392150"><span class="annot"><span class="annottext">Instance -&gt; Instance -&gt; Bool
+(Instance -&gt; Instance -&gt; Bool)
+-&gt; (Instance -&gt; Instance -&gt; Bool) -&gt; Eq Instance
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Instance -&gt; Instance -&gt; Bool
+$c/= :: Instance -&gt; Instance -&gt; Bool
+== :: Instance -&gt; Instance -&gt; Bool
+$c== :: Instance -&gt; Instance -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392141"><span id="local-6989586621679392143"><span id="local-6989586621679392145"><span class="annot"><span class="annottext">Int -&gt; Instance -&gt; ShowS
+[Instance] -&gt; ShowS
+Instance -&gt; String
+(Int -&gt; Instance -&gt; ShowS)
+-&gt; (Instance -&gt; String) -&gt; ([Instance] -&gt; ShowS) -&gt; Show Instance
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Instance] -&gt; ShowS
+$cshowList :: [Instance] -&gt; ShowS
+show :: Instance -&gt; String
+$cshow :: Instance -&gt; String
+showsPrec :: Int -&gt; Instance -&gt; ShowS
+$cshowsPrec :: Int -&gt; Instance -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq Instance
+Zero Instance
+(Eq Instance, Zero Instance) =&gt; IsHandle Instance
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero Instance
+$cp1IsHandle :: Eq Instance
+</span><a href="OpenXR.Core10.APIConstants.html#C%3AIsHandle"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-102"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-type">Instance</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-103"></span><span>  </span><span id="local-6989586621679392134"><span class="annot"><span class="annottext">zero :: Instance
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr Instance_T -&gt; InstanceCmds -&gt; Instance
+</span><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-var">Instance</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Instance_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-104"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-type">Instance</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-105"></span><span>  </span><span id="local-6989586621679392130"><span class="annot"><span class="annottext">objectTypeAndHandle :: Instance -&gt; (ObjectType, Word64)
+</span><a href="OpenXR.Core10.APIConstants.html#objectTypeAndHandle"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Instance"><span class="hs-identifier hs-type">Instance</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Instance_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679392128"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679392128"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_INSTANCE"><span class="hs-identifier hs-var">OBJECT_TYPE_INSTANCE</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679392128"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrSession handles</span><span>
+</span><span id="line-109"></span><span class="hs-keyword">data</span><span> </span><span id="Session_T"><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-var">Session_T</span></a></span></span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- | XrSession - Opaque handle to a session object</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- A session represents an application&#8217;s intention to display XR content to</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- the user.</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- First, the application creates a session by choosing a</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#system system&gt;</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- and a graphics API and calling 'OpenXR.Core10.Device.createSession',</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- which creates a session in the</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.SessionState.SESSION_STATE_IDLE' state. The</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- application then sets up an 'OpenXR.Core10.Instance.pollEvent' loop to</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- monitor for session state changes delivered through the</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataSessionStateChanged' event. When the</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- runtime determines that the system is ready to start transitioning to</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- this session&#8217;s XR content, it notifies the application that its session</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- has moved into the</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.SessionState.SESSION_STATE_READY' state. When the</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- application is ready to proceed and display its XR content, it calls</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.beginSession' and</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop starts its frame loop&gt;,</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- which starts its session running. While the session is running, the</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- application is expected to continuously run its frame loop by calling</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.waitFrame',</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.beginFrame' and</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.endFrame' each frame, to establish</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- synchronization with the runtime. Once the runtime is synchronized with</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- the application&#8217;s frame loop and ready to display its frames, the</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- session will move into the</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.SessionState.SESSION_STATE_SYNCHRONIZED' state. For</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- frames where 'OpenXR.Core10.DisplayTiming.waitFrame' returns an</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.FrameState' with @shouldRender@ set to</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- true, the application should render its composition layers and submit</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- them to 'OpenXR.Core10.DisplayTiming.endFrame'. If the application</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- desires to leave a running session, it should call the</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.requestExitSession' function to request that the</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- runtime transition its session to the</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.SessionState.SESSION_STATE_STOPPING' state as soon</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- as possible. Once the application reaches the</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.SessionState.SESSION_STATE_STOPPING' state, it can</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- call 'OpenXR.Core10.Session.endSession' to stop the XR session, after</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- which the session will transition through</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.SessionState.SESSION_STATE_IDLE' to the</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.SessionState.SESSION_STATE_EXITING' state.</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- #session_running#A session is considered __running__ after a successful</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- call to 'OpenXR.Core10.Session.beginSession' and remains running until</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- any call is made to 'OpenXR.Core10.Session.endSession'. Certain</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- functions are only valid to call when a session is running, such as</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.waitFrame', or else the</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.ERROR_SESSION_NOT_RUNNING' error /must/ be</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- returned by the runtime.</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- #session_not_running#A session is considered __not running__ before a</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- successful call to 'OpenXR.Core10.Session.beginSession' and becomes not</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- running again after any call is made to</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.endSession'. Certain functions are only valid to</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- call when a session is not running, such as</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.beginSession', or else the</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.ERROR_SESSION_RUNNING' error /must/ be</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- returned by the runtime.</span><span>
+</span><span id="line-172"></span><span class="hs-comment">--</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- If an error is returned from 'OpenXR.Core10.Session.beginSession', the</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- session remains in its current running or not running state. Calling</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.endSession' always transitions a session to the</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- not running state, regardless of any errors returned.</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- Only running sessions may become focused sessions that receive XR input.</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- When a session</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#session_not_running is not running&gt;,</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- the application /must/ not submit frames. This is important because</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- without a running session, the runtime no longer has to spend resources</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- on sub-systems (tracking etc.) that are no longer needed by the</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- application.</span><span>
+</span><span id="line-185"></span><span class="hs-comment">--</span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-187"></span><span class="hs-comment">--</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataInteractionProfileChanged',</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataReferenceSpaceChangePending',</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataSessionStateChanged',</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_visibility_mask.EventDataVisibilityMaskChangedKHR',</span><span>
+</span><span id="line-192"></span><span class="hs-comment">-- 'OpenXR.Core10.Haptics.applyHapticFeedback',</span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.attachSessionActionSets',</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.beginFrame',</span><span>
+</span><span id="line-195"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.beginSession',</span><span>
+</span><span id="line-196"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.createActionSpace',</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.createHandTrackerEXT',</span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.createReferenceSpace',</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.createSession',</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_perception_anchor_interop.createSpatialAnchorFromPerceptionAnchorMSFT',</span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_anchor.createSpatialAnchorMSFT',</span><span>
+</span><span id="line-202"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_anchor.createSpatialAnchorSpaceMSFT',</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_graph_bridge.createSpatialGraphNodeSpaceMSFT',</span><span>
+</span><span id="line-204"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.createSwapchain',</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_android_surface_swapchain.createSwapchainAndroidSurfaceKHR',</span><span>
+</span><span id="line-206"></span><span class="hs-comment">-- 'OpenXR.Core10.Device.destroySession',</span><span>
+</span><span id="line-207"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.endFrame',</span><span>
+</span><span id="line-208"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.endSession',</span><span>
+</span><span id="line-209"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.enumerateBoundSourcesForAction',</span><span>
+</span><span id="line-210"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_FB_color_space.enumerateColorSpacesFB',</span><span>
+</span><span id="line-211"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_FB_display_refresh_rate.enumerateDisplayRefreshRatesFB',</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.enumerateReferenceSpaces',</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.enumerateSwapchainFormats',</span><span>
+</span><span id="line-214"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.getActionStateBoolean',</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.getActionStateFloat',</span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.getActionStatePose',</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.getActionStateVector2f',</span><span>
+</span><span id="line-218"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_controller_model.getControllerModelKeyMSFT',</span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_controller_model.getControllerModelPropertiesMSFT',</span><span>
+</span><span id="line-220"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_controller_model.getControllerModelStateMSFT',</span><span>
+</span><span id="line-221"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.getCurrentInteractionProfile',</span><span>
+</span><span id="line-222"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_FB_display_refresh_rate.getDisplayRefreshRateFB',</span><span>
+</span><span id="line-223"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.getInputSourceLocalizedName',</span><span>
+</span><span id="line-224"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.getReferenceSpaceBoundsRect',</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_visibility_mask.getVisibilityMaskKHR',</span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_controller_model.loadControllerModelMSFT',</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.locateViews',</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_performance_settings.perfSettingsSetPerformanceLevelEXT',</span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_FB_display_refresh_rate.requestDisplayRefreshRateFB',</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- 'OpenXR.Core10.Session.requestExitSession',</span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.sessionBeginDebugUtilsLabelRegionEXT',</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.sessionEndDebugUtilsLabelRegionEXT',</span><span>
+</span><span id="line-233"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_debug_utils.sessionInsertDebugUtilsLabelEXT',</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_android_thread_settings.setAndroidApplicationThreadKHR',</span><span>
+</span><span id="line-235"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_FB_color_space.setColorSpaceFB',</span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetInputDeviceActiveEXT xrSetInputDeviceActiveEXT&gt;,</span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetInputDeviceLocationEXT xrSetInputDeviceLocationEXT&gt;,</span><span>
+</span><span id="line-238"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetInputDeviceStateBoolEXT xrSetInputDeviceStateBoolEXT&gt;,</span><span>
+</span><span id="line-239"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetInputDeviceStateFloatEXT xrSetInputDeviceStateFloatEXT&gt;,</span><span>
+</span><span id="line-240"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetInputDeviceStateVector2fEXT xrSetInputDeviceStateVector2fEXT&gt;,</span><span>
+</span><span id="line-241"></span><span class="hs-comment">-- 'OpenXR.Core10.Haptics.stopHapticFeedback',</span><span>
+</span><span id="line-242"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.syncActions',</span><span>
+</span><span id="line-243"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_thermal_query.thermalGetTemperatureTrendEXT',</span><span>
+</span><span id="line-244"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_perception_anchor_interop.tryGetPerceptionAnchorFromSpatialAnchorMSFT',</span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.waitFrame'</span><span>
+</span><span id="line-246"></span><span class="hs-keyword">data</span><span> </span><span id="Session"><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-var">Session</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Session"><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-var">Session</span></a></span></span><span>
+</span><span id="line-247"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AsessionHandle%3ASession"><span class="annot"><span class="annottext">Session -&gt; Ptr Session_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AsessionHandle%3ASession"><span class="hs-identifier hs-var hs-var">sessionHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-type">Session_T</span></a></span><span>
+</span><span id="line-248"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3ASession"><span class="annot"><span class="annottext">Session -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3ASession"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-249"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-250"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679392121"><span id="local-6989586621679392123"><span class="annot"><span class="annottext">Session -&gt; Session -&gt; Bool
+(Session -&gt; Session -&gt; Bool)
+-&gt; (Session -&gt; Session -&gt; Bool) -&gt; Eq Session
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Session -&gt; Session -&gt; Bool
+$c/= :: Session -&gt; Session -&gt; Bool
+== :: Session -&gt; Session -&gt; Bool
+$c== :: Session -&gt; Session -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392115"><span id="local-6989586621679392117"><span id="local-6989586621679392119"><span class="annot"><span class="annottext">Int -&gt; Session -&gt; ShowS
+[Session] -&gt; ShowS
+Session -&gt; String
+(Int -&gt; Session -&gt; ShowS)
+-&gt; (Session -&gt; String) -&gt; ([Session] -&gt; ShowS) -&gt; Show Session
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Session] -&gt; ShowS
+$cshowList :: [Session] -&gt; ShowS
+show :: Session -&gt; String
+$cshow :: Session -&gt; String
+showsPrec :: Int -&gt; Session -&gt; ShowS
+$cshowsPrec :: Int -&gt; Session -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-251"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq Session
+Zero Session
+(Eq Session, Zero Session) =&gt; IsHandle Session
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero Session
+$cp1IsHandle :: Eq Session
+</span><a href="#local-6989586621679392113"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-252"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-253"></span><span>  </span><span id="local-6989586621679392111"><span class="annot"><span class="annottext">zero :: Session
+</span><a href="#local-6989586621679392111"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr Session_T -&gt; InstanceCmds -&gt; Session
+</span><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-var">Session</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Session_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-254"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-255"></span><span>  </span><span id="local-6989586621679392109"><span class="annot"><span class="annottext">objectTypeAndHandle :: Session -&gt; (ObjectType, Word64)
+</span><a href="#local-6989586621679392109"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Session_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679392108"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679392108"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SESSION"><span class="hs-identifier hs-var">OBJECT_TYPE_SESSION</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679392108"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-256"></span><span>
+</span><span id="line-257"></span><span>
+</span><span id="line-258"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrActionSet handles</span><span>
+</span><span id="line-259"></span><span class="hs-keyword">data</span><span> </span><span id="ActionSet_T"><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet_T"><span class="hs-identifier hs-var">ActionSet_T</span></a></span></span><span>
+</span><span id="line-260"></span><span class="hs-comment">-- | XrActionSet - Opaque handle to an action set</span><span>
+</span><span id="line-261"></span><span class="hs-comment">--</span><span>
+</span><span id="line-262"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--</span><span>
+</span><span id="line-264"></span><span class="hs-comment">-- Action sets are application-defined collections of actions. They are</span><span>
+</span><span id="line-265"></span><span class="hs-comment">-- attached to a given 'Session' with a</span><span>
+</span><span id="line-266"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.attachSessionActionSets' call. They are enabled or</span><span>
+</span><span id="line-267"></span><span class="hs-comment">-- disabled by the application via 'OpenXR.Core10.Input.syncActions'</span><span>
+</span><span id="line-268"></span><span class="hs-comment">-- depending on the current application context. For example, a game may</span><span>
+</span><span id="line-269"></span><span class="hs-comment">-- have one set of actions that apply to controlling a character and</span><span>
+</span><span id="line-270"></span><span class="hs-comment">-- another set for navigating a menu system. When these actions are grouped</span><span>
+</span><span id="line-271"></span><span class="hs-comment">-- into two 'ActionSet' handles they can be selectively enabled and</span><span>
+</span><span id="line-272"></span><span class="hs-comment">-- disabled using a single function call.</span><span>
+</span><span id="line-273"></span><span class="hs-comment">--</span><span>
+</span><span id="line-274"></span><span class="hs-comment">-- Actions are passed a handle to their 'ActionSet' when they are created.</span><span>
+</span><span id="line-275"></span><span class="hs-comment">--</span><span>
+</span><span id="line-276"></span><span class="hs-comment">-- Action sets are created by calling</span><span>
+</span><span id="line-277"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.createActionSet':</span><span>
+</span><span id="line-278"></span><span class="hs-comment">--</span><span>
+</span><span id="line-279"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-280"></span><span class="hs-comment">--</span><span>
+</span><span id="line-281"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.ActiveActionSet',</span><span>
+</span><span id="line-282"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.SessionActionSetsAttachInfo',</span><span>
+</span><span id="line-283"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.createAction',</span><span>
+</span><span id="line-284"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.createActionSet',</span><span>
+</span><span id="line-285"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.destroyActionSet'</span><span>
+</span><span id="line-286"></span><span class="hs-keyword">data</span><span> </span><span id="ActionSet"><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet"><span class="hs-identifier hs-var">ActionSet</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ActionSet"><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet"><span class="hs-identifier hs-var">ActionSet</span></a></span></span><span>
+</span><span id="line-287"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AactionSetHandle%3AActionSet"><span class="annot"><span class="annottext">ActionSet -&gt; Ptr ActionSet_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AactionSetHandle%3AActionSet"><span class="hs-identifier hs-var hs-var">actionSetHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet_T"><span class="hs-identifier hs-type">ActionSet_T</span></a></span><span>
+</span><span id="line-288"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3AActionSet"><span class="annot"><span class="annottext">ActionSet -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3AActionSet"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-289"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-290"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679392101"><span id="local-6989586621679392103"><span class="annot"><span class="annottext">ActionSet -&gt; ActionSet -&gt; Bool
+(ActionSet -&gt; ActionSet -&gt; Bool)
+-&gt; (ActionSet -&gt; ActionSet -&gt; Bool) -&gt; Eq ActionSet
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ActionSet -&gt; ActionSet -&gt; Bool
+$c/= :: ActionSet -&gt; ActionSet -&gt; Bool
+== :: ActionSet -&gt; ActionSet -&gt; Bool
+$c== :: ActionSet -&gt; ActionSet -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392095"><span id="local-6989586621679392097"><span id="local-6989586621679392099"><span class="annot"><span class="annottext">Int -&gt; ActionSet -&gt; ShowS
+[ActionSet] -&gt; ShowS
+ActionSet -&gt; String
+(Int -&gt; ActionSet -&gt; ShowS)
+-&gt; (ActionSet -&gt; String)
+-&gt; ([ActionSet] -&gt; ShowS)
+-&gt; Show ActionSet
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [ActionSet] -&gt; ShowS
+$cshowList :: [ActionSet] -&gt; ShowS
+show :: ActionSet -&gt; String
+$cshow :: ActionSet -&gt; String
+showsPrec :: Int -&gt; ActionSet -&gt; ShowS
+$cshowsPrec :: Int -&gt; ActionSet -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-291"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq ActionSet
+Zero ActionSet
+(Eq ActionSet, Zero ActionSet) =&gt; IsHandle ActionSet
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero ActionSet
+$cp1IsHandle :: Eq ActionSet
+</span><a href="#local-6989586621679392093"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-292"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet"><span class="hs-identifier hs-type">ActionSet</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-293"></span><span>  </span><span id="local-6989586621679392091"><span class="annot"><span class="annottext">zero :: ActionSet
+</span><a href="#local-6989586621679392091"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ActionSet_T -&gt; InstanceCmds -&gt; ActionSet
+</span><a href="OpenXR.Core10.Handles.html#ActionSet"><span class="hs-identifier hs-var">ActionSet</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ActionSet_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-294"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet"><span class="hs-identifier hs-type">ActionSet</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-295"></span><span>  </span><span id="local-6989586621679392089"><span class="annot"><span class="annottext">objectTypeAndHandle :: ActionSet -&gt; (ObjectType, Word64)
+</span><a href="#local-6989586621679392089"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#ActionSet"><span class="hs-identifier hs-type">ActionSet</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ActionSet_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679392088"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679392088"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION_SET"><span class="hs-identifier hs-var">OBJECT_TYPE_ACTION_SET</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679392088"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-296"></span><span>
+</span><span id="line-297"></span><span>
+</span><span id="line-298"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrAction handles</span><span>
+</span><span id="line-299"></span><span class="hs-keyword">data</span><span> </span><span id="Action_T"><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier hs-var">Action_T</span></a></span></span><span>
+</span><span id="line-300"></span><span class="hs-comment">-- | XrAction - Opaque handle to an action</span><span>
+</span><span id="line-301"></span><span class="hs-comment">--</span><span>
+</span><span id="line-302"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-303"></span><span class="hs-comment">--</span><span>
+</span><span id="line-304"></span><span class="hs-comment">-- Action handles are used to refer to individual actions when retrieving</span><span>
+</span><span id="line-305"></span><span class="hs-comment">-- action data, creating action spaces, or sending haptic events.</span><span>
+</span><span id="line-306"></span><span class="hs-comment">--</span><span>
+</span><span id="line-307"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-308"></span><span class="hs-comment">--</span><span>
+</span><span id="line-309"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.ActionSpaceCreateInfo',</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.ActionStateGetInfo',</span><span>
+</span><span id="line-311"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.ActionSuggestedBinding',</span><span>
+</span><span id="line-312"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.ActionType.ActionType',</span><span>
+</span><span id="line-313"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.BoundSourcesForActionEnumerateInfo',</span><span>
+</span><span id="line-314"></span><span class="hs-comment">-- 'OpenXR.Core10.Haptics.HapticActionInfo',</span><span>
+</span><span id="line-315"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_VALVE_analog_threshold.InteractionProfileAnalogThresholdVALVE',</span><span>
+</span><span id="line-316"></span><span class="hs-comment">-- 'OpenXR.Core10.Input.createAction', 'OpenXR.Core10.Input.destroyAction'</span><span>
+</span><span id="line-317"></span><span class="hs-keyword">data</span><span> </span><span id="Action"><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier hs-var">Action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Action"><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier hs-var">Action</span></a></span></span><span>
+</span><span id="line-318"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AactionHandle%3AAction"><span class="annot"><span class="annottext">Action -&gt; Ptr Action_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AactionHandle%3AAction"><span class="hs-identifier hs-var hs-var">actionHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action_T"><span class="hs-identifier hs-type">Action_T</span></a></span><span>
+</span><span id="line-319"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3AAction"><span class="annot"><span class="annottext">Action -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3AAction"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-320"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-321"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679392081"><span id="local-6989586621679392083"><span class="annot"><span class="annottext">Action -&gt; Action -&gt; Bool
+(Action -&gt; Action -&gt; Bool)
+-&gt; (Action -&gt; Action -&gt; Bool) -&gt; Eq Action
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Action -&gt; Action -&gt; Bool
+$c/= :: Action -&gt; Action -&gt; Bool
+== :: Action -&gt; Action -&gt; Bool
+$c== :: Action -&gt; Action -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392075"><span id="local-6989586621679392077"><span id="local-6989586621679392079"><span class="annot"><span class="annottext">Int -&gt; Action -&gt; ShowS
+[Action] -&gt; ShowS
+Action -&gt; String
+(Int -&gt; Action -&gt; ShowS)
+-&gt; (Action -&gt; String) -&gt; ([Action] -&gt; ShowS) -&gt; Show Action
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Action] -&gt; ShowS
+$cshowList :: [Action] -&gt; ShowS
+show :: Action -&gt; String
+$cshow :: Action -&gt; String
+showsPrec :: Int -&gt; Action -&gt; ShowS
+$cshowsPrec :: Int -&gt; Action -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-322"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq Action
+Zero Action
+(Eq Action, Zero Action) =&gt; IsHandle Action
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero Action
+$cp1IsHandle :: Eq Action
+</span><a href="#local-6989586621679392073"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-323"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier hs-type">Action</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-324"></span><span>  </span><span id="local-6989586621679392071"><span class="annot"><span class="annottext">zero :: Action
+</span><a href="#local-6989586621679392071"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr Action_T -&gt; InstanceCmds -&gt; Action
+</span><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier hs-var">Action</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Action_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-325"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier hs-type">Action</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-326"></span><span>  </span><span id="local-6989586621679392069"><span class="annot"><span class="annottext">objectTypeAndHandle :: Action -&gt; (ObjectType, Word64)
+</span><a href="#local-6989586621679392069"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Action"><span class="hs-identifier hs-type">Action</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Action_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679392068"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679392068"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_ACTION"><span class="hs-identifier hs-var">OBJECT_TYPE_ACTION</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679392068"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-327"></span><span>
+</span><span id="line-328"></span><span>
+</span><span id="line-329"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrSwapchain handles</span><span>
+</span><span id="line-330"></span><span class="hs-keyword">data</span><span> </span><span id="Swapchain_T"><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain_T"><span class="hs-identifier hs-var">Swapchain_T</span></a></span></span><span>
+</span><span id="line-331"></span><span class="hs-comment">-- | XrSwapchain - Opaque handle to a swapchain object</span><span>
+</span><span id="line-332"></span><span class="hs-comment">--</span><span>
+</span><span id="line-333"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-334"></span><span class="hs-comment">--</span><span>
+</span><span id="line-335"></span><span class="hs-comment">-- Normal XR applications will want to present rendered images to the user.</span><span>
+</span><span id="line-336"></span><span class="hs-comment">-- To allow this, the runtime provides images organized in swapchains for</span><span>
+</span><span id="line-337"></span><span class="hs-comment">-- the application to render into. The runtime /must/ allow applications to</span><span>
+</span><span id="line-338"></span><span class="hs-comment">-- create multiple swapchains.</span><span>
+</span><span id="line-339"></span><span class="hs-comment">--</span><span>
+</span><span id="line-340"></span><span class="hs-comment">-- Swapchain image format support by the runtime is specified by the</span><span>
+</span><span id="line-341"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.enumerateSwapchainFormats' function. Runtimes</span><span>
+</span><span id="line-342"></span><span class="hs-comment">-- /should/ support @R8G8B8A8@ and @R8G8B8A8@ @sRGB@ formats if possible.</span><span>
+</span><span id="line-343"></span><span class="hs-comment">--</span><span>
+</span><span id="line-344"></span><span class="hs-comment">-- Swapchain images /can/ be 2D or 2D Array.</span><span>
+</span><span id="line-345"></span><span class="hs-comment">--</span><span>
+</span><span id="line-346"></span><span class="hs-comment">-- Rendering operations involving composition of submitted layers should be</span><span>
+</span><span id="line-347"></span><span class="hs-comment">-- assumed to be internally performed by the runtime in linear color space.</span><span>
+</span><span id="line-348"></span><span class="hs-comment">-- Images submitted in sRGB color space must be created using an</span><span>
+</span><span id="line-349"></span><span class="hs-comment">-- API-specific sRGB format (e.g. @DXGI_FORMAT_R8G8B8A8_UNORM_SRGB@,</span><span>
+</span><span id="line-350"></span><span class="hs-comment">-- @GL_SRGB8_ALPHA8@, @VK_FORMAT_R8G8B8A8_SRGB@) to apply automatic</span><span>
+</span><span id="line-351"></span><span class="hs-comment">-- sRGB-to-linear conversion when read by the runtime. All other formats</span><span>
+</span><span id="line-352"></span><span class="hs-comment">-- will be treated as linear values.</span><span>
+</span><span id="line-353"></span><span class="hs-comment">--</span><span>
+</span><span id="line-354"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-355"></span><span class="hs-comment">--</span><span>
+</span><span id="line-356"></span><span class="hs-comment">-- OpenXR applications should avoid submitting linear encoded 8 bit color</span><span>
+</span><span id="line-357"></span><span class="hs-comment">-- data (e.g. @DXGI_FORMAT_R8G8B8A8_UNORM@) whenever possible as it may</span><span>
+</span><span id="line-358"></span><span class="hs-comment">-- result in color banding.</span><span>
+</span><span id="line-359"></span><span class="hs-comment">--</span><span>
+</span><span id="line-360"></span><span class="hs-comment">-- Gritz, L. and d&#8217;Eon, E. 2007. The Importance of Being Linear. In: H.</span><span>
+</span><span id="line-361"></span><span class="hs-comment">-- Nguyen, ed., /GPU Gems 3/. Addison-Wesley Professional.</span><span>
+</span><span id="line-362"></span><span class="hs-comment">-- &lt;https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-24-importance-being-linear&gt;</span><span>
+</span><span id="line-363"></span><span class="hs-comment">--</span><span>
+</span><span id="line-364"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-365"></span><span class="hs-comment">--</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- DXGI resources will be created with their associated TYPELESS format,</span><span>
+</span><span id="line-367"></span><span class="hs-comment">-- but the runtime will use the application-specified format for reading</span><span>
+</span><span id="line-368"></span><span class="hs-comment">-- the data.</span><span>
+</span><span id="line-369"></span><span class="hs-comment">--</span><span>
+</span><span id="line-370"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-371"></span><span class="hs-comment">--</span><span>
+</span><span id="line-372"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_cube.CompositionLayerCubeKHR',</span><span>
+</span><span id="line-373"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.SwapchainSubImage',</span><span>
+</span><span id="line-374"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.acquireSwapchainImage',</span><span>
+</span><span id="line-375"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.createSwapchain',</span><span>
+</span><span id="line-376"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_android_surface_swapchain.createSwapchainAndroidSurfaceKHR',</span><span>
+</span><span id="line-377"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.destroySwapchain',</span><span>
+</span><span id="line-378"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.enumerateSwapchainFormats',</span><span>
+</span><span id="line-379"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.enumerateSwapchainImages',</span><span>
+</span><span id="line-380"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.releaseSwapchainImage',</span><span>
+</span><span id="line-381"></span><span class="hs-comment">-- 'OpenXR.Core10.Image.waitSwapchainImage'</span><span>
+</span><span id="line-382"></span><span class="hs-keyword">data</span><span> </span><span id="Swapchain"><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier hs-var">Swapchain</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Swapchain"><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier hs-var">Swapchain</span></a></span></span><span>
+</span><span id="line-383"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AswapchainHandle%3ASwapchain"><span class="annot"><span class="annottext">Swapchain -&gt; Ptr Swapchain_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AswapchainHandle%3ASwapchain"><span class="hs-identifier hs-var hs-var">swapchainHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain_T"><span class="hs-identifier hs-type">Swapchain_T</span></a></span><span>
+</span><span id="line-384"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3ASwapchain"><span class="annot"><span class="annottext">Swapchain -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3ASwapchain"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-385"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-386"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679392061"><span id="local-6989586621679392063"><span class="annot"><span class="annottext">Swapchain -&gt; Swapchain -&gt; Bool
+(Swapchain -&gt; Swapchain -&gt; Bool)
+-&gt; (Swapchain -&gt; Swapchain -&gt; Bool) -&gt; Eq Swapchain
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Swapchain -&gt; Swapchain -&gt; Bool
+$c/= :: Swapchain -&gt; Swapchain -&gt; Bool
+== :: Swapchain -&gt; Swapchain -&gt; Bool
+$c== :: Swapchain -&gt; Swapchain -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392055"><span id="local-6989586621679392057"><span id="local-6989586621679392059"><span class="annot"><span class="annottext">Int -&gt; Swapchain -&gt; ShowS
+[Swapchain] -&gt; ShowS
+Swapchain -&gt; String
+(Int -&gt; Swapchain -&gt; ShowS)
+-&gt; (Swapchain -&gt; String)
+-&gt; ([Swapchain] -&gt; ShowS)
+-&gt; Show Swapchain
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Swapchain] -&gt; ShowS
+$cshowList :: [Swapchain] -&gt; ShowS
+show :: Swapchain -&gt; String
+$cshow :: Swapchain -&gt; String
+showsPrec :: Int -&gt; Swapchain -&gt; ShowS
+$cshowsPrec :: Int -&gt; Swapchain -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-387"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq Swapchain
+Zero Swapchain
+(Eq Swapchain, Zero Swapchain) =&gt; IsHandle Swapchain
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero Swapchain
+$cp1IsHandle :: Eq Swapchain
+</span><a href="#local-6989586621679392053"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-388"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier hs-type">Swapchain</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-389"></span><span>  </span><span id="local-6989586621679392051"><span class="annot"><span class="annottext">zero :: Swapchain
+</span><a href="#local-6989586621679392051"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr Swapchain_T -&gt; InstanceCmds -&gt; Swapchain
+</span><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier hs-var">Swapchain</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Swapchain_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-390"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier hs-type">Swapchain</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-391"></span><span>  </span><span id="local-6989586621679392049"><span class="annot"><span class="annottext">objectTypeAndHandle :: Swapchain -&gt; (ObjectType, Word64)
+</span><a href="#local-6989586621679392049"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Swapchain"><span class="hs-identifier hs-type">Swapchain</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Swapchain_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679392048"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679392048"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SWAPCHAIN"><span class="hs-identifier hs-var">OBJECT_TYPE_SWAPCHAIN</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679392048"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-392"></span><span>
+</span><span id="line-393"></span><span>
+</span><span id="line-394"></span><span class="hs-comment">-- | An opaque type for representing pointers to XrSpace handles</span><span>
+</span><span id="line-395"></span><span class="hs-keyword">data</span><span> </span><span id="Space_T"><span class="annot"><a href="OpenXR.Core10.Handles.html#Space_T"><span class="hs-identifier hs-var">Space_T</span></a></span></span><span>
+</span><span id="line-396"></span><span class="hs-comment">-- | XrSpace - Opaque handle to a space</span><span>
+</span><span id="line-397"></span><span class="hs-comment">--</span><span>
+</span><span id="line-398"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-399"></span><span class="hs-comment">--</span><span>
+</span><span id="line-400"></span><span class="hs-comment">-- Spaces are represented by 'Space' handles, which the application creates</span><span>
+</span><span id="line-401"></span><span class="hs-comment">-- and then uses in API calls. Whenever an application calls a function</span><span>
+</span><span id="line-402"></span><span class="hs-comment">-- that returns coordinates, it provides an 'Space' to specify the frame of</span><span>
+</span><span id="line-403"></span><span class="hs-comment">-- reference in which those coordinates will be expressed. Similarly, when</span><span>
+</span><span id="line-404"></span><span class="hs-comment">-- providing coordinates to a function, the application specifies which</span><span>
+</span><span id="line-405"></span><span class="hs-comment">-- 'Space' the runtime should use to interpret those coordinates.</span><span>
+</span><span id="line-406"></span><span class="hs-comment">--</span><span>
+</span><span id="line-407"></span><span class="hs-comment">-- OpenXR defines a set of well-known __reference spaces__ that</span><span>
+</span><span id="line-408"></span><span class="hs-comment">-- applications use to bootstrap their spatial reasoning. These reference</span><span>
+</span><span id="line-409"></span><span class="hs-comment">-- spaces are: @VIEW@, @LOCAL@ and @STAGE@. Each reference space has a</span><span>
+</span><span id="line-410"></span><span class="hs-comment">-- well-defined meaning, which establishes where its origin is positioned</span><span>
+</span><span id="line-411"></span><span class="hs-comment">-- and how its axes are oriented.</span><span>
+</span><span id="line-412"></span><span class="hs-comment">--</span><span>
+</span><span id="line-413"></span><span class="hs-comment">-- Runtimes whose tracking systems improve their understanding of the world</span><span>
+</span><span id="line-414"></span><span class="hs-comment">-- over time /may/ track spaces independently. For example, even though a</span><span>
+</span><span id="line-415"></span><span class="hs-comment">-- @LOCAL@ space and a @STAGE@ space each map their origin to a static</span><span>
+</span><span id="line-416"></span><span class="hs-comment">-- position in the world, a runtime with an inside-out tracking system</span><span>
+</span><span id="line-417"></span><span class="hs-comment">-- /may/ introduce slight adjustments to the origin of each space on a</span><span>
+</span><span id="line-418"></span><span class="hs-comment">-- continuous basis to keep each origin in place.</span><span>
+</span><span id="line-419"></span><span class="hs-comment">--</span><span>
+</span><span id="line-420"></span><span class="hs-comment">-- Beyond well-known reference spaces, runtimes expose other</span><span>
+</span><span id="line-421"></span><span class="hs-comment">-- independently-tracked spaces, such as a pose action space that tracks</span><span>
+</span><span id="line-422"></span><span class="hs-comment">-- the pose of a motion controller over time.</span><span>
+</span><span id="line-423"></span><span class="hs-comment">--</span><span>
+</span><span id="line-424"></span><span class="hs-comment">-- When one or both spaces are tracking a dynamic object, passing in an</span><span>
+</span><span id="line-425"></span><span class="hs-comment">-- updated time to 'OpenXR.Core10.Space.locateSpace' each frame will result</span><span>
+</span><span id="line-426"></span><span class="hs-comment">-- in an updated relative pose. For example, the location of the left</span><span>
+</span><span id="line-427"></span><span class="hs-comment">-- hand&#8217;s pose action space in the @STAGE@ reference space will change each</span><span>
+</span><span id="line-428"></span><span class="hs-comment">-- frame as the user&#8217;s hand moves relative to the stage&#8217;s predefined origin</span><span>
+</span><span id="line-429"></span><span class="hs-comment">-- on the floor. In other XR APIs, it is common to report the \&quot;pose\&quot; of</span><span>
+</span><span id="line-430"></span><span class="hs-comment">-- an object relative to some presumed underlying global space. This API is</span><span>
+</span><span id="line-431"></span><span class="hs-comment">-- careful to not explicitly define such an underlying global space,</span><span>
+</span><span id="line-432"></span><span class="hs-comment">-- because it does not apply to all systems. Some systems will support no</span><span>
+</span><span id="line-433"></span><span class="hs-comment">-- @STAGE@ space, while others may support a @STAGE@ space that switches</span><span>
+</span><span id="line-434"></span><span class="hs-comment">-- between various physical stages with dynamic availability. To satisfy</span><span>
+</span><span id="line-435"></span><span class="hs-comment">-- this wide variability, \&quot;poses\&quot; are always described as the</span><span>
+</span><span id="line-436"></span><span class="hs-comment">-- relationship between two spaces.</span><span>
+</span><span id="line-437"></span><span class="hs-comment">--</span><span>
+</span><span id="line-438"></span><span class="hs-comment">-- Some devices improve their understanding of the world as the device is</span><span>
+</span><span id="line-439"></span><span class="hs-comment">-- used. The location returned by 'OpenXR.Core10.Space.locateSpace' in</span><span>
+</span><span id="line-440"></span><span class="hs-comment">-- later frames /may/ change over time, even for spaces that track static</span><span>
+</span><span id="line-441"></span><span class="hs-comment">-- objects, as either the target space or base space adjusts its origin.</span><span>
+</span><span id="line-442"></span><span class="hs-comment">--</span><span>
+</span><span id="line-443"></span><span class="hs-comment">-- Composition layers submitted by the application include an 'Space' for</span><span>
+</span><span id="line-444"></span><span class="hs-comment">-- the runtime to use to position that layer over time. Composition layers</span><span>
+</span><span id="line-445"></span><span class="hs-comment">-- whose 'Space' is relative to the @VIEW@ reference space are implicitly</span><span>
+</span><span id="line-446"></span><span class="hs-comment">-- \&quot;head-locked\&quot;, even if they may not be \&quot;display-locked\&quot; for</span><span>
+</span><span id="line-447"></span><span class="hs-comment">-- non-head-mounted form factors.</span><span>
+</span><span id="line-448"></span><span class="hs-comment">--</span><span>
+</span><span id="line-449"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-450"></span><span class="hs-comment">--</span><span>
+</span><span id="line-451"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.ActionSpaceCreateInfo',</span><span>
+</span><span id="line-452"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerBaseHeader',</span><span>
+</span><span id="line-453"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_cube.CompositionLayerCubeKHR',</span><span>
+</span><span id="line-454"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_cylinder.CompositionLayerCylinderKHR',</span><span>
+</span><span id="line-455"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_equirect2.CompositionLayerEquirect2KHR',</span><span>
+</span><span id="line-456"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_KHR_composition_layer_equirect.CompositionLayerEquirectKHR',</span><span>
+</span><span id="line-457"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerProjection',</span><span>
+</span><span id="line-458"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerQuad',</span><span>
+</span><span id="line-459"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.HandJointsLocateInfoEXT',</span><span>
+</span><span id="line-460"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.ReferenceSpaceCreateInfo',</span><span>
+</span><span id="line-461"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_anchor.SpatialAnchorCreateInfoMSFT',</span><span>
+</span><span id="line-462"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.ViewLocateInfo',</span><span>
+</span><span id="line-463"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.createActionSpace',</span><span>
+</span><span id="line-464"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_hand_tracking_mesh.createHandMeshSpaceMSFT',</span><span>
+</span><span id="line-465"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.createReferenceSpace',</span><span>
+</span><span id="line-466"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_anchor.createSpatialAnchorSpaceMSFT',</span><span>
+</span><span id="line-467"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_MSFT_spatial_graph_bridge.createSpatialGraphNodeSpaceMSFT',</span><span>
+</span><span id="line-468"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.destroySpace', 'OpenXR.Core10.Space.locateSpace',</span><span>
+</span><span id="line-469"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrSetInputDeviceLocationEXT xrSetInputDeviceLocationEXT&gt;</span><span>
+</span><span id="line-470"></span><span class="hs-keyword">data</span><span> </span><span id="Space"><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier hs-var">Space</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Space"><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier hs-var">Space</span></a></span></span><span>
+</span><span id="line-471"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AspaceHandle%3ASpace"><span class="annot"><span class="annottext">Space -&gt; Ptr Space_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AspaceHandle%3ASpace"><span class="hs-identifier hs-var hs-var">spaceHandle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space_T"><span class="hs-identifier hs-type">Space_T</span></a></span><span>
+</span><span id="line-472"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="%24sel%3AinstanceCmds%3ASpace"><span class="annot"><span class="annottext">Space -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3ASpace"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier hs-type">InstanceCmds</span></a></span><span>
+</span><span id="line-473"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-474"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679392041"><span id="local-6989586621679392043"><span class="annot"><span class="annottext">Space -&gt; Space -&gt; Bool
+(Space -&gt; Space -&gt; Bool) -&gt; (Space -&gt; Space -&gt; Bool) -&gt; Eq Space
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Space -&gt; Space -&gt; Bool
+$c/= :: Space -&gt; Space -&gt; Bool
+== :: Space -&gt; Space -&gt; Bool
+$c== :: Space -&gt; Space -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392035"><span id="local-6989586621679392037"><span id="local-6989586621679392039"><span class="annot"><span class="annottext">Int -&gt; Space -&gt; ShowS
+[Space] -&gt; ShowS
+Space -&gt; String
+(Int -&gt; Space -&gt; ShowS)
+-&gt; (Space -&gt; String) -&gt; ([Space] -&gt; ShowS) -&gt; Show Space
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Space] -&gt; ShowS
+$cshowList :: [Space] -&gt; ShowS
+show :: Space -&gt; String
+$cshow :: Space -&gt; String
+showsPrec :: Int -&gt; Space -&gt; ShowS
+$cshowsPrec :: Int -&gt; Space -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-475"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Eq Space
+Zero Space
+(Eq Space, Zero Space) =&gt; IsHandle Space
+forall a. (Eq a, Zero a) =&gt; IsHandle a
+$cp2IsHandle :: Zero Space
+$cp1IsHandle :: Eq Space
+</span><a href="#local-6989586621679392033"><span class="hs-identifier hs-var hs-var hs-var hs-var">IsHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-476"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier hs-type">Space</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-477"></span><span>  </span><span id="local-6989586621679392031"><span class="annot"><span class="annottext">zero :: Space
+</span><a href="#local-6989586621679392031"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr Space_T -&gt; InstanceCmds -&gt; Space
+</span><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier hs-var">Space</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Space_T
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-478"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="OpenXR.Core10.APIConstants.html#HasObjectType"><span class="hs-identifier hs-type">HasObjectType</span></a></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier hs-type">Space</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-479"></span><span>  </span><span id="local-6989586621679392029"><span class="annot"><span class="annottext">objectTypeAndHandle :: Space -&gt; (ObjectType, Word64)
+</span><a href="#local-6989586621679392029"><span class="hs-identifier hs-var hs-var hs-var hs-var">objectTypeAndHandle</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Space"><span class="hs-identifier hs-type">Space</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Space_T -&gt; WordPtr
+forall a. Ptr a -&gt; WordPtr
+</span><span class="hs-identifier hs-var">ptrToWordPtr</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">WordPtr</span></span><span> </span><span id="local-6989586621679392028"><span class="annot"><span class="annottext">h :: Word
+</span><a href="#local-6989586621679392028"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectType
+</span><a href="OpenXR.Core10.Enums.ObjectType.html#OBJECT_TYPE_SPACE"><span class="hs-identifier hs-var">OBJECT_TYPE_SPACE</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679392028"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-480"></span><span>
+</span><span id="line-481"></span></pre></body></html>

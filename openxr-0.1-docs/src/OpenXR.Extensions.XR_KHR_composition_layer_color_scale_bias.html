@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_KHR_composition_layer_color_scale_bias - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_KHR_composition_layer_color_scale_bias  XR_KHR_composition_layer_color_scale_bias&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 35</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 5</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'CompositionLayerColorScaleBiasKHR'</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_KHR_composition_layer_color_scale_bias OpenXR Specification&gt;</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier">CompositionLayerColorScaleBiasKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span>                                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_composition_layer_color_scale_bias_SPEC_VERSION"><span class="hs-identifier">KHR_composition_layer_color_scale_bias_SPEC_VERSION</span></a></span><span>
+</span><span id="line-37"></span><span>                                                                    </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_composition_layer_color_scale_bias_SPEC_VERSION"><span class="hs-identifier">KHR_composition_layer_color_scale_bias_SPEC_VERSION</span></a></span><span>
+</span><span id="line-38"></span><span>                                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span class="hs-identifier">KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-39"></span><span>                                                                    </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span class="hs-identifier">KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-40"></span><span>                                                                    </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html"><span class="hs-identifier">OpenXR.Core10.OtherTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier">Color4f</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR"><span class="hs-identifier">TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- | XrCompositionLayerColorScaleBiasKHR - defines color scale and bias for</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- layer textures</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- == Member Descriptions</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- 'CompositionLayerColorScaleBiasKHR' contains the information needed to</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- scale and bias the color of layer textures.</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- The 'CompositionLayerColorScaleBiasKHR' structure /can/ be applied by</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- applications to composition layers by adding an instance of the struct</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- to the 'OpenXR.Core10.OtherTypes.CompositionLayerBaseHeader'::@next@</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- list.</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- -   #VUID-XrCompositionLayerColorScaleBiasKHR-extension-notenabled# The</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--     @@ extension /must/ be enabled prior to using</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--     'CompositionLayerColorScaleBiasKHR'</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- -   #VUID-XrCompositionLayerColorScaleBiasKHR-type-type# @type@ /must/</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--     be</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR'</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- -   #VUID-XrCompositionLayerColorScaleBiasKHR-next-next# @next@ /must/</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--     be @NULL@ or a valid pointer to the</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.Color4f',</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.CompositionLayerBaseHeader',</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-95"></span><span class="hs-keyword">data</span><span> </span><span id="CompositionLayerColorScaleBiasKHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-var">CompositionLayerColorScaleBiasKHR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CompositionLayerColorScaleBiasKHR"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-var">CompositionLayerColorScaleBiasKHR</span></a></span></span><span>
+</span><span id="line-96"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @colorScale@ is an 'OpenXR.Core10.OtherTypes.Color4f' which will</span><span>
+</span><span id="line-97"></span><span>    </span><span class="hs-comment">-- modulate the color sourced from the images.</span><span>
+</span><span id="line-98"></span><span>    </span><span id="%24sel%3AcolorScale%3ACompositionLayerColorScaleBiasKHR"><span class="annot"><span class="annottext">CompositionLayerColorScaleBiasKHR -&gt; Color4f
+</span><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#%24sel%3AcolorScale%3ACompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-var hs-var">colorScale</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span>
+</span><span id="line-99"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @colorBias@ is an 'OpenXR.Core10.OtherTypes.Color4f' which will offset</span><span>
+</span><span id="line-100"></span><span>    </span><span class="hs-comment">-- the color sourced from the images.</span><span>
+</span><span id="line-101"></span><span>    </span><span id="%24sel%3AcolorBias%3ACompositionLayerColorScaleBiasKHR"><span class="annot"><span class="annottext">CompositionLayerColorScaleBiasKHR -&gt; Color4f
+</span><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#%24sel%3AcolorBias%3ACompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-var hs-var">colorBias</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span>
+</span><span id="line-102"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-103"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">CompositionLayerColorScaleBiasKHR</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679404989"><span id="local-6989586621679404991"><span id="local-6989586621679404993"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-type">CompositionLayerColorScaleBiasKHR</span></a></span></span></span></span><span>
+</span><span id="line-108"></span><span>
+</span><span id="line-109"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679404984"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-type">CompositionLayerColorScaleBiasKHR</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-110"></span><span>  </span><span id="local-6989586621679404979"><span class="annot"><span class="annottext">withCStruct :: CompositionLayerColorScaleBiasKHR
+-&gt; (Ptr CompositionLayerColorScaleBiasKHR -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></span></span><span> </span><span id="local-6989586621679404977"><span class="annot"><span class="annottext">x :: CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404977"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679404976"><span class="annot"><span class="annottext">f :: Ptr CompositionLayerColorScaleBiasKHR -&gt; IO b
+</span><a href="#local-6989586621679404976"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int -&gt; (Ptr CompositionLayerColorScaleBiasKHR -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">48</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr CompositionLayerColorScaleBiasKHR -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr CompositionLayerColorScaleBiasKHR -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679404975"><span class="annot"><span class="annottext">p :: Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404975"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+-&gt; CompositionLayerColorScaleBiasKHR -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404975"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404977"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; IO b
+</span><a href="#local-6989586621679404976"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404975"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span>  </span><span id="local-6989586621679404973"><span class="annot"><span class="annottext">pokeCStruct :: Ptr CompositionLayerColorScaleBiasKHR
+-&gt; CompositionLayerColorScaleBiasKHR -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679404973"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679404972"><span class="annot"><span class="annottext">p :: Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404972"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679404970"><span id="local-6989586621679404971"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-type">CompositionLayerColorScaleBiasKHR</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621679404969"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679404969"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-112"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR"><span class="hs-identifier hs-var">TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-113"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-114"></span><span>    </span><span class="annot"><span class="annottext">Ptr Color4f -&gt; Color4f -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr Color4f
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color4f
+</span><a href="#local-6989586621679404971"><span class="hs-identifier hs-var">colorScale</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-115"></span><span>    </span><span class="annot"><span class="annottext">Ptr Color4f -&gt; Color4f -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr Color4f
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color4f
+</span><a href="#local-6989586621679404970"><span class="hs-identifier hs-var">colorBias</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-116"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679404969"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-117"></span><span>  </span><span id="local-6989586621679404968"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">48</span></span><span>
+</span><span id="line-118"></span><span>  </span><span id="local-6989586621679404966"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-119"></span><span>  </span><span id="local-6989586621679404964"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr CompositionLayerColorScaleBiasKHR -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></span></span><span> </span><span id="local-6989586621679404962"><span class="annot"><span class="annottext">p :: Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404962"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679404961"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679404961"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-120"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404962"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR"><span class="hs-identifier hs-var">TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404962"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-122"></span><span>    </span><span class="annot"><span class="annottext">Ptr Color4f -&gt; Color4f -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404962"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr Color4f
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color4f
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-123"></span><span>    </span><span class="annot"><span class="annottext">Ptr Color4f -&gt; Color4f -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404962"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr Color4f
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color4f
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679404961"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-type">CompositionLayerColorScaleBiasKHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-127"></span><span>  </span><span id="local-6989586621679404957"><span class="annot"><span class="annottext">peekCStruct :: Ptr CompositionLayerColorScaleBiasKHR
+-&gt; IO CompositionLayerColorScaleBiasKHR
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></span></span><span> </span><span id="local-6989586621679404955"><span class="annot"><span class="annottext">p :: Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404955"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-128"></span><span>    </span><span id="local-6989586621679404954"><span class="annot"><span class="annottext">Color4f
+</span><a href="#local-6989586621679404954"><span class="hs-identifier hs-var">colorScale</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Color4f -&gt; IO Color4f
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404955"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr Color4f
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-129"></span><span>    </span><span id="local-6989586621679404953"><span class="annot"><span class="annottext">Color4f
+</span><a href="#local-6989586621679404953"><span class="hs-identifier hs-var">colorBias</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Color4f -&gt; IO Color4f
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404955"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR -&gt; Int -&gt; Ptr Color4f
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.OtherTypes.html#Color4f"><span class="hs-identifier hs-type">Color4f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span>    </span><span class="annot"><span class="annottext">CompositionLayerColorScaleBiasKHR
+-&gt; IO CompositionLayerColorScaleBiasKHR
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(CompositionLayerColorScaleBiasKHR
+ -&gt; IO CompositionLayerColorScaleBiasKHR)
+-&gt; CompositionLayerColorScaleBiasKHR
+-&gt; IO CompositionLayerColorScaleBiasKHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Color4f -&gt; Color4f -&gt; CompositionLayerColorScaleBiasKHR
+</span><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-var">CompositionLayerColorScaleBiasKHR</span></a></span><span>
+</span><span id="line-131"></span><span>             </span><span class="annot"><span class="annottext">Color4f
+</span><a href="#local-6989586621679404954"><span class="hs-identifier hs-var">colorScale</span></a></span><span> </span><span class="annot"><span class="annottext">Color4f
+</span><a href="#local-6989586621679404953"><span class="hs-identifier hs-var">colorBias</span></a></span><span>
+</span><span id="line-132"></span><span>
+</span><span id="line-133"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679404943"><span id="local-6989586621679404945"><span id="local-6989586621679404947"><span id="local-6989586621679404949"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-type">CompositionLayerColorScaleBiasKHR</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-134"></span><span>  </span><span id="local-6989586621679404939"><span class="annot"><span class="annottext">sizeOf :: CompositionLayerColorScaleBiasKHR -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">CompositionLayerColorScaleBiasKHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">48</span></span><span>
+</span><span id="line-135"></span><span>  </span><span id="local-6989586621679404937"><span class="annot"><span class="annottext">alignment :: CompositionLayerColorScaleBiasKHR -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">CompositionLayerColorScaleBiasKHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-136"></span><span>  </span><span id="local-6989586621679404935"><span class="annot"><span class="annottext">peek :: Ptr CompositionLayerColorScaleBiasKHR
+-&gt; IO CompositionLayerColorScaleBiasKHR
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+-&gt; IO CompositionLayerColorScaleBiasKHR
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-137"></span><span>  </span><span id="local-6989586621679404933"><span class="annot"><span class="annottext">poke :: Ptr CompositionLayerColorScaleBiasKHR
+-&gt; CompositionLayerColorScaleBiasKHR -&gt; IO ()
+</span><a href="#local-6989586621679404933"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679404932"><span class="annot"><span class="annottext">ptr :: Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404932"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679404931"><span class="annot"><span class="annottext">poked :: CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404931"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+-&gt; CompositionLayerColorScaleBiasKHR -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404932"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404931"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span>
+</span><span id="line-139"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-type">CompositionLayerColorScaleBiasKHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-140"></span><span>  </span><span id="local-6989586621679404928"><span class="annot"><span class="annottext">zero :: CompositionLayerColorScaleBiasKHR
+</span><a href="#local-6989586621679404928"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color4f -&gt; Color4f -&gt; CompositionLayerColorScaleBiasKHR
+</span><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#CompositionLayerColorScaleBiasKHR"><span class="hs-identifier hs-var">CompositionLayerColorScaleBiasKHR</span></a></span><span>
+</span><span id="line-141"></span><span>           </span><span class="annot"><span class="annottext">Color4f
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-142"></span><span>           </span><span class="annot"><span class="annottext">Color4f
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-143"></span><span>
+</span><span id="line-144"></span><span>
+</span><span id="line-145"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_composition_layer_color_scale_bias_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_composition_layer_color_scale_bias_SPEC_VERSION"><span class="hs-identifier hs-var">KHR_composition_layer_color_scale_bias_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">5</span></span><span>
+</span><span id="line-146"></span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_KHR_composition_layer_color_scale_bias_SPEC_VERSION&quot;</span><span>
+</span><span id="line-148"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_composition_layer_color_scale_bias_SPEC_VERSION"><span class="hs-identifier hs-type">KHR_composition_layer_color_scale_bias_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679405013"><span class="annot"><a href="#local-6989586621679405013"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679405013"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679405013"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-149"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_composition_layer_color_scale_bias_SPEC_VERSION"><span id="%24mKHR_composition_layer_color_scale_bias_SPEC_VERSION"><span id="KHR_composition_layer_color_scale_bias_SPEC_VERSION"><span class="annot"><span class="annottext">$bKHR_composition_layer_color_scale_bias_SPEC_VERSION :: a
+$mKHR_composition_layer_color_scale_bias_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#%24bKHR_composition_layer_color_scale_bias_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">KHR_composition_layer_color_scale_bias_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">5</span></span><span>
+</span><span id="line-150"></span><span>
+</span><span id="line-151"></span><span>
+</span><span id="line-152"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span class="hs-identifier hs-var">KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_KHR_composition_layer_color_scale_bias&quot;</span></span><span>
+</span><span id="line-153"></span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-155"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span class="hs-identifier hs-type">KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679405009"><span class="annot"><a href="#local-6989586621679405009"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679405009"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679405009"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679405009"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-156"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span id="%24mKHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span id="KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span class="annot"><span class="annottext">$bKHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME :: a
+$mKHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.html#%24bKHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_KHR_composition_layer_color_scale_bias&quot;</span></span><span>
+</span><span id="line-157"></span><span>
+</span><span id="line-158"></span></pre></body></html>

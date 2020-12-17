@@ -1,0 +1,1274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- XR_FB_color_space - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- = Specification</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-9"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_FB_color_space  XR_FB_color_space&gt;</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- in the main specification for complete information.</span><span>
+</span><span id="line-11"></span><span class="hs-comment">--</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- = Registered Extension Number</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- 109</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- = Revision</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- 1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Extension and Version Dependencies</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -   Requires OpenXR 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'ColorSpaceFB', 'SystemColorSpacePropertiesFB',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'enumerateColorSpacesFB', 'setColorSpaceFB'</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_FB_color_space OpenXR Specification&gt;</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Extensions.XR_FB_color_space</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#enumerateColorSpacesFB"><span class="hs-identifier">enumerateColorSpacesFB</span></a></span><span>
+</span><span id="line-37"></span><span>                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#setColorSpaceFB"><span class="hs-identifier">setColorSpaceFB</span></a></span><span>
+</span><span id="line-38"></span><span>                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier">SystemColorSpacePropertiesFB</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span>                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier">ColorSpaceFB</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_UNMANAGED_FB"><span class="hs-identifier">COLOR_SPACE_UNMANAGED_FB</span></a></span><span>
+</span><span id="line-40"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_REC2020_FB"><span class="hs-identifier">COLOR_SPACE_REC2020_FB</span></a></span><span>
+</span><span id="line-41"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_REC709_FB"><span class="hs-identifier">COLOR_SPACE_REC709_FB</span></a></span><span>
+</span><span id="line-42"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_RIFT_CV1_FB"><span class="hs-identifier">COLOR_SPACE_RIFT_CV1_FB</span></a></span><span>
+</span><span id="line-43"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_RIFT_S_FB"><span class="hs-identifier">COLOR_SPACE_RIFT_S_FB</span></a></span><span>
+</span><span id="line-44"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_QUEST_FB"><span class="hs-identifier">COLOR_SPACE_QUEST_FB</span></a></span><span>
+</span><span id="line-45"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_P3_FB"><span class="hs-identifier">COLOR_SPACE_P3_FB</span></a></span><span>
+</span><span id="line-46"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_ADOBE_RGB_FB"><span class="hs-identifier">COLOR_SPACE_ADOBE_RGB_FB</span></a></span><span>
+</span><span id="line-47"></span><span>                                                          </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-48"></span><span>                                                          </span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span>                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_color_space_SPEC_VERSION"><span class="hs-identifier">FB_color_space_SPEC_VERSION</span></a></span><span>
+</span><span id="line-50"></span><span>                                            </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_color_space_SPEC_VERSION"><span class="hs-identifier">FB_color_space_SPEC_VERSION</span></a></span><span>
+</span><span id="line-51"></span><span>                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_COLOR_SPACE_EXTENSION_NAME"><span class="hs-identifier">FB_COLOR_SPACE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-52"></span><span>                                            </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_COLOR_SPACE_EXTENSION_NAME"><span class="hs-identifier">FB_COLOR_SPACE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-53"></span><span>                                            </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier">traceAroundEvent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Exception.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bracket</span></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">callocBytes</span></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">free</span></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">generateM</span></span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.html"><span class="hs-identifier">OpenXR.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToCStruct</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-83"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-85"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-89"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-91"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Vector</span></span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.CStruct.Utils.html"><span class="hs-identifier">OpenXR.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.CStruct.Utils.html#advancePtrBytes"><span class="hs-identifier">advancePtrBytes</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.NamedType.html"><span class="hs-identifier">OpenXR.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html"><span class="hs-identifier">OpenXR.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#pXrEnumerateColorSpacesFB"><span class="hs-identifier">pXrEnumerateColorSpacesFB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Dynamic.html"><span class="hs-identifier">OpenXR.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#InstanceCmds"><span class="hs-identifier">InstanceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Dynamic.html#pXrSetColorSpaceFB"><span class="hs-identifier">pXrSetColorSpaceFB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-102"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Exception.html"><span class="hs-identifier">OpenXR.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier">OpenXrException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-103"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-104"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-105"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier">Session</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier">Session</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html"><span class="hs-identifier">OpenXR.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier">Session_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-109"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html"><span class="hs-identifier">OpenXR.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-110"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html"><span class="hs-identifier">OpenXR.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB"><span class="hs-identifier">TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkXrEnumerateColorSpacesFB"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#mkXrEnumerateColorSpacesFB"><span class="hs-identifier hs-var">mkXrEnumerateColorSpacesFB</span></a></span></span><span>
+</span><span id="line-116"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-type">Session_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-type">Session_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-117"></span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- | xrEnumerateColorSpacesFB - Enumerates color spaces</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- == Parameter Descriptions</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- -   @session@ is the session that enumerates the supported color spaces.</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- -   @colorSpaceCapacityInput@ is the capacity of the @colorSpaces@</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--     array, or 0 to retrieve the required capacity.</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- -   @colorSpaceCountOutput@ is a pointer to the count of 'ColorSpaceFB'</span><span>
+</span><span id="line-128"></span><span class="hs-comment">--     @colorSpaces@ written, or a pointer to the required capacity in the</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--     case that @colorSpaceCapacityInput@ is @0@.</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- -   @colorSpaces@ is a pointer to an array of 'ColorSpaceFB' color</span><span>
+</span><span id="line-132"></span><span class="hs-comment">--     spaces, but /can/ be @NULL@ if @colorSpaceCapacityInput@ is @0@.</span><span>
+</span><span id="line-133"></span><span class="hs-comment">--</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- -   See</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters Buffer Size Parameters&gt;</span><span>
+</span><span id="line-136"></span><span class="hs-comment">--     chapter for a detailed description of retrieving the required</span><span>
+</span><span id="line-137"></span><span class="hs-comment">--     @colorSpaces@ size.</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-140"></span><span class="hs-comment">--</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- 'enumerateColorSpacesFB' enumerates the color spaces supported by the</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- current session. Runtimes /must/ always return identical buffer contents</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- from this enumeration for the lifetime of the session.</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-146"></span><span class="hs-comment">--</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- -   #VUID-xrEnumerateColorSpacesFB-extension-notenabled# The @@</span><span>
+</span><span id="line-148"></span><span class="hs-comment">--     extension /must/ be enabled prior to calling</span><span>
+</span><span id="line-149"></span><span class="hs-comment">--     'enumerateColorSpacesFB'</span><span>
+</span><span id="line-150"></span><span class="hs-comment">--</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- -   #VUID-xrEnumerateColorSpacesFB-session-parameter# @session@ /must/</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--     be a valid 'OpenXR.Core10.Handles.Session' handle</span><span>
+</span><span id="line-153"></span><span class="hs-comment">--</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- -   #VUID-xrEnumerateColorSpacesFB-colorSpaceCountOutput-parameter#</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--     @colorSpaceCountOutput@ /must/ be a pointer to a @uint32_t@ value</span><span>
+</span><span id="line-156"></span><span class="hs-comment">--</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- -   #VUID-xrEnumerateColorSpacesFB-colorSpaces-parameter# If</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--     @colorSpaceCapacityInput@ is not @0@, @colorSpaces@ /must/ be a</span><span>
+</span><span id="line-159"></span><span class="hs-comment">--     pointer to an array of @colorSpaceCapacityInput@ 'ColorSpaceFB'</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--     values</span><span>
+</span><span id="line-161"></span><span class="hs-comment">--</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--</span><span>
+</span><span id="line-166"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-167"></span><span class="hs-comment">--</span><span>
+</span><span id="line-168"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.SESSION_LOSS_PENDING'</span><span>
+</span><span id="line-169"></span><span class="hs-comment">--</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-171"></span><span class="hs-comment">--</span><span>
+</span><span id="line-172"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_INSTANCE_LOST'</span><span>
+</span><span id="line-173"></span><span class="hs-comment">--</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_SESSION_LOST'</span><span>
+</span><span id="line-175"></span><span class="hs-comment">--</span><span>
+</span><span id="line-176"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_RUNTIME_FAILURE'</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--</span><span>
+</span><span id="line-178"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_HANDLE_INVALID'</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--</span><span>
+</span><span id="line-180"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_SIZE_INSUFFICIENT'</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--</span><span>
+</span><span id="line-182"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_FUNCTION_UNSUPPORTED'</span><span>
+</span><span id="line-183"></span><span class="hs-comment">--</span><span>
+</span><span id="line-184"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_VALIDATION_FAILURE'</span><span>
+</span><span id="line-185"></span><span class="hs-comment">--</span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-187"></span><span class="hs-comment">--</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- 'ColorSpaceFB', 'OpenXR.Core10.Handles.Session', 'setColorSpaceFB'</span><span>
+</span><span id="line-189"></span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#enumerateColorSpacesFB"><span class="hs-identifier hs-type">enumerateColorSpacesFB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679392866"><span class="annot"><a href="#local-6989586621679392866"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-190"></span><span>                        </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679392866"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-191"></span><span>                       </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- No documentation found for Nested &quot;xrEnumerateColorSpacesFB&quot; &quot;session&quot;</span><span>
+</span><span id="line-192"></span><span>                          </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span>
+</span><span id="line-193"></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679392866"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;colorSpaces&quot;</span></span><span> </span><span class="annot"><a href="OpenXR.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Vector</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span id="enumerateColorSpacesFB"><span class="annot"><span class="annottext">enumerateColorSpacesFB :: Session -&gt; io (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#enumerateColorSpacesFB"><span class="hs-identifier hs-var hs-var">enumerateColorSpacesFB</span></a></span></span><span> </span><span id="local-6989586621679392865"><span class="annot"><span class="annottext">session :: Session
+</span><a href="#local-6989586621679392865"><span class="hs-identifier hs-var">session</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; io (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+ -&gt; io (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; (ContT
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+      IO
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+    -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; io (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT
+  (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+  IO
+  (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT
+   (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+   IO
+   (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+ -&gt; io (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; io (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-195"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679392863"><span class="annot"><span class="annottext">xrEnumerateColorSpacesFBPtr :: FunPtr
+  (Ptr Session_T
+   -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+   -&gt; (&quot;colorSpaceCountOutput&quot;
+       ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+   -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+   -&gt; IO Result)
+</span><a href="#local-6989586621679392863"><span class="hs-identifier hs-var hs-var">xrEnumerateColorSpacesFBPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">InstanceCmds
+-&gt; FunPtr
+     (Ptr Session_T
+      -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+      -&gt; (&quot;colorSpaceCountOutput&quot;
+          ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+      -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+      -&gt; IO Result)
+</span><a href="OpenXR.Dynamic.html#pXrEnumerateColorSpacesFB"><span class="hs-identifier hs-var hs-var">pXrEnumerateColorSpacesFB</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3ASession"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session
+</span><a href="#local-6989586621679392865"><span class="hs-identifier hs-var">session</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-196"></span><span>  </span><span class="annot"><span class="annottext">IO ()
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO ()
+ -&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ())
+-&gt; IO ()
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+   -&gt; (&quot;colorSpaceCountOutput&quot;
+       ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+   -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+   -&gt; IO Result)
+</span><a href="#local-6989586621679392863"><span class="hs-identifier hs-var">xrEnumerateColorSpacesFBPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+   -&gt; (&quot;colorSpaceCountOutput&quot;
+       ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+   -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Session_T
+      -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+      -&gt; (&quot;colorSpaceCountOutput&quot;
+          ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+      -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+   -&gt; (&quot;colorSpaceCountOutput&quot;
+       ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+   -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-197"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for xrEnumerateColorSpacesFB is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-198"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679392858"><span class="annot"><span class="annottext">xrEnumerateColorSpacesFB' :: Ptr Session_T
+-&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; (&quot;colorSpaceCountOutput&quot;
+    ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; IO Result
+</span><a href="#local-6989586621679392858"><span class="hs-identifier hs-var hs-var">xrEnumerateColorSpacesFB'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+   -&gt; (&quot;colorSpaceCountOutput&quot;
+       ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+   -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+   -&gt; IO Result)
+-&gt; Ptr Session_T
+-&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; (&quot;colorSpaceCountOutput&quot;
+    ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; IO Result
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#mkXrEnumerateColorSpacesFB"><span class="hs-identifier hs-var">mkXrEnumerateColorSpacesFB</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Session_T
+   -&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+   -&gt; (&quot;colorSpaceCountOutput&quot;
+       ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+   -&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+   -&gt; IO Result)
+</span><a href="#local-6989586621679392863"><span class="hs-identifier hs-var">xrEnumerateColorSpacesFBPtr</span></a></span><span>
+</span><span id="line-199"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679392857"><span class="annot"><span class="annottext">session' :: Ptr Session_T
+</span><a href="#local-6989586621679392857"><span class="hs-identifier hs-var hs-var">session'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Session -&gt; Ptr Session_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AsessionHandle%3ASession"><span class="hs-identifier hs-var hs-var">sessionHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session
+</span><a href="#local-6989586621679392865"><span class="hs-identifier hs-var">session</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-200"></span><span>  </span><span id="local-6989586621679392855"><span class="annot"><span class="annottext">&quot;colorSpaceCountOutput&quot;
+::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+</span><a href="#local-6989586621679392855"><span class="hs-identifier hs-var">pColorSpaceCountOutput</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;colorSpaceCountOutput&quot;
+   ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+  -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+ -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaceCountOutput&quot;
+      ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;colorSpaceCountOutput&quot;
+    ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+   -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+  -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+ -&gt; ContT
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+      IO
+      (&quot;colorSpaceCountOutput&quot;
+       ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32)))
+-&gt; (((&quot;colorSpaceCountOutput&quot;
+      ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+     -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+    -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaceCountOutput&quot;
+      ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO
+  (&quot;colorSpaceCountOutput&quot;
+   ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; ((&quot;colorSpaceCountOutput&quot;
+     ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+    -&gt; IO ())
+-&gt; ((&quot;colorSpaceCountOutput&quot;
+     ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+    -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+-&gt; IO
+     (&quot;colorSpaceCountOutput&quot;
+      ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;colorSpaceCountOutput&quot;
+ ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-201"></span><span>  </span><span id="local-6989586621679392853"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392853"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result
+ -&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO Result)
+-&gt; IO Result
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;xrEnumerateColorSpacesFB&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Session_T
+-&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; (&quot;colorSpaceCountOutput&quot;
+    ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; IO Result
+</span><a href="#local-6989586621679392858"><span class="hs-identifier hs-var">xrEnumerateColorSpacesFB'</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Session_T
+</span><a href="#local-6989586621679392857"><span class="hs-identifier hs-var">session'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaceCountOutput&quot;
+::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+</span><a href="#local-6989586621679392855"><span class="hs-identifier hs-var">pColorSpaceCountOutput</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-202"></span><span>  </span><span class="annot"><span class="annottext">IO ()
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO ()
+ -&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ())
+-&gt; IO ()
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392853"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OpenXrException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; OpenXrException
+</span><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-var">OpenXrException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392853"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-203"></span><span>  </span><span id="local-6989586621679392850"><span class="annot"><span class="annottext">&quot;colorSpaceCapacityInput&quot; ::: Word32
+</span><a href="#local-6989586621679392850"><span class="hs-identifier hs-var">colorSpaceCountOutput</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+ -&gt; ContT
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+      IO
+      (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;colorSpaceCountOutput&quot;
+ ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="annot"><span class="annottext">&quot;colorSpaceCountOutput&quot;
+::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+</span><a href="#local-6989586621679392855"><span class="hs-identifier hs-var">pColorSpaceCountOutput</span></a></span><span>
+</span><span id="line-204"></span><span>  </span><span id="local-6989586621679392849"><span class="annot"><span class="annottext">&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+</span><a href="#local-6989586621679392849"><span class="hs-identifier hs-var">pColorSpaces</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+  -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+ -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+   -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+  -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+ -&gt; ContT
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+      IO
+      (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB))
+-&gt; (((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+     -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+    -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; ((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ())
+-&gt; ((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+    -&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; IO (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;colorSpaceCapacityInput&quot; ::: Word32) -&gt; Int
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaceCapacityInput&quot; ::: Word32
+</span><a href="#local-6989586621679392850"><span class="hs-identifier hs-var">colorSpaceCountOutput</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-205"></span><span>  </span><span id="local-6989586621679392847"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392847"><span class="hs-identifier hs-var">r'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result
+ -&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO Result)
+-&gt; IO Result
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;xrEnumerateColorSpacesFB&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Session_T
+-&gt; (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; (&quot;colorSpaceCountOutput&quot;
+    ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; IO Result
+</span><a href="#local-6989586621679392858"><span class="hs-identifier hs-var">xrEnumerateColorSpacesFB'</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Session_T
+</span><a href="#local-6989586621679392857"><span class="hs-identifier hs-var">session'</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaceCapacityInput&quot; ::: Word32
+</span><a href="#local-6989586621679392850"><span class="hs-identifier hs-var">colorSpaceCountOutput</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaceCountOutput&quot;
+::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+</span><a href="#local-6989586621679392855"><span class="hs-identifier hs-var">pColorSpaceCountOutput</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+</span><a href="#local-6989586621679392849"><span class="hs-identifier hs-var">pColorSpaces</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-206"></span><span>  </span><span class="annot"><span class="annottext">IO ()
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO ()
+ -&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ())
+-&gt; IO ()
+-&gt; ContT (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB) IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392847"><span class="hs-identifier hs-var">r'</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OpenXrException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; OpenXrException
+</span><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-var">OpenXrException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392847"><span class="hs-identifier hs-var">r'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-207"></span><span>  </span><span id="local-6989586621679392846"><span class="annot"><span class="annottext">&quot;colorSpaceCapacityInput&quot; ::: Word32
+</span><a href="#local-6989586621679392846"><span class="hs-identifier hs-var">colorSpaceCountOutput'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+ -&gt; ContT
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+      IO
+      (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;colorSpaceCountOutput&quot;
+ ::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32))
+-&gt; IO (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="annot"><span class="annottext">&quot;colorSpaceCountOutput&quot;
+::: Ptr (&quot;colorSpaceCapacityInput&quot; ::: Word32)
+</span><a href="#local-6989586621679392855"><span class="hs-identifier hs-var">pColorSpaceCountOutput</span></a></span><span>
+</span><span id="line-208"></span><span>  </span><span id="local-6989586621679392845"><span class="annot"><span class="annottext">&quot;colorSpaces&quot; ::: Vector ColorSpaceFB
+</span><a href="#local-6989586621679392845"><span class="hs-identifier hs-var">colorSpaces'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (&quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO (&quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+ -&gt; ContT
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+      IO
+      (&quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; IO (&quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (&quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; (Int -&gt; IO ColorSpaceFB)
+-&gt; IO (&quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall (m :: * -&gt; *) a.
+Monad m =&gt;
+Int -&gt; (Int -&gt; m a) -&gt; m (Vector a)
+</span><span class="hs-identifier hs-var">generateM</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;colorSpaceCapacityInput&quot; ::: Word32) -&gt; Int
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaceCapacityInput&quot; ::: Word32
+</span><a href="#local-6989586621679392846"><span class="hs-identifier hs-var">colorSpaceCountOutput'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679392844"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621679392844"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ColorSpaceFB
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+</span><a href="#local-6989586621679392849"><span class="hs-identifier hs-var">pColorSpaces</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; Int -&gt; &quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+forall a. Ptr a -&gt; Int -&gt; Ptr a
+</span><a href="OpenXR.CStruct.Utils.html#advancePtrBytes"><span class="hs-operator hs-var">`advancePtrBytes`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679392844"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-209"></span><span>  </span><span class="annot"><span class="annottext">(Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">((Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+ -&gt; ContT
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+      IO
+      (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB))
+-&gt; (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+-&gt; ContT
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+     IO
+     (Result, &quot;colorSpaces&quot; ::: Vector ColorSpaceFB)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392847"><span class="hs-identifier hs-var">r'</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&quot;colorSpaces&quot; ::: Vector ColorSpaceFB
+</span><a href="#local-6989586621679392845"><span class="hs-identifier hs-var">colorSpaces'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-210"></span><span>
+</span><span id="line-211"></span><span>
+</span><span id="line-212"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkXrSetColorSpaceFB"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#mkXrSetColorSpaceFB"><span class="hs-identifier hs-var">mkXrSetColorSpaceFB</span></a></span></span><span>
+</span><span id="line-217"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-type">Session_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session_T"><span class="hs-identifier hs-type">Session_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-218"></span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- | xrSetColorSpaceFB - Set a color space</span><span>
+</span><span id="line-220"></span><span class="hs-comment">--</span><span>
+</span><span id="line-221"></span><span class="hs-comment">-- == Parameter Descriptions</span><span>
+</span><span id="line-222"></span><span class="hs-comment">--</span><span>
+</span><span id="line-223"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-224"></span><span class="hs-comment">--</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- 'setColorSpaceFB' provides a mechanism for an application to specify the</span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- color space used in the final rendered frame. If this function is not</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- called, the session will use the color space deemed appropriate by the</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- runtime. Facebook HMDs for both PC and Mobile product lines default to</span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- 'COLOR_SPACE_RIFT_CV1_FB'. The runtime /must/ return</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- 'OpenXR.Core10.Enums.Result.ERROR_COLOR_SPACE_UNSUPPORTED_FB' if</span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- @colorSpace@ is not one of the values enumerated by</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- 'enumerateColorSpacesFB'.</span><span>
+</span><span id="line-233"></span><span class="hs-comment">--</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-235"></span><span class="hs-comment">--</span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- -   #VUID-xrSetColorSpaceFB-extension-notenabled# The @@ extension</span><span>
+</span><span id="line-237"></span><span class="hs-comment">--     /must/ be enabled prior to calling 'setColorSpaceFB'</span><span>
+</span><span id="line-238"></span><span class="hs-comment">--</span><span>
+</span><span id="line-239"></span><span class="hs-comment">-- -   #VUID-xrSetColorSpaceFB-session-parameter# @session@ /must/ be a</span><span>
+</span><span id="line-240"></span><span class="hs-comment">--     valid 'OpenXR.Core10.Handles.Session' handle</span><span>
+</span><span id="line-241"></span><span class="hs-comment">--</span><span>
+</span><span id="line-242"></span><span class="hs-comment">-- -   #VUID-xrSetColorSpaceFB-colorspace-parameter# @colorspace@ /must/ be</span><span>
+</span><span id="line-243"></span><span class="hs-comment">--     a valid 'ColorSpaceFB' value</span><span>
+</span><span id="line-244"></span><span class="hs-comment">--</span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-246"></span><span class="hs-comment">--</span><span>
+</span><span id="line-247"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-248"></span><span class="hs-comment">--</span><span>
+</span><span id="line-249"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-250"></span><span class="hs-comment">--</span><span>
+</span><span id="line-251"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.SESSION_LOSS_PENDING'</span><span>
+</span><span id="line-252"></span><span class="hs-comment">--</span><span>
+</span><span id="line-253"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-254"></span><span class="hs-comment">--</span><span>
+</span><span id="line-255"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_INSTANCE_LOST'</span><span>
+</span><span id="line-256"></span><span class="hs-comment">--</span><span>
+</span><span id="line-257"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_SESSION_LOST'</span><span>
+</span><span id="line-258"></span><span class="hs-comment">--</span><span>
+</span><span id="line-259"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_RUNTIME_FAILURE'</span><span>
+</span><span id="line-260"></span><span class="hs-comment">--</span><span>
+</span><span id="line-261"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_HANDLE_INVALID'</span><span>
+</span><span id="line-262"></span><span class="hs-comment">--</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_COLOR_SPACE_UNSUPPORTED_FB'</span><span>
+</span><span id="line-264"></span><span class="hs-comment">--</span><span>
+</span><span id="line-265"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_FEATURE_UNSUPPORTED'</span><span>
+</span><span id="line-266"></span><span class="hs-comment">--</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_FUNCTION_UNSUPPORTED'</span><span>
+</span><span id="line-268"></span><span class="hs-comment">--</span><span>
+</span><span id="line-269"></span><span class="hs-comment">--     -   'OpenXR.Core10.Enums.Result.ERROR_VALIDATION_FAILURE'</span><span>
+</span><span id="line-270"></span><span class="hs-comment">--</span><span>
+</span><span id="line-271"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-272"></span><span class="hs-comment">--</span><span>
+</span><span id="line-273"></span><span class="hs-comment">-- 'ColorSpaceFB', 'OpenXR.Core10.Handles.Session',</span><span>
+</span><span id="line-274"></span><span class="hs-comment">-- 'enumerateColorSpacesFB'</span><span>
+</span><span id="line-275"></span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#setColorSpaceFB"><span class="hs-identifier hs-type">setColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679392842"><span class="annot"><a href="#local-6989586621679392842"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-276"></span><span>                 </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679392842"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-277"></span><span>                </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @session@ is a valid 'OpenXR.Core10.Handles.Session' handle.</span><span>
+</span><span id="line-278"></span><span>                   </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span>
+</span><span id="line-279"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- No documentation found for Nested &quot;xrSetColorSpaceFB&quot; &quot;colorspace&quot;</span><span>
+</span><span id="line-280"></span><span>                   </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span>
+</span><span id="line-281"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679392842"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-282"></span><span id="setColorSpaceFB"><span class="annot"><span class="annottext">setColorSpaceFB :: Session -&gt; ColorSpaceFB -&gt; io Result
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#setColorSpaceFB"><span class="hs-identifier hs-var hs-var">setColorSpaceFB</span></a></span></span><span> </span><span id="local-6989586621679392841"><span class="annot"><span class="annottext">session :: Session
+</span><a href="#local-6989586621679392841"><span class="hs-identifier hs-var">session</span></a></span></span><span> </span><span id="local-6989586621679392840"><span class="annot"><span class="annottext">colorspace :: ColorSpaceFB
+</span><a href="#local-6989586621679392840"><span class="hs-identifier hs-var">colorspace</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; io Result
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; io Result) -&gt; IO Result -&gt; io Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-283"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679392839"><span class="annot"><span class="annottext">xrSetColorSpaceFBPtr :: FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result)
+</span><a href="#local-6989586621679392839"><span class="hs-identifier hs-var hs-var">xrSetColorSpaceFBPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">InstanceCmds -&gt; FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result)
+</span><a href="OpenXR.Dynamic.html#pXrSetColorSpaceFB"><span class="hs-identifier hs-var hs-var">pXrSetColorSpaceFB</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session -&gt; InstanceCmds
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AinstanceCmds%3ASession"><span class="hs-identifier hs-var hs-var">instanceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session
+</span><a href="#local-6989586621679392841"><span class="hs-identifier hs-var">session</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Handles.html#Session"><span class="hs-identifier hs-type">Session</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-284"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result)
+</span><a href="#local-6989586621679392839"><span class="hs-identifier hs-var">xrSetColorSpaceFBPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result)
+-&gt; FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result) -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-285"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for xrSetColorSpaceFB is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-286"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679392838"><span class="annot"><span class="annottext">xrSetColorSpaceFB' :: Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result
+</span><a href="#local-6989586621679392838"><span class="hs-identifier hs-var hs-var">xrSetColorSpaceFB'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result)
+-&gt; Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#mkXrSetColorSpaceFB"><span class="hs-identifier hs-var">mkXrSetColorSpaceFB</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result)
+</span><a href="#local-6989586621679392839"><span class="hs-identifier hs-var">xrSetColorSpaceFBPtr</span></a></span><span>
+</span><span id="line-287"></span><span>  </span><span id="local-6989586621679392837"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392837"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Result -&gt; IO Result
+forall a. String -&gt; IO a -&gt; IO a
+</span><a href="OpenXR.Internal.Utils.html#traceAroundEvent"><span class="hs-identifier hs-var">traceAroundEvent</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;xrSetColorSpaceFB&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Session_T -&gt; ColorSpaceFB -&gt; IO Result
+</span><a href="#local-6989586621679392838"><span class="hs-identifier hs-var">xrSetColorSpaceFB'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session -&gt; Ptr Session_T
+</span><a href="OpenXR.Core10.Handles.html#%24sel%3AsessionHandle%3ASession"><span class="hs-identifier hs-var hs-var">sessionHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Session
+</span><a href="#local-6989586621679392841"><span class="hs-identifier hs-var">session</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="#local-6989586621679392840"><span class="hs-identifier hs-var">colorspace</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-288"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392837"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="OpenXR.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OpenXrException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; OpenXrException
+</span><a href="OpenXR.Exception.html#OpenXrException"><span class="hs-identifier hs-var">OpenXrException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392837"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-289"></span><span>  </span><span class="annot"><span class="annottext">Result -&gt; IO Result
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Result -&gt; IO Result) -&gt; Result -&gt; IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621679392837"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-290"></span><span>
+</span><span id="line-291"></span><span>
+</span><span id="line-292"></span><span class="hs-comment">-- | XrSystemColorSpacePropertiesFB - System property for color space</span><span>
+</span><span id="line-293"></span><span class="hs-comment">--</span><span>
+</span><span id="line-294"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-295"></span><span class="hs-comment">--</span><span>
+</span><span id="line-296"></span><span class="hs-comment">-- -   #VUID-XrSystemColorSpacePropertiesFB-extension-notenabled# The @@</span><span>
+</span><span id="line-297"></span><span class="hs-comment">--     extension /must/ be enabled prior to using</span><span>
+</span><span id="line-298"></span><span class="hs-comment">--     'SystemColorSpacePropertiesFB'</span><span>
+</span><span id="line-299"></span><span class="hs-comment">--</span><span>
+</span><span id="line-300"></span><span class="hs-comment">-- -   #VUID-XrSystemColorSpacePropertiesFB-type-type# @type@ /must/ be</span><span>
+</span><span id="line-301"></span><span class="hs-comment">--     'OpenXR.Core10.Enums.StructureType.TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB'</span><span>
+</span><span id="line-302"></span><span class="hs-comment">--</span><span>
+</span><span id="line-303"></span><span class="hs-comment">-- -   #VUID-XrSystemColorSpacePropertiesFB-next-next# @next@ /must/ be</span><span>
+</span><span id="line-304"></span><span class="hs-comment">--     @NULL@ or a valid pointer to the</span><span>
+</span><span id="line-305"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#valid-usage-for-structure-pointer-chains next structure in a structure chain&gt;</span><span>
+</span><span id="line-306"></span><span class="hs-comment">--</span><span>
+</span><span id="line-307"></span><span class="hs-comment">-- -   #VUID-XrSystemColorSpacePropertiesFB-colorSpace-parameter#</span><span>
+</span><span id="line-308"></span><span class="hs-comment">--     @colorSpace@ /must/ be a valid 'ColorSpaceFB' value</span><span>
+</span><span id="line-309"></span><span class="hs-comment">--</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-311"></span><span class="hs-comment">--</span><span>
+</span><span id="line-312"></span><span class="hs-comment">-- 'ColorSpaceFB', 'OpenXR.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-313"></span><span class="hs-keyword">data</span><span> </span><span id="SystemColorSpacePropertiesFB"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-var">SystemColorSpacePropertiesFB</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SystemColorSpacePropertiesFB"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-var">SystemColorSpacePropertiesFB</span></a></span></span><span>
+</span><span id="line-314"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @colorSpace@ is the native color space of the XR device.</span><span>
+</span><span id="line-315"></span><span>    </span><span id="%24sel%3AcolorSpace%3ASystemColorSpacePropertiesFB"><span class="annot"><span class="annottext">SystemColorSpacePropertiesFB -&gt; ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24sel%3AcolorSpace%3ASystemColorSpacePropertiesFB"><span class="hs-identifier hs-var hs-var">colorSpace</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-316"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392831"><span id="local-6989586621679392833"><span class="annot"><span class="annottext">SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; Bool
+(SystemColorSpacePropertiesFB
+ -&gt; SystemColorSpacePropertiesFB -&gt; Bool)
+-&gt; (SystemColorSpacePropertiesFB
+    -&gt; SystemColorSpacePropertiesFB -&gt; Bool)
+-&gt; Eq SystemColorSpacePropertiesFB
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; Bool
+$c/= :: SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; Bool
+== :: SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; Bool
+$c== :: SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">SystemColorSpacePropertiesFB</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621679392824"><span id="local-6989586621679392826"><span id="local-6989586621679392828"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-type">SystemColorSpacePropertiesFB</span></a></span></span></span></span><span>
+</span><span id="line-321"></span><span>
+</span><span id="line-322"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679392819"><span class="annot"><span class="hs-identifier hs-type">ToCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-type">SystemColorSpacePropertiesFB</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-323"></span><span>  </span><span id="local-6989586621679392814"><span class="annot"><span class="annottext">withCStruct :: SystemColorSpacePropertiesFB
+-&gt; (Ptr SystemColorSpacePropertiesFB -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></span></span><span> </span><span id="local-6989586621679392812"><span class="annot"><span class="annottext">x :: SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392812"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679392811"><span class="annot"><span class="annottext">f :: Ptr SystemColorSpacePropertiesFB -&gt; IO b
+</span><a href="#local-6989586621679392811"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr SystemColorSpacePropertiesFB -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr SystemColorSpacePropertiesFB -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr SystemColorSpacePropertiesFB -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679392810"><span class="annot"><span class="annottext">p :: Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392810"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392810"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392812"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB -&gt; IO b
+</span><a href="#local-6989586621679392811"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392810"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-324"></span><span>  </span><span id="local-6989586621679392808"><span class="annot"><span class="annottext">pokeCStruct :: Ptr SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621679392808"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621679392807"><span class="annot"><span class="annottext">p :: Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392807"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679392806"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-type">SystemColorSpacePropertiesFB</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621679392805"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679392805"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-325"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392807"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB"><span class="hs-identifier hs-var">TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-326"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392807"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-327"></span><span>    </span><span class="annot"><span class="annottext">(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; ColorSpaceFB -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392807"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+-&gt; Int -&gt; &quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="#local-6989586621679392806"><span class="hs-identifier hs-var">colorSpace</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-328"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679392805"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-329"></span><span>  </span><span id="local-6989586621679392804"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-330"></span><span>  </span><span id="local-6989586621679392802"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-331"></span><span>  </span><span id="local-6989586621679392800"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr SystemColorSpacePropertiesFB -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></span></span><span> </span><span id="local-6989586621679392798"><span class="annot"><span class="annottext">p :: Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392798"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679392797"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621679392797"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-332"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392798"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="OpenXR.Core10.Enums.StructureType.html#TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB"><span class="hs-identifier hs-var">TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-333"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392798"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-334"></span><span>    </span><span class="annot"><span class="annottext">(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; ColorSpaceFB -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392798"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+-&gt; Int -&gt; &quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-335"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621679392797"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-336"></span><span>
+</span><span id="line-337"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromCStruct</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-type">SystemColorSpacePropertiesFB</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-338"></span><span>  </span><span id="local-6989586621679392793"><span class="annot"><span class="annottext">peekCStruct :: Ptr SystemColorSpacePropertiesFB -&gt; IO SystemColorSpacePropertiesFB
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></span></span><span> </span><span id="local-6989586621679392791"><span class="annot"><span class="annottext">p :: Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392791"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-339"></span><span>    </span><span id="local-6989586621679392790"><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="#local-6989586621679392790"><span class="hs-identifier hs-var">colorSpace</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ColorSpaceFB
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392791"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+-&gt; Int -&gt; &quot;colorSpaces&quot; ::: Ptr ColorSpaceFB
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-340"></span><span>    </span><span class="annot"><span class="annottext">SystemColorSpacePropertiesFB -&gt; IO SystemColorSpacePropertiesFB
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(SystemColorSpacePropertiesFB -&gt; IO SystemColorSpacePropertiesFB)
+-&gt; SystemColorSpacePropertiesFB -&gt; IO SystemColorSpacePropertiesFB
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ColorSpaceFB -&gt; SystemColorSpacePropertiesFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-var">SystemColorSpacePropertiesFB</span></a></span><span>
+</span><span id="line-341"></span><span>             </span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="#local-6989586621679392790"><span class="hs-identifier hs-var">colorSpace</span></a></span><span>
+</span><span id="line-342"></span><span>
+</span><span id="line-343"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679392780"><span id="local-6989586621679392782"><span id="local-6989586621679392784"><span id="local-6989586621679392786"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-type">SystemColorSpacePropertiesFB</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-344"></span><span>  </span><span id="local-6989586621679392776"><span class="annot"><span class="annottext">sizeOf :: SystemColorSpacePropertiesFB -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SystemColorSpacePropertiesFB
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-345"></span><span>  </span><span id="local-6989586621679392774"><span class="annot"><span class="annottext">alignment :: SystemColorSpacePropertiesFB -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SystemColorSpacePropertiesFB
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-346"></span><span>  </span><span id="local-6989586621679392772"><span class="annot"><span class="annottext">peek :: Ptr SystemColorSpacePropertiesFB -&gt; IO SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392772"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB -&gt; IO SystemColorSpacePropertiesFB
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peekCStruct</span></span><span>
+</span><span id="line-347"></span><span>  </span><span id="local-6989586621679392771"><span class="annot"><span class="annottext">poke :: Ptr SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; IO ()
+</span><a href="#local-6989586621679392771"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621679392770"><span class="annot"><span class="annottext">ptr :: Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392770"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621679392769"><span class="annot"><span class="annottext">poked :: SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392769"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+-&gt; SystemColorSpacePropertiesFB -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><span class="hs-identifier hs-var">pokeCStruct</span></span><span> </span><span class="annot"><span class="annottext">Ptr SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392770"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392769"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-348"></span><span>
+</span><span id="line-349"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Zero</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-type">SystemColorSpacePropertiesFB</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-350"></span><span>  </span><span id="local-6989586621679392766"><span class="annot"><span class="annottext">zero :: SystemColorSpacePropertiesFB
+</span><a href="#local-6989586621679392766"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ColorSpaceFB -&gt; SystemColorSpacePropertiesFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#SystemColorSpacePropertiesFB"><span class="hs-identifier hs-var">SystemColorSpacePropertiesFB</span></a></span><span>
+</span><span id="line-351"></span><span>           </span><span class="annot"><span class="annottext">ColorSpaceFB
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-352"></span><span>
+</span><span id="line-353"></span><span>
+</span><span id="line-354"></span><span class="hs-comment">-- | XrColorSpaceFB - Color Space Type</span><span>
+</span><span id="line-355"></span><span class="hs-comment">--</span><span>
+</span><span id="line-356"></span><span class="hs-comment">-- == Enumerant Descriptions</span><span>
+</span><span id="line-357"></span><span class="hs-comment">--</span><span>
+</span><span id="line-358"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-359"></span><span class="hs-comment">--</span><span>
+</span><span id="line-360"></span><span class="hs-comment">-- 'SystemColorSpacePropertiesFB', 'enumerateColorSpacesFB',</span><span>
+</span><span id="line-361"></span><span class="hs-comment">-- 'setColorSpaceFB'</span><span>
+</span><span id="line-362"></span><span class="hs-keyword">newtype</span><span> </span><span id="ColorSpaceFB"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-var">ColorSpaceFB</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ColorSpaceFB"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-var">ColorSpaceFB</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-363"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679392761"><span id="local-6989586621679392763"><span class="annot"><span class="annottext">ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+(ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool)
+-&gt; (ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool) -&gt; Eq ColorSpaceFB
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+$c/= :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+== :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+$c== :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392746"><span id="local-6989586621679392748"><span id="local-6989586621679392750"><span id="local-6989586621679392752"><span id="local-6989586621679392754"><span id="local-6989586621679392756"><span id="local-6989586621679392758"><span class="annot"><span class="annottext">Eq ColorSpaceFB
+Eq ColorSpaceFB =&gt;
+(ColorSpaceFB -&gt; ColorSpaceFB -&gt; Ordering)
+-&gt; (ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool)
+-&gt; (ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool)
+-&gt; (ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool)
+-&gt; (ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool)
+-&gt; (ColorSpaceFB -&gt; ColorSpaceFB -&gt; ColorSpaceFB)
+-&gt; (ColorSpaceFB -&gt; ColorSpaceFB -&gt; ColorSpaceFB)
+-&gt; Ord ColorSpaceFB
+ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+ColorSpaceFB -&gt; ColorSpaceFB -&gt; Ordering
+ColorSpaceFB -&gt; ColorSpaceFB -&gt; ColorSpaceFB
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; ColorSpaceFB
+$cmin :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; ColorSpaceFB
+max :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; ColorSpaceFB
+$cmax :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; ColorSpaceFB
+&gt;= :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+$c&gt;= :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+&gt; :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+$c&gt; :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+&lt;= :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+$c&lt;= :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+&lt; :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+$c&lt; :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Bool
+compare :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Ordering
+$ccompare :: ColorSpaceFB -&gt; ColorSpaceFB -&gt; Ordering
+$cp1Ord :: Eq ColorSpaceFB
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392729"><span id="local-6989586621679392731"><span id="local-6989586621679392733"><span id="local-6989586621679392735"><span id="local-6989586621679392737"><span id="local-6989586621679392739"><span id="local-6989586621679392741"><span id="local-6989586621679392743"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ColorSpaceFB
+Ptr b -&gt; Int -&gt; ColorSpaceFB -&gt; IO ()
+(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ColorSpaceFB
+(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; Int -&gt; IO ColorSpaceFB
+(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; Int -&gt; ColorSpaceFB -&gt; IO ()
+(&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; ColorSpaceFB -&gt; IO ()
+ColorSpaceFB -&gt; Int
+(ColorSpaceFB -&gt; Int)
+-&gt; (ColorSpaceFB -&gt; Int)
+-&gt; ((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; Int -&gt; IO ColorSpaceFB)
+-&gt; ((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+    -&gt; Int -&gt; ColorSpaceFB -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ColorSpaceFB)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; ColorSpaceFB -&gt; IO ())
+-&gt; ((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ColorSpaceFB)
+-&gt; ((&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; ColorSpaceFB -&gt; IO ())
+-&gt; Storable ColorSpaceFB
+forall b. Ptr b -&gt; Int -&gt; IO ColorSpaceFB
+forall b. Ptr b -&gt; Int -&gt; ColorSpaceFB -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; ColorSpaceFB -&gt; IO ()
+$cpoke :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; ColorSpaceFB -&gt; IO ()
+peek :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ColorSpaceFB
+$cpeek :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; IO ColorSpaceFB
+pokeByteOff :: Ptr b -&gt; Int -&gt; ColorSpaceFB -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ColorSpaceFB -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ColorSpaceFB
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ColorSpaceFB
+pokeElemOff :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; Int -&gt; ColorSpaceFB -&gt; IO ()
+$cpokeElemOff :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB)
+-&gt; Int -&gt; ColorSpaceFB -&gt; IO ()
+peekElemOff :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; Int -&gt; IO ColorSpaceFB
+$cpeekElemOff :: (&quot;colorSpaces&quot; ::: Ptr ColorSpaceFB) -&gt; Int -&gt; IO ColorSpaceFB
+alignment :: ColorSpaceFB -&gt; Int
+$calignment :: ColorSpaceFB -&gt; Int
+sizeOf :: ColorSpaceFB -&gt; Int
+$csizeOf :: ColorSpaceFB -&gt; Int
+</span><a href="#local-6989586621679392729"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></a></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679392727"><span class="annot"><span class="annottext">ColorSpaceFB
+ColorSpaceFB -&gt; Zero ColorSpaceFB
+forall a. a -&gt; Zero a
+zero :: ColorSpaceFB
+$czero :: ColorSpaceFB
+</span><a href="#local-6989586621679392727"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-364"></span><span>
+</span><span id="line-365"></span><span class="hs-comment">-- | 'COLOR_SPACE_UNMANAGED_FB'. No color correction, not recommended for</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- production use.</span><span>
+</span><span id="line-367"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_UNMANAGED_FB"><span id="%24mCOLOR_SPACE_UNMANAGED_FB"><span id="COLOR_SPACE_UNMANAGED_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_UNMANAGED_FB :: ColorSpaceFB
+$mCOLOR_SPACE_UNMANAGED_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_UNMANAGED_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_UNMANAGED_FB</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-368"></span><span class="hs-comment">-- | 'COLOR_SPACE_REC2020_FB'. Standard Rec. 2020 chromacities. This is the</span><span>
+</span><span id="line-369"></span><span class="hs-comment">-- preferred color space for standardized color across all Oculus HMDs with</span><span>
+</span><span id="line-370"></span><span class="hs-comment">-- D65 white point.</span><span>
+</span><span id="line-371"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_REC2020_FB"><span id="%24mCOLOR_SPACE_REC2020_FB"><span id="COLOR_SPACE_REC2020_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_REC2020_FB :: ColorSpaceFB
+$mCOLOR_SPACE_REC2020_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_REC2020_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_REC2020_FB</span></a></span></span></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-372"></span><span class="hs-comment">-- | 'COLOR_SPACE_REC709_FB'. Standard Rec. 709 chromaticities, similar to</span><span>
+</span><span id="line-373"></span><span class="hs-comment">-- sRGB.</span><span>
+</span><span id="line-374"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_REC709_FB"><span id="%24mCOLOR_SPACE_REC709_FB"><span id="COLOR_SPACE_REC709_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_REC709_FB :: ColorSpaceFB
+$mCOLOR_SPACE_REC709_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_REC709_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_REC709_FB</span></a></span></span></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-375"></span><span class="hs-comment">-- | 'COLOR_SPACE_RIFT_CV1_FB'. Unique color space, between P3 and Adobe RGB</span><span>
+</span><span id="line-376"></span><span class="hs-comment">-- using D75 white point.</span><span>
+</span><span id="line-377"></span><span class="hs-comment">--</span><span>
+</span><span id="line-378"></span><span class="hs-comment">-- Color Space Details with Chromacity Primaries in CIE 1931 xy:</span><span>
+</span><span id="line-379"></span><span class="hs-comment">--</span><span>
+</span><span id="line-380"></span><span class="hs-comment">-- -   Red: (0.666, 0.334)</span><span>
+</span><span id="line-381"></span><span class="hs-comment">--</span><span>
+</span><span id="line-382"></span><span class="hs-comment">-- -   Green: (0.238, 0.714)</span><span>
+</span><span id="line-383"></span><span class="hs-comment">--</span><span>
+</span><span id="line-384"></span><span class="hs-comment">-- -   Blue: (0.139, 0.053)</span><span>
+</span><span id="line-385"></span><span class="hs-comment">--</span><span>
+</span><span id="line-386"></span><span class="hs-comment">-- -   White: (0.298, 0.318)</span><span>
+</span><span id="line-387"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_RIFT_CV1_FB"><span id="%24mCOLOR_SPACE_RIFT_CV1_FB"><span id="COLOR_SPACE_RIFT_CV1_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_RIFT_CV1_FB :: ColorSpaceFB
+$mCOLOR_SPACE_RIFT_CV1_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_RIFT_CV1_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_RIFT_CV1_FB</span></a></span></span></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-388"></span><span class="hs-comment">-- | 'COLOR_SPACE_RIFT_S_FB'. Unique color space. Similar to Rec 709 using</span><span>
+</span><span id="line-389"></span><span class="hs-comment">-- D75.</span><span>
+</span><span id="line-390"></span><span class="hs-comment">--</span><span>
+</span><span id="line-391"></span><span class="hs-comment">-- Color Space Details with Chromacity Primaries in CIE 1931 xy:</span><span>
+</span><span id="line-392"></span><span class="hs-comment">--</span><span>
+</span><span id="line-393"></span><span class="hs-comment">-- -   Red: (0.640, 0.330)</span><span>
+</span><span id="line-394"></span><span class="hs-comment">--</span><span>
+</span><span id="line-395"></span><span class="hs-comment">-- -   Green: (0.292, 0.586)</span><span>
+</span><span id="line-396"></span><span class="hs-comment">--</span><span>
+</span><span id="line-397"></span><span class="hs-comment">-- -   Blue: (0.156, 0.058)</span><span>
+</span><span id="line-398"></span><span class="hs-comment">--</span><span>
+</span><span id="line-399"></span><span class="hs-comment">-- -   White: (0.298, 0.318)</span><span>
+</span><span id="line-400"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_RIFT_S_FB"><span id="%24mCOLOR_SPACE_RIFT_S_FB"><span id="COLOR_SPACE_RIFT_S_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_RIFT_S_FB :: ColorSpaceFB
+$mCOLOR_SPACE_RIFT_S_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_RIFT_S_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_RIFT_S_FB</span></a></span></span></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">4</span><span>
+</span><span id="line-401"></span><span class="hs-comment">-- | 'COLOR_SPACE_QUEST_FB'. Unique color space. Similar to Rift CV1 using</span><span>
+</span><span id="line-402"></span><span class="hs-comment">-- D75 white point</span><span>
+</span><span id="line-403"></span><span class="hs-comment">--</span><span>
+</span><span id="line-404"></span><span class="hs-comment">-- Color Space Details with Chromacity Primaries in CIE 1931 xy:</span><span>
+</span><span id="line-405"></span><span class="hs-comment">--</span><span>
+</span><span id="line-406"></span><span class="hs-comment">-- -   Red: (0.661, 0.338)</span><span>
+</span><span id="line-407"></span><span class="hs-comment">--</span><span>
+</span><span id="line-408"></span><span class="hs-comment">-- -   Green: (0.228, 0.718)</span><span>
+</span><span id="line-409"></span><span class="hs-comment">--</span><span>
+</span><span id="line-410"></span><span class="hs-comment">-- -   Blue: (0.142, 0.042)</span><span>
+</span><span id="line-411"></span><span class="hs-comment">--</span><span>
+</span><span id="line-412"></span><span class="hs-comment">-- -   White: (0.298, 0.318)</span><span>
+</span><span id="line-413"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_QUEST_FB"><span id="%24mCOLOR_SPACE_QUEST_FB"><span id="COLOR_SPACE_QUEST_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_QUEST_FB :: ColorSpaceFB
+$mCOLOR_SPACE_QUEST_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_QUEST_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_QUEST_FB</span></a></span></span></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">5</span><span>
+</span><span id="line-414"></span><span class="hs-comment">-- | 'COLOR_SPACE_P3_FB'. Similar to DCI-P3, but uses D65 white point</span><span>
+</span><span id="line-415"></span><span class="hs-comment">-- instead.</span><span>
+</span><span id="line-416"></span><span class="hs-comment">--</span><span>
+</span><span id="line-417"></span><span class="hs-comment">-- Color Space Details with Chromacity Primaries in CIE 1931 xy:</span><span>
+</span><span id="line-418"></span><span class="hs-comment">--</span><span>
+</span><span id="line-419"></span><span class="hs-comment">-- -   Red: (0.680, 0.320)</span><span>
+</span><span id="line-420"></span><span class="hs-comment">--</span><span>
+</span><span id="line-421"></span><span class="hs-comment">-- -   Green: (0.265, 0.690)</span><span>
+</span><span id="line-422"></span><span class="hs-comment">--</span><span>
+</span><span id="line-423"></span><span class="hs-comment">-- -   Blue: (0.150, 0.060)</span><span>
+</span><span id="line-424"></span><span class="hs-comment">--</span><span>
+</span><span id="line-425"></span><span class="hs-comment">-- -   White: (0.313, 0.329)</span><span>
+</span><span id="line-426"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_P3_FB"><span id="%24mCOLOR_SPACE_P3_FB"><span id="COLOR_SPACE_P3_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_P3_FB :: ColorSpaceFB
+$mCOLOR_SPACE_P3_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_P3_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_P3_FB</span></a></span></span></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">6</span><span>
+</span><span id="line-427"></span><span class="hs-comment">-- | 'COLOR_SPACE_ADOBE_RGB_FB'. Standard Adobe chromacities.</span><span>
+</span><span id="line-428"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOLOR_SPACE_ADOBE_RGB_FB"><span id="%24mCOLOR_SPACE_ADOBE_RGB_FB"><span id="COLOR_SPACE_ADOBE_RGB_FB"><span class="annot"><span class="annottext">$bCOLOR_SPACE_ADOBE_RGB_FB :: ColorSpaceFB
+$mCOLOR_SPACE_ADOBE_RGB_FB :: forall r. ColorSpaceFB -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bCOLOR_SPACE_ADOBE_RGB_FB"><span class="hs-identifier hs-var hs-var hs-var">COLOR_SPACE_ADOBE_RGB_FB</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-number">7</span><span>
+</span><span id="line-429"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_UNMANAGED_FB"><span class="hs-pragma hs-type">COLOR_SPACE_UNMANAGED_FB</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-430"></span><span>             </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_REC2020_FB"><span class="hs-pragma hs-type">COLOR_SPACE_REC2020_FB</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-431"></span><span>             </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_REC709_FB"><span class="hs-pragma hs-type">COLOR_SPACE_REC709_FB</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-432"></span><span>             </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_RIFT_CV1_FB"><span class="hs-pragma hs-type">COLOR_SPACE_RIFT_CV1_FB</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-433"></span><span>             </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_RIFT_S_FB"><span class="hs-pragma hs-type">COLOR_SPACE_RIFT_S_FB</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-434"></span><span>             </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_QUEST_FB"><span class="hs-pragma hs-type">COLOR_SPACE_QUEST_FB</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-435"></span><span>             </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_P3_FB"><span class="hs-pragma hs-type">COLOR_SPACE_P3_FB</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-436"></span><span>             </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_ADOBE_RGB_FB"><span class="hs-pragma hs-type">COLOR_SPACE_ADOBE_RGB_FB</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-pragma hs-type">ColorSpaceFB</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-437"></span><span>
+</span><span id="line-438"></span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#conNameColorSpaceFB"><span class="hs-identifier hs-type">conNameColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-439"></span><span id="conNameColorSpaceFB"><span class="annot"><span class="annottext">conNameColorSpaceFB :: String
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#conNameColorSpaceFB"><span class="hs-identifier hs-var hs-var">conNameColorSpaceFB</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ColorSpaceFB&quot;</span></span><span>
+</span><span id="line-440"></span><span>
+</span><span id="line-441"></span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#enumPrefixColorSpaceFB"><span class="hs-identifier hs-type">enumPrefixColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-442"></span><span id="enumPrefixColorSpaceFB"><span class="annot"><span class="annottext">enumPrefixColorSpaceFB :: String
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#enumPrefixColorSpaceFB"><span class="hs-identifier hs-var hs-var">enumPrefixColorSpaceFB</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;COLOR_SPACE_&quot;</span></span><span>
+</span><span id="line-443"></span><span>
+</span><span id="line-444"></span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#showTableColorSpaceFB"><span class="hs-identifier hs-type">showTableColorSpaceFB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-445"></span><span id="showTableColorSpaceFB"><span class="annot"><span class="annottext">showTableColorSpaceFB :: [(ColorSpaceFB, String)]
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#showTableColorSpaceFB"><span class="hs-identifier hs-var hs-var">showTableColorSpaceFB</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-446"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_UNMANAGED_FB"><span class="hs-identifier hs-var">COLOR_SPACE_UNMANAGED_FB</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UNMANAGED_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-447"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_REC2020_FB"><span class="hs-identifier hs-var">COLOR_SPACE_REC2020_FB</span></a></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;REC2020_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-448"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_REC709_FB"><span class="hs-identifier hs-var">COLOR_SPACE_REC709_FB</span></a></span><span>   </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;REC709_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-449"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_RIFT_CV1_FB"><span class="hs-identifier hs-var">COLOR_SPACE_RIFT_CV1_FB</span></a></span><span> </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;RIFT_CV1_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-450"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_RIFT_S_FB"><span class="hs-identifier hs-var">COLOR_SPACE_RIFT_S_FB</span></a></span><span>   </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;RIFT_S_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-451"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_QUEST_FB"><span class="hs-identifier hs-var">COLOR_SPACE_QUEST_FB</span></a></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;QUEST_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-452"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_P3_FB"><span class="hs-identifier hs-var">COLOR_SPACE_P3_FB</span></a></span><span>       </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;P3_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-453"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#COLOR_SPACE_ADOBE_RGB_FB"><span class="hs-identifier hs-var">COLOR_SPACE_ADOBE_RGB_FB</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ADOBE_RGB_FB&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-454"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-455"></span><span>
+</span><span id="line-456"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679392703"><span id="local-6989586621679392705"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-457"></span><span>  </span><span id="local-6989586621679392702"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ColorSpaceFB -&gt; ShowS
+</span><a href="#local-6989586621679392702"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ColorSpaceFB, String)]
+-&gt; String
+-&gt; (ColorSpaceFB -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; ColorSpaceFB
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#enumPrefixColorSpaceFB"><span class="hs-identifier hs-var">enumPrefixColorSpaceFB</span></a></span><span>
+</span><span id="line-458"></span><span>                            </span><span class="annot"><span class="annottext">[(ColorSpaceFB, String)]
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#showTableColorSpaceFB"><span class="hs-identifier hs-var">showTableColorSpaceFB</span></a></span><span>
+</span><span id="line-459"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#conNameColorSpaceFB"><span class="hs-identifier hs-var">conNameColorSpaceFB</span></a></span><span>
+</span><span id="line-460"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span><span> </span><span id="local-6989586621679392701"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679392701"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679392701"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-461"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-462"></span><span>
+</span><span id="line-463"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679392694"><span id="local-6989586621679392697"><span id="local-6989586621679392699"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-type">ColorSpaceFB</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-464"></span><span>  </span><span id="local-6989586621679392692"><span class="annot"><span class="annottext">readPrec :: ReadPrec ColorSpaceFB
+</span><a href="#local-6989586621679392692"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ColorSpaceFB, String)]
+-&gt; String
+-&gt; (Int32 -&gt; ColorSpaceFB)
+-&gt; ReadPrec ColorSpaceFB
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#enumPrefixColorSpaceFB"><span class="hs-identifier hs-var">enumPrefixColorSpaceFB</span></a></span><span> </span><span class="annot"><span class="annottext">[(ColorSpaceFB, String)]
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#showTableColorSpaceFB"><span class="hs-identifier hs-var">showTableColorSpaceFB</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#conNameColorSpaceFB"><span class="hs-identifier hs-var">conNameColorSpaceFB</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; ColorSpaceFB
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#ColorSpaceFB"><span class="hs-identifier hs-var">ColorSpaceFB</span></a></span><span>
+</span><span id="line-465"></span><span>
+</span><span id="line-466"></span><span>
+</span><span id="line-467"></span><span class="hs-keyword">type</span><span> </span><span id="FB_color_space_SPEC_VERSION"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_color_space_SPEC_VERSION"><span class="hs-identifier hs-var">FB_color_space_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-468"></span><span>
+</span><span id="line-469"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_FB_color_space_SPEC_VERSION&quot;</span><span>
+</span><span id="line-470"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_color_space_SPEC_VERSION"><span class="hs-identifier hs-type">FB_color_space_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679392914"><span class="annot"><a href="#local-6989586621679392914"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621679392914"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679392914"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-471"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bFB_color_space_SPEC_VERSION"><span id="%24mFB_color_space_SPEC_VERSION"><span id="FB_color_space_SPEC_VERSION"><span class="annot"><span class="annottext">$bFB_color_space_SPEC_VERSION :: a
+$mFB_color_space_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bFB_color_space_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">FB_color_space_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-472"></span><span>
+</span><span id="line-473"></span><span>
+</span><span id="line-474"></span><span class="hs-keyword">type</span><span> </span><span id="FB_COLOR_SPACE_EXTENSION_NAME"><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_COLOR_SPACE_EXTENSION_NAME"><span class="hs-identifier hs-var">FB_COLOR_SPACE_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_FB_color_space&quot;</span></span><span>
+</span><span id="line-475"></span><span>
+</span><span id="line-476"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;XR_FB_COLOR_SPACE_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-477"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="OpenXR.Extensions.XR_FB_color_space.html#FB_COLOR_SPACE_EXTENSION_NAME"><span class="hs-identifier hs-type">FB_COLOR_SPACE_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679392910"><span class="annot"><a href="#local-6989586621679392910"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679392910"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621679392910"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679392910"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-478"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bFB_COLOR_SPACE_EXTENSION_NAME"><span id="%24mFB_COLOR_SPACE_EXTENSION_NAME"><span id="FB_COLOR_SPACE_EXTENSION_NAME"><span class="annot"><span class="annottext">$bFB_COLOR_SPACE_EXTENSION_NAME :: a
+$mFB_COLOR_SPACE_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Extensions.XR_FB_color_space.html#%24bFB_COLOR_SPACE_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">FB_COLOR_SPACE_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;XR_FB_color_space&quot;</span></span><span>
+</span><span id="line-479"></span><span>
+</span><span id="line-480"></span></pre></body></html>

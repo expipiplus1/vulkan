@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;ReferenceSpaceType&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.ReferenceSpaceType</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier">ReferenceSpaceType</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_VIEW"><span class="hs-identifier">REFERENCE_SPACE_TYPE_VIEW</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_LOCAL"><span class="hs-identifier">REFERENCE_SPACE_TYPE_LOCAL</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_STAGE"><span class="hs-identifier">REFERENCE_SPACE_TYPE_STAGE</span></a></span><span>
+</span><span id="line-6"></span><span>                                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"><span class="hs-identifier">REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT</span></a></span><span>
+</span><span id="line-7"></span><span>                                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-8"></span><span>                                                                  </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- | XrReferenceSpaceType - Reference space types</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- Available reference space types are indicated by</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.enumerateReferenceSpaces'. Note that other spaces</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- can be created as well, such as pose action spaces created by</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.createActionSpace', which are not enumerated by</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- that API.</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- == Enumerant Descriptions</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataReferenceSpaceChangePending',</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.ReferenceSpaceCreateInfo',</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.enumerateReferenceSpaces',</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.getReferenceSpaceBoundsRect'</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">newtype</span><span> </span><span id="ReferenceSpaceType"><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-var">ReferenceSpaceType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ReferenceSpaceType"><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-var">ReferenceSpaceType</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-38"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679389454"><span id="local-6989586621679389456"><span class="annot"><span class="annottext">ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+(ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool)
+-&gt; (ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool)
+-&gt; Eq ReferenceSpaceType
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+$c/= :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+== :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+$c== :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389438"><span id="local-6989586621679389440"><span id="local-6989586621679389442"><span id="local-6989586621679389444"><span id="local-6989586621679389446"><span id="local-6989586621679389448"><span id="local-6989586621679389450"><span class="annot"><span class="annottext">Eq ReferenceSpaceType
+Eq ReferenceSpaceType =&gt;
+(ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Ordering)
+-&gt; (ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool)
+-&gt; (ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool)
+-&gt; (ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool)
+-&gt; (ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool)
+-&gt; (ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; ReferenceSpaceType)
+-&gt; (ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; ReferenceSpaceType)
+-&gt; Ord ReferenceSpaceType
+ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Ordering
+ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; ReferenceSpaceType
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; ReferenceSpaceType
+$cmin :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; ReferenceSpaceType
+max :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; ReferenceSpaceType
+$cmax :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; ReferenceSpaceType
+&gt;= :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+$c&gt;= :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+&gt; :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+$c&gt; :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+&lt;= :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+$c&lt;= :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+&lt; :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+$c&lt; :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Bool
+compare :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Ordering
+$ccompare :: ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; Ordering
+$cp1Ord :: Eq ReferenceSpaceType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389421"><span id="local-6989586621679389423"><span id="local-6989586621679389425"><span id="local-6989586621679389427"><span id="local-6989586621679389429"><span id="local-6989586621679389431"><span id="local-6989586621679389433"><span id="local-6989586621679389435"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ReferenceSpaceType
+Ptr b -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ()
+Ptr ReferenceSpaceType -&gt; IO ReferenceSpaceType
+Ptr ReferenceSpaceType -&gt; Int -&gt; IO ReferenceSpaceType
+Ptr ReferenceSpaceType -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ()
+Ptr ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; IO ()
+ReferenceSpaceType -&gt; Int
+(ReferenceSpaceType -&gt; Int)
+-&gt; (ReferenceSpaceType -&gt; Int)
+-&gt; (Ptr ReferenceSpaceType -&gt; Int -&gt; IO ReferenceSpaceType)
+-&gt; (Ptr ReferenceSpaceType -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ReferenceSpaceType)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ())
+-&gt; (Ptr ReferenceSpaceType -&gt; IO ReferenceSpaceType)
+-&gt; (Ptr ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; IO ())
+-&gt; Storable ReferenceSpaceType
+forall b. Ptr b -&gt; Int -&gt; IO ReferenceSpaceType
+forall b. Ptr b -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; IO ()
+$cpoke :: Ptr ReferenceSpaceType -&gt; ReferenceSpaceType -&gt; IO ()
+peek :: Ptr ReferenceSpaceType -&gt; IO ReferenceSpaceType
+$cpeek :: Ptr ReferenceSpaceType -&gt; IO ReferenceSpaceType
+pokeByteOff :: Ptr b -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ReferenceSpaceType
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ReferenceSpaceType
+pokeElemOff :: Ptr ReferenceSpaceType -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ()
+$cpokeElemOff :: Ptr ReferenceSpaceType -&gt; Int -&gt; ReferenceSpaceType -&gt; IO ()
+peekElemOff :: Ptr ReferenceSpaceType -&gt; Int -&gt; IO ReferenceSpaceType
+$cpeekElemOff :: Ptr ReferenceSpaceType -&gt; Int -&gt; IO ReferenceSpaceType
+alignment :: ReferenceSpaceType -&gt; Int
+$calignment :: ReferenceSpaceType -&gt; Int
+sizeOf :: ReferenceSpaceType -&gt; Int
+$csizeOf :: ReferenceSpaceType -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679389418"><span class="annot"><span class="annottext">ReferenceSpaceType
+ReferenceSpaceType -&gt; Zero ReferenceSpaceType
+forall a. a -&gt; Zero a
+zero :: ReferenceSpaceType
+$czero :: ReferenceSpaceType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- | 'REFERENCE_SPACE_TYPE_VIEW'. The @VIEW@ space tracks the view origin</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- used to generate view transforms for the primary viewer (or centroid of</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- view origins if stereo), with +Y up, +X to the right, and -Z forward.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- This space points in the forward direction for the viewer without</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- incorporating the user&#8217;s eye orientation, and is not gravity-aligned.</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- @VIEW@ space is primarily useful when projecting from the user&#8217;s</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- perspective into another space to obtain a targeting ray, or when</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- rendering small head-locked content such as a reticle. Content rendered</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- in @VIEW@ space will stay at a fixed point on head-mounted displays and</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- may be uncomfortable to view if too large. To obtain the ideal view and</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- projection transforms to use each frame for rendering world content,</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- applications should call 'OpenXR.Core10.DisplayTiming.locateViews'</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- instead of using this space.</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- Runtimes /must/ support this reference space.</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bREFERENCE_SPACE_TYPE_VIEW"><span id="%24mREFERENCE_SPACE_TYPE_VIEW"><span id="REFERENCE_SPACE_TYPE_VIEW"><span class="annot"><span class="annottext">$bREFERENCE_SPACE_TYPE_VIEW :: ReferenceSpaceType
+$mREFERENCE_SPACE_TYPE_VIEW :: forall r. ReferenceSpaceType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#%24bREFERENCE_SPACE_TYPE_VIEW"><span class="hs-identifier hs-var hs-var hs-var">REFERENCE_SPACE_TYPE_VIEW</span></a></span></span></span></span><span>           </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- | 'REFERENCE_SPACE_TYPE_LOCAL'. The @LOCAL@ reference space establishes a</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- world-locked origin, gravity-aligned to exclude pitch and roll, with +Y</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- up, +X to the right, and -Z forward. This space locks in both its</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- initial position and orientation, which the runtime /may/ define to be</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- either the initial position at application launch or some other</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- calibrated zero position.</span><span>
+</span><span id="line-64"></span><span class="hs-comment">--</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- @LOCAL@ space is useful when an application needs to render</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- __seated-scale__ content that is not positioned relative to the physical</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- floor.</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- When a user needs to recenter @LOCAL@ space, a runtime /may/ offer some</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- system-level recentering interaction that is transparent to the</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- application, but which causes the current leveled head space to become</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- the new @LOCAL@ space. When such a recentering occurs, the runtime</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- /must/ queue the</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataReferenceSpaceChangePending' event,</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- with the recentered @LOCAL@ space origin only taking effect for</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.locateSpace' or</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.locateViews' calls whose</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrTime &gt;</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- parameter is greater than or equal to the @changeTime@ provided in that</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- event.</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- When views, controllers or other spaces experience tracking loss</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- relative to the @LOCAL@ space, runtimes /should/ continue to provide</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- inferred or last-known @position@ and @orientation@ values. These</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- inferred poses can, for example, be based on neck model updates,</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- inertial dead reckoning, or a last-known position, so long as it is</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- still reasonable for the application to use that pose. While a runtime</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- is providing position data, it /must/ continue to set</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- @XR_VIEW_STATE_POSITION_VALID_BIT@ but it /can/ clear</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ and</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- @XR_VIEW_STATE_POSITION_TRACKED_BIT@ to indicate that the position is</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- inferred or last-known in this way.</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- When tracking is recovered, runtimes /should/ snap the pose of other</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- spaces back into position relative to the @LOCAL@ space&#8217;s original</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- origin.</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- Runtimes /must/ support this reference space.</span><span>
+</span><span id="line-100"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bREFERENCE_SPACE_TYPE_LOCAL"><span id="%24mREFERENCE_SPACE_TYPE_LOCAL"><span id="REFERENCE_SPACE_TYPE_LOCAL"><span class="annot"><span class="annottext">$bREFERENCE_SPACE_TYPE_LOCAL :: ReferenceSpaceType
+$mREFERENCE_SPACE_TYPE_LOCAL :: forall r. ReferenceSpaceType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#%24bREFERENCE_SPACE_TYPE_LOCAL"><span class="hs-identifier hs-var hs-var hs-var">REFERENCE_SPACE_TYPE_LOCAL</span></a></span></span></span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- | 'REFERENCE_SPACE_TYPE_STAGE'. The @STAGE@ reference space is a</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- runtime-defined flat, rectangular space that is empty and can be walked</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- around on. The origin is on the floor at the center of the rectangle,</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- with +Y up, and the X and Z axes aligned with the rectangle edges. The</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- runtime /may/ not be able to locate spaces relative to the @STAGE@</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- reference space if the user has not yet defined one within the</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- runtime-specific UI. Applications can use</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.getReferenceSpaceBoundsRect' to determine the</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- extents of the @STAGE@ reference space&#8217;s XZ bounds rectangle, if</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- defined.</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- @STAGE@ space is useful when an application needs to render</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- __standing-scale__ content (no bounds) or __room-scale__ content (with</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- bounds) that is relative to the physical floor.</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- When the user redefines the origin or bounds of the current @STAGE@</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- space, or the runtime otherwise switches to a new @STAGE@ definition,</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- the runtime /must/ queue the</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- 'OpenXR.Core10.OtherTypes.EventDataReferenceSpaceChangePending' event,</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- with the new @STAGE@ space origin only taking effect for</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.locateSpace' or</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- 'OpenXR.Core10.DisplayTiming.locateViews' calls whose</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrTime &gt;</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- parameter is greater than or equal to the @changeTime@ provided in that</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- event.</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- When views, controllers or other spaces experience tracking loss</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- relative to the @STAGE@ space, runtimes /should/ continue to provide</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- inferred or last-known @position@ and @orientation@ values. These</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- inferred poses can, for example, be based on neck model updates,</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- inertial dead reckoning, or a last-known position, so long as it is</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- still reasonable for the application to use that pose. While a runtime</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- is providing position data, it /must/ continue to set</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- @XR_VIEW_STATE_POSITION_VALID_BIT@ but it /can/ clear</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ and</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- @XR_VIEW_STATE_POSITION_TRACKED_BIT@ to indicate that the position is</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- inferred or last-known in this way.</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- When tracking is recovered, runtimes /should/ snap the pose of other</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- spaces back into position relative to the @STAGE@ space&#8217;s original</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- origin.</span><span>
+</span><span id="line-143"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bREFERENCE_SPACE_TYPE_STAGE"><span id="%24mREFERENCE_SPACE_TYPE_STAGE"><span id="REFERENCE_SPACE_TYPE_STAGE"><span class="annot"><span class="annottext">$bREFERENCE_SPACE_TYPE_STAGE :: ReferenceSpaceType
+$mREFERENCE_SPACE_TYPE_STAGE :: forall r. ReferenceSpaceType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#%24bREFERENCE_SPACE_TYPE_STAGE"><span class="hs-identifier hs-var hs-var hs-var">REFERENCE_SPACE_TYPE_STAGE</span></a></span></span></span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- No documentation found for Nested &quot;XrReferenceSpaceType&quot; &quot;XR_REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT&quot;</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bREFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"><span id="%24mREFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"><span id="REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"><span class="annot"><span class="annottext">$bREFERENCE_SPACE_TYPE_UNBOUNDED_MSFT :: ReferenceSpaceType
+$mREFERENCE_SPACE_TYPE_UNBOUNDED_MSFT :: forall r. ReferenceSpaceType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#%24bREFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"><span class="hs-identifier hs-var hs-var hs-var">REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span><span> </span><span class="hs-number">1000038000</span><span>
+</span><span id="line-146"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_VIEW"><span class="hs-pragma hs-type">REFERENCE_SPACE_TYPE_VIEW</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-147"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_LOCAL"><span class="hs-pragma hs-type">REFERENCE_SPACE_TYPE_LOCAL</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-148"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_STAGE"><span class="hs-pragma hs-type">REFERENCE_SPACE_TYPE_STAGE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-149"></span><span>             </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"><span class="hs-pragma hs-type">REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-pragma hs-type">ReferenceSpaceType</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-150"></span><span>
+</span><span id="line-151"></span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#conNameReferenceSpaceType"><span class="hs-identifier hs-type">conNameReferenceSpaceType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-152"></span><span id="conNameReferenceSpaceType"><span class="annot"><span class="annottext">conNameReferenceSpaceType :: String
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#conNameReferenceSpaceType"><span class="hs-identifier hs-var hs-var">conNameReferenceSpaceType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ReferenceSpaceType&quot;</span></span><span>
+</span><span id="line-153"></span><span>
+</span><span id="line-154"></span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#enumPrefixReferenceSpaceType"><span class="hs-identifier hs-type">enumPrefixReferenceSpaceType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-155"></span><span id="enumPrefixReferenceSpaceType"><span class="annot"><span class="annottext">enumPrefixReferenceSpaceType :: String
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#enumPrefixReferenceSpaceType"><span class="hs-identifier hs-var hs-var">enumPrefixReferenceSpaceType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;REFERENCE_SPACE_TYPE_&quot;</span></span><span>
+</span><span id="line-156"></span><span>
+</span><span id="line-157"></span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#showTableReferenceSpaceType"><span class="hs-identifier hs-type">showTableReferenceSpaceType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-158"></span><span id="showTableReferenceSpaceType"><span class="annot"><span class="annottext">showTableReferenceSpaceType :: [(ReferenceSpaceType, String)]
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#showTableReferenceSpaceType"><span class="hs-identifier hs-var hs-var">showTableReferenceSpaceType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-159"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReferenceSpaceType
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_VIEW"><span class="hs-identifier hs-var">REFERENCE_SPACE_TYPE_VIEW</span></a></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;VIEW&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-160"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReferenceSpaceType
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_LOCAL"><span class="hs-identifier hs-var">REFERENCE_SPACE_TYPE_LOCAL</span></a></span><span>         </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;LOCAL&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-161"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReferenceSpaceType
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_STAGE"><span class="hs-identifier hs-var">REFERENCE_SPACE_TYPE_STAGE</span></a></span><span>         </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;STAGE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReferenceSpaceType
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"><span class="hs-identifier hs-var">REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UNBOUNDED_MSFT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-164"></span><span>
+</span><span id="line-165"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389401"><span id="local-6989586621679389403"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-166"></span><span>  </span><span id="local-6989586621679389399"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ReferenceSpaceType -&gt; ShowS
+</span><a href="#local-6989586621679389399"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ReferenceSpaceType, String)]
+-&gt; String
+-&gt; (ReferenceSpaceType -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; ReferenceSpaceType
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#enumPrefixReferenceSpaceType"><span class="hs-identifier hs-var">enumPrefixReferenceSpaceType</span></a></span><span>
+</span><span id="line-167"></span><span>                            </span><span class="annot"><span class="annottext">[(ReferenceSpaceType, String)]
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#showTableReferenceSpaceType"><span class="hs-identifier hs-var">showTableReferenceSpaceType</span></a></span><span>
+</span><span id="line-168"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#conNameReferenceSpaceType"><span class="hs-identifier hs-var">conNameReferenceSpaceType</span></a></span><span>
+</span><span id="line-169"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span><span> </span><span id="local-6989586621679389398"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621679389398"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621679389398"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-170"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-171"></span><span>
+</span><span id="line-172"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679389391"><span id="local-6989586621679389394"><span id="local-6989586621679389396"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-type">ReferenceSpaceType</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-173"></span><span>  </span><span id="local-6989586621679389389"><span class="annot"><span class="annottext">readPrec :: ReadPrec ReferenceSpaceType
+</span><a href="#local-6989586621679389389"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-174"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(ReferenceSpaceType, String)]
+-&gt; String
+-&gt; (Int32 -&gt; ReferenceSpaceType)
+-&gt; ReadPrec ReferenceSpaceType
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#enumPrefixReferenceSpaceType"><span class="hs-identifier hs-var">enumPrefixReferenceSpaceType</span></a></span><span> </span><span class="annot"><span class="annottext">[(ReferenceSpaceType, String)]
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#showTableReferenceSpaceType"><span class="hs-identifier hs-var">showTableReferenceSpaceType</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#conNameReferenceSpaceType"><span class="hs-identifier hs-var">conNameReferenceSpaceType</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; ReferenceSpaceType
+</span><a href="OpenXR.Core10.Enums.ReferenceSpaceType.html#ReferenceSpaceType"><span class="hs-identifier hs-var">ReferenceSpaceType</span></a></span><span>
+</span><span id="line-175"></span><span>
+</span><span id="line-176"></span></pre></body></html>

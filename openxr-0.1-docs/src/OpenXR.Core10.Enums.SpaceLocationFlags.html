@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;SpaceLocationFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.SpaceLocationFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier">SpaceLocationFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | XrSpaceLocationFlags - Space location flags</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- where the flags have the following meaning:</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- == Flag Descriptions</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.HandJointLocationEXT',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.SpaceLocation'</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">newtype</span><span> </span><span id="SpaceLocationFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier hs-var">SpaceLocationFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SpaceLocationFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier hs-var">SpaceLocationFlags</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679388731"><span id="local-6989586621679388733"><span class="annot"><span class="annottext">SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+(SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool)
+-&gt; Eq SpaceLocationFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+$c/= :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+== :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+$c== :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388715"><span id="local-6989586621679388717"><span id="local-6989586621679388719"><span id="local-6989586621679388721"><span id="local-6989586621679388723"><span id="local-6989586621679388725"><span id="local-6989586621679388727"><span class="annot"><span class="annottext">Eq SpaceLocationFlags
+Eq SpaceLocationFlags =&gt;
+(SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Ordering)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags)
+-&gt; Ord SpaceLocationFlags
+SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Ordering
+SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+$cmin :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+max :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+$cmax :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+&gt;= :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+$c&gt;= :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+&gt; :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+$c&gt; :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+&lt;= :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+$c&lt;= :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+&lt; :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+$c&lt; :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Bool
+compare :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Ordering
+$ccompare :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; Ordering
+$cp1Ord :: Eq SpaceLocationFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388698"><span id="local-6989586621679388700"><span id="local-6989586621679388702"><span id="local-6989586621679388704"><span id="local-6989586621679388706"><span id="local-6989586621679388708"><span id="local-6989586621679388710"><span id="local-6989586621679388712"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SpaceLocationFlags
+Ptr b -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ()
+Ptr SpaceLocationFlags -&gt; IO SpaceLocationFlags
+Ptr SpaceLocationFlags -&gt; Int -&gt; IO SpaceLocationFlags
+Ptr SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ()
+Ptr SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; IO ()
+SpaceLocationFlags -&gt; Int
+(SpaceLocationFlags -&gt; Int)
+-&gt; (SpaceLocationFlags -&gt; Int)
+-&gt; (Ptr SpaceLocationFlags -&gt; Int -&gt; IO SpaceLocationFlags)
+-&gt; (Ptr SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SpaceLocationFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ())
+-&gt; (Ptr SpaceLocationFlags -&gt; IO SpaceLocationFlags)
+-&gt; (Ptr SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; IO ())
+-&gt; Storable SpaceLocationFlags
+forall b. Ptr b -&gt; Int -&gt; IO SpaceLocationFlags
+forall b. Ptr b -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; IO ()
+$cpoke :: Ptr SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; IO ()
+peek :: Ptr SpaceLocationFlags -&gt; IO SpaceLocationFlags
+$cpeek :: Ptr SpaceLocationFlags -&gt; IO SpaceLocationFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SpaceLocationFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SpaceLocationFlags
+pokeElemOff :: Ptr SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ()
+$cpokeElemOff :: Ptr SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags -&gt; IO ()
+peekElemOff :: Ptr SpaceLocationFlags -&gt; Int -&gt; IO SpaceLocationFlags
+$cpeekElemOff :: Ptr SpaceLocationFlags -&gt; Int -&gt; IO SpaceLocationFlags
+alignment :: SpaceLocationFlags -&gt; Int
+$calignment :: SpaceLocationFlags -&gt; Int
+sizeOf :: SpaceLocationFlags -&gt; Int
+$csizeOf :: SpaceLocationFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388695"><span class="annot"><span class="annottext">SpaceLocationFlags
+SpaceLocationFlags -&gt; Zero SpaceLocationFlags
+forall a. a -&gt; Zero a
+zero :: SpaceLocationFlags
+$czero :: SpaceLocationFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388649"><span id="local-6989586621679388651"><span id="local-6989586621679388653"><span id="local-6989586621679388655"><span id="local-6989586621679388657"><span id="local-6989586621679388659"><span id="local-6989586621679388661"><span id="local-6989586621679388663"><span id="local-6989586621679388665"><span id="local-6989586621679388667"><span id="local-6989586621679388669"><span id="local-6989586621679388671"><span id="local-6989586621679388673"><span id="local-6989586621679388675"><span id="local-6989586621679388677"><span id="local-6989586621679388679"><span id="local-6989586621679388681"><span id="local-6989586621679388683"><span id="local-6989586621679388685"><span id="local-6989586621679388687"><span id="local-6989586621679388689"><span id="local-6989586621679388691"><span class="annot"><span class="annottext">Eq SpaceLocationFlags
+SpaceLocationFlags
+Eq SpaceLocationFlags =&gt;
+(SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; SpaceLocationFlags
+-&gt; (Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; Bool)
+-&gt; (SpaceLocationFlags -&gt; Maybe Int)
+-&gt; (SpaceLocationFlags -&gt; Int)
+-&gt; (SpaceLocationFlags -&gt; Bool)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags)
+-&gt; (SpaceLocationFlags -&gt; Int)
+-&gt; Bits SpaceLocationFlags
+Int -&gt; SpaceLocationFlags
+SpaceLocationFlags -&gt; Bool
+SpaceLocationFlags -&gt; Int
+SpaceLocationFlags -&gt; Maybe Int
+SpaceLocationFlags -&gt; SpaceLocationFlags
+SpaceLocationFlags -&gt; Int -&gt; Bool
+SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SpaceLocationFlags -&gt; Int
+$cpopCount :: SpaceLocationFlags -&gt; Int
+rotateR :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$crotateR :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+rotateL :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$crotateL :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+unsafeShiftR :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$cunsafeShiftR :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+shiftR :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$cshiftR :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+unsafeShiftL :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$cunsafeShiftL :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+shiftL :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$cshiftL :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+isSigned :: SpaceLocationFlags -&gt; Bool
+$cisSigned :: SpaceLocationFlags -&gt; Bool
+bitSize :: SpaceLocationFlags -&gt; Int
+$cbitSize :: SpaceLocationFlags -&gt; Int
+bitSizeMaybe :: SpaceLocationFlags -&gt; Maybe Int
+$cbitSizeMaybe :: SpaceLocationFlags -&gt; Maybe Int
+testBit :: SpaceLocationFlags -&gt; Int -&gt; Bool
+$ctestBit :: SpaceLocationFlags -&gt; Int -&gt; Bool
+complementBit :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$ccomplementBit :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+clearBit :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$cclearBit :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+setBit :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$csetBit :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+bit :: Int -&gt; SpaceLocationFlags
+$cbit :: Int -&gt; SpaceLocationFlags
+zeroBits :: SpaceLocationFlags
+$czeroBits :: SpaceLocationFlags
+rotate :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$crotate :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+shift :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+$cshift :: SpaceLocationFlags -&gt; Int -&gt; SpaceLocationFlags
+complement :: SpaceLocationFlags -&gt; SpaceLocationFlags
+$ccomplement :: SpaceLocationFlags -&gt; SpaceLocationFlags
+xor :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+$cxor :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+.|. :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+$c.|. :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+.&amp;. :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+$c.&amp;. :: SpaceLocationFlags -&gt; SpaceLocationFlags -&gt; SpaceLocationFlags
+$cp1Bits :: Eq SpaceLocationFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388641"><span id="local-6989586621679388643"><span id="local-6989586621679388645"><span class="annot"><span class="annottext">Bits SpaceLocationFlags
+Bits SpaceLocationFlags =&gt;
+(SpaceLocationFlags -&gt; Int)
+-&gt; (SpaceLocationFlags -&gt; Int)
+-&gt; (SpaceLocationFlags -&gt; Int)
+-&gt; FiniteBits SpaceLocationFlags
+SpaceLocationFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: SpaceLocationFlags -&gt; Int
+$ccountTrailingZeros :: SpaceLocationFlags -&gt; Int
+countLeadingZeros :: SpaceLocationFlags -&gt; Int
+$ccountLeadingZeros :: SpaceLocationFlags -&gt; Int
+finiteBitSize :: SpaceLocationFlags -&gt; Int
+$cfiniteBitSize :: SpaceLocationFlags -&gt; Int
+$cp1FiniteBits :: Bits SpaceLocationFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#conNameSpaceLocationFlags"><span class="hs-identifier hs-type">conNameSpaceLocationFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-34"></span><span id="conNameSpaceLocationFlags"><span class="annot"><span class="annottext">conNameSpaceLocationFlags :: String
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#conNameSpaceLocationFlags"><span class="hs-identifier hs-var hs-var">conNameSpaceLocationFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SpaceLocationFlags&quot;</span></span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#enumPrefixSpaceLocationFlags"><span class="hs-identifier hs-type">enumPrefixSpaceLocationFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-37"></span><span id="enumPrefixSpaceLocationFlags"><span class="annot"><span class="annottext">enumPrefixSpaceLocationFlags :: String
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#enumPrefixSpaceLocationFlags"><span class="hs-identifier hs-var hs-var">enumPrefixSpaceLocationFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#showTableSpaceLocationFlags"><span class="hs-identifier hs-type">showTableSpaceLocationFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier hs-type">SpaceLocationFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-40"></span><span id="showTableSpaceLocationFlags"><span class="annot"><span class="annottext">showTableSpaceLocationFlags :: [(SpaceLocationFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#showTableSpaceLocationFlags"><span class="hs-identifier hs-var hs-var">showTableSpaceLocationFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388632"><span id="local-6989586621679388634"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier hs-type">SpaceLocationFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span id="local-6989586621679388630"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SpaceLocationFlags -&gt; ShowS
+</span><a href="#local-6989586621679388630"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SpaceLocationFlags, String)]
+-&gt; String
+-&gt; (SpaceLocationFlags -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; SpaceLocationFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#enumPrefixSpaceLocationFlags"><span class="hs-identifier hs-var">enumPrefixSpaceLocationFlags</span></a></span><span>
+</span><span id="line-44"></span><span>                            </span><span class="annot"><span class="annottext">[(SpaceLocationFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#showTableSpaceLocationFlags"><span class="hs-identifier hs-var">showTableSpaceLocationFlags</span></a></span><span>
+</span><span id="line-45"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#conNameSpaceLocationFlags"><span class="hs-identifier hs-var">conNameSpaceLocationFlags</span></a></span><span>
+</span><span id="line-46"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier hs-type">SpaceLocationFlags</span></a></span><span> </span><span id="local-6989586621679388629"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679388629"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679388629"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679388628"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679388628"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679388628"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388620"><span id="local-6989586621679388623"><span id="local-6989586621679388625"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier hs-type">SpaceLocationFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-50"></span><span>  </span><span id="local-6989586621679388618"><span class="annot"><span class="annottext">readPrec :: ReadPrec SpaceLocationFlags
+</span><a href="#local-6989586621679388618"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-51"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(SpaceLocationFlags, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; SpaceLocationFlags)
+-&gt; ReadPrec SpaceLocationFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#enumPrefixSpaceLocationFlags"><span class="hs-identifier hs-var">enumPrefixSpaceLocationFlags</span></a></span><span> </span><span class="annot"><span class="annottext">[(SpaceLocationFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#showTableSpaceLocationFlags"><span class="hs-identifier hs-var">showTableSpaceLocationFlags</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#conNameSpaceLocationFlags"><span class="hs-identifier hs-var">conNameSpaceLocationFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; SpaceLocationFlags
+</span><a href="OpenXR.Core10.Enums.SpaceLocationFlags.html#SpaceLocationFlags"><span class="hs-identifier hs-var">SpaceLocationFlags</span></a></span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span></pre></body></html>

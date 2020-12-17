@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;SpaceVelocityFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">OpenXR.Core10.Enums.SpaceVelocityFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier">SpaceVelocityFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Internal.Utils.html"><span class="hs-identifier">OpenXR.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Zero.html"><span class="hs-identifier">OpenXR.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Zero</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html"><span class="hs-identifier">OpenXR.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier">Flags64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | XrSpaceVelocityFlags - Space velocity flags</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- where the flags have the following meaning:</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- == Flag Descriptions</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'OpenXR.Extensions.XR_EXT_hand_tracking.HandJointVelocityEXT',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'OpenXR.Core10.Space.SpaceVelocity'</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">newtype</span><span> </span><span id="SpaceVelocityFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier hs-var">SpaceVelocityFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SpaceVelocityFlags"><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier hs-var">SpaceVelocityFlags</span></a></span></span><span> </span><span class="annot"><a href="OpenXR.Core10.FundamentalTypes.html#Flags64"><span class="hs-identifier hs-type">Flags64</span></a></span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679388577"><span id="local-6989586621679388579"><span class="annot"><span class="annottext">SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+(SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool)
+-&gt; Eq SpaceVelocityFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+$c/= :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+== :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+$c== :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388561"><span id="local-6989586621679388563"><span id="local-6989586621679388565"><span id="local-6989586621679388567"><span id="local-6989586621679388569"><span id="local-6989586621679388571"><span id="local-6989586621679388573"><span class="annot"><span class="annottext">Eq SpaceVelocityFlags
+Eq SpaceVelocityFlags =&gt;
+(SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Ordering)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags)
+-&gt; Ord SpaceVelocityFlags
+SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Ordering
+SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+$cmin :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+max :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+$cmax :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+&gt;= :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+$c&gt;= :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+&gt; :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+$c&gt; :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+&lt;= :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+$c&lt;= :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+&lt; :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+$c&lt; :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Bool
+compare :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Ordering
+$ccompare :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; Ordering
+$cp1Ord :: Eq SpaceVelocityFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388544"><span id="local-6989586621679388546"><span id="local-6989586621679388548"><span id="local-6989586621679388550"><span id="local-6989586621679388552"><span id="local-6989586621679388554"><span id="local-6989586621679388556"><span id="local-6989586621679388558"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SpaceVelocityFlags
+Ptr b -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ()
+Ptr SpaceVelocityFlags -&gt; IO SpaceVelocityFlags
+Ptr SpaceVelocityFlags -&gt; Int -&gt; IO SpaceVelocityFlags
+Ptr SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ()
+Ptr SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; IO ()
+SpaceVelocityFlags -&gt; Int
+(SpaceVelocityFlags -&gt; Int)
+-&gt; (SpaceVelocityFlags -&gt; Int)
+-&gt; (Ptr SpaceVelocityFlags -&gt; Int -&gt; IO SpaceVelocityFlags)
+-&gt; (Ptr SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SpaceVelocityFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ())
+-&gt; (Ptr SpaceVelocityFlags -&gt; IO SpaceVelocityFlags)
+-&gt; (Ptr SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; IO ())
+-&gt; Storable SpaceVelocityFlags
+forall b. Ptr b -&gt; Int -&gt; IO SpaceVelocityFlags
+forall b. Ptr b -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; IO ()
+$cpoke :: Ptr SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; IO ()
+peek :: Ptr SpaceVelocityFlags -&gt; IO SpaceVelocityFlags
+$cpeek :: Ptr SpaceVelocityFlags -&gt; IO SpaceVelocityFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SpaceVelocityFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SpaceVelocityFlags
+pokeElemOff :: Ptr SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ()
+$cpokeElemOff :: Ptr SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags -&gt; IO ()
+peekElemOff :: Ptr SpaceVelocityFlags -&gt; Int -&gt; IO SpaceVelocityFlags
+$cpeekElemOff :: Ptr SpaceVelocityFlags -&gt; Int -&gt; IO SpaceVelocityFlags
+alignment :: SpaceVelocityFlags -&gt; Int
+$calignment :: SpaceVelocityFlags -&gt; Int
+sizeOf :: SpaceVelocityFlags -&gt; Int
+$csizeOf :: SpaceVelocityFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388541"><span class="annot"><span class="annottext">SpaceVelocityFlags
+SpaceVelocityFlags -&gt; Zero SpaceVelocityFlags
+forall a. a -&gt; Zero a
+zero :: SpaceVelocityFlags
+$czero :: SpaceVelocityFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388495"><span id="local-6989586621679388497"><span id="local-6989586621679388499"><span id="local-6989586621679388501"><span id="local-6989586621679388503"><span id="local-6989586621679388505"><span id="local-6989586621679388507"><span id="local-6989586621679388509"><span id="local-6989586621679388511"><span id="local-6989586621679388513"><span id="local-6989586621679388515"><span id="local-6989586621679388517"><span id="local-6989586621679388519"><span id="local-6989586621679388521"><span id="local-6989586621679388523"><span id="local-6989586621679388525"><span id="local-6989586621679388527"><span id="local-6989586621679388529"><span id="local-6989586621679388531"><span id="local-6989586621679388533"><span id="local-6989586621679388535"><span id="local-6989586621679388537"><span class="annot"><span class="annottext">Eq SpaceVelocityFlags
+SpaceVelocityFlags
+Eq SpaceVelocityFlags =&gt;
+(SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; SpaceVelocityFlags
+-&gt; (Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; Bool)
+-&gt; (SpaceVelocityFlags -&gt; Maybe Int)
+-&gt; (SpaceVelocityFlags -&gt; Int)
+-&gt; (SpaceVelocityFlags -&gt; Bool)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags)
+-&gt; (SpaceVelocityFlags -&gt; Int)
+-&gt; Bits SpaceVelocityFlags
+Int -&gt; SpaceVelocityFlags
+SpaceVelocityFlags -&gt; Bool
+SpaceVelocityFlags -&gt; Int
+SpaceVelocityFlags -&gt; Maybe Int
+SpaceVelocityFlags -&gt; SpaceVelocityFlags
+SpaceVelocityFlags -&gt; Int -&gt; Bool
+SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SpaceVelocityFlags -&gt; Int
+$cpopCount :: SpaceVelocityFlags -&gt; Int
+rotateR :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$crotateR :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+rotateL :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$crotateL :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+unsafeShiftR :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$cunsafeShiftR :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+shiftR :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$cshiftR :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+unsafeShiftL :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$cunsafeShiftL :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+shiftL :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$cshiftL :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+isSigned :: SpaceVelocityFlags -&gt; Bool
+$cisSigned :: SpaceVelocityFlags -&gt; Bool
+bitSize :: SpaceVelocityFlags -&gt; Int
+$cbitSize :: SpaceVelocityFlags -&gt; Int
+bitSizeMaybe :: SpaceVelocityFlags -&gt; Maybe Int
+$cbitSizeMaybe :: SpaceVelocityFlags -&gt; Maybe Int
+testBit :: SpaceVelocityFlags -&gt; Int -&gt; Bool
+$ctestBit :: SpaceVelocityFlags -&gt; Int -&gt; Bool
+complementBit :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$ccomplementBit :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+clearBit :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$cclearBit :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+setBit :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$csetBit :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+bit :: Int -&gt; SpaceVelocityFlags
+$cbit :: Int -&gt; SpaceVelocityFlags
+zeroBits :: SpaceVelocityFlags
+$czeroBits :: SpaceVelocityFlags
+rotate :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$crotate :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+shift :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+$cshift :: SpaceVelocityFlags -&gt; Int -&gt; SpaceVelocityFlags
+complement :: SpaceVelocityFlags -&gt; SpaceVelocityFlags
+$ccomplement :: SpaceVelocityFlags -&gt; SpaceVelocityFlags
+xor :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+$cxor :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+.|. :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+$c.|. :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+.&amp;. :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+$c.&amp;. :: SpaceVelocityFlags -&gt; SpaceVelocityFlags -&gt; SpaceVelocityFlags
+$cp1Bits :: Eq SpaceVelocityFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679388487"><span id="local-6989586621679388489"><span id="local-6989586621679388491"><span class="annot"><span class="annottext">Bits SpaceVelocityFlags
+Bits SpaceVelocityFlags =&gt;
+(SpaceVelocityFlags -&gt; Int)
+-&gt; (SpaceVelocityFlags -&gt; Int)
+-&gt; (SpaceVelocityFlags -&gt; Int)
+-&gt; FiniteBits SpaceVelocityFlags
+SpaceVelocityFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: SpaceVelocityFlags -&gt; Int
+$ccountTrailingZeros :: SpaceVelocityFlags -&gt; Int
+countLeadingZeros :: SpaceVelocityFlags -&gt; Int
+$ccountLeadingZeros :: SpaceVelocityFlags -&gt; Int
+finiteBitSize :: SpaceVelocityFlags -&gt; Int
+$cfiniteBitSize :: SpaceVelocityFlags -&gt; Int
+$cp1FiniteBits :: Bits SpaceVelocityFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#conNameSpaceVelocityFlags"><span class="hs-identifier hs-type">conNameSpaceVelocityFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-34"></span><span id="conNameSpaceVelocityFlags"><span class="annot"><span class="annottext">conNameSpaceVelocityFlags :: String
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#conNameSpaceVelocityFlags"><span class="hs-identifier hs-var hs-var">conNameSpaceVelocityFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SpaceVelocityFlags&quot;</span></span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#enumPrefixSpaceVelocityFlags"><span class="hs-identifier hs-type">enumPrefixSpaceVelocityFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-37"></span><span id="enumPrefixSpaceVelocityFlags"><span class="annot"><span class="annottext">enumPrefixSpaceVelocityFlags :: String
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#enumPrefixSpaceVelocityFlags"><span class="hs-identifier hs-var hs-var">enumPrefixSpaceVelocityFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#showTableSpaceVelocityFlags"><span class="hs-identifier hs-type">showTableSpaceVelocityFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier hs-type">SpaceVelocityFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-40"></span><span id="showTableSpaceVelocityFlags"><span class="annot"><span class="annottext">showTableSpaceVelocityFlags :: [(SpaceVelocityFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#showTableSpaceVelocityFlags"><span class="hs-identifier hs-var hs-var">showTableSpaceVelocityFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388478"><span id="local-6989586621679388480"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier hs-type">SpaceVelocityFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span id="local-6989586621679388476"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SpaceVelocityFlags -&gt; ShowS
+</span><a href="#local-6989586621679388476"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SpaceVelocityFlags, String)]
+-&gt; String
+-&gt; (SpaceVelocityFlags -&gt; Flags64)
+-&gt; (Flags64 -&gt; ShowS)
+-&gt; Int
+-&gt; SpaceVelocityFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="OpenXR.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#enumPrefixSpaceVelocityFlags"><span class="hs-identifier hs-var">enumPrefixSpaceVelocityFlags</span></a></span><span>
+</span><span id="line-44"></span><span>                            </span><span class="annot"><span class="annottext">[(SpaceVelocityFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#showTableSpaceVelocityFlags"><span class="hs-identifier hs-var">showTableSpaceVelocityFlags</span></a></span><span>
+</span><span id="line-45"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#conNameSpaceVelocityFlags"><span class="hs-identifier hs-var">conNameSpaceVelocityFlags</span></a></span><span>
+</span><span id="line-46"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier hs-type">SpaceVelocityFlags</span></a></span><span> </span><span id="local-6989586621679388475"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679388475"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679388475"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679388474"><span class="annot"><span class="annottext">x :: Flags64
+</span><a href="#local-6989586621679388474"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags64
+</span><a href="#local-6989586621679388474"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679388466"><span id="local-6989586621679388469"><span id="local-6989586621679388471"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier hs-type">SpaceVelocityFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-50"></span><span>  </span><span id="local-6989586621679388464"><span class="annot"><span class="annottext">readPrec :: ReadPrec SpaceVelocityFlags
+</span><a href="#local-6989586621679388464"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-51"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(SpaceVelocityFlags, String)]
+-&gt; String
+-&gt; (Flags64 -&gt; SpaceVelocityFlags)
+-&gt; ReadPrec SpaceVelocityFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="OpenXR.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#enumPrefixSpaceVelocityFlags"><span class="hs-identifier hs-var">enumPrefixSpaceVelocityFlags</span></a></span><span> </span><span class="annot"><span class="annottext">[(SpaceVelocityFlags, String)]
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#showTableSpaceVelocityFlags"><span class="hs-identifier hs-var">showTableSpaceVelocityFlags</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#conNameSpaceVelocityFlags"><span class="hs-identifier hs-var">conNameSpaceVelocityFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags64 -&gt; SpaceVelocityFlags
+</span><a href="OpenXR.Core10.Enums.SpaceVelocityFlags.html#SpaceVelocityFlags"><span class="hs-identifier hs-var">SpaceVelocityFlags</span></a></span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span></pre></body></html>
