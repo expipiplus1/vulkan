@@ -666,7 +666,7 @@ parseEmptyBitmasks es = fromList <$> traverseV
   | Element n <- es
   , "type" == name n
   , not (isAlias n)
-  , Nothing        <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
+  , Nothing        <- pure $ getBitValuesAttr n
   , Just "bitmask" <- pure $ getAttr "category" n
   ]
  where
@@ -694,7 +694,7 @@ parseEnums types es = do
     | Element n <- types
     , "type" == name n
     , not (isAlias n)
-    , Just bits      <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
+    , Just bits      <- pure $ getBitValuesAttr n
     , Just "bitmask" <- pure $ getAttr "category" n
     ]
   fromList <$> traverseV
@@ -818,6 +818,9 @@ appendEnumExtensions extensions =
   in
     fmap
       (\e@Enum {..} -> e { eValues = vNubOrd $ eValues <> getExtensions eName })
+
+getBitValuesAttr :: Node -> Maybe ByteString
+getBitValuesAttr n = getAttr "bitvalues" n <|> getAttr "requires" n
 
 ----------------------------------------------------------------
 -- Structs
