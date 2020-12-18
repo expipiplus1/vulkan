@@ -14,6 +14,7 @@ import           Text.Pandoc
 
 import           Control.Exception
 
+import qualified Data.Text.Extra               as T
 import           Documentation
 import           Error
 import           Haskell                       as H
@@ -75,27 +76,46 @@ displayExceptionCase specFlavor getDocumentation pat = do
       res  = case specFlavor of
         SpecVk -> "VkResult"
         SpecXr -> "XrResult"
-  pure $ fmap ((pretty pat' <+> "->") <+>)
-              (documentationToString =<< getDocumentation (Nested res pat))
+  pure $ fmap
+    ((pretty pat' <+> "->") <+>)
+    (documentationToString specFlavor =<< getDocumentation (Nested res pat))
 
 -- | Get a string expression from some documentation
-documentationToString :: Documentation -> Maybe (Doc ())
-documentationToString Documentation {..} =
+documentationToString :: SpecFlavor -> Documentation -> Maybe (Doc ())
+documentationToString specFlavor Documentation {..} =
   let writerOptions = def
-  in  viaShow . fixupResultDescription <$> eitherToMaybe
+  in  viaShow . fixupResultDescription specFlavor <$> eitherToMaybe
         (runPure (writePlain writerOptions (prepareForPlain dDocumentation)))
 
 -- |
--- - Keep only the first sentence
--- - Drop the first word (it's the enum name)
-fixupResultDescription :: Text -> Text
-fixupResultDescription =
-  T.takeWhile (/= '.') . T.unwords . tailSafe . T.words . T.replace "\8217" "'"
+-- Vulkan:
+-- - Keep only the first sentence (vulkan only)
+-- - Drop the first word (it's the enum name) (for vulkan)
+--
+-- OpenXR
+-- - Swap the leading "The" for "A"
+fixupResultDescription :: SpecFlavor -> Text -> Text
+fixupResultDescription = \case
+  SpecVk -> T.takeWhile (/= '.') . T.unwords . tailSafe . T.words . T.replace
+    "\8217"
+    "'"
+  SpecXr ->
+    T.upperCaseFirst
+      . T.dropWhileEnd (== '.')
+      . T.strip
+      . replacePrefixSafe "The" "A"
+      . T.unwords
+      . T.words
+      . T.replace "\8217" "'"
 
 tailSafe :: [a] -> [a]
 tailSafe = \case
   []     -> []
   _ : xs -> xs
+
+replacePrefixSafe :: Text -> Text -> Text -> Text
+replacePrefixSafe p r t =
+  if p `T.isPrefixOf` t then r <> T.drop (T.length p) t else t
 
 prepareForPlain :: Pandoc -> Pandoc
 prepareForPlain = topDown removeEmph
