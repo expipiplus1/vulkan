@@ -25,11 +25,12 @@ import           Spec.Types
 
 vkExceptionRenderElement
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => (Documentee -> Maybe Documentation)
+  => SpecFlavor
+  -> (Documentee -> Maybe Documentation)
   -> Enum'
   -> Sem r RenderElement
-vkExceptionRenderElement getDocumentation vkResultEnum =
-  genRe "VulkanException declaration" $ do
+vkExceptionRenderElement specFlavor getDocumentation vkResultEnum =
+  genRe "Exception declaration" $ do
     tellExplicitModule =<< mkModuleName ["Exception"]
     tellNotReexportable
     RenderParams {..} <- input
@@ -39,18 +40,23 @@ vkExceptionRenderElement getDocumentation vkResultEnum =
     tellExport (EData exceptionTypeName)
     tellExport (ETerm (TermName "resultString"))
     let resultPatterns = evName <$> eValues vkResultEnum
-    cases <- V.mapMaybe id
-      <$> forV resultPatterns (displayExceptionCase getDocumentation)
+    let lower, upper :: Doc ()
+        (lower, upper) = case specFlavor of
+          SpecVk -> ("vulkan", "Vulkan")
+          SpecXr -> ("openxr", "OpenXR")
+    cases <- V.mapMaybe id <$> forV
+      resultPatterns
+      (displayExceptionCase specFlavor getDocumentation)
     tellDoc [qci|
-        -- | This exception is thrown from calls to marshalled Vulkan commands
-        -- which return a negative VkResult.
-        newtype {exceptionTypeName} = {exceptionTypeName} \{ vulkanExceptionResult :: {vkResultTyDoc} }
+        -- | This exception is thrown from calls to marshalled {upper} commands
+        -- which return a negative 'Result'.
+        newtype {exceptionTypeName} = {exceptionTypeName} \{ {lower}ExceptionResult :: {vkResultTyDoc} }
           deriving (Eq, Ord, Read, Show)
 
         instance Exception {exceptionTypeName} where
           displayException ({exceptionTypeName} r) = show r ++ ": " ++ resultString r
 
-        -- | A human understandable message for each VkResult
+        -- | A human understandable message for each 'Result'
         resultString :: {vkResultTyDoc} -> String
         resultString = \case
         {indent 2 . vcat $ V.toList cases}
@@ -59,15 +65,18 @@ vkExceptionRenderElement getDocumentation vkResultEnum =
 
 displayExceptionCase
   :: HasRenderParams r
-  => (Documentee -> Maybe Documentation)
+  => SpecFlavor
+  -> (Documentee -> Maybe Documentation)
   -> CName
   -> Sem r (Maybe (Doc ()))
-displayExceptionCase getDocumentation pat = do
+displayExceptionCase specFlavor getDocumentation pat = do
   RenderParams {..} <- input
   let pat' = mkPatternName pat
-  pure $ fmap
-    ((pretty pat' <+> "->") <+>)
-    (documentationToString =<< getDocumentation (Nested "VkResult" pat))
+      res  = case specFlavor of
+        SpecVk -> "VkResult"
+        SpecXr -> "XrResult"
+  pure $ fmap ((pretty pat' <+> "->") <+>)
+              (documentationToString =<< getDocumentation (Nested res pat))
 
 -- | Get a string expression from some documentation
 documentationToString :: Documentation -> Maybe (Doc ())
