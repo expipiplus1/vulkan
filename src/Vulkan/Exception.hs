@@ -1,12 +1,14 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "Exception"
-module Vulkan.Exception  (VulkanException(..)) where
+module Vulkan.Exception  ( VulkanException(..)
+                         , resultString
+                         ) where
 
 import GHC.Exception.Type (Exception(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 -- | This exception is thrown from calls to marshalled Vulkan commands
--- which return a negative VkResult.
+-- which return a negative 'Result'.
 newtype VulkanException = VulkanException { vulkanExceptionResult :: Result }
   deriving (Eq, Ord, Read, Show)
 

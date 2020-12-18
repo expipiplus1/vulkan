@@ -37,6 +37,7 @@ vkExceptionRenderElement getDocumentation vkResultEnum =
     vkResultTyDoc <- renderType =<< cToHsType DoNotPreserve successCodeType
     tellImportWithAll (mkTyName (eName vkResultEnum))
     tellExport (EData exceptionTypeName)
+    tellExport (ETerm (TermName "resultString"))
     let resultPatterns = evName <$> eValues vkResultEnum
     cases <- V.mapMaybe id
       <$> forV resultPatterns (displayExceptionCase getDocumentation)

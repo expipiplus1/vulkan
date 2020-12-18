@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Expose `resultString :: Result -> String`
 
 ## [3.10.1] - 2021-03-31
 - Bump API version to v1.2.174
