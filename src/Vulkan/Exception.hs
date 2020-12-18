@@ -15,7 +15,7 @@ newtype VulkanException = VulkanException { vulkanExceptionResult :: Result }
 instance Exception VulkanException where
   displayException (VulkanException r) = show r ++ ": " ++ resultString r
 
--- | A human understandable message for each VkResult
+-- | A human understandable message for each 'Result'
 resultString :: Result -> String
 resultString = \case
   SUCCESS -> "Command successfully completed"
