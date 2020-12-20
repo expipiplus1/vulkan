@@ -7,29 +7,27 @@ module Build
   , Actions
   , runActions
   , runActionsWithRecreator
-  , DoRecreate (..)
+  , DoRecreate(..)
   , actionsGraph
   , Action
   , use
+  , useEq
+  , useOld
   ) where
 
-import           Algebra.Graph.AdjacencyIntMap  (AdjacencyIntMap,  fromAdjacencyIntSets
+import           Algebra.Graph.AdjacencyIntMap  ( AdjacencyIntMap
+                                                , fromAdjacencyIntSets
                                                 , induce
                                                 , postIntSet
                                                 , transitiveClosure
-                                                , transpose
+
                                                 )
 import           Algebra.Graph.AdjacencyIntMap.Algorithm
                                                 ( topSort )
 import           Barbies
-import           Barbies.Bare
-import           Barbies.Constraints            ( Dict(Dict) )
 import           Control.Monad
 import           Control.Monad.Fix
 import           Control.Monad.Trans.Class
-import           Control.Monad.Trans.Cont       ( ContT
-                                                , callCC
-                                                )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.State
 import           Data.Bifunctor
@@ -47,21 +45,17 @@ import qualified Data.IntMap                   as Map
 import           Data.IntMap.Strict             ( IntMap )
 import qualified Data.IntSet                   as Set
 import           Data.IntSet                    ( IntSet )
-import           Data.Kind                      ( Type )
-import           Data.List                      ( find
-                                                , intercalate
+import           Data.List                      ( intercalate
                                                 )
-import           Data.Maybe
 import           Data.Some                      ( Some(Some) )
 import           Data.Type.Equality             ( (:~:)(Refl) )
-import           Data.Typeable                  ( Typeable )
-import           Debug.Trace
-import           Type.Reflection                ( typeRep )
 import           Unsafe.Coerce                  ( unsafeCoerce )
+import Data.Functor.Compose
+import Data.Bool
+import Data.Foldable
+import Data.Maybe
 
-newtype Ref s a = Ref
-  { unRef :: Int
-  }
+newtype Ref s a = Ref { unRef :: Int }
   deriving (Show)
 
 instance GEq (Ref s) where
@@ -77,177 +71,305 @@ instance GCompare (Ref s) where
     GT -> GGT
 
 
-data Action s (m :: Type -> Type) a where
-  Pure ::a -> Action s m a
-  Ap ::Action s m (a -> b) -> Action s m a -> Action s m b
-  FMap ::(a -> b) -> Action s m a -> Action s m b
+data Action s a where
+  Pure ::a -> Action s a
+  Ap ::Action s (a -> b) -> Action s a -> Action s b
+  FMap ::(a -> b) -> Action s a -> Action s b
   -- This has to be lazy so that the MonadFix instance for Actions is useful
-  UseRef :: ~(Ref s a) -> Action s m a
+  UseRef :: Cond a -> ~(Ref s a) -> Action s a
+  UseOldRef :: ~(Ref s a) -> Action s (Maybe a)
 
-instance Functor (Action s m) where
+instance Functor (Action s) where
   fmap = FMap
-instance Applicative (Action s m) where
+instance Applicative (Action s) where
   pure  = Pure
   (<*>) = Ap
 
-runAction :: Monad m => Action s m a -> ([Some (Ref s)], LookupRef s m a)
+data Dep s a where
+  Dep :: { _depRef :: Ref s a
+         , _depCond :: Cond a
+         } -> Dep s a
+
+newtype Cond a = Cond (a -> a -> Bool)
+
+runAction
+  :: Monad m
+  => Action s a
+  -> (([Some (Dep s)], [Some (Ref s)]), LookupRef s m a)
 runAction = \case
-  Pure a -> ([], pure a)
+  Pure a -> (mempty, pure a)
   Ap f x ->
-    let (fds, f') = runAction f
-        (xds, x') = runAction x
-    in  (fds <> xds, f' <*> x')
-  FMap f x -> let (xds, x') = runAction x in (xds, f <$> x')
-  UseRef r -> ([Some r], lookupRef r)
+    let f' = Compose $ runAction f
+        x' = Compose $ runAction x
+    in  getCompose $ f' <*> x'
+  FMap   f x  -> getCompose . fmap f . Compose . runAction $ x
+  UseRef c r  -> (([Some (Dep r c)], []), lookupRef r)
+  UseOldRef r -> (([], [Some r]), lookupOldRef r)
 
 ----------------------------------------------------------------
 -- Action
 ----------------------------------------------------------------
 
-use :: Ref s a -> Action s m a
-use = UseRef
+use :: Ref s a -> Action s a
+use = useCond (\_ _ -> True)
+
+-- | A shorthand for @'useCond' (/=)@
+useEq :: Eq a => Ref s a -> Action s a
+useEq = useCond (/=)
+
+-- | Compare the old and the new values for this dependency, becomes an edge in
+-- the dependency graph if this predicate returns True
+useCond :: (a -> a -> Bool) -> Ref s a -> Action s a
+useCond p = UseRef (Cond p)
+
+useOld :: Ref s a -> Action s (Maybe a)
+useOld = UseOldRef
 
 ----------------------------------------------------------------
 -- Actions
 ----------------------------------------------------------------
 
-newtype Actions s m a = Actions { unActions :: State (ActionsState s m) a }
+newtype Actions s m a = Actions { _unActions :: State (ActionsState s m) a }
   deriving (Functor, Applicative, Monad, MonadFix)
 
 data ActionsState s m = ActionsState
-  { asNextRef :: Int
-  , asCreate  :: DMap (Ref s) (LookupRef s m)
-  , asDepends :: IntMap IntSet
-  , asNames   :: IntMap String
+  { asNextRef    :: Int
+  , asCreate     :: DMap (Ref s) (LookupRef s m)
+  , asDepends    :: IntMap (DMap (Ref s) Cond)
+  , asOldDepends :: IntMap IntSet
+  , asNames      :: IntMap String
   }
 
-initialActionState = ActionsState { asNextRef = 0
-                                  , asCreate  = mempty
-                                  , asDepends = mempty
-                                  , asNames   = mempty
+initialActionState :: ActionsState s m
+initialActionState = ActionsState { asNextRef    = 0
+                                  , asCreate     = mempty
+                                  , asDepends    = mempty
+                                  , asOldDepends = mempty
+                                  , asNames      = mempty
                                   }
 
 sortRefs
-  :: AdjacencyIntMap -> [Some (Ref s)] -> ActionsState s m -> [DSum (Ref s) (LookupRef s m)]
-sortRefs graph initRefs ActionsState {..} =
-  let initInts = [ i | Some (Ref i) <- initRefs ]
-      reachable =
+  :: AdjacencyIntMap
+  -> IntSet
+  -> ActionsState s m
+  -> [DSum (Ref s) (LookupRef s m)]
+sortRefs graph initInts ActionsState {..} =
+  let reachable =
         let t = transitiveClosure graph
         in  Set.unions
-              (Set.fromList initInts : [ postIntSet i t | i <- initInts ])
+              (initInts : [ postIntSet i t | i <- Set.toList initInts ])
       filtered = induce (`Set.member` reachable) graph
       sorted   = reverse $ case topSort filtered of
-        Left  c -> error "cycle in graph"
+        Left  _ -> error "cycle in graph"
         Right r -> r
       acts = DMap.toAscList asCreate
-  in   (acts !!) <$> sorted
-
-closeDirty
-  :: AdjacencyIntMap -> [Some (Ref s)] -> IntSet
-closeDirty graph dirty =
-  let dirtyInts = [ i | Some (Ref i) <- dirty ]
-      reachable =
-        let t = transitiveClosure graph
-        in  Set.unions
-              (Set.fromList dirtyInts : [ postIntSet i t | i <- dirtyInts ])
-  in reachable
+  in  (acts !!) <$> sorted
 
 create
   :: forall m a s
    . Monad m
   => String
-  -> Action s m (m a)
+  -> Action s (m a)
   -> Actions s m (Ref s a)
 create name act = do
   r <- newRef @s @m @a
-  let (actDepends, actCreate) = runAction act
+  let ((actDepends, actOldDepends), actCreate) = runAction act
+      addCondDepends new old =
+        Map.insert (unRef r) (DMap.fromList [ d :=> c | Some (Dep d c) <- new ]) old
+      addDepends new old =
+        Map.insert (unRef r) (Set.fromList [ d | Some (Ref d) <- new ]) old
   Actions $ modify'
-    (\as -> as
-      { asCreate  = DMap.insert r (lift =<< actCreate) (asCreate as)
-      , asDepends = Map.insert
-                      (unRef r)
-                      (Set.fromList [ d | Some (Ref d) <- actDepends ])
-                      (asDepends as)
-      , asNames   = Map.insert (unRef r) name (asNames as)
-      }
+    (\as -> as { asCreate     = DMap.insert r (lift =<< actCreate) (asCreate as)
+               , asDepends    = addCondDepends actDepends (asDepends as)
+               , asOldDepends = addDepends actOldDepends (asOldDepends as)
+               , asNames      = Map.insert (unRef r) name (asNames as)
+               }
     )
   pure r
+
+unCondDeps :: DMap (Ref s) f -> IntSet
+unCondDeps = Set.fromList . fmap (\(Some (Ref r)) -> r) . DMap.keys
+
+makeNew
+  :: (Foldable t, Monad m)
+  => t (DSum (Ref s) (LookupRef s m))
+  -> (DMap (Ref s) Identity -> b)
+  -> m b
+makeNew sorted fromResolved = do
+  resolved <- foldM
+    (\done (r :=> m) -> do
+      m' <- runLookupRef mempty done m
+      pure $ DMap.insert r (Identity m') done
+    )
+    mempty
+    sorted
+  pure $ fromResolved resolved
 
 runActions
   :: (Monad m, TraversableB f)
   => (forall s . Actions s m (f (Ref s)))
   -> m (f Identity)
-runActions a = undefined -- snd (runActionsWithRecreator a)
+runActions (Actions c) =
+  let (rs, s@ActionsState {..}) = runState c initialActionState
+      needed                    = bfoldMap (Set.singleton . unRef) rs
+      graph =
+        fromAdjacencyIntSets
+          . fmap (fmap unCondDeps)
+          . Map.toList
+          $ asDepends
+      sorted = sortRefs graph needed s
+      fromResolved resolved =
+        runIdentity
+          . runLookupRef mempty resolved
+          . btraverse (fmap Identity . lookupRef)
+          $ rs
+  in  makeNew sorted fromResolved
 
 runActionsWithRecreator
-  :: (Monad m, TraversableB f, ApplicativeB f)
+  :: forall m f
+   . (Monad m, TraversableB f, ApplicativeB f)
   => (forall s . Actions s m (f (Ref s)))
   -> (Recreator m f, m (f Identity))
 runActionsWithRecreator (Actions c) =
   let
     (rs, s@ActionsState {..}) = runState c initialActionState
-    needed                    = bfoldMap ((: []) . Some) rs
-    graph    = fromAdjacencyIntSets . Map.toList $ asDepends
-    transposed = transpose graph
-    sorted                    = sortRefs graph needed s
-    fromResolved resolved =
+    needed                    = bfoldMap (Set.singleton . unRef) rs
+    graph =
+      fromAdjacencyIntSets . fmap (fmap unCondDeps) . Map.toList $ asDepends
+    sorted = sortRefs graph needed s
+    fromResolved oldMap resolved =
       runIdentity
-        . runLookupRef resolved
+        . runLookupRef oldMap resolved
         . btraverse (fmap Identity . lookupRef)
         $ rs
 
-    makeNew = do
-      resolved <- foldM
-        (\done (r :=> m) -> do
-          m' <- runLookupRef done m
-          pure $ DMap.insert r (Identity m') done
-        )
-        mempty
-        sorted
-      pure $ fromResolved resolved
+    reverseDeps :: DMap (Ref ()) CondDependees
+    reverseDeps = DMap.fromListWithKey
+      (const (<>))
+      [ childRef :=> CondDependees [(p, cond)]
+      | (p, children)       <- Map.toList asDepends
+      , (childRef :=> cond) <- DMap.toList children
+      ]
+
+    realiseOldRef
+      :: forall a
+       . RefMap ()
+      -> Ref () a
+      -> StateT (RefMap (), IntSet) m (Identity a)
+    realiseOldRef oldRefs ref = case DMap.lookup ref oldRefs of
+      Just v  -> pure v
+      Nothing -> Identity <$> realiseRef (Just oldRefs) ref
+
+    realiseRef
+      :: forall a
+       . Maybe ( RefMap ())
+      -> Ref () a
+      -> StateT (RefMap (), IntSet) m a
+    realiseRef oldRefsMb ref = do
+      (refsWeHave, foundDirty) <- get
+      case DMap.lookup ref refsWeHave of
+        Just v -> pure (runIdentity v)
+        Nothing
+          | unRef ref `Set.notMember` foundDirty, Just oldRefs <- oldRefsMb, Just r <- DMap.lookup
+            ref
+            oldRefs -> do
+            modify' (first $ DMap.insert ref r)
+            pure $ runIdentity r
+        Nothing -> do
+          -- First make sure that all the dependencies are accounted for by
+          -- building them if they're missing
+          let deps = Map.findWithDefault mempty (unRef ref) asDepends
+          for_ (DMap.toList deps)
+            $ \(depRef :=> _) -> realiseRef oldRefsMb (coerce depRef)
+          let oldDeps = Map.findWithDefault mempty (unRef ref) asOldDepends
+          case oldRefsMb of
+            Nothing -> pure ()
+            Just oldRefs ->
+               for_ (Set.toList oldDeps)
+              $ realiseOldRef oldRefs
+              . Ref
+
+          -- Then create this value
+          let ourCreate =
+                DMap.findWithDefault (error "missing ref creator") ref asCreate
+          newRefs <- gets fst
+          r       <- lift $ runLookupRef (fromMaybe mempty oldRefsMb) newRefs ourCreate
+          modify' (first $ DMap.insert ref (Identity r))
+          pure r
+
+    regenRef
+      :: Maybe (RefMap ()) -> Ref () a -> StateT (RefMap (), IntSet) m (Identity a)
+    regenRef oldRefs ref = do
+      r <- realiseRef oldRefs ref
+      -- Mark its dependees as dirty if they fail the condition
+      let CondDependees dependees =
+            DMap.findWithDefault mempty ref reverseDeps
+          dirtyDependees = Set.fromList
+            [ d
+            | (d, Cond cond) <- dependees
+            , case DMap.lookup ref =<< oldRefs of
+              Nothing              -> True
+              Just (Identity oldR) -> cond oldR r
+            ]
+      modify' $ second (Set.union dirtyDependees)
+      pure $ Identity r
 
     recreate dirty old = do
-      let dirtyRefs = bfoldMap
+      let initialDirtyRefs = bfoldMap
             (\case
-              Pair DoRecreate r -> [Some r]
-              _                 -> []
+              Pair DoRecreate (Ref r) -> Set.singleton r
+              _                       -> mempty
             )
             (bzip dirty rs)
-          dirtyClosure = closeDirty transposed dirtyRefs
           oldRefs = bfoldMap (\(Pair r v) -> DMap.singleton r v) (bzip rs old)
-      resolved <- foldM
-        (\done (r :=> m) -> do
-          let new = Identity <$> runLookupRef done m
-          m' <- if unRef r `Set.member` dirtyClosure
-            then new
-            else maybe new pure (DMap.lookup r oldRefs)
-          pure $ DMap.insert r m' done
-        )
-        mempty
-        sorted
-      pure $ fromResolved resolved
-  in
-    (recreate, makeNew)
 
-type Recreator m f
-  = f DoRecreate -> f Identity -> m (f Identity)
+      let
+
+      flip evalStateT (mempty, initialDirtyRefs) $ btraverse
+        (\case
+          -- We have been explicitly asked to recreate this one
+          Pair DoRecreate    (Pair _        ref) -> regenRef (Just oldRefs) ref
+          Pair DoNotRecreate (Pair oldValue ref) -> do
+            foundDirty <- gets snd
+            if unRef ref `Set.member` foundDirty
+              then regenRef (Just oldRefs) ref
+              else pure oldValue
+        )
+        (bzip dirty (bzip old rs))
+
+    createNew = do
+      flip evalStateT mempty $ btraverse (regenRef mempty) rs
+  in
+    (recreate, createNew)
+
+newtype CondDependees a = CondDependees [(Int, Cond a)]
+  deriving newtype (Semigroup, Monoid)
+
+type Recreator m f = f DoRecreate -> f Identity -> m (f Identity)
 
 data DoRecreate a = DoRecreate | DoNotRecreate
 
 -- | Generate a graphviz description for this set of actions
 --
--- >>> actionsGraph $ do pure ()
--- "digraph G {}"
---
--- >>> actionsGraph $ do create "foo" (pure (Identity ()))
+-- Dependencies on old values are shown with dotted lines
 actionsGraph :: Actions s m a -> String
 actionsGraph (Actions c) =
   let ActionsState {..} = execState c initialActionState
-      edges = [ (p, c) | (p, cs) <- Map.toList asDepends, c <- Set.toList cs ]
+      toEdges ds = [ (p, child) | (p, cs) <- Map.toList ds, child <- Set.toList cs ]
+      edges    = toEdges (unCondDeps <$> asDepends)
+      oldEdges = toEdges asOldDepends
   in  "digraph G {"
         <> intercalate
              ";"
              (  [ show a <> "->" <> show b | (a, b) <- edges ]
+             <> [ show a
+                  <> "->"
+                  <> show b
+                  <> " [style=dashed"
+                  <> bool "" ";dir=back" (a == b)
+                  <> "]"
+                | (a, b) <- oldEdges
+                ]
              <> [ show n <> " [label=" <> show name <> "]"
                 | (n, name) <- Map.toList asNames
                 ]
@@ -258,16 +380,26 @@ actionsGraph (Actions c) =
 --
 ----------------------------------------------------------------
 
-newtype LookupRef s m a = LookupRef { unLookupRef :: ReaderT (DMap (Ref s) Identity) m a }
+type RefMap s = DMap (Ref s) Identity
+data LookupData s = LookupData
+  { ldOldRefMap :: RefMap s
+  , ldRefMap    :: RefMap s
+  }
+newtype LookupRef s m a = LookupRef { _unLookupRef :: ReaderT (LookupData s) m a }
   deriving newtype (Functor, Applicative, Monad, MonadTrans)
 
-runLookupRef :: DMap (Ref s) Identity -> LookupRef s m a -> m a
-runLookupRef r (LookupRef x) = runReaderT x r
+runLookupRef :: RefMap s -> RefMap s -> LookupRef s m a -> m a
+runLookupRef oldRefMap refMap (LookupRef x) =
+  runReaderT x (LookupData oldRefMap refMap)
 
 lookupRef :: Monad m => Ref s a -> LookupRef s m a
 lookupRef r = do
-  a <- LookupRef . asks $ DMap.lookup r
+  a <- LookupRef . asks $ DMap.lookup r . ldRefMap
   pure $ maybe (error ("lookupRef: missing ref: " <> show r)) runIdentity a
+
+lookupOldRef :: Monad m => Ref s a -> LookupRef s m (Maybe a)
+lookupOldRef r =
+  fmap (fmap runIdentity) . LookupRef . asks $ DMap.lookup r . ldOldRefMap
 
 ----------------------------------------------------------------
 -- Utils
@@ -279,357 +411,3 @@ newRef = Actions $ do
   let r = asNextRef as
   put (as { asNextRef = succ r })
   pure $ Ref r
-
-  {-
-module Build
-  ( Ref
-  , create
-  , use
-  , useEq
-  , Actions
-  , actionsGraph
-  , runActions
-  -- , runActionsWithRecreator
-  , runActionsWithRecreator'
-  , DoRecreate(..)
-  ) where
-
-import           Barbies
-import           Barbies.Bare
-import           Barbies.Constraints            ( Dict(Dict) )
-import           Control.Monad
-import           Control.Monad.Trans.Class
-import           Control.Monad.Trans.State
-import           Data.Bifunctor
-import           Data.Coerce                    ( coerce )
-import           Data.Dependent.Map             ( DMap )
-import qualified Data.Dependent.Map            as DMap
-import           Data.Functor.Identity
-import           Data.Functor.Product
-import           Data.GADT.Compare              ( GCompare(..)
-                                                , GEq(..)
-                                                , GOrdering(GEQ, GGT, GLT)
-                                                )
-import qualified Data.IntMap                   as Map
-import           Data.IntMap.Strict             ( IntMap )
-import qualified Data.IntSet                   as Set
-import           Data.IntSet                    ( IntSet )
-import           Data.List                      ( find
-                                                , intercalate
-                                                )
-import           Data.Maybe
-import           Data.Some                      ( Some(Some) )
-import           Data.Type.Equality             ( (:~:)(Refl) )
-import           Data.Typeable                  ( Typeable )
-import           Debug.Trace
-import           Type.Reflection                ( typeRep )
-
-----------------------------------------------------------------
--- Resource Graph
---
--- The problem is that there are dependencies in the construction of resources,
--- so when one resource goes out of date such as the swapchain, the resources
--- created from it are also out of date and must be regenerated.
-----------------------------------------------------------------
-
-----------------------------------------------------------------
--- Actions
-----------------------------------------------------------------
-
-create
-  :: (Monad m, Typeable a)
-  => String
-  -> Action s m (m a)
-  -> Actions s m (Ref s m a)
-create name a = Actions $ do
-  let deps = actionDepends a
-  ActionsState {..} <- get
-  let n = asNextRef
-      r = Ref { refRef    = n
-              , refName   = name
-              , refCreate = cached t (lift =<< runAction a)
-              }
-      t = TRef r
-  put
-    (ActionsState
-      { asNextRef  = succ n
-      , asVertices = Some t : asVertices
-      , asEdges    = [ (refRef d, n) | Some (TRef d) <- deps ] <> asEdges
-      }
-    )
-  pure r
-
---
--- Consuming actions
---
-
--- | Generate a graphviz description for this set of actions
---
--- >>> actionsGraph $ do pure ()
--- "digraph G {}"
---
--- >>> actionsGraph $ do create "foo" (pure (Identity ()))
-actionsGraph :: Actions s m a -> String
-actionsGraph (Actions c) =
-  let ActionsState {..} = execState c initialActionState
-  in  "digraph G {"
-        <> intercalate
-             ";"
-             (  [ show a <> "->" <> show b | (a, b) <- asEdges ]
-             <> [ show n <> " [label=" <> show name <> "]"
-                | Some (TRef (Ref n name _)) <- asVertices
-                ]
-             )
-        <> "}"
-
-runActions
-  :: (BareB f, Monad m, TraversableB (f Covered))
-  => (forall s . Actions s m (f Covered (Ref s m)))
-  -> m (f Bare Identity)
-runActions (Actions c) =
-  let hs = evalState c initialActionState
-  in  runCache
-        $ fmap bstrip
-        . btraverse (\Ref {..} -> Identity <$> refCreate)
-        $ hs
-
-data DoRecreate a = DoRecreate | DoNotRecreate
-
-closure :: (Int -> IntSet) -> IntSet -> IntSet
-closure f xs =
-  let xs' = Set.unions (xs : (f <$> Set.toList xs))
-  in  if Set.size xs == Set.size xs' then xs else closure f xs'
-
-dependencyClosure :: ActionsState s m -> [Vertex] -> [Vertex]
-dependencyClosure ActionsState {..} =
-  let childMap :: IntMap IntSet
-      childMap = Map.fromListWith
-        (<>)
-        [ (unVertex p, Set.singleton (unVertex c)) | (p, c) <- asEdges ]
-      children :: Int -> IntSet
-      children = (\k -> Map.findWithDefault Set.empty k childMap)
-  in  coerce . Set.toList . closure children . Set.fromList . coerce
-
-dirtyClosure
-  :: forall f m s
-   . (BareB f, Monad m, TraversableB (f Covered), ApplicativeB (f Covered))
-  => f Covered (Ref s m)
-  -> ActionsState s m
-  -> f Covered DoRecreate
-  -> f Covered DoRecreate
-dirtyClosure refs finalState dirty =
-  let initialDirtyVertices :: [Vertex]
-      initialDirtyVertices = bfoldMap
-        (\case
-          Pair DoRecreate    Ref { refRef } -> [refRef]
-          Pair DoNotRecreate _              -> []
-        )
-        (bzip dirty refs)
-      allDirtyVertices = dependencyClosure finalState initialDirtyVertices
-  in  bmap
-        (\case
-          Ref { refRef } ->
-            if refRef `elem` allDirtyVertices then DoRecreate else DoNotRecreate
-        )
-        refs
-
-type Recreator m f
-  = f Covered DoRecreate -> f Bare Identity -> m (f Bare Identity)
-
--- runActionsWithRecreator
---   :: (BareB f, Monad m, TraversableB (f Covered), ApplicativeB (f Covered))
---   => (forall s . Actions s m (f Covered (Ref s m)))
---   -> (Recreator m f, m (f Bare Identity))
--- runActionsWithRecreator (Actions c) =
---   let (refs, finalState) = runState c initialActionState
---       generate =
---         fmap bstrip . btraverse (\Ref {..} -> Identity <$> refCreate) $ refs
---       new = runCache generate
---       recreator initialDirty old =
---         let closedDirty = dirtyClosure refs finalState initialDirty
---             clean       = bfoldMap
---               (\case
---                 Pair DoRecreate    _          -> mempty
---                 Pair DoNotRecreate (Pair v r) -> DMap.singleton r v
---               )
---               (bzip closedDirty (bzip (bcover old) refs))
---         in  runCacheWithInitial clean generate
---   in  (recreator, new)
-
-{-# ANN runActionsWithRecreator' ("Hlint: ignore Use Just" :: String) #-}
-runActionsWithRecreator'
-  :: forall f m
-   . (BareB f, Monad m, TraversableB (f Covered), ApplicativeB (f Covered))
-  => (forall s . Actions s m (f Covered (Ref s m)))
-  -> (Recreator m f, m (f Bare Identity))
-runActionsWithRecreator' (Actions c) =
-  let (refs, finalState) = runState c initialActionState
-      generate =
-        fmap bstrip . btraverse (\Ref {..} -> Identity <$> refCreate) $ refs
-      makeNew = runCache generate
-      recreator initialDirty old =
-        let
-            -- Find the Refs of these dirty elements
-            initialDirtyVertices :: [Some (Ref () m)]
-            initialDirtyVertices = bfoldMap
-              (\case
-                Pair DoRecreate    r -> [Some r]
-                Pair DoNotRecreate _ -> mempty
-              )
-              (bzip initialDirty refs)
-
-            -- Get all the references
-            allVertices :: [Some (Ref () m)]
-            allVertices = bfoldMap (\r -> [Some r]) refs
-            -- And a map from Vertices to Refs
-            findRef :: Vertex -> Some (Ref () m)
-            findRef v = fromMaybe
-              (error "missing ref")
-              (find (\(Some Ref { refRef }) -> refRef == v) allVertices)
-
-            oldCache = undefined
-            -- oldCache = bfoldMap (\(Pair r v) -> DMap.singleton r v)
-            --                     (bzip refs (bcover old))
-
-            -- Accumulate a map of replacements
-            newVerts :: CacheT (TRef () m) m (DMap (Ref () m) Identity)
-            newVerts = undefined
-            -- flip evalStateT (initialDirtyVertices, DMap.empty)
-            --   $ let
-            --       go = get >>= \case
-            --         -- If there are no dirty vertices we are done
-            --         ([], new) -> pure new
-            --         -- If there is a dirty vertex:
-            --         (Some r@(TRef Ref { refRef, refCreate }) : rs, _) -> do
-            --           -- Recreate it, find its children and add them to the
-            --           -- pending list, also insert the new result into the
-            --           -- replacements
-            --           x' <- lift $ removeFromCache r *> refCreate
-            --           let
-            --             irefEq = Nothing
-            --             eq     = fromMaybe False $ do
-            --               Dict          <- irefEq
-            --               Identity oldX <- DMap.lookup r oldCache
-            --               pure (x' == oldX)
-            --             dirtyRefs =
-            --               [ findRef child
-            --               | (p, child) <- asEdges finalState
-            --               , p == refRef
-            --               ]
-            --           unless eq
-            --             $ modify'
-            --                 (bimap (const (dirtyRefs <> rs))
-            --                        (DMap.insert r (Identity x'))
-            --                 )
-            --           go
-            --     in  go
-        in  undefined
-        -- do
-        --   m <- runCacheWithInitial oldCache newVerts
-        --   pure . bstrip $ bzipWith (\o ref -> fromMaybe o (DMap.lookup ref m))
-        --                            (bcover old)
-        --                            refs
-  in  (recreator, makeNew)
-----------------------------------------------------------------
--- Action
-----------------------------------------------------------------
-
-data Ref s m a = Ref
-  { refRef    :: Vertex
-  , refName   :: String
-  , refCreate :: ~(CacheT (TRef s m) m a)
-  }
-  deriving Functor
-
-data TRef s m a where
-  TRef ::Typeable a => { unTRef :: Ref s m a } -> TRef s m a
-
-instance GEq (TRef s m) where
-  geq h1 h2 = case gcompare h1 h2 of
-    GEQ -> Just Refl
-    _   -> Nothing
-
-instance GCompare (TRef s m) where
-  gcompare (TRef r1 :: TRef s m a) (TRef r2 :: TRef s m b) =
-    case compare (refRef r1) (refRef r2) of
-      LT -> GLT
-      EQ -> gcompare (typeRep @a) (typeRep @b)
-      GT -> GGT
-
-data Action s m a where
-  Pure ::a -> Action s m a
-  Ap ::Action s m (a -> b) -> Action s m a -> Action s m b
-  FMap ::(a -> b) -> Action s m a -> Action s m b
-  UseRef ::Maybe (Dict Eq a) -> TRef s m a -> Action s m a
-
-instance Functor m => Functor (Action s m) where
-  fmap = FMap
-
-instance Applicative m => Applicative (Action s m) where
-  pure  = Pure
-  (<*>) = Ap
-
-use :: Typeable a => Ref s m a -> Action s m a
-use = UseRef Nothing . TRef
-
-useEq :: (Typeable a, Eq a) => Ref s m a -> Action s m a
-useEq = UseRef (Just Dict) . TRef
-
-runAction :: Monad m => Action s m a -> CacheT (TRef s m) m a
-runAction = \case
-  Pure a -> pure a
-  Ap f x ->
-    let f' = runAction f
-        x' = runAction x
-    in  f' <*> x'
-  FMap   f x               -> f <$> runAction x
-  UseRef _ (TRef Ref {..}) -> refCreate
-
-actionDepends :: Applicative m => Action s m a -> [Some (TRef s m)]
-actionDepends = \case
-  Pure _     -> mempty
-  Ap     f x -> actionDepends f <> actionDepends x
-  FMap   _ x -> actionDepends x
-  UseRef _ h -> [Some h]
-
-newtype Vertex = Vertex { unVertex :: Int }
-  deriving (Eq, Ord, Enum)
-  deriving newtype Show
-
-data ActionsState s m = ActionsState
-  { asNextRef  :: Vertex
-  , asVertices :: [Some (TRef s m)]
-  , asEdges    :: [(Vertex, Vertex)]
-  }
-
-initialActionState :: ActionsState s m
-initialActionState = ActionsState (Vertex 0) [] []
-
-newtype Actions s m a = Actions { _unActions :: State (ActionsState s m) a }
-  deriving newtype (Functor, Applicative, Monad)
-
-----------------------------------------------------------------
--- Simple cache
-----------------------------------------------------------------
-
-newtype CacheT k m a = CacheT { _unCacheT :: StateT (DMap k Identity) m a }
-  deriving newtype (Functor, Applicative, Monad, MonadTrans)
-
-cached :: (GCompare k, Monad m) => k a -> CacheT k m a -> CacheT k m a
-cached k (CacheT v) = CacheT $ gets (DMap.lookup k) >>= \case
-  Nothing -> do
-    r <- v
-    modify' (DMap.insert k (Identity r))
-    pure r
-  Just (Identity r) -> pure r
-
-removeFromCache :: (GCompare k, Monad m) => k a -> CacheT k m ()
-removeFromCache k = CacheT $ modify' (DMap.delete k)
-
-runCache :: Monad m => CacheT k m a -> m a
-runCache = runCacheWithInitial DMap.empty
-
-runCacheWithInitial :: Monad m => DMap k Identity -> CacheT k m a -> m a
-runCacheWithInitial initial (CacheT a) = evalStateT a initial
--}
-
