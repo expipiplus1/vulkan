@@ -498,7 +498,7 @@ library
     extra-libraries:
         vulkan-1
   else
-    extra-libraries:
+    pkgconfig-depends:
         vulkan
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
