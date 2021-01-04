@@ -1238,8 +1238,8 @@ pattern FORMAT_G16_B16_R16_3PLANE_444_UNORM       = Format 1000156033
 -- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 -- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the BR plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G16_B16R16_2PLANE_422_UNORM        = Format 1000156032
 -- | 'FORMAT_G16_B16_R16_3PLANE_422_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has a 16-bit G component in each 16-bit word
@@ -1255,8 +1255,8 @@ pattern FORMAT_G16_B16R16_2PLANE_422_UNORM        = Format 1000156032
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the R plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G16_B16_R16_3PLANE_422_UNORM       = Format 1000156031
 -- | 'FORMAT_G16_B16R16_2PLANE_420_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has a 16-bit G component in each 16-bit word
@@ -1273,8 +1273,8 @@ pattern FORMAT_G16_B16_R16_3PLANE_422_UNORM       = Format 1000156031
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the BR plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G16_B16R16_2PLANE_420_UNORM        = Format 1000156030
 -- | 'FORMAT_G16_B16_R16_3PLANE_420_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has a 16-bit G component in each 16-bit word
@@ -1292,8 +1292,8 @@ pattern FORMAT_G16_B16R16_2PLANE_420_UNORM        = Format 1000156030
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the R plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G16_B16_R16_3PLANE_420_UNORM       = Format 1000156029
 -- | 'FORMAT_B16G16R16G16_422_UNORM' specifies a four-component, 64-bit
 -- format containing a pair of G components, an R component, and a B
@@ -1304,9 +1304,9 @@ pattern FORMAT_G16_B16_R16_3PLANE_420_UNORM       = Format 1000156029
 -- in the word in bytes 0..1, a 16-bit G component for the even /i/
 -- coordinate in the word in bytes 2..3, a 16-bit R component in the word
 -- in bytes 4..5, and a 16-bit G component for the odd /i/ coordinate in
--- the word in bytes 6..7. Images in this format /must/ be defined with a
--- width that is a multiple of two. For the purposes of the constraints on
--- copy extents, this format is treated as a compressed format with a 2×1
+-- the word in bytes 6..7. This format only supports images with a width
+-- that is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
 -- compressed texel block.
 pattern FORMAT_B16G16R16G16_422_UNORM             = Format 1000156028
 -- | 'FORMAT_G16B16G16R16_422_UNORM' specifies a four-component, 64-bit
@@ -1318,9 +1318,9 @@ pattern FORMAT_B16G16R16G16_422_UNORM             = Format 1000156028
 -- for the even /i/ coordinate in the word in bytes 0..1, a 16-bit B
 -- component in the word in bytes 2..3, a 16-bit G component for the odd
 -- /i/ coordinate in the word in bytes 4..5, and a 16-bit R component in
--- the word in bytes 6..7. Images in this format /must/ be defined with a
--- width that is a multiple of two. For the purposes of the constraints on
--- copy extents, this format is treated as a compressed format with a 2×1
+-- the word in bytes 6..7. This format only supports images with a width
+-- that is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
 -- compressed texel block.
 pattern FORMAT_G16B16G16R16_422_UNORM             = Format 1000156027
 -- | 'FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16' specifies an
@@ -1353,8 +1353,8 @@ pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = Format 1000156026
 -- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 -- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the BR plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = Format 1000156025
 -- | 'FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16' specifies an
 -- unsigned normalized /multi-planar format/ that has a 12-bit G component
@@ -1372,8 +1372,8 @@ pattern FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = Format 1000156025
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the R plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = Format 1000156024
 -- | 'FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16' specifies an unsigned
 -- normalized /multi-planar format/ that has a 12-bit G component in the
@@ -1391,8 +1391,8 @@ pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = Format 1000156024
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the BR plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = Format 1000156023
 -- | 'FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16' specifies an
 -- unsigned normalized /multi-planar format/ that has a 12-bit G component
@@ -1412,8 +1412,8 @@ pattern FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = Format 1000156023
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the R plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 = Format 1000156022
 -- | 'FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16' specifies a
 -- four-component, 64-bit format containing a pair of G components, an R
@@ -1426,10 +1426,10 @@ pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 = Format 1000156022
 -- word in bytes 2..3, a 12-bit R component in the top 12 bits of the word
 -- in bytes 4..5, and a 12-bit G component for the odd /i/ coordinate in
 -- the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of
--- each word unused. Images in this format /must/ be defined with a width
--- that is a multiple of two. For the purposes of the constraints on copy
--- extents, this format is treated as a compressed format with a 2×1
--- compressed texel block.
+-- each word unused. This format only supports images with a width that is
+-- a multiple of two. For the purposes of the constraints on copy extents,
+-- this format is treated as a compressed format with a 2×1 compressed
+-- texel block.
 pattern FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 = Format 1000156021
 -- | 'FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16' specifies a
 -- four-component, 64-bit format containing a pair of G components, an R
@@ -1442,10 +1442,10 @@ pattern FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 = Format 1000156021
 -- word in bytes 2..3, a 12-bit G component for the odd /i/ coordinate in
 -- the top 12 bits of the word in bytes 4..5, and a 12-bit R component in
 -- the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of
--- each word unused. Images in this format /must/ be defined with a width
--- that is a multiple of two. For the purposes of the constraints on copy
--- extents, this format is treated as a compressed format with a 2×1
--- compressed texel block.
+-- each word unused. This format only supports images with a width that is
+-- a multiple of two. For the purposes of the constraints on copy extents,
+-- this format is treated as a compressed format with a 2×1 compressed
+-- texel block.
 pattern FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 = Format 1000156020
 -- | 'FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16' specifies a four-component,
 -- 64-bit unsigned normalized format that has a 12-bit R component in the
@@ -1495,8 +1495,8 @@ pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = Format 1000156016
 -- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 -- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the BR plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = Format 1000156015
 -- | 'FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16' specifies an
 -- unsigned normalized /multi-planar format/ that has a 10-bit G component
@@ -1514,8 +1514,8 @@ pattern FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = Format 1000156015
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the R plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = Format 1000156014
 -- | 'FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16' specifies an unsigned
 -- normalized /multi-planar format/ that has a 10-bit G component in the
@@ -1533,8 +1533,8 @@ pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = Format 1000156014
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the BR plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = Format 1000156013
 -- | 'FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16' specifies an
 -- unsigned normalized /multi-planar format/ that has a 10-bit G component
@@ -1554,8 +1554,8 @@ pattern FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = Format 1000156013
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the R plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 = Format 1000156012
 -- | 'FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16' specifies a
 -- four-component, 64-bit format containing a pair of G components, an R
@@ -1568,10 +1568,10 @@ pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 = Format 1000156012
 -- word in bytes 2..3, a 10-bit R component in the top 10 bits of the word
 -- in bytes 4..5, and a 10-bit G component for the odd /i/ coordinate in
 -- the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of
--- each word unused. Images in this format /must/ be defined with a width
--- that is a multiple of two. For the purposes of the constraints on copy
--- extents, this format is treated as a compressed format with a 2×1
--- compressed texel block.
+-- each word unused. This format only supports images with a width that is
+-- a multiple of two. For the purposes of the constraints on copy extents,
+-- this format is treated as a compressed format with a 2×1 compressed
+-- texel block.
 pattern FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 = Format 1000156011
 -- | 'FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16' specifies a
 -- four-component, 64-bit format containing a pair of G components, an R
@@ -1584,10 +1584,10 @@ pattern FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 = Format 1000156011
 -- word in bytes 2..3, a 10-bit G component for the odd /i/ coordinate in
 -- the top 10 bits of the word in bytes 4..5, and a 10-bit R component in
 -- the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of
--- each word unused. Images in this format /must/ be defined with a width
--- that is a multiple of two. For the purposes of the constraints on copy
--- extents, this format is treated as a compressed format with a 2×1
--- compressed texel block.
+-- each word unused. This format only supports images with a width that is
+-- a multiple of two. For the purposes of the constraints on copy extents,
+-- this format is treated as a compressed format with a 2×1 compressed
+-- texel block.
 pattern FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 = Format 1000156010
 -- | 'FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16' specifies a four-component,
 -- 64-bit unsigned normalized format that has a 10-bit R component in the
@@ -1633,8 +1633,8 @@ pattern FORMAT_G8_B8_R8_3PLANE_444_UNORM          = Format 1000156006
 -- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 -- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the BR plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G8_B8R8_2PLANE_422_UNORM           = Format 1000156005
 -- | 'FORMAT_G8_B8_R8_3PLANE_422_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has an 8-bit G component in plane 0, an 8-bit
@@ -1649,8 +1649,8 @@ pattern FORMAT_G8_B8R8_2PLANE_422_UNORM           = Format 1000156005
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width that
--- is a multiple of two.
+-- the R plane. This format only supports images with a width that is a
+-- multiple of two.
 pattern FORMAT_G8_B8_R8_3PLANE_422_UNORM          = Format 1000156004
 -- | 'FORMAT_G8_B8R8_2PLANE_420_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has an 8-bit G component in plane 0, and a
@@ -1666,8 +1666,8 @@ pattern FORMAT_G8_B8_R8_3PLANE_422_UNORM          = Format 1000156004
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the BR plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G8_B8R8_2PLANE_420_UNORM           = Format 1000156003
 -- | 'FORMAT_G8_B8_R8_3PLANE_420_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has an 8-bit G component in plane 0, an 8-bit
@@ -1684,8 +1684,8 @@ pattern FORMAT_G8_B8R8_2PLANE_420_UNORM           = Format 1000156003
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
--- the R plane. Images in this format /must/ be defined with a width and
--- height that is a multiple of two.
+-- the R plane. This format only supports images with a width and height
+-- that is a multiple of two.
 pattern FORMAT_G8_B8_R8_3PLANE_420_UNORM          = Format 1000156002
 -- | 'FORMAT_B8G8R8G8_422_UNORM' specifies a four-component, 32-bit format
 -- containing a pair of G components, an R component, and a B component,
@@ -1695,9 +1695,9 @@ pattern FORMAT_G8_B8_R8_3PLANE_420_UNORM          = Format 1000156002
 -- horizontal resolution of the image. This format has an 8-bit B component
 -- in byte 0, an 8-bit G component for the even /i/ coordinate in byte 1,
 -- an 8-bit R component in byte 2, and an 8-bit G component for the odd /i/
--- coordinate in byte 3. Images in this format /must/ be defined with a
--- width that is a multiple of two. For the purposes of the constraints on
--- copy extents, this format is treated as a compressed format with a 2×1
+-- coordinate in byte 3. This format only supports images with a width that
+-- is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
 -- compressed texel block.
 pattern FORMAT_B8G8R8G8_422_UNORM                 = Format 1000156001
 -- | 'FORMAT_G8B8G8R8_422_UNORM' specifies a four-component, 32-bit format
@@ -1708,9 +1708,9 @@ pattern FORMAT_B8G8R8G8_422_UNORM                 = Format 1000156001
 -- horizontal resolution of the image. This format has an 8-bit G component
 -- for the even /i/ coordinate in byte 0, an 8-bit B component in byte 1,
 -- an 8-bit G component for the odd /i/ coordinate in byte 2, and an 8-bit
--- R component in byte 3. Images in this format /must/ be defined with a
--- width that is a multiple of two. For the purposes of the constraints on
--- copy extents, this format is treated as a compressed format with a 2×1
+-- R component in byte 3. This format only supports images with a width
+-- that is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
 -- compressed texel block.
 pattern FORMAT_G8B8G8R8_422_UNORM                 = Format 1000156000
 {-# complete FORMAT_UNDEFINED,

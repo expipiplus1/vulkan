@@ -2668,10 +2668,11 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'PhysicalDeviceLimits' structure, respectively.
     largePoints :: Bool
   , -- | #features-alphaToOne# @alphaToOne@ specifies whether the implementation
-    -- is able to replace the alpha value of the color fragment output from the
-    -- fragment shader with the maximum representable alpha value for
-    -- fixed-point colors or 1.0 for floating-point colors. If this feature is
-    -- not enabled, then the @alphaToOneEnable@ member of the
+    -- is able to replace the alpha value of the fragment shader color output
+    -- in the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-covg Multisample Coverage>
+    -- fragment operation. If this feature is not enabled, then the
+    -- @alphaToOneEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' structure
     -- /must/ be set to 'Vulkan.Core10.FundamentalTypes.FALSE'. Otherwise
     -- setting @alphaToOneEnable@ to 'Vulkan.Core10.FundamentalTypes.TRUE' will

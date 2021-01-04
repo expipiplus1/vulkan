@@ -595,12 +595,13 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
     -- section.
     compareOp :: CompareOp
-  , -- | @minLod@ and @maxLod@ are the values used to clamp the computed LOD
-    -- value, as described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
-    -- section.
+  , -- | @minLod@ is used to clamp the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation minimum of the computed LOD value>.
     minLod :: Float
-  , -- No documentation found for Nested "VkSamplerCreateInfo" "maxLod"
+  , -- | @maxLod@ is used to clamp the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation maximum of the computed LOD value>.
+    -- To avoid clamping the maximum value, set @maxLod@ to the constant
+    -- 'Vulkan.Core10.APIConstants.LOD_CLAMP_NONE'.
     maxLod :: Float
   , -- | @borderColor@ is a 'Vulkan.Core10.Enums.BorderColor.BorderColor' value
     -- specifying the predefined border color to use.
