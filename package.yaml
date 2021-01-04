@@ -1,5 +1,5 @@
 name: vulkan
-version: "3.8.2"
+version: "3.8.3"
 synopsis: Bindings to the Vulkan graphics API.
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
