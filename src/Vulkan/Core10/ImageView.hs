@@ -959,6 +959,14 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
 --     @format@ /must/ be identical to the @format@ used to create @image@
 --
+-- -   #VUID-VkImageViewCreateInfo-format-04714# If @format@ has a @_422@
+--     or @_420@ suffix then @image@ /must/ have been created with a width
+--     that is a multiple of 2
+--
+-- -   #VUID-VkImageViewCreateInfo-format-04715# If @format@ has a @_420@
+--     suffix then @image@ /must/ have been created with a height that is a
+--     multiple of 2
+--
 -- -   #VUID-VkImageViewCreateInfo-pNext-01970# If the @pNext@ chain
 --     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'

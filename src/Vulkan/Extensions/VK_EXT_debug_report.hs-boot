@@ -37,7 +37,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2017-09-12
+--     2020-12-14
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -244,6 +244,22 @@
 -- __RESOLVED__: 'DEBUG_REPORT_DEBUG_BIT_EXT' specifies information that
 -- could be useful debugging the Vulkan implementation itself.
 --
+-- 4) How do you compare handles returned by the debug_report callback to
+-- the application’s handles?
+--
+-- RESOLVED: Due to the different nature of dispatchable and
+-- nondispatchable handles there is no generic way (that we know of) that
+-- works for common compilers with 32bit, 64bit, C and C++. We recommend
+-- applications use the same cast that the validation layers use:
+--
+-- +
+--
+-- > reinterpret_cast<uint64_t &>(dispatchableHandle)
+-- > (uint64_t)(nondispatchableHandle)
+--
+-- + This does require that the app treat dispatchable and nondispatchable
+-- handles differently.
+--
 -- == Version History
 --
 -- -   Revision 1, 2015-05-20 (Courtney Goetzenleuchter)
@@ -291,6 +307,11 @@
 -- -   Revision 9, 2017-09-12 (Tobias Hector)
 --
 --     -   Added interactions with Vulkan 1.1
+--
+-- -   Revision 10, 2020-12-14 (Courtney Goetzenleuchter)
+--
+--     -   Add issue 4 discussing matching handles returned by the
+--         extension, based on suggestion in public issue 368.
 --
 -- = See Also
 --

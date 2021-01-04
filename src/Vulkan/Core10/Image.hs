@@ -1103,6 +1103,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --
+-- -   #VUID-VkImageCreateInfo-format-04712# If @format@ has a @_422@ or
+--     @_420@ suffix, @width@ /must/ be a multiple of 2
+--
+-- -   #VUID-VkImageCreateInfo-format-04713# If @format@ has a @_420@
+--     suffix, @height@ /must/ be a multiple of 2
+--
 -- -   #VUID-VkImageCreateInfo-tiling-02261# If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then the @pNext@ chain /must/ include exactly one of

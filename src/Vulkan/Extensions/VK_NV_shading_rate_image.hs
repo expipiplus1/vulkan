@@ -767,9 +767,6 @@ instance Zero ShadingRatePaletteNV where
 --     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV'
 --
--- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-arraylength#
---     @viewportCount@ /must/ be greater than @0@
---
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'ShadingRatePaletteNV',

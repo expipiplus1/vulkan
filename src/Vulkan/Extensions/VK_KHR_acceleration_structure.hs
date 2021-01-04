@@ -4587,9 +4587,9 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
 --
 -- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-pAccelerationStructures-03579#
 --     Each acceleration structure in @pAccelerationStructures@ /must/ have
---     been created with 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' or
---     'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' and built with
---     'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR'
+--     been created with a @type@ of
+--     'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' or
+--     'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR'
 --
 -- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-pAccelerationStructures-03580#
 --     If the
@@ -4921,9 +4921,6 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 -- to being a 32-bit value.
 --
 -- == Valid Usage
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-maxVertex-03655#
---     @maxVertex@ /must/ be greater than @0@
 --
 -- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03735#
 --     @vertexStride@ /must/ be a multiple of the size in bytes of the
