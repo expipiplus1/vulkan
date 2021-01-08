@@ -44,9 +44,8 @@ import           Numeric
 import           CType
 import           Data.List                      ( lookup )
 import           Error
-import           Foreign                        ( Storable(poke) )
 import           Foreign.C.String               ( CString )
-import           Foreign.Storable               ( Storable )
+import           Foreign.Storable               ( Storable(poke) )
 import           Haskell                       as H
 import           Marshal.Marshalable
 import           Marshal.Scheme
