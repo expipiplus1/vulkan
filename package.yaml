@@ -23,10 +23,11 @@ library:
     - vector
   when:
     - condition: os(windows)
-      then:
-        extra-libraries: vulkan-1
-      else:
-        extra-libraries: vulkan
+      extra-libraries: vulkan-1
+    - condition: os(darwin)
+      extra-libraries: vulkan
+    - condition: "!os(windows) && !os(darwin)"
+      pkg-config-dependencies: vulkan
     - condition: flag(safe-foreign-calls)
       cpp-options: -DSAFE_FOREIGN_CALLS
     - condition: flag(generic-instances)

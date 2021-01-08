@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.2.
+-- This file has been generated from package.yaml by hpack version 0.34.3.
 --
 -- see: https://github.com/sol/hpack
 
@@ -497,7 +497,10 @@ library
   if os(windows)
     extra-libraries:
         vulkan-1
-  else
+  if os(darwin)
+    extra-libraries:
+        vulkan
+  if !os(windows) && !os(darwin)
     pkgconfig-depends:
         vulkan
   if flag(safe-foreign-calls)
