@@ -790,6 +790,11 @@ bespokeOptionality = \case
     "pBufferInfo"      -> Just (fromList [True])
     "pTexelBufferView" -> Just (fromList [True])
     _                  -> Nothing
+  -- Because we don't marshal ppGeometries, this is not actually optional
+  -- See https://github.com/expipiplus1/vulkan/issues/239
+  "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
+    "pGeometries" -> Just mempty
+    _             -> Nothing
   _ -> const Nothing
 
 bespokeLengths :: CName -> CName -> Maybe (Vector ParameterLength)
