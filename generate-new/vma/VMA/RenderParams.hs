@@ -124,7 +124,9 @@ renderParams handles = r
     , objectTypePattern              = const Nothing
     , extensibleStructTypeMemberName = Nothing
     , extensibleStructTypeType       = Nothing
-    , modulePrefix                   = "VulkanMemoryAllocator"
+    , -- TODO: Handle this a bit neater, this is Vulkan because we reuse what's
+      -- defined in Vulkan everywhere 'modulePrefix' is used
+      modulePrefix                   = "Vulkan"
     , commandOverrides               = const Nothing
     }
 
