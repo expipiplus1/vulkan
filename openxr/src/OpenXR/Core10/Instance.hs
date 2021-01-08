@@ -1297,16 +1297,6 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 24 :: Ptr ApplicationInfo)) (zero)
-    pEnabledApiLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      enabledApiLayerNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pEnabledApiLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) enabledApiLayerNames'') (mempty)
-    lift $ poke ((p `plusPtr` 304 :: Ptr (Ptr (Ptr CChar)))) (pEnabledApiLayerNames')
-    pEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      enabledExtensionNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) enabledExtensionNames'') (mempty)
-    lift $ poke ((p `plusPtr` 320 :: Ptr (Ptr (Ptr CChar)))) (pEnabledExtensionNames')
     lift $ f
 
 instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (InstanceCreateInfo es) where

@@ -2064,9 +2064,6 @@ instance (Extendss InteractionProfileSuggestedBinding es, PokeChain es) => ToCSt
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 16 :: Ptr Path)) (zero)
-    pSuggestedBindings' <- ContT $ allocaBytesAligned @ActionSuggestedBinding ((Data.Vector.length (mempty)) * 16) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pSuggestedBindings' `plusPtr` (16 * (i)) :: Ptr ActionSuggestedBinding) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr ActionSuggestedBinding))) (pSuggestedBindings')
     lift $ f
 
 instance (Extendss InteractionProfileSuggestedBinding es, PeekChain es) => FromCStruct (InteractionProfileSuggestedBinding es) where
@@ -2207,13 +2204,10 @@ instance ToCStruct SessionActionSetsAttachInfo where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_ACTION_SETS_ATTACH_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pActionSets' <- ContT $ allocaBytesAligned @(Ptr ActionSet_T) ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pActionSets' `plusPtr` (8 * (i)) :: Ptr (Ptr ActionSet_T)) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (Ptr ActionSet_T)))) (pActionSets')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_ACTION_SETS_ATTACH_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct SessionActionSetsAttachInfo where
   peekCStruct p = do
