@@ -197,6 +197,7 @@ import GHC.Show (showsPrec)
 import Numeric (showHex)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -233,6 +234,7 @@ import Data.Bits (FiniteBits)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -799,7 +801,7 @@ makePoolAllocationsLost allocator pool = liftIO . evalContT $ do
   pPLostAllocationCount <- ContT $ bracket (callocBytes @CSize 8) free
   lift $ traceAroundEvent "vmaMakePoolAllocationsLost" ((ffiVmaMakePoolAllocationsLost) (allocator) (pool) (pPLostAllocationCount))
   pLostAllocationCount <- lift $ peek @CSize pPLostAllocationCount
-  pure $ (((\(CSize a) -> a) pLostAllocationCount))
+  pure $ ((coerce @CSize @Word64 pLostAllocationCount))
 
 
 foreign import ccall
@@ -4014,7 +4016,7 @@ instance FromCStruct PoolCreateInfo where
     maxBlockCount <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     frameInUseCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pure $ PoolCreateInfo
-             memoryTypeIndex flags blockSize ((\(CSize a) -> a) minBlockCount) ((\(CSize a) -> a) maxBlockCount) frameInUseCount
+             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount
 
 instance Storable PoolCreateInfo where
   sizeOf ~_ = 40
@@ -4093,7 +4095,7 @@ instance FromCStruct PoolStats where
     unusedRangeSizeMax <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
     blockCount <- peek @CSize ((p `plusPtr` 40 :: Ptr CSize))
     pure $ PoolStats
-             size unusedSize ((\(CSize a) -> a) allocationCount) ((\(CSize a) -> a) unusedRangeCount) unusedRangeSizeMax ((\(CSize a) -> a) blockCount)
+             size unusedSize (coerce @CSize @Word64 allocationCount) (coerce @CSize @Word64 unusedRangeCount) unusedRangeSizeMax (coerce @CSize @Word64 blockCount)
 
 instance Storable PoolStats where
   sizeOf ~_ = 48
