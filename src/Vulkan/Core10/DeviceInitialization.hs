@@ -1481,16 +1481,6 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    pPpEnabledLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      ppEnabledLayerNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pPpEnabledLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledLayerNames'') (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledLayerNames')
-    pPpEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      ppEnabledExtensionNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pPpEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledExtensionNames'') (mempty)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledExtensionNames')
     lift $ f
 
 instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (InstanceCreateInfo es) where
@@ -1958,13 +1948,7 @@ instance ToCStruct PhysicalDeviceMemoryProperties where
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
-    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
-      throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e)) (mempty)
     poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
-    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
-      throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e)) (mempty)
     f
 
 instance FromCStruct PhysicalDeviceMemoryProperties where

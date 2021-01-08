@@ -498,9 +498,6 @@ instance (Extendss DeviceQueueCreateInfo es, PokeChain es) => ToCStruct (DeviceQ
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    pPQueuePriorities' <- ContT $ allocaBytesAligned @CFloat ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPQueuePriorities' `plusPtr` (4 * (i)) :: Ptr CFloat) (CFloat (e))) (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CFloat))) (pPQueuePriorities')
     lift $ f
 
 instance (Extendss DeviceQueueCreateInfo es, PeekChain es) => FromCStruct (DeviceQueueCreateInfo es) where
@@ -958,19 +955,6 @@ instance (Extendss DeviceCreateInfo es, PokeChain es) => ToCStruct (DeviceCreate
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    pPQueueCreateInfos' <- ContT $ allocaBytesAligned @(DeviceQueueCreateInfo _) ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPQueueCreateInfos' `plusPtr` (40 * (i)) :: Ptr (DeviceQueueCreateInfo _))) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (DeviceQueueCreateInfo _)))) (pPQueueCreateInfos')
-    pPpEnabledLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      ppEnabledLayerNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pPpEnabledLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledLayerNames'') (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledLayerNames')
-    pPpEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      ppEnabledExtensionNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pPpEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledExtensionNames'') (mempty)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledExtensionNames')
     lift $ f
 
 instance (Extendss DeviceCreateInfo es, PeekChain es) => FromCStruct (DeviceCreateInfo es) where

@@ -460,9 +460,6 @@ instance (Extendss BufferCreateInfo es, PokeChain es) => ToCStruct (BufferCreate
     lift $ poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
     lift $ poke ((p `plusPtr` 32 :: Ptr BufferUsageFlags)) (zero)
     lift $ poke ((p `plusPtr` 36 :: Ptr SharingMode)) (zero)
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ f
 
 instance (Extendss BufferCreateInfo es, PeekChain es) => FromCStruct (BufferCreateInfo es) where

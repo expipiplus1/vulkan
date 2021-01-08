@@ -893,13 +893,10 @@ instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPBindingFlags' <- ContT $ allocaBytesAligned @DescriptorBindingFlags ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags' `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags))) (pPBindingFlags')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
   peekCStruct p = do
@@ -983,13 +980,10 @@ instance ToCStruct DescriptorSetVariableDescriptorCountAllocateInfo where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPDescriptorCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorCounts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDescriptorCounts')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct DescriptorSetVariableDescriptorCountAllocateInfo where
   peekCStruct p = do

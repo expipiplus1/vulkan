@@ -1064,12 +1064,9 @@ instance ToCStruct SparseBufferMemoryBindInfo where
     lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Buffer)) (zero)
-    pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (mempty)) * 40) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Buffer)) (zero)
+    f
 
 instance FromCStruct SparseBufferMemoryBindInfo where
   peekCStruct p = do
@@ -1135,12 +1132,9 @@ instance ToCStruct SparseImageOpaqueMemoryBindInfo where
     lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (zero)
-    pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (mempty)) * 40) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Image)) (zero)
+    f
 
 instance FromCStruct SparseImageOpaqueMemoryBindInfo where
   peekCStruct p = do
@@ -1215,12 +1209,9 @@ instance ToCStruct SparseImageMemoryBindInfo where
     lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (zero)
-    pPBinds' <- ContT $ allocaBytesAligned @SparseImageMemoryBind ((Data.Vector.length (mempty)) * 64) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (64 * (i)) :: Ptr SparseImageMemoryBind) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseImageMemoryBind))) (pPBinds')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Image)) (zero)
+    f
 
 instance FromCStruct SparseImageMemoryBindInfo where
   peekCStruct p = do
@@ -1421,21 +1412,6 @@ instance (Extendss BindSparseInfo es, PokeChain es) => ToCStruct (BindSparseInfo
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_SPARSE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    pPWaitSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPWaitSemaphores')
-    pPBufferBinds' <- ContT $ allocaBytesAligned @SparseBufferMemoryBindInfo ((Data.Vector.length (mempty)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferBinds' `plusPtr` (24 * (i)) :: Ptr SparseBufferMemoryBindInfo) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SparseBufferMemoryBindInfo))) (pPBufferBinds')
-    pPImageOpaqueBinds' <- ContT $ allocaBytesAligned @SparseImageOpaqueMemoryBindInfo ((Data.Vector.length (mempty)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageOpaqueBinds' `plusPtr` (24 * (i)) :: Ptr SparseImageOpaqueMemoryBindInfo) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SparseImageOpaqueMemoryBindInfo))) (pPImageOpaqueBinds')
-    pPImageBinds' <- ContT $ allocaBytesAligned @SparseImageMemoryBindInfo ((Data.Vector.length (mempty)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageBinds' `plusPtr` (24 * (i)) :: Ptr SparseImageMemoryBindInfo) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr SparseImageMemoryBindInfo))) (pPImageBinds')
-    pPSignalSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 88 :: Ptr (Ptr Semaphore))) (pPSignalSemaphores')
     lift $ f
 
 instance (Extendss BindSparseInfo es, PeekChain es) => FromCStruct (BindSparseInfo es) where

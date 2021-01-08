@@ -159,13 +159,10 @@ instance ToCStruct FramebufferAttachmentsCreateInfo where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPAttachmentImageInfos' <- ContT $ allocaBytesAligned @FramebufferAttachmentImageInfo ((Data.Vector.length (mempty)) * 48) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachmentImageInfos' `plusPtr` (48 * (i)) :: Ptr FramebufferAttachmentImageInfo) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr FramebufferAttachmentImageInfo))) (pPAttachmentImageInfos')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct FramebufferAttachmentsCreateInfo where
   peekCStruct p = do
@@ -266,17 +263,14 @@ instance ToCStruct FramebufferAttachmentImageInfo where
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 20 :: Ptr ImageUsageFlags)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    pPViewFormats' <- ContT $ allocaBytesAligned @Format ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPViewFormats' `plusPtr` (4 * (i)) :: Ptr Format) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Format))) (pPViewFormats')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 20 :: Ptr ImageUsageFlags)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    f
 
 instance FromCStruct FramebufferAttachmentImageInfo where
   peekCStruct p = do
@@ -355,13 +349,10 @@ instance ToCStruct RenderPassAttachmentBeginInfo where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPAttachments' <- ContT $ allocaBytesAligned @ImageView ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (8 * (i)) :: Ptr ImageView) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ImageView))) (pPAttachments')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct RenderPassAttachmentBeginInfo where
   peekCStruct p = do

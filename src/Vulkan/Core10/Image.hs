@@ -1475,9 +1475,6 @@ instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateIn
     lift $ poke ((p `plusPtr` 52 :: Ptr ImageTiling)) (zero)
     lift $ poke ((p `plusPtr` 56 :: Ptr ImageUsageFlags)) (zero)
     lift $ poke ((p `plusPtr` 60 :: Ptr SharingMode)) (zero)
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ poke ((p `plusPtr` 80 :: Ptr ImageLayout)) (zero)
     lift $ f
 

@@ -2920,12 +2920,6 @@ instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruc
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (mempty)) * 48) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
-    pPGroups' <- ContT $ allocaBytesAligned @RayTracingShaderGroupCreateInfoKHR ((Data.Vector.length (mempty)) * 48) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPGroups' `plusPtr` (48 * (i)) :: Ptr RayTracingShaderGroupCreateInfoKHR) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr RayTracingShaderGroupCreateInfoKHR))) (pPGroups')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 80 :: Ptr PipelineLayout)) (zero)
     lift $ poke ((p `plusPtr` 96 :: Ptr Int32)) (zero)

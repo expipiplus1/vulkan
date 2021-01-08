@@ -214,9 +214,6 @@ instance ToCStruct PhysicalDeviceGroupProperties where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    unless ((Data.Vector.length $ (mempty)) <= MAX_DEVICE_GROUP_SIZE) $
-      throwIO $ IOError Nothing InvalidArgument "" "physicalDevices is too long, a maximum of MAX_DEVICE_GROUP_SIZE elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE (Ptr PhysicalDevice_T))))) `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (mempty)
     poke ((p `plusPtr` 280 :: Ptr Bool32)) (boolToBool32 (zero))
     f
 
@@ -311,13 +308,10 @@ instance ToCStruct DeviceGroupDeviceCreateInfo where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPPhysicalDevices' <- ContT $ allocaBytesAligned @(Ptr PhysicalDevice_T) ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPPhysicalDevices' `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (Ptr PhysicalDevice_T)))) (pPPhysicalDevices')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct DeviceGroupDeviceCreateInfo where
   peekCStruct p = do

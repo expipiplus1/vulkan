@@ -2304,9 +2304,6 @@ instance (Extendss DescriptorSetLayoutCreateInfo es, PokeChain es) => ToCStruct 
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    pPBindings' <- ContT $ allocaBytesAligned @DescriptorSetLayoutBinding ((Data.Vector.length (mempty)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindings' `plusPtr` (24 * (i)) :: Ptr DescriptorSetLayoutBinding) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayoutBinding))) (pPBindings')
     lift $ f
 
 instance (Extendss DescriptorSetLayoutCreateInfo es, PeekChain es) => FromCStruct (DescriptorSetLayoutCreateInfo es) where
@@ -2575,9 +2572,6 @@ instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (Desc
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    pPPoolSizes' <- ContT $ allocaBytesAligned @DescriptorPoolSize ((Data.Vector.length (mempty)) * 8) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
 
 instance (Extendss DescriptorPoolCreateInfo es, PeekChain es) => FromCStruct (DescriptorPoolCreateInfo es) where
@@ -2703,9 +2697,6 @@ instance (Extendss DescriptorSetAllocateInfo es, PokeChain es) => ToCStruct (Des
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorPool)) (zero)
-    pPSetLayouts' <- ContT $ allocaBytesAligned @DescriptorSetLayout ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPSetLayouts' `plusPtr` (8 * (i)) :: Ptr DescriptorSetLayout) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ f
 
 instance (Extendss DescriptorSetAllocateInfo es, PeekChain es) => FromCStruct (DescriptorSetAllocateInfo es) where

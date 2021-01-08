@@ -5,7 +5,7 @@
   https://github.com/expipiplus1/vulkan/issues/240
 - Remove explicit 'count' field in AccelerationStructureBuildGeometryInfoKHR.
   See https://github.com/expipiplus1/vulkan/issues/239
-
+- Do not bother poking empty vectors for zero pokes
 
 ## [3.8.3] - 2021-01-04
 - Bump API version to v1.2.166
