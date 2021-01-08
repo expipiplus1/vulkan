@@ -652,6 +652,7 @@ zeroMemberVal MarshaledStructMember {..} = case msmScheme of
     pure Nothing
   Custom CustomScheme { csZeroIsZero = True } -> pure Nothing
   Length{} -> pure Nothing
+  Vector{} -> pure Nothing
   s        -> zeroScheme s
 
 isCustom :: MarshalScheme a -> Bool
