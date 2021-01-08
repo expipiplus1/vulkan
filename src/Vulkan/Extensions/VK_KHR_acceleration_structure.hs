@@ -5913,27 +5913,9 @@ instance ToCStruct TransformMatrixKHR where
   cStructSize = 48
   cStructAlignment = 4
   pokeZeroCStruct p f = do
-    let pMatrixRow0' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray 4 CFloat)))
-    case ((zero, zero, zero, zero)) of
-      (e0, e1, e2, e3) -> do
-        poke (pMatrixRow0' :: Ptr CFloat) (CFloat (e0))
-        poke (pMatrixRow0' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-        poke (pMatrixRow0' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
-        poke (pMatrixRow0' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-    let pMatrixRow1' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray 4 CFloat)))
-    case ((zero, zero, zero, zero)) of
-      (e0, e1, e2, e3) -> do
-        poke (pMatrixRow1' :: Ptr CFloat) (CFloat (e0))
-        poke (pMatrixRow1' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-        poke (pMatrixRow1' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
-        poke (pMatrixRow1' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-    let pMatrixRow2' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 4 CFloat)))
-    case ((zero, zero, zero, zero)) of
-      (e0, e1, e2, e3) -> do
-        poke (pMatrixRow2' :: Ptr CFloat) (CFloat (e0))
-        poke (pMatrixRow2' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-        poke (pMatrixRow2' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
-        poke (pMatrixRow2' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
+    poke (p `plusPtr` 0) (CFloat 1)
+    poke (p `plusPtr` 20) (CFloat 1)
+    poke (p `plusPtr` 40) (CFloat 1)
     f
 
 instance FromCStruct TransformMatrixKHR where
@@ -5963,10 +5945,10 @@ instance Storable TransformMatrixKHR where
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero TransformMatrixKHR where
-  zero = TransformMatrixKHR
-           (zero, zero, zero, zero)
-           (zero, zero, zero, zero)
-           (zero, zero, zero, zero)
+ zero = TransformMatrixKHR
+          (1,0,0,0)
+          (0,1,0,0)
+          (0,0,1,0)
 
 
 -- | VkAccelerationStructureInstanceKHR - Structure specifying a single
