@@ -492,27 +492,31 @@ pokeZeroCStructDecl
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
-pokeZeroCStructDecl ms@MarshaledStruct {..} = context "ZeroCStruct" $ do
-  let replaceWithZeroChainPoke m = case msmScheme m of
-        Custom s@(CustomScheme "Chain" _ _ _ _ _) -> m
-          { msmScheme = Custom s { csDirectPoke = APoke $ const zeroNextPointer
-                                 }
-          }
-        _ -> m
-      ms' = ms { msMembers = replaceWithZeroChainPoke <$> msMembers }
-  pokeDoc <- renderPokes zeroMemberVal (IOAction $ pretty contVar) ms' >>= \case
-    ContTStmts d -> do
-      tellImport 'evalContT
-      pure $ "evalContT $" <+> d
-    IOStmts d -> pure d
+pokeZeroCStructDecl ms@MarshaledStruct {..}
+  | Just a <- bespokeZeroCStruct msName = a
+  | otherwise = context "ZeroCStruct" $ do
+    let replaceWithZeroChainPoke m = case msmScheme m of
+          Custom s@(CustomScheme "Chain" _ _ _ _ _) -> m
+            { msmScheme = Custom s
+                            { csDirectPoke = APoke $ const zeroNextPointer
+                            }
+            }
+          _ -> m
+        ms' = ms { msMembers = replaceWithZeroChainPoke <$> msMembers }
+    pokeDoc <-
+      renderPokes zeroMemberVal (IOAction $ pretty contVar) ms' >>= \case
+        ContTStmts d -> do
+          tellImport 'evalContT
+          pure $ "evalContT $" <+> d
+        IOStmts d -> pure d
 
-  addrVar' <- bool "_" addrVar . V.any isJust <$> forV msMembers zeroMemberVal
-  pure
-    $   "pokeZeroCStruct"
-    <+> pretty addrVar'
-    <+> pretty contVar
-    <+> "="
-    <+> pokeDoc
+    addrVar' <- bool "_" addrVar . V.any isJust <$> forV msMembers zeroMemberVal
+    pure
+      $   "pokeZeroCStruct"
+      <+> pretty addrVar'
+      <+> pretty contVar
+      <+> "="
+      <+> pokeDoc
 
 zeroInstanceDecl
   :: ( HasErr r
@@ -524,23 +528,35 @@ zeroInstanceDecl
      )
   => MarshaledStruct AStruct
   -> Sem r ()
-zeroInstanceDecl MarshaledStruct {..} = do
-  RenderParams {..} <- input
-  let n    = mkTyName msName
-      con  = mkConName msName msName
-      head = if hasChildren msStruct
-        then " " <> pretty structChainVar <> " ~ '[] =>"
-        else ""
-      tDoc = if hasChildren msStruct
-        then parens (pretty n <+> pretty structChainVar)
-        else pretty n
-  zeroMembers <- catMaybes . toList <$> forV msMembers (zeroScheme . msmScheme)
-  tellImportWithAll (TyConName "Zero")
-  tellDoc $ "instance" <> head <+> "Zero" <+> tDoc <+> "where" <> line <> indent
-    2
-    (vsep
-      ["zero =" <+> align (pretty con <> line <> indent 2 (vsep zeroMembers))]
-    )
+zeroInstanceDecl MarshaledStruct {..}
+  | Just a <- bespokeZeroInstances msName = a
+  | otherwise = do
+    RenderParams {..} <- input
+    let n    = mkTyName msName
+        con  = mkConName msName msName
+        head = if hasChildren msStruct
+          then " " <> pretty structChainVar <> " ~ '[] =>"
+          else ""
+        tDoc = if hasChildren msStruct
+          then parens (pretty n <+> pretty structChainVar)
+          else pretty n
+    zeroMembers <- catMaybes . toList <$> forV msMembers
+                                               (zeroScheme . msmScheme)
+    tellImportWithAll (TyConName "Zero")
+    tellDoc
+      $   "instance"
+      <>  head
+      <+> "Zero"
+      <+> tDoc
+      <+> "where"
+      <>  line
+      <>  indent
+            2
+            (vsep
+              [ "zero ="
+                  <+> align (pretty con <> line <> indent 2 (vsep zeroMembers))
+              ]
+            )
 
 renderPokes
   :: ( HasErr r
