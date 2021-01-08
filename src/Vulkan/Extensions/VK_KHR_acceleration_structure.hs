@@ -1266,7 +1266,6 @@ import Control.Monad.Trans.Cont (runContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Foreign.C.Types (CSize(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -5386,9 +5385,6 @@ data AccelerationStructureBuildGeometryInfoKHR = AccelerationStructureBuildGeome
   , -- | @dstAccelerationStructure@ points to the target acceleration structure
     -- for the build.
     dstAccelerationStructure :: AccelerationStructureKHR
-  , -- | @geometryCount@ specifies the number of geometries that will be built
-    -- into @dstAccelerationStructure@.
-    geometryCount :: Word32
   , -- | @pGeometries@ is a pointer to an array of
     -- 'AccelerationStructureGeometryKHR' structures.
     geometries :: Vector AccelerationStructureGeometryKHR
@@ -5412,21 +5408,10 @@ instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr BuildAccelerationStructureModeKHR)) (mode)
     lift $ poke ((p `plusPtr` 32 :: Ptr AccelerationStructureKHR)) (srcAccelerationStructure)
     lift $ poke ((p `plusPtr` 40 :: Ptr AccelerationStructureKHR)) (dstAccelerationStructure)
-    let pGeometriesLength = Data.Vector.length $ (geometries)
-    geometryCount'' <- lift $ if (geometryCount) == 0
-      then pure $ fromIntegral pGeometriesLength
-      else do
-        unless (fromIntegral pGeometriesLength == (geometryCount) || pGeometriesLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pGeometries must be empty or have 'geometryCount' elements" Nothing Nothing
-        pure (geometryCount)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (geometryCount'')
-    pGeometries'' <- if Data.Vector.null (geometries)
-      then pure nullPtr
-      else do
-        pPGeometries <- ContT $ allocaBytesAligned @AccelerationStructureGeometryKHR (((Data.Vector.length (geometries))) * 96) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries `plusPtr` (96 * (i)) :: Ptr AccelerationStructureGeometryKHR) (e) . ($ ())) ((geometries))
-        pure $ pPGeometries
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr AccelerationStructureGeometryKHR))) pGeometries''
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (geometries)) :: Word32))
+    pPGeometries' <- ContT $ allocaBytesAligned @AccelerationStructureGeometryKHR ((Data.Vector.length (geometries)) * 96) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries' `plusPtr` (96 * (i)) :: Ptr AccelerationStructureGeometryKHR) (e) . ($ ())) (geometries)
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr AccelerationStructureGeometryKHR))) (pPGeometries')
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr AccelerationStructureGeometryKHR)))) (nullPtr)
     ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr DeviceOrHostAddressKHR)) (scratchData) . ($ ())
     lift $ f
@@ -5437,13 +5422,15 @@ instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr AccelerationStructureTypeKHR)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr BuildAccelerationStructureModeKHR)) (zero)
+    pPGeometries' <- ContT $ allocaBytesAligned @AccelerationStructureGeometryKHR ((Data.Vector.length (mempty)) * 96) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries' `plusPtr` (96 * (i)) :: Ptr AccelerationStructureGeometryKHR) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr AccelerationStructureGeometryKHR))) (pPGeometries')
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr AccelerationStructureGeometryKHR)))) (nullPtr)
     ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr DeviceOrHostAddressKHR)) (zero) . ($ ())
     lift $ f
 
 instance Zero AccelerationStructureBuildGeometryInfoKHR where
   zero = AccelerationStructureBuildGeometryInfoKHR
-           zero
            zero
            zero
            zero
