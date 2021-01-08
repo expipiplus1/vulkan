@@ -90,23 +90,7 @@ let
       #
       # Overrides for examples
       #
-      pretty-simple = self.pretty-simple_4_0_0_0;
-      prettyprinter = self.prettyprinter_1_7_0;
-      derive-storable = self.callHackageDirect {
-        pkg = "derive-storable";
-        ver = "0.3.0.0";
-        sha256 = "0h9v6k1651acsqs64mkidqrflld7ghhbiir7z9f0wm8vrqwc6wyp";
-      } { };
-      derive-storable-plugin = self.callHackageDirect {
-        pkg = "derive-storable-plugin";
-        ver = "0.2.3.3";
-        sha256 = "07ikj9l5pzrh7khp0pr6pjgpygni12svfm14x0csvw0hgbsb0mnj";
-      } { };
-      nothunks = doJailbreak (self.callHackageDirect {
-        pkg = "nothunks";
-        ver = "0.1.2";
-        sha256 = "1xj5xvy3x3vixkj84cwsjl3m06z2zfszbcpxbz1j1ca83ha2gb7i";
-      } { });
+      nothunks = doJailbreak super.nothunks;
       # profiling
       eventlog2html = markUnbroken (doJailbreak (appendPatch
         (overrideSrc super.eventlog2html {
@@ -142,7 +126,7 @@ let
       #
       pandoc = appendPatch super.pandoc
         ../generate-new/patches/pandoc-haddock-tables.patch;
-      language-c = self.language-c_0_9;
+      language-c = self.language-c_0_9_0_1;
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = self.ghc.withPackages;
