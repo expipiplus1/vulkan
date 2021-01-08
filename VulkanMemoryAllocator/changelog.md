@@ -4,6 +4,7 @@
 
 - Calling traceEventIO before and after every VulkanMemoryAllocator command if
   `vulkan` was compiled with the `trace-calls` flag
+- Don't bother poking empty vectors in `withZeroCStruct`
 
 ## [0.3.11] - 2020-11-30
 
