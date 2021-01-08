@@ -104,10 +104,10 @@ jobs:
         sed -ibak '/examples/d' cabal.project
       if: matrix.ghc == '8.6.5'
 
-    - name: Remove generator for all but 8.10.2
+    - name: Remove generator for all but 8.10.3
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.10.2'
+      if: matrix.ghc != '8.10.3'
 
     # Because of https://github.com/actions/setup-haskell/issues/43 we can't
     # set the cabal version correctly

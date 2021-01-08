@@ -42,7 +42,6 @@ import           Bespoke
 import           CType
 import           CType.Size
 import           Data.ByteString.Extra          ( dropPrefix )
-import qualified Data.ByteString.Extra         as BS
 import           Error
 import           Marshal.Marshalable            ( ParameterLength(..) )
 import           Spec.APIConstant
