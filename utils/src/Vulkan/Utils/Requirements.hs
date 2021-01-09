@@ -27,6 +27,7 @@ import           Data.Foldable
 import           Data.Functor.Product           ( Product(..) )
 import qualified Data.HashMap.Strict           as Map
 import           Data.Kind                      ( Type )
+import           Data.List                      ( intercalate )
 import           Data.List.Extra                ( nubOrd )
 import           Data.Proxy
 import           Data.Semigroup                 ( Endo(..) )
@@ -58,7 +59,6 @@ import           Vulkan.NamedType
 import           Vulkan.Requirement
 import           Vulkan.Version
 import           Vulkan.Zero                    ( Zero(..) )
-import Data.List (intercalate)
 
 ----------------------------------------------------------------
 -- * Instance Creation
@@ -238,9 +238,7 @@ checkDeviceRequirements required optional phys baseCreateInfo = do
 --
 -- The returned struct chain will enable all required features and extensions.
 makeDeviceCreateInfo
-  :: [DeviceRequirement]
-  -> DeviceCreateInfo '[]
-  -> SomeStruct DeviceCreateInfo
+  :: [DeviceRequirement] -> DeviceCreateInfo '[] -> SomeStruct DeviceCreateInfo
 makeDeviceCreateInfo allReqs baseCreateInfo =
   let
     featureSetters :: DMap TypeRep (Product (Has KnownFeatureStruct) Endo)
@@ -254,7 +252,7 @@ makeDeviceCreateInfo allReqs baseCreateInfo =
     makeZeroFeatureExts =
       [ Endo (extendSomeStruct s)
       | _ :=> Pair Has (f :: Endo s) <- DMap.toList featureSetters
-      , ExtendedFeatureStruct <- pure $ sFeatureStruct @s
+      , ExtendedFeatureStruct        <- pure $ sFeatureStruct @s
       , let s = appEndo f zero
       ]
 
@@ -455,11 +453,8 @@ instance KnownChain '[] where
   knownChainNull = Just Refl
 
 instance (Typeable x, ToCStruct x, FromCStruct x, KnownChain xs) => KnownChain (x ': xs) where
-  has (px :: Proxy# a)
-    | Just Refl <- eqT @a @x
-    = Just (fst,first)
-    | otherwise
-    = ((. snd) *** (second .)) <$> has px
+  has (px :: Proxy# a) | Just Refl <- eqT @a @x = Just (fst, first)
+                       | otherwise = ((. snd) *** (second .)) <$> has px
   knownChainNull = Nothing
 
 getPropertyStruct
@@ -520,10 +515,7 @@ getLookupExtension mbPhys extensionLayers = do
 ----------------------------------------------------------------
 
 withDevicePropertyStructs
-  :: forall a
-   . [DeviceRequirement]
-  -> ChainCont DevicePropertyChain a
-  -> a
+  :: forall a . [DeviceRequirement] -> ChainCont DevicePropertyChain a -> a
 withDevicePropertyStructs = go @'[] []
  where
   go
@@ -546,10 +538,7 @@ withDevicePropertyStructs = go @'[] []
     _ : rs -> go @fs seen rs f
 
 withDeviceFeatureStructs
-  :: forall a
-   . [DeviceRequirement]
-  -> ChainCont DeviceFeatureChain a
-  -> a
+  :: forall a . [DeviceRequirement] -> ChainCont DeviceFeatureChain a -> a
 withDeviceFeatureStructs = go @'[] []
  where
   go
@@ -630,7 +619,7 @@ showVersion ver = intercalate "." [show ma, show mi, show pa]
   where MAKE_VERSION ma mi pa = ver
 
 data Has c a where
-  Has :: c a => Has c a
+  Has ::c a => Has c a
 
 instance Semigroup (Has c a) where
   Has <> _ = Has
