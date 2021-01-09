@@ -6,6 +6,8 @@
 - Remove explicit 'count' field in AccelerationStructureBuildGeometryInfoKHR.
   See https://github.com/expipiplus1/vulkan/issues/239
 - Do not bother poking empty vectors for zero pokes
+- Use `0` for spec version requirements for SPIRV Requirements, See
+  https://github.com/expipiplus1/vulkan/issues/249
 
 ## [3.8.3] - 2021-01-04
 - Bump API version to v1.2.166
