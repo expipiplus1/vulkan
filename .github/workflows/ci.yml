@@ -18,6 +18,12 @@ jobs:
           # https://github.com/haskell/cabal/issues/6421
           - ghc: 8.10.2
             os: macOS-latest
+          # ghc: loadArchive: Failed reading header from `/Users/runner/work/vulkan/vulkan/dist-newstyle/build/x86_64-osx/ghc-8.6.5/vulkan-3.8.3/build/Vulkan'
+          # ghc: panic! (the 'impossible' happened)
+          #   (GHC version 8.6.5 for x86_64-apple-darwin):
+          # 	loadArchive "/Users/runner/work/vulkan/vulkan/dist-newstyle/build/x86_64-osx/ghc-8.6.5/vulkan-3.8.3/build/Vulkan": failed
+          - ghc: 8.6.5
+            os: macOS-latest
           - os: windows-latest
             ghc: '8.10.2'
         include:
