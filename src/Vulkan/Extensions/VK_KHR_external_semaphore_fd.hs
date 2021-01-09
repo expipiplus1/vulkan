@@ -313,13 +313,14 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 --
 -- The handle types supported by @handleType@ are:
 --
--- +--------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | Handle Type                                                                                            | Transference         | Permanence Supported  |
--- +========================================================================================================+======================+=======================+
--- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT' | Reference            | Temporary,Permanent   |
--- +--------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT'   | Copy                 | Temporary             |
--- +--------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
+-- +--------------------------------------------------------------------------------------------------------+------------------+---------------------+
+-- | Handle Type                                                                                            | Transference     | Permanence          |
+-- |                                                                                                        |                  | Supported           |
+-- +========================================================================================================+==================+=====================+
+-- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT' | Reference        | Temporary,Permanent |
+-- +--------------------------------------------------------------------------------------------------------+------------------+---------------------+
+-- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT'   | Copy             | Temporary           |
+-- +--------------------------------------------------------------------------------------------------------+------------------+---------------------+
 --
 -- Handle Types Supported by 'ImportSemaphoreFdInfoKHR'
 --
