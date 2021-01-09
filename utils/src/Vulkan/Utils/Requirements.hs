@@ -27,6 +27,7 @@ import           Data.Foldable
 import           Data.Functor.Product           ( Product(..) )
 import qualified Data.HashMap.Strict           as Map
 import           Data.Kind                      ( Type )
+import           Data.List                      ( intercalate )
 import           Data.List.Extra                ( nubOrd )
 import           Data.Proxy
 import           Data.Semigroup                 ( Endo(..) )
@@ -58,7 +59,6 @@ import           Vulkan.NamedType
 import           Vulkan.Requirement
 import           Vulkan.Version
 import           Vulkan.Zero                    ( Zero(..) )
-import Data.List (intercalate)
 
 ----------------------------------------------------------------
 -- * Instance Creation
@@ -158,8 +158,15 @@ checkInstanceRequest foundVersion layerProps lookupExtension = \case
   RequireInstanceExtension { instanceExtensionLayerName, instanceExtensionName, instanceExtensionMinVersion }
     | Just eProps <- lookupExtension instanceExtensionLayerName
                                      instanceExtensionName
-    , specVersion (eProps :: ExtensionProperties) >= instanceExtensionMinVersion
-    -> Satisfied
+    -> let foundInstanceExtensionVersion =
+             specVersion (eProps :: ExtensionProperties)
+       in  if foundInstanceExtensionVersion >= instanceExtensionMinVersion
+             then Satisfied
+             else UnsatisfiedInstanceExtensionVersion
+               instanceExtensionName
+               (Unsatisfied instanceExtensionMinVersion
+                            foundInstanceExtensionVersion
+               )
     | otherwise
     -> UnsatisfiedInstanceExtension instanceExtensionName
 
@@ -231,9 +238,7 @@ checkDeviceRequirements required optional phys baseCreateInfo = do
 --
 -- The returned struct chain will enable all required features and extensions.
 makeDeviceCreateInfo
-  :: [DeviceRequirement]
-  -> DeviceCreateInfo '[]
-  -> SomeStruct DeviceCreateInfo
+  :: [DeviceRequirement] -> DeviceCreateInfo '[] -> SomeStruct DeviceCreateInfo
 makeDeviceCreateInfo allReqs baseCreateInfo =
   let
     featureSetters :: DMap TypeRep (Product (Has KnownFeatureStruct) Endo)
@@ -247,7 +252,7 @@ makeDeviceCreateInfo allReqs baseCreateInfo =
     makeZeroFeatureExts =
       [ Endo (extendSomeStruct s)
       | _ :=> Pair Has (f :: Endo s) <- DMap.toList featureSetters
-      , ExtendedFeatureStruct <- pure $ sFeatureStruct @s
+      , ExtendedFeatureStruct        <- pure $ sFeatureStruct @s
       , let s = appEndo f zero
       ]
 
@@ -322,8 +327,12 @@ checkDeviceRequest mbFeats mbProps lookupExtension = \case
   RequireDeviceExtension { deviceExtensionLayerName, deviceExtensionName, deviceExtensionMinVersion }
     | Just eProps <- lookupExtension deviceExtensionLayerName
                                      deviceExtensionName
-    , specVersion (eProps :: ExtensionProperties) >= deviceExtensionMinVersion
-    -> Satisfied
+    -> let foundVersion = specVersion (eProps :: ExtensionProperties)
+       in  if foundVersion >= deviceExtensionMinVersion
+             then Satisfied
+             else UnsatisfiedDeviceExtensionVersion
+               deviceExtensionName
+               (Unsatisfied deviceExtensionMinVersion foundVersion)
     | otherwise
     -> UnsatisfiedDeviceExtension deviceExtensionName
 
@@ -357,8 +366,12 @@ data RequirementResult
     -- ^ A propery was not an appropriate value
   | UnsatisfiedDeviceExtension ByteString
     -- ^ A device extension was missing
+  | UnsatisfiedDeviceExtensionVersion ByteString (Unsatisfied Word32)
+    -- ^ A device extension was found but the version didn't meet requirements
   | UnsatisfiedInstanceExtension ByteString
     -- ^ An instance extension was missing
+  | UnsatisfiedInstanceExtensionVersion ByteString (Unsatisfied Word32)
+    -- ^ An instance extension was found but the version didn't meet requirements
   deriving (Eq, Ord)
 
 data Unsatisfied a = Unsatisfied
@@ -404,10 +417,15 @@ prettyRequirementResult = \case
   UnsatisfiedDeviceVersion   u -> "Unsatisfied Device version: " <> p u
   UnsatisfiedLayerVersion n u ->
     "Unsatisfied layer version for " <> show n <> ": " <> p u
-  UnsatisfiedFeature           n -> "Missing feature: " <> show n
-  UnsatisfiedProperty          n -> "Unsatisfied property: " <> show n
-  UnsatisfiedInstanceExtension n -> "Couldn't find instance extension: " <> show n
-  UnsatisfiedDeviceExtension   n -> "Couldn't find device extension: " <> show n
+  UnsatisfiedFeature  n -> "Missing feature: " <> show n
+  UnsatisfiedProperty n -> "Unsatisfied property: " <> show n
+  UnsatisfiedInstanceExtension n ->
+    "Couldn't find instance extension: " <> show n
+  UnsatisfiedInstanceExtensionVersion n u ->
+    "Unsatisfied Instance extension version " <> show n <> " " <> p u
+  UnsatisfiedDeviceExtension n -> "Couldn't find device extension: " <> show n
+  UnsatisfiedDeviceExtensionVersion n u ->
+    "Unsatisfied Device extension version " <> show n <> " " <> p u
   where p = prettyUnsatisfied showVersion
 
 -- How I'm feeling after writing all this type level nonsense
@@ -435,11 +453,8 @@ instance KnownChain '[] where
   knownChainNull = Just Refl
 
 instance (Typeable x, ToCStruct x, FromCStruct x, KnownChain xs) => KnownChain (x ': xs) where
-  has (px :: Proxy# a)
-    | Just Refl <- eqT @a @x
-    = Just (fst,first)
-    | otherwise
-    = ((. snd) *** (second .)) <$> has px
+  has (px :: Proxy# a) | Just Refl <- eqT @a @x = Just (fst, first)
+                       | otherwise = ((. snd) *** (second .)) <$> has px
   knownChainNull = Nothing
 
 getPropertyStruct
@@ -500,10 +515,7 @@ getLookupExtension mbPhys extensionLayers = do
 ----------------------------------------------------------------
 
 withDevicePropertyStructs
-  :: forall a
-   . [DeviceRequirement]
-  -> ChainCont DevicePropertyChain a
-  -> a
+  :: forall a . [DeviceRequirement] -> ChainCont DevicePropertyChain a -> a
 withDevicePropertyStructs = go @'[] []
  where
   go
@@ -526,10 +538,7 @@ withDevicePropertyStructs = go @'[] []
     _ : rs -> go @fs seen rs f
 
 withDeviceFeatureStructs
-  :: forall a
-   . [DeviceRequirement]
-  -> ChainCont DeviceFeatureChain a
-  -> a
+  :: forall a . [DeviceRequirement] -> ChainCont DeviceFeatureChain a -> a
 withDeviceFeatureStructs = go @'[] []
  where
   go
@@ -610,7 +619,7 @@ showVersion ver = intercalate "." [show ma, show mi, show pa]
   where MAKE_VERSION ma mi pa = ver
 
 data Has c a where
-  Has :: c a => Has c a
+  Has ::c a => Has c a
 
 instance Semigroup (Has c a) where
   Has <> _ = Has

@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.4.1] - 2021-01-09
+- Better error message reporting on unsatisfied extension version. See
+  https://github.com/expipiplus1/vulkan/issues/249
+
 ## [0.4] - 2020-11-30
 
 - Add `Vulkan.Utils.Requirements`, a module with several helpers for the

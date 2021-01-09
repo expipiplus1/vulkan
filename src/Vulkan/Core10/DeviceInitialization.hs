@@ -520,25 +520,28 @@ foreign import ccall
 -- /must/ only be called with a dispatchable object (the first parameter)
 -- that is @device@ or a child of @device@.
 --
--- +----------------------+----------------------+-----------------------+
--- | @device@             | @pName@              | return value          |
--- +======================+======================+=======================+
--- | @NULL@               | *1                   | undefined             |
--- +----------------------+----------------------+-----------------------+
--- | invalid device       | *1                   | undefined             |
--- +----------------------+----------------------+-----------------------+
--- | device               | @NULL@               | undefined             |
--- +----------------------+----------------------+-----------------------+
--- | device               | core device-level    | fp3                   |
--- |                      | Vulkan command2      |                       |
--- +----------------------+----------------------+-----------------------+
--- | device               | enabled extension    | fp3                   |
--- |                      | device-level         |                       |
--- |                      | commands2            |                       |
--- +----------------------+----------------------+-----------------------+
--- | any other case, not  |                      | @NULL@                |
--- | covered above        |                      |                       |
--- +----------------------+----------------------+-----------------------+
+-- +------------------+------------------+------------------+
+-- | @device@         | @pName@          | return value     |
+-- +==================+==================+==================+
+-- | @NULL@           | *1               | undefined        |
+-- +------------------+------------------+------------------+
+-- | invalid device   | *1               | undefined        |
+-- +------------------+------------------+------------------+
+-- | device           | @NULL@           | undefined        |
+-- +------------------+------------------+------------------+
+-- | device           | core             | fp3              |
+-- |                  | device-level     |                  |
+-- |                  | Vulkan command2  |                  |
+-- +------------------+------------------+------------------+
+-- | device           | enabled          | fp3              |
+-- |                  | extension        |                  |
+-- |                  | device-level     |                  |
+-- |                  | commands2        |                  |
+-- +------------------+------------------+------------------+
+-- | any other case,  |                  | @NULL@           |
+-- | not covered      |                  |                  |
+-- | above            |                  |                  |
+-- +------------------+------------------+------------------+
 --
 -- 'getDeviceProcAddr' behavior
 --
@@ -606,33 +609,35 @@ foreign import ccall
 -- 'Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be cast to
 -- the type of the command being queried before use.
 --
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | @instance@           | @pName@                                                                 | return value          |
--- +======================+=========================================================================+=======================+
--- | *1                   | @NULL@                                                                  | undefined             |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | invalid non-@NULL@   | *1                                                                      | undefined             |
--- | instance             |                                                                         |                       |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | @NULL@               | 'getInstanceProcAddr'                                                   | fp4                   |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | @NULL@               | 'Vulkan.Core11.DeviceInitialization.enumerateInstanceVersion'           | fp                    |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | @NULL@               | 'Vulkan.Core10.ExtensionDiscovery.enumerateInstanceExtensionProperties' | fp                    |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | @NULL@               | 'Vulkan.Core10.LayerDiscovery.enumerateInstanceLayerProperties'         | fp                    |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | @NULL@               | 'createInstance'                                                        | fp                    |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | instance             | core Vulkan command                                                     | fp2                   |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | instance             | enabled instance extension commands for @instance@                      | fp2                   |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | instance             | available device extension3 commands for @instance@                     | fp2                   |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
--- | any other case, not  |                                                                         | @NULL@                |
--- | covered above        |                                                                         |                       |
--- +----------------------+-------------------------------------------------------------------------+-----------------------+
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | @instance@       | @pName@                                                                 | return value     |
+-- +==================+=========================================================================+==================+
+-- | *1               | @NULL@                                                                  | undefined        |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | invalid          | *1                                                                      | undefined        |
+-- | non-@NULL@       |                                                                         |                  |
+-- | instance         |                                                                         |                  |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | @NULL@           | 'getInstanceProcAddr'                                                   | fp4              |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | @NULL@           | 'Vulkan.Core11.DeviceInitialization.enumerateInstanceVersion'           | fp               |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | @NULL@           | 'Vulkan.Core10.ExtensionDiscovery.enumerateInstanceExtensionProperties' | fp               |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | @NULL@           | 'Vulkan.Core10.LayerDiscovery.enumerateInstanceLayerProperties'         | fp               |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | @NULL@           | 'createInstance'                                                        | fp               |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | instance         | core Vulkan command                                                     | fp2              |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | instance         | enabled instance extension commands for @instance@                      | fp2              |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | instance         | available device extension3 commands for @instance@                     | fp2              |
+-- +------------------+-------------------------------------------------------------------------+------------------+
+-- | any other case,  |                                                                         | @NULL@           |
+-- | not covered      |                                                                         |                  |
+-- | above            |                                                                         |                  |
+-- +------------------+-------------------------------------------------------------------------+------------------+
 --
 -- 'getInstanceProcAddr' behavior
 --
@@ -1481,16 +1486,6 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    pPpEnabledLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      ppEnabledLayerNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pPpEnabledLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledLayerNames'') (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledLayerNames')
-    pPpEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      ppEnabledExtensionNames'' <- ContT $ useAsCString (e)
-      lift $ poke (pPpEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledExtensionNames'') (mempty)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledExtensionNames')
     lift $ f
 
 instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (InstanceCreateInfo es) where
@@ -1958,13 +1953,7 @@ instance ToCStruct PhysicalDeviceMemoryProperties where
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
-    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
-      throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e)) (mempty)
     poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
-    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
-      throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e)) (mempty)
     f
 
 instance FromCStruct PhysicalDeviceMemoryProperties where

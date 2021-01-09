@@ -443,22 +443,23 @@ foreign import ccall
 -- bytes written to @pData@ /must/ be a header consisting of the following
 -- members:
 --
--- +--------+----------------------------------------+--------------------------------------------------+
--- | Offset | Size                                   | Meaning                                          |
--- +========+========================================+==================================================+
--- | 0      | 4                                      | length in bytes of the entire validation cache   |
--- |        |                                        | header written as a stream of bytes, with the    |
--- |        |                                        | least significant byte first                     |
--- +--------+----------------------------------------+--------------------------------------------------+
--- | 4      | 4                                      | a 'ValidationCacheHeaderVersionEXT' value        |
--- |        |                                        | written as a stream of bytes, with the least     |
--- |        |                                        | significant byte first                           |
--- +--------+----------------------------------------+--------------------------------------------------+
--- | 8      | 'Vulkan.Core10.APIConstants.UUID_SIZE' | a layer commit ID expressed as a UUID, which     |
--- |        |                                        | uniquely identifies the version of the           |
--- |        |                                        | validation layers used to generate these         |
--- |        |                                        | validation results                               |
--- +--------+----------------------------------------+--------------------------------------------------+
+-- +--------+----------------------------------------+------------------------------------------+
+-- | Offset | Size                                   | Meaning                                  |
+-- +========+========================================+==========================================+
+-- | 0      | 4                                      | length in bytes of the entire validation |
+-- |        |                                        | cache header written as a stream of      |
+-- |        |                                        | bytes, with the least significant byte   |
+-- |        |                                        | first                                    |
+-- +--------+----------------------------------------+------------------------------------------+
+-- | 4      | 4                                      | a 'ValidationCacheHeaderVersionEXT'      |
+-- |        |                                        | value written as a stream of bytes, with |
+-- |        |                                        | the least significant byte first         |
+-- +--------+----------------------------------------+------------------------------------------+
+-- | 8      | 'Vulkan.Core10.APIConstants.UUID_SIZE' | a layer commit ID expressed as a UUID,   |
+-- |        |                                        | which uniquely identifies the version of |
+-- |        |                                        | the validation layers used to generate   |
+-- |        |                                        | these validation results                 |
+-- +--------+----------------------------------------+------------------------------------------+
 --
 -- Layout for validation cache header version
 -- 'VALIDATION_CACHE_HEADER_VERSION_ONE_EXT'

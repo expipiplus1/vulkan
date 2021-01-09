@@ -59,138 +59,72 @@ import Vulkan.Core12 (PhysicalDeviceVulkan12Features(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties(..))
 import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_gpu_shader_int16 (pattern AMD_GPU_SHADER_INT16_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_gpu_shader_int16 (pattern AMD_GPU_SHADER_INT16_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_shader_ballot (pattern AMD_SHADER_BALLOT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_ballot (pattern AMD_SHADER_BALLOT_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter (pattern AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter (pattern AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_shader_fragment_mask (pattern AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_fragment_mask (pattern AMD_SHADER_FRAGMENT_MASK_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_shader_image_load_store_lod (pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_image_load_store_lod (pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_shader_trinary_minmax (pattern AMD_SHADER_TRINARY_MINMAX_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_trinary_minmax (pattern AMD_SHADER_TRINARY_MINMAX_SPEC_VERSION)
 import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (pattern AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (pattern AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_buffer_device_address (pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_buffer_device_address (pattern EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDEXING_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_post_depth_coverage (pattern EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_post_depth_coverage (pattern EXT_POST_DEPTH_COVERAGE_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (pattern EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (pattern EXT_SHADER_IMAGE_ATOMIC_INT64_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_shader_stencil_export (pattern EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_stencil_export (pattern EXT_SHADER_STENCIL_EXPORT_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_shader_subgroup_ballot (pattern EXT_SHADER_SUBGROUP_BALLOT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_subgroup_ballot (pattern EXT_SHADER_SUBGROUP_BALLOT_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_shader_subgroup_vote (pattern EXT_SHADER_SUBGROUP_VOTE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_subgroup_vote (pattern EXT_SHADER_SUBGROUP_VOTE_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_shader_viewport_index_layer (pattern EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_viewport_index_layer (pattern EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION)
 import Vulkan.Extensions.VK_EXT_transform_feedback (pattern EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_transform_feedback (pattern EXT_TRANSFORM_FEEDBACK_SPEC_VERSION)
 import Vulkan.Extensions.VK_GOOGLE_decorate_string (pattern GOOGLE_DECORATE_STRING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_GOOGLE_decorate_string (pattern GOOGLE_DECORATE_STRING_SPEC_VERSION)
 import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1 (pattern GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME)
-import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1 (pattern GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION)
 import Vulkan.Extensions.VK_GOOGLE_user_type (pattern GOOGLE_USER_TYPE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_GOOGLE_user_type (pattern GOOGLE_USER_TYPE_SPEC_VERSION)
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_8bit_storage (pattern KHR_8BIT_STORAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_8bit_storage (pattern KHR_8BIT_STORAGE_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (pattern KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_buffer_device_address (pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_buffer_device_address (pattern KHR_BUFFER_DEVICE_ADDRESS_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_create_renderpass2 (pattern KHR_CREATE_RENDERPASS_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_create_renderpass2 (pattern KHR_CREATE_RENDERPASS_2_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_deferred_host_operations (pattern KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_deferred_host_operations (pattern KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_device_group_creation (pattern KHR_DEVICE_GROUP_CREATION_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_device_group_creation (pattern KHR_DEVICE_GROUP_CREATION_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_device_group (pattern KHR_DEVICE_GROUP_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_device_group (pattern KHR_DEVICE_GROUP_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (pattern KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_fragment_shading_rate (pattern KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (pattern KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (pattern KHR_GET_MEMORY_REQUIREMENTS_2_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2 (pattern KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_get_physical_device_properties2 (pattern KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_maintenance2 (pattern KHR_MAINTENANCE2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_maintenance2 (pattern KHR_MAINTENANCE2_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_maintenance3 (pattern KHR_MAINTENANCE3_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_maintenance3 (pattern KHR_MAINTENANCE3_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_multiview (pattern KHR_MULTIVIEW_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_multiview (pattern KHR_MULTIVIEW_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_ray_query (pattern KHR_RAY_QUERY_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_ray_query (pattern KHR_RAY_QUERY_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (pattern KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (pattern KHR_RAY_TRACING_PIPELINE_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_shader_atomic_int64 (pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_atomic_int64 (pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_shader_draw_parameters (pattern KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_draw_parameters (pattern KHR_SHADER_DRAW_PARAMETERS_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_shader_float16_int8 (pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_float16_int8 (pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_shader_float_controls (pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_float_controls (pattern KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info (pattern KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_non_semantic_info (pattern KHR_SHADER_NON_SEMANTIC_INFO_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_spirv_1_4 (pattern KHR_SPIRV_1_4_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_spirv_1_4 (pattern KHR_SPIRV_1_4_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_storage_buffer_storage_class (pattern KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_storage_buffer_storage_class (pattern KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_variable_pointers (pattern KHR_VARIABLE_POINTERS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_variable_pointers (pattern KHR_VARIABLE_POINTERS_SPEC_VERSION)
 import Vulkan.Extensions.VK_KHR_vulkan_memory_model (pattern KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_vulkan_memory_model (pattern KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION)
 import Vulkan.Version (pattern MAKE_VERSION)
 import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_compute_shader_derivatives (pattern NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_cooperative_matrix (pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_cooperative_matrix (pattern NV_COOPERATIVE_MATRIX_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_geometry_shader_passthrough (pattern NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_geometry_shader_passthrough (pattern NV_GEOMETRY_SHADER_PASSTHROUGH_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_mesh_shader (pattern NV_MESH_SHADER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_mesh_shader (pattern NV_MESH_SHADER_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_ray_tracing (pattern NV_RAY_TRACING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_ray_tracing (pattern NV_RAY_TRACING_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_sample_mask_override_coverage (pattern NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_sample_mask_override_coverage (pattern NV_SAMPLE_MASK_OVERRIDE_COVERAGE_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_shader_image_footprint (pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shader_image_footprint (pattern NV_SHADER_IMAGE_FOOTPRINT_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_SPEC_VERSION)
 import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY2_SPEC_VERSION)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ARITHMETIC_BIT))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
@@ -221,67 +155,67 @@ spirvExtensionRequirements = \case
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_gcn_shader" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_GCN_SHADER_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_GCN_SHADER_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_gpu_shader_half_float" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_GPU_SHADER_HALF_FLOAT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_gpu_shader_int16" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_GPU_SHADER_INT16_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_GPU_SHADER_INT16_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_shader_ballot" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_SHADER_BALLOT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_SHADER_BALLOT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_shader_fragment_mask" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_SHADER_FRAGMENT_MASK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_shader_image_load_store_lod" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_shader_trinary_minmax" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_SHADER_TRINARY_MINMAX_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_SHADER_TRINARY_MINMAX_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_AMD_texture_gather_bias_lod" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_shader_draw_parameters" ->
@@ -293,12 +227,12 @@ spirvExtensionRequirements = \case
   "SPV_KHR_shader_clock" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_CLOCK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_CLOCK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_float_controls" ->
@@ -309,67 +243,67 @@ spirvExtensionRequirements = \case
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_POST_DEPTH_COVERAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_EXT_shader_stencil_export" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_STENCIL_EXPORT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_shader_ballot" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_SUBGROUP_BALLOT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_SUBGROUP_BALLOT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_subgroup_vote" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_SUBGROUP_VOTE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_SUBGROUP_VOTE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_sample_mask_override_coverage" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SAMPLE_MASK_OVERRIDE_COVERAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_geometry_shader_passthrough" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_GEOMETRY_SHADER_PASSTHROUGH_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_mesh_shader" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_MESH_SHADER_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_MESH_SHADER_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_viewport_array2" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_VIEWPORT_ARRAY2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_VIEWPORT_ARRAY2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_shader_subgroup_partitioned" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_EXT_shader_viewport_index_layer" ->
@@ -377,16 +311,16 @@ spirvExtensionRequirements = \case
   "SPV_NVX_multiview_per_view_attributes" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MULTIVIEW_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MULTIVIEW_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_EXT_descriptor_indexing" ->
@@ -396,170 +330,170 @@ spirvExtensionRequirements = \case
   "SPV_NV_compute_shader_derivatives" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_fragment_shader_barycentric" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_shader_image_footprint" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADER_IMAGE_FOOTPRINT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_shading_rate" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADING_RATE_IMAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADING_RATE_IMAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_ray_tracing" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_RAY_TRACING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_RAY_TRACING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_GET_MEMORY_REQUIREMENTS_2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_ray_tracing" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_RAY_TRACING_PIPELINE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SPIRV_1_4_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SPIRV_1_4_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_ray_query" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_QUERY_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_RAY_QUERY_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SPIRV_1_4_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SPIRV_1_4_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_GOOGLE_hlsl_functionality1" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME
-                             , deviceExtensionMinVersion = GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_GOOGLE_user_type" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = GOOGLE_USER_TYPE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = GOOGLE_USER_TYPE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_GOOGLE_decorate_string" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = GOOGLE_DECORATE_STRING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = GOOGLE_DECORATE_STRING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_EXT_fragment_invocation_density" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_physical_storage_buffer" ->
@@ -567,104 +501,104 @@ spirvExtensionRequirements = \case
   "SPV_EXT_physical_storage_buffer" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_cooperative_matrix" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COOPERATIVE_MATRIX_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_COOPERATIVE_MATRIX_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_NV_shader_sm_builtins" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_SM_BUILTINS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADER_SM_BUILTINS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_EXT_fragment_shader_interlock" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_FRAGMENT_SHADER_INTERLOCK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_EXT_demote_to_helper_invocation" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_fragment_shading_rate" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_CREATE_RENDERPASS_2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_CREATE_RENDERPASS_2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MULTIVIEW_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MULTIVIEW_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_non_semantic_info" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_NON_SEMANTIC_INFO_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_EXT_shader_image_int64" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_IMAGE_ATOMIC_INT64_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_KHR_terminate_invocation" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_TERMINATE_INVOCATION_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   _ -> ([], [])
@@ -712,7 +646,7 @@ spirvCapabilityRequirements = \case
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -723,13 +657,13 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "AtomicFloat32AddEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -739,13 +673,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_ATOMIC_FLOAT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "AtomicFloat64AddEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -755,13 +689,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_ATOMIC_FLOAT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "Int64ImageEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -771,7 +705,7 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_IMAGE_ATOMIC_INT64_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "Int16" -> (,)
@@ -943,7 +877,7 @@ spirvCapabilityRequirements = \case
     [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "multiview"
@@ -953,7 +887,7 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 1 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MULTIVIEW_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MULTIVIEW_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "DeviceGroup" -> (,) [RequireInstanceVersion $ MAKE_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_VERSION 1 1 0]
@@ -961,7 +895,7 @@ spirvCapabilityRequirements = \case
     [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -972,18 +906,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 1 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_VARIABLE_POINTERS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_VARIABLE_POINTERS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "VariablePointers" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "variablePointers"
@@ -993,82 +927,82 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 1 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_VARIABLE_POINTERS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_VARIABLE_POINTERS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ShaderClockKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_CLOCK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_CLOCK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StencilExportEXT" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_STENCIL_EXPORT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SubgroupBallotKHR" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_SUBGROUP_BALLOT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_SUBGROUP_BALLOT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SubgroupVoteKHR" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_SUBGROUP_VOTE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_SUBGROUP_VOTE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ImageReadWriteLodAMD" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ImageGatherBiasLodAMD" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "FragmentMaskAMD" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = AMD_SHADER_FRAGMENT_MASK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SampleMaskOverrideCoverageNV" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SAMPLE_MASK_OVERRIDE_COVERAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "GeometryShaderPassthroughNV" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_GEOMETRY_SHADER_PASSTHROUGH_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ShaderViewportIndex" -> (,)
@@ -1092,43 +1026,43 @@ spirvCapabilityRequirements = \case
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ShaderViewportIndexLayerNV" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_VIEWPORT_ARRAY2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_VIEWPORT_ARRAY2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ShaderViewportMaskNV" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_VIEWPORT_ARRAY2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_VIEWPORT_ARRAY2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "PerViewAttributesNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MULTIVIEW_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MULTIVIEW_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StorageBuffer16BitAccess" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1139,18 +1073,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 1 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_16BIT_STORAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "UniformAndStorageBuffer16BitAccess" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1161,18 +1095,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 1 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_16BIT_STORAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StoragePushConstant16" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "storagePushConstant16"
@@ -1182,18 +1116,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 1 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_16BIT_STORAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StorageInputOutput16" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "storageInputOutput16"
@@ -1203,11 +1137,11 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 1 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_16BIT_STORAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "GroupNonUniform" -> (,)
@@ -1291,14 +1225,14 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SampleMaskPostDepthCoverage" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_POST_DEPTH_COVERAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ShaderNonUniform" -> (,) [RequireInstanceVersion $ MAKE_VERSION 1 2 0] [RequireDeviceVersion $ MAKE_VERSION 1 2 0]
@@ -1306,7 +1240,7 @@ spirvCapabilityRequirements = \case
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "runtimeDescriptorArray"
@@ -1316,18 +1250,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "InputAttachmentArrayDynamicIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1338,18 +1272,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "UniformTexelBufferArrayDynamicIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1361,18 +1295,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StorageTexelBufferArrayDynamicIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1384,18 +1318,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "UniformBufferArrayNonUniformIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1406,18 +1340,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SampledImageArrayNonUniformIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1428,18 +1362,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StorageBufferArrayNonUniformIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1450,18 +1384,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StorageImageArrayNonUniformIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1472,18 +1406,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "InputAttachmentArrayNonUniformIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1495,18 +1429,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "UniformTexelBufferArrayNonUniformIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1518,18 +1452,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StorageTexelBufferArrayNonUniformIndexing" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1541,18 +1475,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "Float16" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "shaderFloat16"
@@ -1562,14 +1496,14 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "Int8" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "shaderInt8"
@@ -1579,14 +1513,14 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StorageBuffer8BitAccess" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1597,18 +1531,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_8BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_8BIT_STORAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "UniformAndStorageBuffer8BitAccess" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1619,18 +1553,18 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_8BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_8BIT_STORAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "StoragePushConstant8" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "storagePushConstant8"
@@ -1640,11 +1574,11 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_8BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_8BIT_STORAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "VulkanMemoryModel" -> (,)
@@ -1656,7 +1590,7 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "VulkanMemoryModelDeviceScope" -> (,)
@@ -1669,14 +1603,14 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "DenormPreserve" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceProperty { propertyName  = "VkPhysicalDeviceVulkan12Properties"
@@ -1685,14 +1619,14 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "DenormFlushToZero" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceProperty
@@ -1702,14 +1636,14 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "SignedZeroInfNanPreserve" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceProperty
@@ -1719,14 +1653,14 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "RoundingModeRTE" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceProperty { propertyName  = "VkPhysicalDeviceVulkan12Properties"
@@ -1735,14 +1669,14 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "RoundingModeRTZ" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceProperty { propertyName  = "VkPhysicalDeviceVulkan12Properties"
@@ -1751,13 +1685,13 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ComputeDerivativeGroupQuadsNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1768,13 +1702,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ComputeDerivativeGroupLinearNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1785,13 +1719,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "FragmentBarycentricNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1802,13 +1736,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ImageFootprintNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1818,13 +1752,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADER_IMAGE_FOOTPRINT_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ShadingRateNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1834,24 +1768,24 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADING_RATE_IMAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADING_RATE_IMAGE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "MeshShadingNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_MESH_SHADER_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_MESH_SHADER_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "RayTracingKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1861,41 +1795,41 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_RAY_TRACING_PIPELINE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SPIRV_1_4_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SPIRV_1_4_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "RayQueryKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "rayQuery"
@@ -1904,41 +1838,41 @@ spirvCapabilityRequirements = \case
                            }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_QUERY_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_RAY_QUERY_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SPIRV_1_4_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SPIRV_1_4_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "RayTraversalPrimitiveCullingKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -1948,56 +1882,56 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_RAY_TRACING_PIPELINE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SPIRV_1_4_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SPIRV_1_4_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE3_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "RayTracingNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_RAY_TRACING_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_RAY_TRACING_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_GET_MEMORY_REQUIREMENTS_2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "TransformFeedback" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2007,13 +1941,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_TRANSFORM_FEEDBACK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "GeometryStreams" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2023,13 +1957,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_TRANSFORM_FEEDBACK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "FragmentDensityEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2039,14 +1973,14 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "PhysicalStorageBufferAddresses" -> (,)
     [ RequireInstanceVersion $ MAKE_VERSION 1 2 0
     , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature { featureName   = "bufferDeviceAddress"
@@ -2056,13 +1990,13 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "CooperativeMatrixNV" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2072,13 +2006,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COOPERATIVE_MATRIX_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_COOPERATIVE_MATRIX_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "IntegerFunctions2INTEL" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2088,7 +2022,7 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = INTEL_SHADER_INTEGER_FUNCTIONS_2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "ShaderSMBuiltinsNV" -> (,)
@@ -2100,13 +2034,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_SM_BUILTINS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = NV_SHADER_SM_BUILTINS_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "FragmentShaderSampleInterlockEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2117,13 +2051,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_FRAGMENT_SHADER_INTERLOCK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "FragmentShaderPixelInterlockEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2134,13 +2068,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_FRAGMENT_SHADER_INTERLOCK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "FragmentShaderShadingRateInterlockEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2151,13 +2085,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_FRAGMENT_SHADER_INTERLOCK_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "DemoteToHelperInvocationEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2168,13 +2102,13 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
-                             , deviceExtensionMinVersion = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   "FragmentShadingRateKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION
+                               , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
@@ -2184,19 +2118,19 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_CREATE_RENDERPASS_2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_CREATE_RENDERPASS_2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MULTIVIEW_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MULTIVIEW_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE2_EXTENSION_NAME
-                             , deviceExtensionMinVersion = KHR_MAINTENANCE2_SPEC_VERSION
+                             , deviceExtensionMinVersion = 0
                              }
     ]
   _ -> ([], [])

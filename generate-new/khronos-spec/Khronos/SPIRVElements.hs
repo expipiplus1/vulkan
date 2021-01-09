@@ -226,16 +226,15 @@ extensionNamePattern p = do
   case parseVersion p of
     Just v  -> pure . RequireVersion $ v
     Nothing -> do
-      (namePattern, versionPattern) <- extensionPatterns p
+      (namePattern, _versionPattern) <- extensionPatterns p
       tellImport namePattern
-      tellImport versionPattern
       case siExtensionType p of
         Just DeviceExtension -> pure $ RequireDeviceExtension
           (pretty namePattern)
-          (pretty versionPattern)
+          "0"
         Just InstanceExtension -> pure $ RequireInstanceExtension
           (pretty namePattern)
-          (pretty versionPattern)
+          "0"
         Just UnknownExtensionType ->
           throw $ "Dependency on extension of unknown type: " <> show p
         Nothing -> throw $ "Dependency on unknown extension" <> show p

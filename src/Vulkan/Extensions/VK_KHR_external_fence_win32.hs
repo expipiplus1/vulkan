@@ -325,13 +325,14 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 --
 -- The handle types supported by @handleType@ are:
 --
--- +-------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | Handle Type                                                                                           | Transference         | Permanence Supported  |
--- +=======================================================================================================+======================+=======================+
--- | 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT'     | Reference            | Temporary,Permanent   |
--- +-------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' | Reference            | Temporary,Permanent   |
--- +-------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
+-- +-------------------------------------------------------------------------------------------------------+------------------+---------------------+
+-- | Handle Type                                                                                           | Transference     | Permanence          |
+-- |                                                                                                       |                  | Supported           |
+-- +=======================================================================================================+==================+=====================+
+-- | 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT'     | Reference        | Temporary,Permanent |
+-- +-------------------------------------------------------------------------------------------------------+------------------+---------------------+
+-- | 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' | Reference        | Temporary,Permanent |
+-- +-------------------------------------------------------------------------------------------------------+------------------+---------------------+
 --
 -- Handle Types Supported by 'ImportFenceWin32HandleInfoKHR'
 --

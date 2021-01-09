@@ -742,14 +742,11 @@ instance ToCStruct CompositionLayerProjection where
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_PROJECTION)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Space_T))) (zero)
-    pViews' <- ContT $ allocaBytesAligned @(CompositionLayerProjectionView _) ((Data.Vector.length (mempty)) * 96) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pViews' `plusPtr` (96 * (i)) :: Ptr (CompositionLayerProjectionView _))) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (CompositionLayerProjectionView _)))) (pViews')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_PROJECTION)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr Space_T))) (zero)
+    f
 
 instance FromCStruct CompositionLayerProjection where
   peekCStruct p = do

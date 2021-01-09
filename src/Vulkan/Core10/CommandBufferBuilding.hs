@@ -11285,9 +11285,6 @@ instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPas
     lift $ poke ((p `plusPtr` 16 :: Ptr RenderPass)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr Framebuffer)) (zero)
     lift $ poke ((p `plusPtr` 32 :: Ptr Rect2D)) (zero)
-    pPClearValues' <- ContT $ allocaBytesAligned @ClearValue ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPClearValues' `plusPtr` (16 * (i)) :: Ptr ClearValue) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr ClearValue))) (pPClearValues')
     lift $ f
 
 instance es ~ '[] => Zero (RenderPassBeginInfo es) where

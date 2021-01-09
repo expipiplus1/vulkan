@@ -113,13 +113,10 @@ instance ToCStruct VulkanSwapchainFormatListCreateInfoKHR where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pViewFormats' <- ContT $ allocaBytesAligned @OpenXR.VulkanTypes.Format ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pViewFormats' `plusPtr` (4 * (i)) :: Ptr OpenXR.VulkanTypes.Format) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.Format))) (pViewFormats')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct VulkanSwapchainFormatListCreateInfoKHR where
   peekCStruct p = do

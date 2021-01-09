@@ -197,6 +197,7 @@ import GHC.Show (showsPrec)
 import Numeric (showHex)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -233,6 +234,7 @@ import Data.Bits (FiniteBits)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -799,7 +801,7 @@ makePoolAllocationsLost allocator pool = liftIO . evalContT $ do
   pPLostAllocationCount <- ContT $ bracket (callocBytes @CSize 8) free
   lift $ traceAroundEvent "vmaMakePoolAllocationsLost" ((ffiVmaMakePoolAllocationsLost) (allocator) (pool) (pPLostAllocationCount))
   pLostAllocationCount <- lift $ peek @CSize pPLostAllocationCount
-  pure $ (((\(CSize a) -> a) pLostAllocationCount))
+  pure $ ((coerce @CSize @Word64 pLostAllocationCount))
 
 
 foreign import ccall
@@ -3356,12 +3358,6 @@ instance ToCStruct Stats where
   cStructSize = 3920
   cStructAlignment = 8
   pokeZeroCStruct p f = do
-    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
-      throwIO $ IOError Nothing InvalidArgument "" "memoryType is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray MAX_MEMORY_TYPES StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (mempty)
-    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
-      throwIO $ IOError Nothing InvalidArgument "" "memoryHeap is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 2560 :: Ptr (FixedArray MAX_MEMORY_HEAPS StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (mempty)
     poke ((p `plusPtr` 3840 :: Ptr StatInfo)) (zero)
     f
 
@@ -4014,7 +4010,7 @@ instance FromCStruct PoolCreateInfo where
     maxBlockCount <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     frameInUseCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pure $ PoolCreateInfo
-             memoryTypeIndex flags blockSize ((\(CSize a) -> a) minBlockCount) ((\(CSize a) -> a) maxBlockCount) frameInUseCount
+             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount
 
 instance Storable PoolCreateInfo where
   sizeOf ~_ = 40
@@ -4093,7 +4089,7 @@ instance FromCStruct PoolStats where
     unusedRangeSizeMax <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
     blockCount <- peek @CSize ((p `plusPtr` 40 :: Ptr CSize))
     pure $ PoolStats
-             size unusedSize ((\(CSize a) -> a) allocationCount) ((\(CSize a) -> a) unusedRangeCount) unusedRangeSizeMax ((\(CSize a) -> a) blockCount)
+             size unusedSize (coerce @CSize @Word64 allocationCount) (coerce @CSize @Word64 unusedRangeCount) unusedRangeSizeMax (coerce @CSize @Word64 blockCount)
 
 instance Storable PoolStats where
   sizeOf ~_ = 48
@@ -4399,19 +4395,13 @@ instance ToCStruct DefragmentationInfo2 where
     lift $ f
   cStructSize = 80
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr DefragmentationFlags)) (zero)
-    pPAllocations' <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations' `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr Allocation))) (pPAllocations')
-    pPPools' <- ContT $ allocaBytesAligned @Pool ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPPools' `plusPtr` (8 * (i)) :: Ptr Pool) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Pool))) (pPPools')
-    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 56 :: Ptr DeviceSize)) (zero)
-    lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DefragmentationFlags)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
+    f
 
 instance FromCStruct DefragmentationInfo2 where
   peekCStruct p = do

@@ -163,13 +163,10 @@ instance ToCStruct SecondaryViewConfigurationSessionBeginInfoMSFT where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pEnabledViewConfigurationTypes' <- ContT $ allocaBytesAligned @ViewConfigurationType ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pEnabledViewConfigurationTypes' `plusPtr` (4 * (i)) :: Ptr ViewConfigurationType) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewConfigurationType))) (pEnabledViewConfigurationTypes')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct SecondaryViewConfigurationSessionBeginInfoMSFT where
   peekCStruct p = do
@@ -475,13 +472,10 @@ instance ToCStruct SecondaryViewConfigurationFrameEndInfoMSFT where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_MSFT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pViewConfigurationLayersInfo' <- ContT $ allocaBytesAligned @SecondaryViewConfigurationLayerInfoMSFT ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pViewConfigurationLayersInfo' `plusPtr` (40 * (i)) :: Ptr SecondaryViewConfigurationLayerInfoMSFT) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr SecondaryViewConfigurationLayerInfoMSFT))) (pViewConfigurationLayersInfo')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_MSFT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct SecondaryViewConfigurationFrameEndInfoMSFT where
   peekCStruct p = do
@@ -613,17 +607,12 @@ instance ToCStruct SecondaryViewConfigurationLayerInfoMSFT where
     lift $ f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr ViewConfigurationType)) (zero)
-    lift $ poke ((p `plusPtr` 20 :: Ptr EnvironmentBlendMode)) (zero)
-    pLayers' <- ContT $ allocaBytesAligned @(Ptr _) ((Data.Vector.length (mempty)) * 8) 8
-    Data.Vector.imapM_ (\i e -> do
-      layers'' <- ContT $ withSomeChild (e)
-      lift $ poke (pLayers' `plusPtr` (8 * (i)) :: Ptr (Ptr _)) layers'') (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr (Ptr _)))) (pLayers')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ViewConfigurationType)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr EnvironmentBlendMode)) (zero)
+    f
 
 instance FromCStruct SecondaryViewConfigurationLayerInfoMSFT where
   peekCStruct p = do

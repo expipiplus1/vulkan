@@ -10,6 +10,8 @@ module Bespoke
   , bespokeSizes
   , bespokeOptionality
   , bespokeLengths
+  , bespokeZeroInstances
+  , bespokeZeroCStruct
   , bespokeSchemes
   , BespokeScheme(..)
   , structChainVar
@@ -40,9 +42,10 @@ import           Foreign.Marshal.Utils
 import           Numeric
 
 import           CType
+import           Data.List                      ( lookup )
 import           Error
 import           Foreign.C.String               ( CString )
-import           Foreign.Storable               ( Storable )
+import           Foreign.Storable               ( Storable(poke) )
 import           Haskell                       as H
 import           Marshal.Marshalable
 import           Marshal.Scheme
@@ -787,6 +790,11 @@ bespokeOptionality = \case
     "pBufferInfo"      -> Just (fromList [True])
     "pTexelBufferView" -> Just (fromList [True])
     _                  -> Nothing
+  -- Because we don't marshal ppGeometries, this is not actually optional
+  -- See https://github.com/expipiplus1/vulkan/issues/239
+  "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
+    "pGeometries" -> Just mempty
+    _             -> Nothing
   _ -> const Nothing
 
 bespokeLengths :: CName -> CName -> Maybe (Vector ParameterLength)
@@ -796,6 +804,56 @@ bespokeLengths = \case
     "pSetLayouts" -> Just (fromList [NamedLength "descriptorSetCount"])
     _             -> Nothing
   _ -> const Nothing
+
+bespokeZeroInstances
+  :: ( HasErr r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo StructMember r
+     , HasStmts r
+     )
+  => HasRenderElem r => CName -> Maybe (Sem r ())
+bespokeZeroInstances = flip
+  lookup
+  [ ( "VkTransformMatrixKHR"
+    , do
+      tellImportWithAll (TyConName "Zero")
+      tellDoc [qqi|
+        instance Zero TransformMatrixKHR where
+         zero = TransformMatrixKHR
+                  (1,0,0,0)
+                  (0,1,0,0)
+                  (0,0,1,0)
+      |]
+    )
+  ]
+
+bespokeZeroCStruct
+  :: ( HasErr r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo StructMember r
+     , HasStmts r
+     )
+  => HasRenderElem r => CName -> Maybe (Sem r (Doc ()))
+bespokeZeroCStruct = flip
+  lookup
+  [ ( "VkTransformMatrixKHR"
+    , do
+      tellImport ''CFloat
+      tellImport 'plusPtr
+      tellImportWith ''Storable 'poke
+      pure [qqi|
+        pokeZeroCStruct p f = do
+          poke (p `plusPtr` 0) (CFloat 1)
+          poke (p `plusPtr` 20) (CFloat 1)
+          poke (p `plusPtr` 40) (CFloat 1)
+          f
+      |]
+    )
+  ]
 
 bespokeElements
   :: (HasErr r, HasRenderParams r) => SpecFlavor -> Vector (Sem r RenderElement)

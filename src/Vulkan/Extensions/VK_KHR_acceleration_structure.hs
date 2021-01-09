@@ -1266,7 +1266,6 @@ import Control.Monad.Trans.Cont (runContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Foreign.C.Types (CSize(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -4637,13 +4636,10 @@ instance ToCStruct WriteDescriptorSetAccelerationStructureKHR where
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPAccelerationStructures' <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures' `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureKHR))) (pPAccelerationStructures')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct WriteDescriptorSetAccelerationStructureKHR where
   peekCStruct p = do
@@ -5386,9 +5382,6 @@ data AccelerationStructureBuildGeometryInfoKHR = AccelerationStructureBuildGeome
   , -- | @dstAccelerationStructure@ points to the target acceleration structure
     -- for the build.
     dstAccelerationStructure :: AccelerationStructureKHR
-  , -- | @geometryCount@ specifies the number of geometries that will be built
-    -- into @dstAccelerationStructure@.
-    geometryCount :: Word32
   , -- | @pGeometries@ is a pointer to an array of
     -- 'AccelerationStructureGeometryKHR' structures.
     geometries :: Vector AccelerationStructureGeometryKHR
@@ -5412,21 +5405,10 @@ instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr BuildAccelerationStructureModeKHR)) (mode)
     lift $ poke ((p `plusPtr` 32 :: Ptr AccelerationStructureKHR)) (srcAccelerationStructure)
     lift $ poke ((p `plusPtr` 40 :: Ptr AccelerationStructureKHR)) (dstAccelerationStructure)
-    let pGeometriesLength = Data.Vector.length $ (geometries)
-    geometryCount'' <- lift $ if (geometryCount) == 0
-      then pure $ fromIntegral pGeometriesLength
-      else do
-        unless (fromIntegral pGeometriesLength == (geometryCount) || pGeometriesLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pGeometries must be empty or have 'geometryCount' elements" Nothing Nothing
-        pure (geometryCount)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (geometryCount'')
-    pGeometries'' <- if Data.Vector.null (geometries)
-      then pure nullPtr
-      else do
-        pPGeometries <- ContT $ allocaBytesAligned @AccelerationStructureGeometryKHR (((Data.Vector.length (geometries))) * 96) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries `plusPtr` (96 * (i)) :: Ptr AccelerationStructureGeometryKHR) (e) . ($ ())) ((geometries))
-        pure $ pPGeometries
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr AccelerationStructureGeometryKHR))) pGeometries''
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (geometries)) :: Word32))
+    pPGeometries' <- ContT $ allocaBytesAligned @AccelerationStructureGeometryKHR ((Data.Vector.length (geometries)) * 96) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries' `plusPtr` (96 * (i)) :: Ptr AccelerationStructureGeometryKHR) (e) . ($ ())) (geometries)
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr AccelerationStructureGeometryKHR))) (pPGeometries')
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr AccelerationStructureGeometryKHR)))) (nullPtr)
     ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr DeviceOrHostAddressKHR)) (scratchData) . ($ ())
     lift $ f
@@ -5443,7 +5425,6 @@ instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
 
 instance Zero AccelerationStructureBuildGeometryInfoKHR where
   zero = AccelerationStructureBuildGeometryInfoKHR
-           zero
            zero
            zero
            zero
@@ -5913,27 +5894,9 @@ instance ToCStruct TransformMatrixKHR where
   cStructSize = 48
   cStructAlignment = 4
   pokeZeroCStruct p f = do
-    let pMatrixRow0' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray 4 CFloat)))
-    case ((zero, zero, zero, zero)) of
-      (e0, e1, e2, e3) -> do
-        poke (pMatrixRow0' :: Ptr CFloat) (CFloat (e0))
-        poke (pMatrixRow0' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-        poke (pMatrixRow0' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
-        poke (pMatrixRow0' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-    let pMatrixRow1' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray 4 CFloat)))
-    case ((zero, zero, zero, zero)) of
-      (e0, e1, e2, e3) -> do
-        poke (pMatrixRow1' :: Ptr CFloat) (CFloat (e0))
-        poke (pMatrixRow1' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-        poke (pMatrixRow1' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
-        poke (pMatrixRow1' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-    let pMatrixRow2' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 4 CFloat)))
-    case ((zero, zero, zero, zero)) of
-      (e0, e1, e2, e3) -> do
-        poke (pMatrixRow2' :: Ptr CFloat) (CFloat (e0))
-        poke (pMatrixRow2' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-        poke (pMatrixRow2' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
-        poke (pMatrixRow2' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
+    poke (p `plusPtr` 0) (CFloat 1)
+    poke (p `plusPtr` 20) (CFloat 1)
+    poke (p `plusPtr` 40) (CFloat 1)
     f
 
 instance FromCStruct TransformMatrixKHR where
@@ -5963,10 +5926,10 @@ instance Storable TransformMatrixKHR where
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero TransformMatrixKHR where
-  zero = TransformMatrixKHR
-           (zero, zero, zero, zero)
-           (zero, zero, zero, zero)
-           (zero, zero, zero, zero)
+ zero = TransformMatrixKHR
+          (1,0,0,0)
+          (0,1,0,0)
+          (0,0,1,0)
 
 
 -- | VkAccelerationStructureInstanceKHR - Structure specifying a single

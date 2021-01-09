@@ -6,9 +6,4 @@ packages:
   ./examples
   ./generate-new/
 
-source-repository-package
-    type: git
-    location: https://github.com/expipiplus1/brittany.git
-    tag: b80f77c36bda563665c616abbdb1eaaf35b1da1c
-
 allow-newer: strict Cabal

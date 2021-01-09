@@ -18,6 +18,12 @@ jobs:
           # https://github.com/haskell/cabal/issues/6421
           - ghc: 8.10.2
             os: macOS-latest
+          # ghc: loadArchive: Failed reading header from `/Users/runner/work/vulkan/vulkan/dist-newstyle/build/x86_64-osx/ghc-8.6.5/vulkan-3.8.3/build/Vulkan'
+          # ghc: panic! (the 'impossible' happened)
+          #   (GHC version 8.6.5 for x86_64-apple-darwin):
+          # 	loadArchive "/Users/runner/work/vulkan/vulkan/dist-newstyle/build/x86_64-osx/ghc-8.6.5/vulkan-3.8.3/build/Vulkan": failed
+          - ghc: 8.6.5
+            os: macOS-latest
           - os: windows-latest
             ghc: '8.10.2'
         include:
@@ -37,17 +43,14 @@ jobs:
         # Work around https://github.com/polysemy-research/polysemy/issues/390
         cabal-version: '3.0.0.0'
 
-    - uses: actions/cache@v1
-      name: Cache cabal-store
+    - uses: actions/cache@v2
       with:
-        path: ${{ steps.setup-haskell.outputs.cabal-store }}
-        key: ${{ runner.os }}-${{ matrix.ghc }}-cabal
-
-    - name: Cache dist-newstyle
-      uses: actions/cache@v1
-      with:
-        path: dist-newstyle
-        key: ${{ runner.os }}-${{ matrix.ghc }}-dist-newstyle
+        path: |
+          ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
+          dist-newstyle
+        key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.ghc }}-
 
     - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-20.04'
@@ -107,10 +110,10 @@ jobs:
         sed -ibak '/examples/d' cabal.project
       if: matrix.ghc == '8.6.5'
 
-    - name: Remove generator for all but 8.10.2
+    - name: Remove generator for all but 8.10.3
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.10.2'
+      if: matrix.ghc != '8.10.3'
 
     # Because of https://github.com/actions/setup-haskell/issues/43 we can't
     # set the cabal version correctly
@@ -177,25 +180,16 @@ jobs:
         enable-stack: true
         ghc-version: '8.10.2'
 
-    - name: Cache stack global package db
-      id: stack-global
-      uses: actions/cache@v1
+    - name: Cache stack things
+      uses: actions/cache@v2
       with:
-        path: ~/.stack
+        path: |
+          ~/.stack
+          .stack-work
         key: ${{ runner.os }}-stack-global-${{ matrix.stack-args }}-${{ hashFiles('**.yaml') }}
         restore-keys: |
           ${{ runner.os }}-stack-global-${{ matrix.stack-args }}
           ${{ runner.os }}-stack-global
-
-    - name: Cache .stack-work
-      id: stack-work
-      uses: actions/cache@v1
-      with:
-        path: .stack-work
-        key: ${{ runner.os }}-stack-work-${{ matrix.stack-args }}-${{ hashFiles('**.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-stack-work-${{ matrix.stack-args }}
-          ${{ runner.os }}-stack-work
 
     - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-20.04'

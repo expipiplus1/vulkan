@@ -1893,13 +1893,10 @@ instance ToCStruct GraphicsShaderGroupCreateInfoNV where
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (mempty)) * 48) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct GraphicsShaderGroupCreateInfoNV where
   peekCStruct p = do
@@ -2028,16 +2025,10 @@ instance ToCStruct GraphicsPipelineShaderGroupsCreateInfoNV where
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPGroups' <- ContT $ allocaBytesAligned @GraphicsShaderGroupCreateInfoNV ((Data.Vector.length (mempty)) * 48) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGroups' `plusPtr` (48 * (i)) :: Ptr GraphicsShaderGroupCreateInfoNV) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr GraphicsShaderGroupCreateInfoNV))) (pPGroups')
-    pPPipelines' <- ContT $ allocaBytesAligned @Pipeline ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPPipelines' `plusPtr` (8 * (i)) :: Ptr Pipeline) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Pipeline))) (pPPipelines')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct GraphicsPipelineShaderGroupsCreateInfoNV where
   peekCStruct p = do
@@ -2560,23 +2551,17 @@ instance ToCStruct IndirectCommandsLayoutTokenNV where
     lift $ f
   cStructSize = 88
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr IndirectCommandsTokenTypeNV)) (zero)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
-    pPIndexTypes' <- ContT $ allocaBytesAligned @IndexType ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPIndexTypes' `plusPtr` (4 * (i)) :: Ptr IndexType) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr IndexType))) (pPIndexTypes')
-    pPIndexTypeValues' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPIndexTypeValues' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Word32))) (pPIndexTypeValues')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr IndirectCommandsTokenTypeNV)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    f
 
 instance FromCStruct IndirectCommandsLayoutTokenNV where
   peekCStruct p = do
@@ -2760,18 +2745,12 @@ instance ToCStruct IndirectCommandsLayoutCreateInfoNV where
     lift $ f
   cStructSize = 56
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr IndirectCommandsLayoutUsageFlagsNV)) (zero)
-    lift $ poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (zero)
-    pPTokens' <- ContT $ allocaBytesAligned @IndirectCommandsLayoutTokenNV ((Data.Vector.length (mempty)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTokens' `plusPtr` (88 * (i)) :: Ptr IndirectCommandsLayoutTokenNV) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr IndirectCommandsLayoutTokenNV))) (pPTokens')
-    pPStreamStrides' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPStreamStrides' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPStreamStrides')
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr IndirectCommandsLayoutUsageFlagsNV)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (zero)
+    f
 
 instance FromCStruct IndirectCommandsLayoutCreateInfoNV where
   peekCStruct p = do
@@ -3026,20 +3005,17 @@ instance ToCStruct GeneratedCommandsInfoNV where
     lift $ f
   cStructSize = 120
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineBindPoint)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Pipeline)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr IndirectCommandsLayoutNV)) (zero)
-    pPStreams' <- ContT $ allocaBytesAligned @IndirectCommandsStreamNV ((Data.Vector.length (mempty)) * 16) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPStreams' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsStreamNV) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr IndirectCommandsStreamNV))) (pPStreams')
-    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 64 :: Ptr Buffer)) (zero)
-    lift $ poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (zero)
-    lift $ poke ((p `plusPtr` 80 :: Ptr DeviceSize)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr PipelineBindPoint)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Pipeline)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr IndirectCommandsLayoutNV)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr Buffer)) (zero)
+    poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 80 :: Ptr DeviceSize)) (zero)
+    f
 
 instance FromCStruct GeneratedCommandsInfoNV where
   peekCStruct p = do

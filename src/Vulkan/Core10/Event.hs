@@ -244,15 +244,15 @@ foreign import ccall
 -- Upon success, 'getEventStatus' returns the state of the event object
 -- with the following return codes:
 --
--- +------------------------------------------+-----------------------------------+
--- | Status                                   | Meaning                           |
--- +==========================================+===================================+
--- | 'Vulkan.Core10.Enums.Result.EVENT_SET'   | The event specified by @event@ is |
--- |                                          | signaled.                         |
--- +------------------------------------------+-----------------------------------+
--- | 'Vulkan.Core10.Enums.Result.EVENT_RESET' | The event specified by @event@ is |
--- |                                          | unsignaled.                       |
--- +------------------------------------------+-----------------------------------+
+-- +------------------------------------------+---------------------------+
+-- | Status                                   | Meaning                   |
+-- +==========================================+===========================+
+-- | 'Vulkan.Core10.Enums.Result.EVENT_SET'   | The event specified by    |
+-- |                                          | @event@ is signaled.      |
+-- +------------------------------------------+---------------------------+
+-- | 'Vulkan.Core10.Enums.Result.EVENT_RESET' | The event specified by    |
+-- |                                          | @event@ is unsignaled.    |
+-- +------------------------------------------+---------------------------+
 --
 -- Event Object Status Codes
 --

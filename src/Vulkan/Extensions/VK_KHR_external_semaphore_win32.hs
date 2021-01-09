@@ -362,15 +362,16 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --
 -- The handle types supported by @handleType@ are:
 --
--- +---------------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | Handle Type                                                                                                   | Transference         | Permanence Supported  |
--- +===============================================================================================================+======================+=======================+
--- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'     | Reference            | Temporary,Permanent   |
--- +---------------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' | Reference            | Temporary,Permanent   |
--- +---------------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT'      | Reference            | Temporary,Permanent   |
--- +---------------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
+-- +---------------------------------------------------------------------------------------------------------------+------------------+---------------------+
+-- | Handle Type                                                                                                   | Transference     | Permanence          |
+-- |                                                                                                               |                  | Supported           |
+-- +===============================================================================================================+==================+=====================+
+-- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'     | Reference        | Temporary,Permanent |
+-- +---------------------------------------------------------------------------------------------------------------+------------------+---------------------+
+-- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' | Reference        | Temporary,Permanent |
+-- +---------------------------------------------------------------------------------------------------------------+------------------+---------------------+
+-- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT'      | Reference        | Temporary,Permanent |
+-- +---------------------------------------------------------------------------------------------------------------+------------------+---------------------+
 --
 -- Handle Types Supported by 'ImportSemaphoreWin32HandleInfoKHR'
 --

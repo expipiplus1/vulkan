@@ -682,18 +682,15 @@ instance ToCStruct DescriptorUpdateTemplateCreateInfo where
     lift $ f
   cStructSize = 72
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPDescriptorUpdateEntries' <- ContT $ allocaBytesAligned @DescriptorUpdateTemplateEntry ((Data.Vector.length (mempty)) * 32) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorUpdateTemplateEntry))) (pPDescriptorUpdateEntries')
-    lift $ poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (zero)
-    lift $ poke ((p `plusPtr` 40 :: Ptr DescriptorSetLayout)) (zero)
-    lift $ poke ((p `plusPtr` 48 :: Ptr PipelineBindPoint)) (zero)
-    lift $ poke ((p `plusPtr` 56 :: Ptr PipelineLayout)) (zero)
-    lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr DescriptorSetLayout)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr PipelineBindPoint)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr PipelineLayout)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
+    f
 
 instance FromCStruct DescriptorUpdateTemplateCreateInfo where
   peekCStruct p = do
