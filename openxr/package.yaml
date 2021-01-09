@@ -32,7 +32,7 @@ library:
     cpp-options: -DTRACE_CALLS
   - condition: flag(use-vulkan-types)
     cpp-options: -DUSE_VULKAN_TYPES
-    dependencies: vulkan >= 3.0
+    dependencies: vulkan >= 3.0 && < 3.10
   ghc-options:
   - -Wall
   - -Wno-unticked-promoted-constructors

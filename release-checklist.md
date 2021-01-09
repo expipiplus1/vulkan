@@ -12,18 +12,22 @@
   - Bump version on `vulkan` in `package.yaml`
   - Bump version on `VulkanMemoryAllocator`
   - Bump version on `utils`
+  - Bump version on `openxr`
 - Bump dependency versions
   - Bump version bounds of `vulkan` dependency in `VulkanMemoryAllocator`
   - Bump version bounds of `vulkan` dependency in `utils`
+  - Bump version bounds of `vulkan` dependency in `openxr`
 - Run hpack in
   - `.`
   - `./VulkanMemoryAllocator`
   - `./utils`
+  - `./openxr`
 
 - Make sure changelogs are up to date
   - `./changelog.md`
   - `./VulkanMemoryAllocator/changelog.md`
   - `./utils/changelog.md`
+  - `./openxr/changelog.md`
 
 ## vulkan
 

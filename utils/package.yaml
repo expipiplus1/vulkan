@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: "0.4"
+version: "0.4.1"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -32,7 +32,7 @@ library:
     - typed-process
     - unordered-containers
     - vector
-    - vulkan >= 3.6.14 && < 3.9
+    - vulkan >= 3.6.14 && < 3.10
 
 tests:
   doctests:

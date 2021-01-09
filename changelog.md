@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [3.10] - 2021-01-09
 - Make zero instance for `TransformMatrixKHR` return identity matrix. See
   https://github.com/expipiplus1/vulkan/issues/240
 - Remove explicit 'count' field in AccelerationStructureBuildGeometryInfoKHR.

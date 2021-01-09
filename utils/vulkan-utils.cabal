@@ -1,11 +1,11 @@
 cabal-version: 1.24
 
--- This file has been generated from package.yaml by hpack version 0.34.2.
+-- This file has been generated from package.yaml by hpack version 0.34.3.
 --
 -- see: https://github.com/sol/hpack
 
 name:           vulkan-utils
-version:        0.4
+version:        0.4.1
 synopsis:       Utils for the vulkan package
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -68,7 +68,7 @@ library
     , typed-process
     , unordered-containers
     , vector
-    , vulkan >=3.6.14 && <3.9
+    , vulkan >=3.6.14 && <3.10
   default-language: Haskell2010
 
 test-suite doctests
