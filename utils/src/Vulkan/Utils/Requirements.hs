@@ -158,8 +158,15 @@ checkInstanceRequest foundVersion layerProps lookupExtension = \case
   RequireInstanceExtension { instanceExtensionLayerName, instanceExtensionName, instanceExtensionMinVersion }
     | Just eProps <- lookupExtension instanceExtensionLayerName
                                      instanceExtensionName
-    , specVersion (eProps :: ExtensionProperties) >= instanceExtensionMinVersion
-    -> Satisfied
+    -> let foundInstanceExtensionVersion =
+             specVersion (eProps :: ExtensionProperties)
+       in  if foundInstanceExtensionVersion >= instanceExtensionMinVersion
+             then Satisfied
+             else UnsatisfiedInstanceExtensionVersion
+               instanceExtensionName
+               (Unsatisfied instanceExtensionMinVersion
+                            foundInstanceExtensionVersion
+               )
     | otherwise
     -> UnsatisfiedInstanceExtension instanceExtensionName
 
@@ -322,8 +329,12 @@ checkDeviceRequest mbFeats mbProps lookupExtension = \case
   RequireDeviceExtension { deviceExtensionLayerName, deviceExtensionName, deviceExtensionMinVersion }
     | Just eProps <- lookupExtension deviceExtensionLayerName
                                      deviceExtensionName
-    , specVersion (eProps :: ExtensionProperties) >= deviceExtensionMinVersion
-    -> Satisfied
+    -> let foundVersion = specVersion (eProps :: ExtensionProperties)
+       in  if foundVersion >= deviceExtensionMinVersion
+             then Satisfied
+             else UnsatisfiedDeviceExtensionVersion
+               deviceExtensionName
+               (Unsatisfied deviceExtensionMinVersion foundVersion)
     | otherwise
     -> UnsatisfiedDeviceExtension deviceExtensionName
 
@@ -357,8 +368,12 @@ data RequirementResult
     -- ^ A propery was not an appropriate value
   | UnsatisfiedDeviceExtension ByteString
     -- ^ A device extension was missing
+  | UnsatisfiedDeviceExtensionVersion ByteString (Unsatisfied Word32)
+    -- ^ A device extension was found but the version didn't meet requirements
   | UnsatisfiedInstanceExtension ByteString
     -- ^ An instance extension was missing
+  | UnsatisfiedInstanceExtensionVersion ByteString (Unsatisfied Word32)
+    -- ^ An instance extension was found but the version didn't meet requirements
   deriving (Eq, Ord)
 
 data Unsatisfied a = Unsatisfied
@@ -404,10 +419,15 @@ prettyRequirementResult = \case
   UnsatisfiedDeviceVersion   u -> "Unsatisfied Device version: " <> p u
   UnsatisfiedLayerVersion n u ->
     "Unsatisfied layer version for " <> show n <> ": " <> p u
-  UnsatisfiedFeature           n -> "Missing feature: " <> show n
-  UnsatisfiedProperty          n -> "Unsatisfied property: " <> show n
-  UnsatisfiedInstanceExtension n -> "Couldn't find instance extension: " <> show n
-  UnsatisfiedDeviceExtension   n -> "Couldn't find device extension: " <> show n
+  UnsatisfiedFeature  n -> "Missing feature: " <> show n
+  UnsatisfiedProperty n -> "Unsatisfied property: " <> show n
+  UnsatisfiedInstanceExtension n ->
+    "Couldn't find instance extension: " <> show n
+  UnsatisfiedInstanceExtensionVersion n u ->
+    "Unsatisfied Instance extension version " <> show n <> " " <> p u
+  UnsatisfiedDeviceExtension n -> "Couldn't find device extension: " <> show n
+  UnsatisfiedDeviceExtensionVersion n u ->
+    "Unsatisfied Device extension version " <> show n <> " " <> p u
   where p = prettyUnsatisfied showVersion
 
 -- How I'm feeling after writing all this type level nonsense
