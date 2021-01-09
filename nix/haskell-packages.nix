@@ -90,7 +90,8 @@ let
       #
       # Overrides for examples
       #
-      nothunks = doJailbreak super.nothunks;
+      nothunks = markUnbroken (doJailbreak super.nothunks);
+      derive-storable-plugin = markUnbroken super.derive-storable-plugin;
       # profiling
       eventlog2html = markUnbroken (doJailbreak (appendPatch
         (overrideSrc super.eventlog2html {
