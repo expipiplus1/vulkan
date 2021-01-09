@@ -5,6 +5,7 @@
 - Calling traceEventIO before and after every VulkanMemoryAllocator command if
   `vulkan` was compiled with the `trace-calls` flag
 - Don't bother poking empty vectors in `withZeroCStruct`
+- Bump VMA, fixes compilation issue when vma-recording is enabled.
 
 ## [0.3.11] - 2020-11-30
 
