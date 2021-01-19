@@ -390,13 +390,12 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     @name@ /must/ be @NULL@
 --
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01467# If
---     @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/ name a
---     valid synchronization primitive of the type specified by
---     @handleType@
+--     @handle@ is @NULL@, @name@ /must/ name a valid synchronization
+--     primitive of the type specified by @handleType@
 --
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01468# If
---     @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be a
---     valid handle of the type specified by @handleType@
+--     @name@ is @NULL@, @handle@ /must/ be a valid handle of the type
+--     specified by @handleType@
 --
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handle-01469# If @handle@
 --     is not @NULL@, @name@ /must/ be @NULL@
@@ -457,11 +456,6 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlagBits'
 --     values
 --
--- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-parameter# If
---     @handleType@ is not @0@, @handleType@ /must/ be a valid
---     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
---     value
---
 -- == Host Synchronization
 --
 -- -   Host access to @semaphore@ /must/ be externally synchronized
@@ -512,6 +506,7 @@ instance ToCStruct ImportSemaphoreWin32HandleInfoKHR where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Semaphore)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr ExternalSemaphoreHandleTypeFlagBits)) (zero)
     f
 
 instance FromCStruct ImportSemaphoreWin32HandleInfoKHR where

@@ -2507,6 +2507,18 @@ instance Zero BlitImageInfo2KHR where
 --     for each element of @pRegions@, @imageSubresource.baseArrayLayer@
 --     /must/ be @0@ and @imageSubresource.layerCount@ /must/ be @1@
 --
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04725# If @dstImage@ is
+--     not a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ multiplied by the
+--     texel block size of @dstImage@ /must/ be less than or equal to 231-1
+--
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04726# If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ divided by the
+--     compressed texel block width and then multiplied by the texel block
+--     size of @dstImage@ /must/ be less than or equal to 231-1
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-sType-sType# @sType@ /must/ be
@@ -2843,6 +2855,20 @@ instance Zero CopyBufferToImageInfo2KHR where
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each element of
 --     @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @imageSubresource.layerCount@ /must/ be @1@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04725# If {imageparam} is
+--     not a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ multiplied by the
+--     texel block size of {imageparam} /must/ be less than or equal to
+--     231-1
+--
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04726# If {imageparam} is
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ divided by the
+--     compressed texel block width and then multiplied by the texel block
+--     size of {imageparam} /must/ be less than or equal to 231-1
 --
 -- == Valid Usage (Implicit)
 --

@@ -1591,6 +1591,9 @@ instance Zero DisplayModeCreateInfoKHR where
 -- mode height) for @minSrcExtent@, @maxSrcExtent@, @minDstExtent@, and
 -- @maxDstExtent@.
 --
+-- The value @supportedAlpha@ /must/ contain at least one valid
+-- 'DisplayPlaneAlphaFlagBitsKHR' bit.
+--
 -- These values indicate the limits of the implementation’s individual
 -- fields. Not all combinations of values within the offset and extent
 -- ranges returned in 'DisplayPlaneCapabilitiesKHR' are guaranteed to be
@@ -1737,10 +1740,9 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --     between @0@ and @1@, inclusive
 --
 -- -   #VUID-VkDisplaySurfaceCreateInfoKHR-alphaMode-01255# @alphaMode@
---     /must/ be @0@ or one of the bits present in the @supportedAlpha@
---     member of 'DisplayPlaneCapabilitiesKHR' returned by
---     'getDisplayPlaneCapabilitiesKHR' for the display plane corresponding
---     to @displayMode@
+--     /must/ be one of the bits present in the @supportedAlpha@ member of
+--     'DisplayPlaneCapabilitiesKHR' for the display plane corresponding to
+--     @displayMode@
 --
 -- -   #VUID-VkDisplaySurfaceCreateInfoKHR-width-01256# The @width@ and
 --     @height@ members of @imageExtent@ /must/ be less than or equal to

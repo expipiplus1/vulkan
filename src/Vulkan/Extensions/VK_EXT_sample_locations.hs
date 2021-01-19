@@ -472,11 +472,6 @@ instance Zero SampleLocationEXT where
 -- -   #VUID-VkSampleLocationsInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT'
 --
--- -   #VUID-VkSampleLocationsInfoEXT-sampleLocationsPerPixel-parameter# If
---     @sampleLocationsPerPixel@ is not @0@, @sampleLocationsPerPixel@
---     /must/ be a valid
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
---
 -- -   #VUID-VkSampleLocationsInfoEXT-pSampleLocations-parameter# If
 --     @sampleLocationsCount@ is not @0@, @pSampleLocations@ /must/ be a
 --     valid pointer to an array of @sampleLocationsCount@
@@ -492,8 +487,8 @@ instance Zero SampleLocationEXT where
 -- 'SubpassSampleLocationsEXT', 'cmdSetSampleLocationsEXT'
 data SampleLocationsInfoEXT = SampleLocationsInfoEXT
   { -- | @sampleLocationsPerPixel@ is a
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' specifying
-    -- the number of sample locations per pixel.
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+    -- specifying the number of sample locations per pixel.
     sampleLocationsPerPixel :: SampleCountFlagBits
   , -- | @sampleLocationGridSize@ is the size of the sample location grid to
     -- select custom sample locations for.
@@ -525,6 +520,7 @@ instance ToCStruct SampleLocationsInfoEXT where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SampleCountFlagBits)) (zero)
     poke ((p `plusPtr` 20 :: Ptr Extent2D)) (zero)
     f
 

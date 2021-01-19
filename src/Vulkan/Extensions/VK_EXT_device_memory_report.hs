@@ -15,7 +15,7 @@
 --     285
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -35,7 +35,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-08-26
+--     2021-01-06
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -216,6 +216,12 @@
 -- == Version History
 --
 -- -   Revision 1, 2020-08-26 (Yiwei Zhang)
+--
+--     -   Initial version
+--
+-- -   Revision 2, 2021-01-06 (Yiwei Zhang)
+--
+--     -   Minor description update
 --
 -- = See Also
 --
@@ -498,32 +504,36 @@ data DeviceMemoryReportCallbackDataEXT = DeviceMemoryReportCallbackDataEXT
   , -- | @size@ is the size of the memory object in bytes. If @type@ is
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT',
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT' or
-    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT', @size@ /must/
-    -- be a valid 'Vulkan.Core10.FundamentalTypes.DeviceSize' value.
+    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT', @size@ is a
+    -- valid 'Vulkan.Core10.FundamentalTypes.DeviceSize' value. Otherwise,
+    -- @size@ is undefined.
     size :: DeviceSize
   , -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
     -- specifying the type of the object associated with this device memory
     -- report event. If @type@ is
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT',
-    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT' or
-    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT', @objectType@
-    -- /must/ be a valid 'Vulkan.Core10.Enums.ObjectType.ObjectType' enum.
+    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT',
+    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT',
+    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT' or
+    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT', @objectType@ is
+    -- a valid 'Vulkan.Core10.Enums.ObjectType.ObjectType' enum. Otherwise,
+    -- @objectType@ is undefined.
     objectType :: ObjectType
   , -- | @objectHandle@ is the object this device memory report event is
     -- attributed to. If @type@ is
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT',
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT',
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT' or
-    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT', @objectHandle@ /must/ be
-    -- a valid Vulkan handle of the type associated with @objectType@ as
-    -- defined in the
+    -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT', @objectHandle@ is a
+    -- valid Vulkan handle of the type associated with @objectType@ as defined
+    -- in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types VkObjectType and Vulkan Handle Relationship>
-    -- table.
+    -- table. Otherwise, @objectHandle@ is undefined.
     objectHandle :: Word64
   , -- | @heapIndex@ describes which memory heap this device memory allocation is
     -- made from. If @type@ is 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT'
     -- or 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT', @heapIndex@
-    -- /must/ correspond to one of the valid heaps from the
+    -- corresponds to one of the valid heaps from the
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'
     -- structure. Otherwise, @heapIndex@ is undefined.
     heapIndex :: Word32
@@ -555,6 +565,10 @@ instance ToCStruct DeviceMemoryReportCallbackDataEXT where
     poke ((p `plusPtr` 16 :: Ptr DeviceMemoryReportFlagsEXT)) (zero)
     poke ((p `plusPtr` 20 :: Ptr DeviceMemoryReportEventTypeEXT)) (zero)
     poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr ObjectType)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct DeviceMemoryReportCallbackDataEXT where
@@ -691,11 +705,11 @@ type FN_vkDeviceMemoryReportCallbackEXT = ("pCallbackData" ::: Ptr DeviceMemoryR
 type PFN_vkDeviceMemoryReportCallbackEXT = FunPtr FN_vkDeviceMemoryReportCallbackEXT
 
 
-type EXT_DEVICE_MEMORY_REPORT_SPEC_VERSION = 1
+type EXT_DEVICE_MEMORY_REPORT_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_DEVICE_MEMORY_REPORT_SPEC_VERSION"
 pattern EXT_DEVICE_MEMORY_REPORT_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_DEVICE_MEMORY_REPORT_SPEC_VERSION = 1
+pattern EXT_DEVICE_MEMORY_REPORT_SPEC_VERSION = 2
 
 
 type EXT_DEVICE_MEMORY_REPORT_EXTENSION_NAME = "VK_EXT_device_memory_report"

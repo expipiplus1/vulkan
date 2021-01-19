@@ -601,7 +601,8 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  _ -> ([], [])
+  "SPV_KHR_multiview" -> (,) [RequireInstanceVersion $ MAKE_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_VERSION 1 1 0]
+  _                   -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
 spirvCapabilityRequirements = \case

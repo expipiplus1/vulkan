@@ -347,11 +347,11 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --     physical device as @device@
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00669# If @handleType@ is
---     not @0@, it /must/ be defined as a POSIX file descriptor handle
+--     not @0@, it /must/ be
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'.
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00670# If @handleType@ is
---     not @0@, @fd@ /must/ be a valid handle of the type specified by
---     @handleType@
+--     not @0@, @fd@ /must/ be a valid POSIX file descriptor handle.
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-fd-01746# The memory represented by
 --     @fd@ /must/ have been created from a physical device and driver that

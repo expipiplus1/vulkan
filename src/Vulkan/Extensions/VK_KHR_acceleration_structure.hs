@@ -1266,6 +1266,7 @@ import Control.Monad.Trans.Cont (runContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Foreign.C.Types (CSize(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -4532,8 +4533,9 @@ foreign import ccall
 --     'AccelerationStructureBuildGeometryInfoKHR' structure
 --
 -- -   #VUID-vkGetAccelerationStructureBuildSizesKHR-pMaxPrimitiveCounts-parameter#
---     @pMaxPrimitiveCounts@ /must/ be a valid pointer to an array of
---     @pBuildInfo->geometryCount@ @uint32_t@ values
+--     If @pMaxPrimitiveCounts@ is not @NULL@, @pMaxPrimitiveCounts@ /must/
+--     be a valid pointer to an array of @pBuildInfo->geometryCount@
+--     @uint32_t@ values
 --
 -- -   #VUID-vkGetAccelerationStructureBuildSizesKHR-pSizeInfo-parameter#
 --     @pSizeInfo@ /must/ be a valid pointer to a
@@ -4567,10 +4569,14 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureBuildSizesKHR is null" Nothing Nothing
   let vkGetAccelerationStructureBuildSizesKHR' = mkVkGetAccelerationStructureBuildSizesKHR vkGetAccelerationStructureBuildSizesKHRPtr
   pBuildInfo <- ContT $ withCStruct (buildInfo)
-  pPMaxPrimitiveCounts <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (maxPrimitiveCounts)) * 4) 4
-  lift $ Data.Vector.imapM_ (\i e -> poke (pPMaxPrimitiveCounts `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (maxPrimitiveCounts)
+  pMaxPrimitiveCounts <- if Data.Vector.null (maxPrimitiveCounts)
+    then pure nullPtr
+    else do
+      pPMaxPrimitiveCounts <- ContT $ allocaBytesAligned @Word32 (((Data.Vector.length (maxPrimitiveCounts))) * 4) 4
+      lift $ Data.Vector.imapM_ (\i e -> poke (pPMaxPrimitiveCounts `plusPtr` (4 * (i)) :: Ptr Word32) (e)) ((maxPrimitiveCounts))
+      pure $ pPMaxPrimitiveCounts
   pPSizeInfo <- ContT (withZeroCStruct @AccelerationStructureBuildSizesInfoKHR)
-  lift $ traceAroundEvent "vkGetAccelerationStructureBuildSizesKHR" (vkGetAccelerationStructureBuildSizesKHR' (deviceHandle (device)) (buildType) pBuildInfo (pPMaxPrimitiveCounts) (pPSizeInfo))
+  lift $ traceAroundEvent "vkGetAccelerationStructureBuildSizesKHR" (vkGetAccelerationStructureBuildSizesKHR' (deviceHandle (device)) (buildType) pBuildInfo pMaxPrimitiveCounts (pPSizeInfo))
   pSizeInfo <- lift $ peekCStruct @AccelerationStructureBuildSizesInfoKHR pPSizeInfo
   pure $ (pSizeInfo)
 
@@ -4916,56 +4922,7 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 -- @vertexStride@ for acceleration structure geometry is instead restricted
 -- to being a 32-bit value.
 --
--- == Valid Usage
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03735#
---     @vertexStride@ /must/ be a multiple of the size in bytes of the
---     smallest component of @vertexFormat@
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03819#
---     @vertexStride@ /must/ be less than or equal to 232-1
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-03797#
---     @vertexFormat@ /must/ support the
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
---     in
---     'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
---     as returned by
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-03798#
---     @indexType@ /must/ be
---     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
---     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
---     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
---
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-sType-sType#
---     @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR'
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-pNext-pNext#
---     @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-parameter#
---     @vertexFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
---     value
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexData-parameter#
---     @vertexData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-parameter#
---     @indexType@ /must/ be a valid
---     'Vulkan.Core10.Enums.IndexType.IndexType' value
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexData-parameter#
---     If @indexData@ is not @0@, @indexData@ /must/ be a valid
---     'DeviceOrHostAddressConstKHR' union
---
--- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-transformData-parameter#
---     If @transformData@ is not @0@, @transformData@ /must/ be a valid
---     'DeviceOrHostAddressConstKHR' union
 --
 -- = See Also
 --
@@ -4977,24 +4934,61 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 data AccelerationStructureGeometryTrianglesDataKHR = AccelerationStructureGeometryTrianglesDataKHR
   { -- | @vertexFormat@ is the 'Vulkan.Core10.Enums.Format.Format' of each vertex
     -- element.
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-03797#
+    -- @vertexFormat@ /must/ support the
+    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+    -- in
+    -- 'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
+    -- as returned by
+    -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-parameter#
+    -- @vertexFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
+    -- value
     vertexFormat :: Format
   , -- | @vertexData@ is a device or host address to memory containing vertex
     -- data for this geometry.
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexData-parameter#
+    -- @vertexData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     vertexData :: DeviceOrHostAddressConstKHR
   , -- | @vertexStride@ is the stride in bytes between each vertex.
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03735#
+    -- @vertexStride@ /must/ be a multiple of the size in bytes of the smallest
+    -- component of @vertexFormat@
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03819#
+    -- @vertexStride@ /must/ be less than or equal to 232-1
     vertexStride :: DeviceSize
   , -- | @maxVertex@ is the highest index of a vertex that will be addressed by a
     -- build command using this structure.
     maxVertex :: Word32
   , -- | @indexType@ is the 'Vulkan.Core10.Enums.IndexType.IndexType' of each
     -- index element.
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-03798#
+    -- @indexType@ /must/ be 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
+    -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
+    -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-parameter#
+    -- @indexType@ /must/ be a valid 'Vulkan.Core10.Enums.IndexType.IndexType'
+    -- value
     indexType :: IndexType
   , -- | @indexData@ is a device or host address to memory containing index data
     -- for this geometry.
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexData-parameter#
+    -- @indexData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     indexData :: DeviceOrHostAddressConstKHR
   , -- | @transformData@ is a device or host address to memory containing an
     -- optional reference to a 'TransformMatrixKHR' structure defining a
     -- transformation that should be applied to vertices in this geometry.
+    --
+    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-transformData-parameter#
+    -- @transformData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     transformData :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
@@ -5026,6 +5020,8 @@ instance ToCStruct AccelerationStructureGeometryTrianglesDataKHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 44 :: Ptr IndexType)) (zero)
+    ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr DeviceOrHostAddressConstKHR)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 56 :: Ptr DeviceOrHostAddressConstKHR)) (zero) . ($ ())
     lift $ f
 
 instance Zero AccelerationStructureGeometryTrianglesDataKHR where
@@ -5548,6 +5544,8 @@ instance ToCStruct AccelerationStructureBuildRangeInfoKHR where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct AccelerationStructureBuildRangeInfoKHR where

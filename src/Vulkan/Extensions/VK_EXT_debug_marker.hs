@@ -920,6 +920,13 @@ instance ToCStruct DebugMarkerMarkerInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pMarkerName'' <- ContT $ useAsCString (mempty)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CChar))) pMarkerName''
+    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
+    lift $ case ((zero, zero, zero, zero)) of
+      (e0, e1, e2, e3) -> do
+        poke (pColor' :: Ptr CFloat) (CFloat (e0))
+        poke (pColor' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
+        poke (pColor' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
+        poke (pColor' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
     lift $ f
 
 instance FromCStruct DebugMarkerMarkerInfoEXT where

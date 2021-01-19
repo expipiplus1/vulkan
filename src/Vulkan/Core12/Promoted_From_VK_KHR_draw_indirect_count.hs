@@ -438,6 +438,16 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
+-- -   #VUID-vkCmdDrawIndirectCount-blendEnable-04727# If rasterization is
+--     not disabled in the bound graphics pipeline, then for each color
+--     attachment in the subpass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
 -- -   #VUID-vkCmdDrawIndirectCount-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
 --     entry point’s interface /must/ have either valid or
@@ -1008,6 +1018,17 @@ foreign import ccall
 --     draw command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-blendEnable-04727# If
+--     rasterization is not disabled in the bound graphics pipeline, then
+--     for each color attachment in the subpass, if the corresponding image
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
