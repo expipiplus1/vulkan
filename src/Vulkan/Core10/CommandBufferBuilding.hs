@@ -2091,6 +2091,16 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
+-- -   #VUID-vkCmdDraw-blendEnable-04727# If rasterization is not disabled
+--     in the bound graphics pipeline, then for each color attachment in
+--     the subpass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
 -- -   #VUID-vkCmdDraw-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -2614,6 +2624,16 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
+-- -   #VUID-vkCmdDrawIndexed-blendEnable-04727# If rasterization is not
+--     disabled in the bound graphics pipeline, then for each color
+--     attachment in the subpass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -3130,6 +3150,16 @@ foreign import ccall
 --     draw command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
+--
+-- -   #VUID-vkCmdDrawIndirect-blendEnable-04727# If rasterization is not
+--     disabled in the bound graphics pipeline, then for each color
+--     attachment in the subpass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDrawIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
@@ -3675,6 +3705,16 @@ foreign import ccall
 --     draw command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-blendEnable-04727# If rasterization
+--     is not disabled in the bound graphics pipeline, then for each color
+--     attachment in the subpass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
@@ -5824,6 +5864,17 @@ foreign import ccall
 --     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
 --     @0@ and @imageSubresource.layerCount@ /must/ be @1@
 --
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-04725# If @dstImage@ is not a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ multiplied by the
+--     texel block size of @dstImage@ /must/ be less than or equal to 231-1
+--
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-04726# If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ divided by the
+--     compressed texel block width and then multiplied by the texel block
+--     size of @dstImage@ /must/ be less than or equal to 231-1
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-parameter#
@@ -6159,6 +6210,17 @@ foreign import ccall
 --     of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each
 --     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
 --     @0@ and @imageSubresource.layerCount@ /must/ be @1@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-04725# If @srcImage@ is not a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ multiplied by the
+--     texel block size of @srcImage@ /must/ be less than or equal to 231-1
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-04726# If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ divided by the
+--     compressed texel block width and then multiplied by the texel block
+--     size of @srcImage@ /must/ be less than or equal to 231-1
 --
 -- == Valid Usage (Implicit)
 --
@@ -8611,6 +8673,16 @@ foreign import ccall
 -- -   #VUID-vkCmdBeginQuery-queryType-02804# The @queryType@ used to
 --     create @queryPool@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP'
+--
+-- -   #VUID-vkCmdBeginQuery-queryType-04728# The @queryType@ used to
+--     create @queryPool@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
+--
+-- -   #VUID-vkCmdBeginQuery-queryType-04729# The @queryType@ used to
+--     create @queryPool@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
 -- -   #VUID-vkCmdBeginQuery-queryType-00800# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-occlusionQueryPrecise precise occlusion queries>

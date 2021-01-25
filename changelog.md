@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump API version to v1.2.168
 
 ## [3.10] - 2021-01-09
 - Make zero instance for `TransformMatrixKHR` return identity matrix. See

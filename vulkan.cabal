@@ -432,8 +432,10 @@ library
       Vulkan.Extensions.VK_KHR_wayland_surface
       Vulkan.Extensions.VK_KHR_win32_keyed_mutex
       Vulkan.Extensions.VK_KHR_win32_surface
+      Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout
       Vulkan.Extensions.VK_KHR_xcb_surface
       Vulkan.Extensions.VK_KHR_xlib_surface
+      Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
       Vulkan.Extensions.VK_MVK_ios_surface
       Vulkan.Extensions.VK_MVK_macos_surface
       Vulkan.Extensions.VK_NN_vi_surface

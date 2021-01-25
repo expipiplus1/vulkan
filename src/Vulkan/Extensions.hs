@@ -180,8 +180,10 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_wayland_surface
                           , module Vulkan.Extensions.VK_KHR_win32_keyed_mutex
                           , module Vulkan.Extensions.VK_KHR_win32_surface
+                          , module Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout
                           , module Vulkan.Extensions.VK_KHR_xcb_surface
                           , module Vulkan.Extensions.VK_KHR_xlib_surface
+                          , module Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
                           , module Vulkan.Extensions.VK_MVK_ios_surface
                           , module Vulkan.Extensions.VK_MVK_macos_surface
                           , module Vulkan.Extensions.VK_NN_vi_surface
@@ -406,8 +408,10 @@ import Vulkan.Extensions.VK_KHR_vulkan_memory_model
 import Vulkan.Extensions.VK_KHR_wayland_surface
 import Vulkan.Extensions.VK_KHR_win32_keyed_mutex
 import Vulkan.Extensions.VK_KHR_win32_surface
+import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout
 import Vulkan.Extensions.VK_KHR_xcb_surface
 import Vulkan.Extensions.VK_KHR_xlib_surface
+import Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
 import Vulkan.Extensions.VK_MVK_ios_surface
 import Vulkan.Extensions.VK_MVK_macos_surface
 import Vulkan.Extensions.VK_NN_vi_surface

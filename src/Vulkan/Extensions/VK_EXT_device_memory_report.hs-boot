@@ -15,7 +15,7 @@
 --     285
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -35,7 +35,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-08-26
+--     2021-01-06
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -216,6 +216,12 @@
 -- == Version History
 --
 -- -   Revision 1, 2020-08-26 (Yiwei Zhang)
+--
+--     -   Initial version
+--
+-- -   Revision 2, 2021-01-06 (Yiwei Zhang)
+--
+--     -   Minor description update
 --
 -- = See Also
 --

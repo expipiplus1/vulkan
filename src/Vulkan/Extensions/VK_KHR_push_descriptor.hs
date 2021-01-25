@@ -373,7 +373,7 @@ foreign import ccall
 --     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
 --     'Vulkan.Core10.Handles.BufferView' in a layout defined by
 --     @descriptorUpdateTemplate@ when it was created with
---     'Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR'
+--     'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.createDescriptorUpdateTemplate'
 --
 -- == Valid Usage (Implicit)
 --

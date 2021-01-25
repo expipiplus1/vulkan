@@ -1634,6 +1634,7 @@ instance ToCStruct SubpassDependency2 where
     poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 24 :: Ptr PipelineStageFlags)) (zero)
     poke ((p `plusPtr` 28 :: Ptr PipelineStageFlags)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr Int32)) (zero)
     f
 
 instance FromCStruct SubpassDependency2 where

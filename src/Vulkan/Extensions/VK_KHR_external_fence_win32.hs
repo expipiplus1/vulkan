@@ -348,14 +348,13 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT',
 --     @name@ /must/ be @NULL@
 --
--- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01460# If
---     @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/ name a
---     valid synchronization primitive of the type specified by
---     @handleType@
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01460# If @handle@
+--     is @NULL@, @name@ /must/ name a valid synchronization primitive of
+--     the type specified by @handleType@
 --
--- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01461# If
---     @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be a
---     valid handle of the type specified by @handleType@
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01461# If @name@ is
+--     @NULL@, @handle@ /must/ be a valid handle of the type specified by
+--     @handleType@
 --
 -- -   #VUID-VkImportFenceWin32HandleInfoKHR-handle-01462# If @handle@ is
 --     not @NULL@, @name@ /must/ be @NULL@
@@ -383,11 +382,6 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 -- -   #VUID-VkImportFenceWin32HandleInfoKHR-flags-parameter# @flags@
 --     /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits' values
---
--- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-parameter# If
---     @handleType@ is not @0@, @handleType@ /must/ be a valid
---     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
---     value
 --
 -- == Host Synchronization
 --
@@ -438,6 +432,7 @@ instance ToCStruct ImportFenceWin32HandleInfoKHR where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Fence)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr ExternalFenceHandleTypeFlagBits)) (zero)
     f
 
 instance FromCStruct ImportFenceWin32HandleInfoKHR where
