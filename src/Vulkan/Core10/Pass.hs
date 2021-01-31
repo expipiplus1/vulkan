@@ -934,11 +934,11 @@ instance Zero AttachmentDescription where
 --     be 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR',
---     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL_KHR',
---     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL_KHR',
---     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL_KHR',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
 --     or
---     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL_KHR'
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2274,12 +2274,12 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 -- -   #VUID-VkFramebufferCreateInfo-flags-03190# If @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     the @pNext@ chain /must/ include an instance of
---     'Vulkan.Extensions.VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfoKHR'
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-03191# If @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     the @attachmentImageInfoCount@ member of an instance of
---     'Vulkan.Extensions.VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfoKHR'
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain /must/ be equal to either zero or
 --     @attachmentCount@
 --
@@ -2287,7 +2287,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     the @width@ member of any element of the @pAttachmentImageInfos@
 --     member of an instance of
---     'Vulkan.Extensions.VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfoKHR'
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain that is used as an input, color, resolve or
 --     depth\/stencil attachment in @pRenderPass@ /must/ be greater than or
 --     equal to @width@
@@ -2296,7 +2296,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     the @height@ member of any element of the @pAttachmentImageInfos@
 --     member of an instance of
---     'Vulkan.Extensions.VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfoKHR'
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain that is used as an input, color, resolve or
 --     depth\/stencil attachment in @pRenderPass@ /must/ be greater than or
 --     equal to @height@
@@ -2305,7 +2305,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     the @width@ member of any element of the @pAttachmentImageInfos@
 --     member of an instance of
---     'Vulkan.Extensions.VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfoKHR'
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain that is referenced by
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'::@fragmentDensityMapAttachment@
 --     in @renderPass@ /must/ be greater than or equal to

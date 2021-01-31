@@ -547,6 +547,8 @@ instance ToCStruct PipelineRasterizationLineStateCreateInfoEXT where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr LineRasterizationModeEXT)) (zero)
     poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word16)) (zero)
     f
 
 instance FromCStruct PipelineRasterizationLineStateCreateInfoEXT where

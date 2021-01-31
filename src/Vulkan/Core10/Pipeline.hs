@@ -3533,15 +3533,16 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     of the @front@ and @back@ members of @pDepthStencilState@ /must/ be
 --     'Vulkan.Core10.Enums.StencilOp.STENCIL_OP_KEEP'
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-blendEnable-02023# If
---     rasterization is not disabled and the subpass uses color
---     attachments, then for each color attachment in the subpass the
---     @blendEnable@ member of the corresponding element of the
---     @pAttachment@ member of @pColorBlendState@ /must/ be
---     'Vulkan.Core10.FundamentalTypes.FALSE' if the attached image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
---     does not contain
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'
+-- -   #VUID-VkGraphicsPipelineCreateInfo-blendEnable-04717# If
+--     rasterization is not disabled, then for each color attachment in the
+--     subpass, if the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     of the format of the corresponding attachment description do not
+--     contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-attachmentCount-00746# If
 --     rasterization is not disabled and the subpass uses color

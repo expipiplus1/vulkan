@@ -165,7 +165,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (Physica
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Features)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model (PhysicalDeviceVulkanMemoryModelFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_image_arrays (PhysicalDeviceYcbcrImageArraysFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory (PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR)
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
@@ -755,8 +757,10 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Features',
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeatures',
+--     'Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout.PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_ycbcr_image_arrays.PhysicalDeviceYcbcrImageArraysFeaturesEXT',
 --     or
---     'Vulkan.Extensions.VK_EXT_ycbcr_image_arrays.PhysicalDeviceYcbcrImageArraysFeaturesEXT'
+--     'Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory.PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR'
 --
 -- -   #VUID-VkDeviceCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique, with the exception of
@@ -843,8 +847,10 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevice4444FormatsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevicePortabilitySubsetFeaturesKHR = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageRobustnessFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRobustness2FeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = Just f
     | Just Refl <- eqT @e @DeviceDiagnosticsConfigCreateInfoNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDiagnosticsConfigFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExtendedDynamicStateFeaturesEXT = Just f

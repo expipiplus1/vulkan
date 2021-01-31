@@ -2697,6 +2697,54 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --     bit set
 --
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04718# If @flags@
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR',
+--     each element of the @pLibraries@ member of @libraries@ /must/ have
+--     been created with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--     bit set
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04719# If @flags@
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR',
+--     each element of the @pLibraries@ member of @libraries@ /must/ have
+--     been created with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
+--     bit set
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04720# If @flags@
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
+--     each element of the @pLibraries@ member of @libraries@ /must/ have
+--     been created with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
+--     bit set
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04721# If @flags@
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
+--     each element of the @pLibraries@ member of @libraries@ /must/ have
+--     been created with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
+--     bit set
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04722# If @flags@
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
+--     each element of the @pLibraries@ member of @libraries@ /must/ have
+--     been created with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
+--     bit set
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04723# If @flags@
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
+--     each element of the @pLibraries@ member of @libraries@ /must/ have
+--     been created with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
+--     bit set
+--
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraryInfo-03595# If the
 --     <VK_KHR_pipeline_library.html VK_KHR_pipeline_library> extension is
 --     not enabled, @pLibraryInfo@ and @pLibraryInterface@ /must/ be
@@ -3227,7 +3275,7 @@ instance Zero PhysicalDeviceRayTracingPipelinePropertiesKHR where
 data StridedDeviceAddressRegionKHR = StridedDeviceAddressRegionKHR
   { -- | @deviceAddress@ is the device address (as returned by the
     -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress'
-    -- command) at which the region starts.
+    -- command) at which the region starts, or zero if the region is unused.
     deviceAddress :: DeviceAddress
   , -- | @stride@ is the byte stride between consecutive elements.
     stride :: DeviceSize

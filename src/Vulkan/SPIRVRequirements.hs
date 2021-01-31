@@ -58,6 +58,8 @@ import Vulkan.Core12 (PhysicalDeviceVulkan12Features)
 import Vulkan.Core12 (PhysicalDeviceVulkan12Features(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties(..))
+import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR)
+import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(..))
 import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gpu_shader_int16 (pattern AMD_GPU_SHADER_INT16_EXTENSION_NAME)
@@ -111,6 +113,7 @@ import Vulkan.Extensions.VK_KHR_spirv_1_4 (pattern KHR_SPIRV_1_4_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_storage_buffer_storage_class (pattern KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_variable_pointers (pattern KHR_VARIABLE_POINTERS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_vulkan_memory_model (pattern KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (pattern KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME)
 import Vulkan.Version (pattern MAKE_VERSION)
 import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME)
@@ -598,6 +601,18 @@ spirvExtensionRequirements = \case
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "SPV_KHR_multiview" -> (,) [RequireInstanceVersion $ MAKE_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_VERSION 1 1 0]
+  "SPV_KHR_workgroup_memory_explicit_layout" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -2130,6 +2145,60 @@ spirvCapabilityRequirements = \case
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_MAINTENANCE2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "WorkgroupMemoryExplicitLayoutKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "workgroupMemoryExplicitLayout"
+      , checkFeature  = workgroupMemoryExplicitLayout :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR -> Bool
+      , enableFeature = \f ->
+        f { workgroupMemoryExplicitLayout = True } :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "WorkgroupMemoryExplicitLayoutKHR8BitAccess" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName = "workgroupMemoryExplicitLayout8BitAccess"
+      , checkFeature = workgroupMemoryExplicitLayout8BitAccess :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+                       -> Bool
+      , enableFeature =
+        \f ->
+          f { workgroupMemoryExplicitLayout8BitAccess = True } :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "WorkgroupMemoryExplicitLayoutKHR16BitAccess" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "workgroupMemoryExplicitLayout16BitAccess"
+      , checkFeature  =
+        workgroupMemoryExplicitLayout16BitAccess :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR -> Bool
+      , enableFeature = \f ->
+        f { workgroupMemoryExplicitLayout16BitAccess = True } :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]

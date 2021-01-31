@@ -1021,6 +1021,7 @@ instance ToCStruct PipelineExecutableInternalRepresentationKHR where
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
     poke ((p `plusPtr` 528 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 536 :: Ptr CSize)) (CSize (zero))
     f
 
 instance FromCStruct PipelineExecutableInternalRepresentationKHR where

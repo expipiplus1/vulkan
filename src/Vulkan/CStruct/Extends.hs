@@ -464,7 +464,9 @@ import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Properties)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model (PhysicalDeviceVulkanMemoryModelFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_image_arrays (PhysicalDeviceYcbcrImageArraysFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory (PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core10.PipelineCache (PipelineCacheCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_blend_operation_advanced (PipelineColorBlendAdvancedStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineColorBlendAttachmentState)
@@ -834,8 +836,10 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceExtendedDynamicStateFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceDiagnosticsConfigFeaturesNV = ()
   Extends DeviceCreateInfo DeviceDiagnosticsConfigCreateInfoNV = ()
+  Extends DeviceCreateInfo PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRobustness2FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceImageRobustnessFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
@@ -963,8 +967,10 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCustomBorderColorFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExtendedDynamicStateFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDiagnosticsConfigFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRobustness2FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageRobustnessFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
@@ -1441,9 +1447,11 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM -> go @CommandBufferInheritanceRenderPassTransformInfoQCOM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV -> go @PhysicalDeviceDiagnosticsConfigFeaturesNV
   STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV -> go @DeviceDiagnosticsConfigCreateInfoNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR -> go @PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT -> go @PhysicalDeviceRobustness2FeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT -> go @PhysicalDeviceRobustness2PropertiesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT -> go @PhysicalDeviceImageRobustnessFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR -> go @PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR -> go @PhysicalDevicePortabilitySubsetFeaturesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR -> go @PhysicalDevicePortabilitySubsetPropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT -> go @PhysicalDevice4444FormatsFeaturesEXT
@@ -1758,9 +1766,11 @@ infix 6 ::&
 {-# complete (::&) :: CommandBufferInheritanceRenderPassTransformInfoQCOM #-}
 {-# complete (::&) :: PhysicalDeviceDiagnosticsConfigFeaturesNV #-}
 {-# complete (::&) :: DeviceDiagnosticsConfigCreateInfoNV #-}
+{-# complete (::&) :: PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR #-}
 {-# complete (::&) :: PhysicalDeviceRobustness2FeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceRobustness2PropertiesEXT #-}
 {-# complete (::&) :: PhysicalDeviceImageRobustnessFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR #-}
 {-# complete (::&) :: PhysicalDevicePortabilitySubsetFeaturesKHR #-}
 {-# complete (::&) :: PhysicalDevicePortabilitySubsetPropertiesKHR #-}
 {-# complete (::&) :: PhysicalDevice4444FormatsFeaturesEXT #-}

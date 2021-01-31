@@ -192,7 +192,7 @@
 -- to a destination access of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT'
 -- at pipeline stage
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'.
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'.
 --
 -- 2) How does this interact with multiview?
 --
@@ -835,6 +835,16 @@ foreign import ccall
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-02804# The @queryType@
 --     used to create @queryPool@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP'
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-04728# The @queryType@
+--     used to create @queryPool@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-04729# The @queryType@
+--     used to create @queryPool@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-00800# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-occlusionQueryPrecise precise occlusion queries>
@@ -1566,6 +1576,17 @@ foreign import ccall
 --     draw command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-blendEnable-04727# If
+--     rasterization is not disabled in the bound graphics pipeline, then
+--     for each color attachment in the subpass, if the corresponding image
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the @blendEnable@ member of the corresponding element of the
+--     @pAttachments@ member of @pColorBlendState@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
