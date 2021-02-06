@@ -2364,18 +2364,6 @@ instance Zero BlitImageInfo2KHR where
 --     not have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   #VUID-VkCopyBufferToImageInfo2KHR-commandBuffer-04052# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
---     @bufferOffset@ member of any element of @pRegions@ /must/ be a
---     multiple of @4@
---
--- -   #VUID-VkCopyBufferToImageInfo2KHR-dstImage-04053# If @dstImage@ has
---     a depth\/stencil format, the @bufferOffset@ member of any element of
---     @pRegions@ /must/ be a multiple of @4@
---
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-commandBuffer-04477# If the queue
 --     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
 --     @commandBuffer@ was allocated from does not support
@@ -2519,6 +2507,18 @@ instance Zero BlitImageInfo2KHR where
 --     compressed texel block width and then multiplied by the texel block
 --     size of @dstImage@ /must/ be less than or equal to 231-1
 --
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-commandBuffer-04052# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of @pRegions@ /must/ be a
+--     multiple of @4@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-srcImage-04053# If @dstImage@ has
+--     a depth\/stencil format, the @bufferOffset@ member of any element of
+--     @pRegions@ /must/ be a multiple of @4@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-sType-sType# @sType@ /must/ be
@@ -2615,8 +2615,8 @@ instance Zero CopyBufferToImageInfo2KHR where
            mempty
 
 
--- | VkCopyImageToBufferInfo2KHR - Structure specifying parameters of a image
--- to buffer copy command
+-- | VkCopyImageToBufferInfo2KHR - Structure specifying parameters of an
+-- image to buffer copy command
 --
 -- == Valid Usage
 --
@@ -2720,18 +2720,6 @@ instance Zero CopyBufferToImageInfo2KHR where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-srcImage-02544# @srcImage@ /must/
 --     not have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
--- -   #VUID-VkCopyImageToBufferInfo2KHR-commandBuffer-04054# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
---     @bufferOffset@ member of any element of @pRegions@ /must/ be a
---     multiple of @4@
---
--- -   #VUID-VkCopyImageToBufferInfo2KHR-srcImage-04055# If @srcImage@ has
---     a depth\/stencil format, the @bufferOffset@ member of any element of
---     @pRegions@ /must/ be a multiple of @4@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00197# For each
 --     element of @pRegions@ not containing
@@ -2869,6 +2857,18 @@ instance Zero CopyBufferToImageInfo2KHR where
 --     for each element of @pRegions@, @bufferRowLength@ divided by the
 --     compressed texel block width and then multiplied by the texel block
 --     size of {imageparam} /must/ be less than or equal to 231-1
+--
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-commandBuffer-04052# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of @pRegions@ /must/ be a
+--     multiple of @4@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-srcImage-04053# If {imageparam}
+--     has a depth\/stencil format, the @bufferOffset@ member of any
+--     element of @pRegions@ /must/ be a multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --

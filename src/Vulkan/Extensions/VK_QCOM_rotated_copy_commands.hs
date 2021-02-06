@@ -95,9 +95,9 @@
 --
 -- == New Enum Constants
 --
--- -   'QCOM_rotated_copy_commands_EXTENSION_NAME'
+-- -   'QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME'
 --
--- -   'QCOM_rotated_copy_commands_SPEC_VERSION'
+-- -   'QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -119,10 +119,10 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_QCOM_rotated_copy_commands  ( CopyCommandTransformInfoQCOM(..)
-                                                        , QCOM_rotated_copy_commands_SPEC_VERSION
-                                                        , pattern QCOM_rotated_copy_commands_SPEC_VERSION
-                                                        , QCOM_rotated_copy_commands_EXTENSION_NAME
-                                                        , pattern QCOM_rotated_copy_commands_EXTENSION_NAME
+                                                        , QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION
+                                                        , pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION
+                                                        , QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME
+                                                        , pattern QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME
                                                         , SurfaceTransformFlagBitsKHR(..)
                                                         , SurfaceTransformFlagsKHR
                                                         ) where
@@ -209,16 +209,16 @@ instance Zero CopyCommandTransformInfoQCOM where
            zero
 
 
-type QCOM_rotated_copy_commands_SPEC_VERSION = 0
+type QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 0
 
--- No documentation found for TopLevel "VK_QCOM_rotated_copy_commands_SPEC_VERSION"
-pattern QCOM_rotated_copy_commands_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_rotated_copy_commands_SPEC_VERSION = 0
+-- No documentation found for TopLevel "VK_QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION"
+pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION :: forall a . Integral a => a
+pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 0
 
 
-type QCOM_rotated_copy_commands_EXTENSION_NAME = "VK_QCOM_rotated_copy_commands"
+type QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME = "VK_QCOM_rotated_copy_commands"
 
--- No documentation found for TopLevel "VK_QCOM_rotated_copy_commands_EXTENSION_NAME"
-pattern QCOM_rotated_copy_commands_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern QCOM_rotated_copy_commands_EXTENSION_NAME = "VK_QCOM_rotated_copy_commands"
+-- No documentation found for TopLevel "VK_QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME"
+pattern QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME = "VK_QCOM_rotated_copy_commands"
 

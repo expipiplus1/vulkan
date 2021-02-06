@@ -1,7 +1,7 @@
 # Change Log
 
 ## WIP
-- Bump API version to v1.2.168
+- Bump API version to v1.2.169
 - Add `COMPLETE` pragma to `MAKE_VERSION` pattern
   https://github.com/expipiplus1/vulkan/issues/256
 

@@ -347,7 +347,7 @@ foreign import ccall
 -- coinciding timestamp values, however, depending on the nature of the
 -- time domains and other properties of the platform extrapolating values
 -- over a sufficiently long period of time /may/ no longer be accurate
--- enough to fit any particular purpose so applications are expected to
+-- enough to fit any particular purpose, so applications are expected to
 -- re-calibrate the timestamps on a regular basis.
 --
 -- == Return Codes

@@ -164,7 +164,7 @@ import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SU
 import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_win32_keyed_mutex (pattern NV_WIN32_KEYED_MUTEX_EXTENSION_NAME)
 import Vulkan.Extensions.VK_QCOM_render_pass_transform (pattern QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME)
-import Vulkan.Extensions.VK_QCOM_rotated_copy_commands (pattern QCOM_rotated_copy_commands_EXTENSION_NAME)
+import Vulkan.Extensions.VK_QCOM_rotated_copy_commands (pattern QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (pattern VALVE_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME)
 -- | The set of other extensions required to use this extension
 extensionDependencies :: ("extensionName" ::: ByteString) -> [ByteString]
@@ -464,7 +464,7 @@ extensionDependencies = \case
     ]
   EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME ->
     [EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME, KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
-  QCOM_rotated_copy_commands_EXTENSION_NAME ->
+  QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME ->
     [KHR_SWAPCHAIN_EXTENSION_NAME, KHR_COPY_COMMANDS_2_EXTENSION_NAME, KHR_SURFACE_EXTENSION_NAME]
   EXT_IMAGE_ROBUSTNESS_EXTENSION_NAME                 -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
   KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]

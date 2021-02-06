@@ -95,9 +95,9 @@
 --
 -- == New Enum Constants
 --
--- -   'QCOM_rotated_copy_commands_EXTENSION_NAME'
+-- -   'QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME'
 --
--- -   'QCOM_rotated_copy_commands_SPEC_VERSION'
+-- -   'QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
