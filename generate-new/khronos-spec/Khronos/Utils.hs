@@ -22,8 +22,6 @@ extensionPatterns p = do
         -> "VK_NV_VIEWPORT_ARRAY2"
         | p == "VK_EXT_swapchain_colorspace"
         -> "EXT_SWAPCHAIN_COLOR_SPACE"
-        | p == "VK_QCOM_rotated_copy_commands"
-        -> "QCOM_rotated_copy_commands"
         | "2" `T.isSuffixOf` p && not ("32" `T.isSuffixOf` p)
         -> T.toUpper (T.init p) <> "_2"
         | otherwise
