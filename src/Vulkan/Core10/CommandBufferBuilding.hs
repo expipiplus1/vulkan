@@ -5732,18 +5732,6 @@ foreign import ccall
 --     have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-04052# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
---     @bufferOffset@ member of any element of @pRegions@ /must/ be a
---     multiple of @4@
---
--- -   #VUID-vkCmdCopyBufferToImage-dstImage-04053# If @dstImage@ has a
---     depth\/stencil format, the @bufferOffset@ member of any element of
---     @pRegions@ /must/ be a multiple of @4@
---
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-04477# If the queue
 --     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
 --     @commandBuffer@ was allocated from does not support
@@ -5874,6 +5862,18 @@ foreign import ccall
 --     for each element of @pRegions@, @bufferRowLength@ divided by the
 --     compressed texel block width and then multiplied by the texel block
 --     size of @dstImage@ /must/ be less than or equal to 231-1
+--
+-- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-04052# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of @pRegions@ /must/ be a
+--     multiple of @4@
+--
+-- -   #VUID-vkCmdCopyBufferToImage-srcImage-04053# If @dstImage@ has a
+--     depth\/stencil format, the @bufferOffset@ member of any element of
+--     @pRegions@ /must/ be a multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --
@@ -6088,18 +6088,6 @@ foreign import ccall
 --     have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-04054# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
---     @bufferOffset@ member of any element of @pRegions@ /must/ be a
---     multiple of @4@
---
--- -   #VUID-vkCmdCopyImageToBuffer-srcImage-04055# If @srcImage@ has a
---     depth\/stencil format, the @bufferOffset@ member of any element of
---     @pRegions@ /must/ be a multiple of @4@
---
 -- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00197# For each element of
 --     @pRegions@ , @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
@@ -6221,6 +6209,18 @@ foreign import ccall
 --     for each element of @pRegions@, @bufferRowLength@ divided by the
 --     compressed texel block width and then multiplied by the texel block
 --     size of @srcImage@ /must/ be less than or equal to 231-1
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-04052# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of @pRegions@ /must/ be a
+--     multiple of @4@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-04053# If @srcImage@ has a
+--     depth\/stencil format, the @bufferOffset@ member of any element of
+--     @pRegions@ /must/ be a multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --
@@ -6702,9 +6702,6 @@ foreign import ccall
 -- -   #VUID-vkCmdClearColorImage-imageLayout-parameter# @imageLayout@
 --     /must/ be a valid 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 --     value
---
--- -   #VUID-vkCmdClearColorImage-pColor-parameter# @pColor@ /must/ be a
---     valid pointer to a valid 'ClearColorValue' union
 --
 -- -   #VUID-vkCmdClearColorImage-pRanges-parameter# @pRanges@ /must/ be a
 --     valid pointer to an array of @rangeCount@ valid
@@ -10796,7 +10793,7 @@ instance Zero ImageBlit where
 -- For purpose of valid usage statements here and in related copy commands,
 -- a /blocked image/ is defined as:
 --
--- -   a image with a /single-plane/, “@_422@” format, which is treated as
+-- -   an image with a /single-plane/, “@_422@” format, which is treated as
 --     a format with a 2 × 1 compressed texel block, or
 --
 -- -   a compressed image.
@@ -11276,10 +11273,6 @@ instance Zero ImageResolve where
 --
 -- -   #VUID-VkRenderPassBeginInfo-framebuffer-parameter# @framebuffer@
 --     /must/ be a valid 'Vulkan.Core10.Handles.Framebuffer' handle
---
--- -   #VUID-VkRenderPassBeginInfo-pClearValues-parameter# If
---     @clearValueCount@ is not @0@, @pClearValues@ /must/ be a valid
---     pointer to an array of @clearValueCount@ 'ClearValue' unions
 --
 -- -   #VUID-VkRenderPassBeginInfo-commonparent# Both of @framebuffer@, and
 --     @renderPass@ /must/ have been created, allocated, or retrieved from

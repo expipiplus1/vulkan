@@ -2165,7 +2165,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  "WorkgroupMemoryExplicitLayoutKHR8BitAccess" -> (,)
+  "WorkgroupMemoryExplicitLayout8BitAccessKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
                                , instanceExtensionMinVersion = 0
@@ -2184,7 +2184,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  "WorkgroupMemoryExplicitLayoutKHR16BitAccess" -> (,)
+  "WorkgroupMemoryExplicitLayout16BitAccessKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
                                , instanceExtensionMinVersion = 0

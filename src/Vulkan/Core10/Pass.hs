@@ -1178,8 +1178,8 @@ instance Zero AttachmentReference where
 --
 -- -   #VUID-VkSubpassDescription-pDepthStencilAttachment-02650# If
 --     @pDepthStencilAttachment@ is not @NULL@ and the attachment is not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it /must/ have a
---     image format whose
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it /must/ have
+--     an image format whose
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'

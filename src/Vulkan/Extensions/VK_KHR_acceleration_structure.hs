@@ -4949,9 +4949,6 @@ data AccelerationStructureGeometryTrianglesDataKHR = AccelerationStructureGeomet
     vertexFormat :: Format
   , -- | @vertexData@ is a device or host address to memory containing vertex
     -- data for this geometry.
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexData-parameter#
-    -- @vertexData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     vertexData :: DeviceOrHostAddressConstKHR
   , -- | @vertexStride@ is the stride in bytes between each vertex.
     --
@@ -4979,16 +4976,10 @@ data AccelerationStructureGeometryTrianglesDataKHR = AccelerationStructureGeomet
     indexType :: IndexType
   , -- | @indexData@ is a device or host address to memory containing index data
     -- for this geometry.
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexData-parameter#
-    -- @indexData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     indexData :: DeviceOrHostAddressConstKHR
   , -- | @transformData@ is a device or host address to memory containing an
     -- optional reference to a 'TransformMatrixKHR' structure defining a
     -- transformation that should be applied to vertices in this geometry.
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-transformData-parameter#
-    -- @transformData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     transformData :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
@@ -5050,9 +5041,6 @@ data AccelerationStructureGeometryAabbsDataKHR = AccelerationStructureGeometryAa
   { -- | @data@ is a device or host address to memory containing
     -- 'AabbPositionsKHR' structures containing position data for each
     -- axis-aligned bounding box in the geometry.
-    --
-    -- #VUID-VkAccelerationStructureGeometryAabbsDataKHR-data-parameter# @data@
-    -- /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     data' :: DeviceOrHostAddressConstKHR
   , -- | @stride@ is the stride in bytes between each entry in @data@. The stride
     -- /must/ be a multiple of @8@.
@@ -5111,9 +5099,6 @@ data AccelerationStructureGeometryInstancesDataKHR = AccelerationStructureGeomet
     -- referencing individual 'AccelerationStructureInstanceKHR' structures if
     -- @arrayOfPointers@ is 'Vulkan.Core10.FundamentalTypes.TRUE', or the
     -- address of an array of 'AccelerationStructureInstanceKHR' structures.
-    --
-    -- #VUID-VkAccelerationStructureGeometryInstancesDataKHR-data-parameter#
-    -- @data@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     data' :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
@@ -5340,9 +5325,6 @@ instance Zero AccelerationStructureGeometryKHR where
 --     @ppGeometries@ /must/ be a valid pointer to an array of
 --     @geometryCount@ valid pointers to valid
 --     'AccelerationStructureGeometryKHR' structures
---
--- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-scratchData-parameter#
---     @scratchData@ /must/ be a valid 'DeviceOrHostAddressKHR' union
 --
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-commonparent# Both
 --     of @dstAccelerationStructure@, and @srcAccelerationStructure@ that
@@ -6302,9 +6284,6 @@ instance Zero CopyAccelerationStructureInfoKHR where
 --     @src@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-dst-parameter#
---     @dst@ /must/ be a valid 'DeviceOrHostAddressKHR' union
---
 -- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-mode-parameter#
 --     @mode@ /must/ be a valid 'CopyAccelerationStructureModeKHR' value
 --
@@ -6382,9 +6361,6 @@ instance Zero CopyAccelerationStructureToMemoryInfoKHR where
 --
 -- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-pNext-pNext#
 --     @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-src-parameter#
---     @src@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
 --
 -- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-dst-parameter#
 --     @dst@ /must/ be a valid

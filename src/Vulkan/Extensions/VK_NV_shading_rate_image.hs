@@ -1119,9 +1119,9 @@ data CoarseSampleOrderCustomNV = CoarseSampleOrderCustomNV
   , -- | @sampleCount@ identifies the per-pixel coverage sample count for the
     -- combination of fragment area and coverage sample count to control.
     sampleCount :: Word32
-  , -- | @pSampleLocations@ is a pointer to an array of
-    -- 'CoarseSampleOrderCustomNV' structures specifying the location of each
-    -- sample in the custom ordering.
+  , -- | @pSampleLocations@ is a pointer to an array of 'CoarseSampleLocationNV'
+    -- structures specifying the location of each sample in the custom
+    -- ordering.
     sampleLocations :: Vector CoarseSampleLocationNV
   }
   deriving (Typeable)
