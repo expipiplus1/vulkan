@@ -126,6 +126,8 @@ versionConstruction = genRe "version construction" $ do
                                 .|. fromIntegral minor `shiftL` 32
                                 .|. fromIntegral patch
 
+    \{-# complete {p} #-}
+
     {patMajor} :: Version -> Word16
     {patMajor} (Version v) = fromIntegral $ (v `shiftR` 48) .&. 0xffff
 

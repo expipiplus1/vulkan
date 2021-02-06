@@ -103,6 +103,8 @@ versionConstruction = genRe "version construction" $ do
       (\\v -> ({patMajor} v, {patMinor} v, {patPatch} v) -> (major, minor, patch))
       where {mkPatternName "VK_MAKE_VERSION"} major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
 
+    \{-# complete {mkPatternName "VK_MAKE_VERSION"} #-}
+
     {patMajor} :: Word32 -> Word32
     {patMajor} v = v `shiftR` 22
 
