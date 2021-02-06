@@ -27,6 +27,8 @@ pattern MAKE_VERSION major minor patch <-
   (\v -> (_VERSION_MAJOR v, _VERSION_MINOR v, _VERSION_PATCH v) -> (major, minor, patch))
   where MAKE_VERSION major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
 
+{-# complete MAKE_VERSION #-}
+
 _VERSION_MAJOR :: Word32 -> Word32
 _VERSION_MAJOR v = v `shiftR` 22
 
