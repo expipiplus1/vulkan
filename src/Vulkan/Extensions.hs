@@ -173,6 +173,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_surface_protected_capabilities
                           , module Vulkan.Extensions.VK_KHR_swapchain
                           , module Vulkan.Extensions.VK_KHR_swapchain_mutable_format
+                          , module Vulkan.Extensions.VK_KHR_synchronization2
                           , module Vulkan.Extensions.VK_KHR_timeline_semaphore
                           , module Vulkan.Extensions.VK_KHR_uniform_buffer_standard_layout
                           , module Vulkan.Extensions.VK_KHR_variable_pointers
@@ -401,6 +402,7 @@ import Vulkan.Extensions.VK_KHR_surface
 import Vulkan.Extensions.VK_KHR_surface_protected_capabilities
 import Vulkan.Extensions.VK_KHR_swapchain
 import Vulkan.Extensions.VK_KHR_swapchain_mutable_format
+import Vulkan.Extensions.VK_KHR_synchronization2
 import Vulkan.Extensions.VK_KHR_timeline_semaphore
 import Vulkan.Extensions.VK_KHR_uniform_buffer_standard_layout
 import Vulkan.Extensions.VK_KHR_variable_pointers

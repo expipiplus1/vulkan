@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.2.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 
@@ -80,7 +80,7 @@ library
       Vulkan.Core10.Enums.DeviceCreateFlags
       Vulkan.Core10.Enums.DeviceQueueCreateFlagBits
       Vulkan.Core10.Enums.DynamicState
-      Vulkan.Core10.Enums.EventCreateFlags
+      Vulkan.Core10.Enums.EventCreateFlagBits
       Vulkan.Core10.Enums.FenceCreateFlagBits
       Vulkan.Core10.Enums.Filter
       Vulkan.Core10.Enums.Format
@@ -425,6 +425,7 @@ library
       Vulkan.Extensions.VK_KHR_surface_protected_capabilities
       Vulkan.Extensions.VK_KHR_swapchain
       Vulkan.Extensions.VK_KHR_swapchain_mutable_format
+      Vulkan.Extensions.VK_KHR_synchronization2
       Vulkan.Extensions.VK_KHR_timeline_semaphore
       Vulkan.Extensions.VK_KHR_uniform_buffer_standard_layout
       Vulkan.Extensions.VK_KHR_variable_pointers
@@ -489,7 +490,40 @@ library
   hs-source-dirs:
       src
       src-manual
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DeriveGeneric DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  default-extensions:
+      AllowAmbiguousTypes
+      CPP
+      DataKinds
+      DefaultSignatures
+      DeriveAnyClass
+      DeriveGeneric
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NoMonomorphismRestriction
+      OverloadedStrings
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      UndecidableInstances
+      ViewPatterns
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   build-depends:
       base <5

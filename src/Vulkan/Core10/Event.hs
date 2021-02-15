@@ -8,7 +8,8 @@ module Vulkan.Core10.Event  ( createEvent
                             , resetEvent
                             , EventCreateInfo(..)
                             , Event(..)
-                            , EventCreateFlags(..)
+                            , EventCreateFlagBits(..)
+                            , EventCreateFlags
                             ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -55,7 +56,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkSetEvent))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Handles (Event)
 import Vulkan.Core10.Handles (Event(..))
-import Vulkan.Core10.Enums.EventCreateFlags (EventCreateFlags)
+import Vulkan.Core10.Enums.EventCreateFlagBits (EventCreateFlags)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -63,7 +64,8 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EVENT_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Handles (Event(..))
-import Vulkan.Core10.Enums.EventCreateFlags (EventCreateFlags(..))
+import Vulkan.Core10.Enums.EventCreateFlagBits (EventCreateFlagBits(..))
+import Vulkan.Core10.Enums.EventCreateFlagBits (EventCreateFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -296,6 +298,10 @@ getEventStatus :: forall io
                   Device
                -> -- | @event@ is the handle of the event to query.
                   --
+                  -- #VUID-vkGetEventStatus-event-03940# @event@ /must/ not have been created
+                  -- with
+                  -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
+                  --
                   -- #VUID-vkGetEventStatus-event-parameter# @event@ /must/ be a valid
                   -- 'Vulkan.Core10.Handles.Event' handle
                   --
@@ -329,6 +335,12 @@ foreign import ccall
 --
 -- If @event@ is already in the signaled state when 'setEvent' is executed,
 -- then 'setEvent' has no effect, and no event signal operation occurs.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkSetEvent-event-03941# @event@ /must/ not have been created
+--     with
+--     'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -396,9 +408,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkResetEvent-event-01148# @event@ /must/ not be waited on by a
---     'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' command that is
---     currently executing
+-- -   #VUID-vkResetEvent-event-03821# There /must/ be an execution
+--     dependency between
+--     'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' and the
+--     execution of any 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'
+--     that includes @event@ in its @pEvents@ parameter
+--
+-- -   #VUID-vkResetEvent-event-03822# There /must/ be an execution
+--     dependency between
+--     'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' and the
+--     execution of any
+--     'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR' that
+--     includes @event@ in its @pEvents@ parameter
+--
+-- -   #VUID-vkResetEvent-event-03823# @event@ /must/ not have been created
+--     with
+--     'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -451,12 +476,16 @@ resetEvent device event = liftIO $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Enums.EventCreateFlags.EventCreateFlags',
+-- 'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createEvent'
 data EventCreateInfo = EventCreateInfo
-  { -- | @flags@ is reserved for future use.
+  { -- | @flags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlagBits' defining
+    -- additional creation parameters.
     --
-    -- #VUID-VkEventCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
+    -- #VUID-VkEventCreateInfo-flags-parameter# @flags@ /must/ be a valid
+    -- combination of
+    -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlagBits' values
     flags :: EventCreateFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

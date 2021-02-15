@@ -481,8 +481,9 @@ newtype TimeDomainEXT = TimeDomainEXT Int32
 -- | 'TIME_DOMAIN_DEVICE_EXT' specifies the device time domain. Timestamp
 -- values in this time domain use the same units and are comparable with
 -- device timestamp values captured using
--- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' and are defined
--- to be incrementing according to the
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' or
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteTimestamp2KHR' and
+-- are defined to be incrementing according to the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
 -- of the device.
 pattern TIME_DOMAIN_DEVICE_EXT                    = TimeDomainEXT 0

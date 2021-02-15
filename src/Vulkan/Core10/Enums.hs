@@ -27,7 +27,7 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.DeviceCreateFlags
                             , module Vulkan.Core10.Enums.DeviceQueueCreateFlagBits
                             , module Vulkan.Core10.Enums.DynamicState
-                            , module Vulkan.Core10.Enums.EventCreateFlags
+                            , module Vulkan.Core10.Enums.EventCreateFlagBits
                             , module Vulkan.Core10.Enums.FenceCreateFlagBits
                             , module Vulkan.Core10.Enums.Filter
                             , module Vulkan.Core10.Enums.Format
@@ -123,7 +123,7 @@ import Vulkan.Core10.Enums.DescriptorType
 import Vulkan.Core10.Enums.DeviceCreateFlags
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits
 import Vulkan.Core10.Enums.DynamicState
-import Vulkan.Core10.Enums.EventCreateFlags
+import Vulkan.Core10.Enums.EventCreateFlagBits
 import Vulkan.Core10.Enums.FenceCreateFlagBits
 import Vulkan.Core10.Enums.Filter
 import Vulkan.Core10.Enums.Format

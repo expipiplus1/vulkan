@@ -18,6 +18,7 @@ module Vulkan.Core10.Enums.PipelineStageFlagBits  ( PipelineStageFlags
                                                                          , PIPELINE_STAGE_HOST_BIT
                                                                          , PIPELINE_STAGE_ALL_GRAPHICS_BIT
                                                                          , PIPELINE_STAGE_ALL_COMMANDS_BIT
+                                                                         , PIPELINE_STAGE_NONE_KHR
                                                                          , PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV
                                                                          , PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT
                                                                          , PIPELINE_STAGE_MESH_SHADER_BIT_NV
@@ -46,6 +47,12 @@ type PipelineStageFlags = PipelineStageFlagBits
 
 -- | VkPipelineStageFlagBits - Bitmask specifying pipeline stages
 --
+-- = Description
+--
+-- These values all have the same value\/meaning as the equivalently named
+-- values for
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlags2KHR'.
+--
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.CheckpointDataNV',
@@ -58,8 +65,8 @@ newtype PipelineStageFlagBits = PipelineStageFlagBits Flags
 -- | 'PIPELINE_STAGE_TOP_OF_PIPE_BIT' is equivalent to
 -- 'PIPELINE_STAGE_ALL_COMMANDS_BIT' with
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags' set to @0@ when
--- specified in the second synchronization scope, but specifies no stages
--- in the first scope.
+-- specified in the second synchronization scope, but specifies no stage of
+-- execution when specified in the first scope.
 pattern PIPELINE_STAGE_TOP_OF_PIPE_BIT                      = PipelineStageFlagBits 0x00000001
 -- | 'PIPELINE_STAGE_DRAW_INDIRECT_BIT' specifies the stage of the pipeline
 -- where Draw\/DispatchIndirect\/TraceRaysIndirect data structures are
@@ -127,8 +134,8 @@ pattern PIPELINE_STAGE_TRANSFER_BIT                         = PipelineStageFlagB
 -- | 'PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT' is equivalent to
 -- 'PIPELINE_STAGE_ALL_COMMANDS_BIT' with
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags' set to @0@ when
--- specified in the first synchronization scope, but specifies no stages in
--- the second scope.
+-- specified in the first synchronization scope, but specifies no stage of
+-- execution when specified in the second scope.
 pattern PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT                   = PipelineStageFlagBits 0x00002000
 -- | 'PIPELINE_STAGE_HOST_BIT' specifies a pseudo-stage indicating execution
 -- on the host of reads\/writes of device memory. This stage is not invoked
@@ -169,9 +176,11 @@ pattern PIPELINE_STAGE_HOST_BIT                             = PipelineStageFlagB
 --
 -- -   'PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 pattern PIPELINE_STAGE_ALL_GRAPHICS_BIT                     = PipelineStageFlagBits 0x00008000
--- | 'PIPELINE_STAGE_ALL_COMMANDS_BIT' specifies all commands supported on
--- the queue it is used with.
+-- | 'PIPELINE_STAGE_ALL_COMMANDS_BIT' specifies all operations performed by
+-- all commands supported on the queue it is used with.
 pattern PIPELINE_STAGE_ALL_COMMANDS_BIT                     = PipelineStageFlagBits 0x00010000
+-- | 'PIPELINE_STAGE_NONE_KHR' specifies no stages of execution.
+pattern PIPELINE_STAGE_NONE_KHR                             = PipelineStageFlagBits 0x00000000
 -- | 'PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV' specifies the stage of the
 -- pipeline where device-side preprocessing for generated commands via
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'
@@ -240,6 +249,7 @@ showTablePipelineStageFlagBits =
   , (PIPELINE_STAGE_HOST_BIT                            , "HOST_BIT")
   , (PIPELINE_STAGE_ALL_GRAPHICS_BIT                    , "ALL_GRAPHICS_BIT")
   , (PIPELINE_STAGE_ALL_COMMANDS_BIT                    , "ALL_COMMANDS_BIT")
+  , (PIPELINE_STAGE_NONE_KHR                            , "NONE_KHR")
   , (PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV           , "COMMAND_PREPROCESS_BIT_NV")
   , (PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT    , "FRAGMENT_DENSITY_PROCESS_BIT_EXT")
   , (PIPELINE_STAGE_MESH_SHADER_BIT_NV                  , "MESH_SHADER_BIT_NV")

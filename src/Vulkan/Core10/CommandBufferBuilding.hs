@@ -7466,26 +7466,11 @@ foreign import ccall
 --
 -- = Description
 --
--- When 'cmdSetEvent' is submitted to a queue, it defines an execution
--- dependency on commands that were submitted before it, and defines an
--- event signal operation which sets the event to the signaled state.
---
--- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
--- includes all commands that occur earlier in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
--- The synchronization scope is limited to operations on the pipeline
--- stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
--- specified by @stageMask@.
---
--- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
--- includes only the event signal operation.
---
--- If @event@ is already in the signaled state when 'cmdSetEvent' is
--- executed on the device, then 'cmdSetEvent' has no effect, no event
--- signal operation occurs, and no execution dependency is generated.
+-- 'cmdSetEvent' behaves identically to
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdSetEvent2KHR', except that
+-- it does not define an access scope, and /must/ only be used with
+-- 'cmdWaitEvents', not
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR'.
 --
 -- == Valid Usage
 --
@@ -7538,6 +7523,10 @@ foreign import ccall
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   #VUID-vkCmdSetEvent-stageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @stageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdSetEvent-stageMask-01149# @stageMask@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
@@ -7631,26 +7620,8 @@ foreign import ccall
 --
 -- = Description
 --
--- When 'cmdResetEvent' is submitted to a queue, it defines an execution
--- dependency on commands that were submitted before it, and defines an
--- event unsignal operation which resets the event to the unsignaled state.
---
--- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
--- includes all commands that occur earlier in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
--- The synchronization scope is limited to operations on the pipeline
--- stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
--- specified by @stageMask@.
---
--- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
--- includes only the event unsignal operation.
---
--- If @event@ is already in the unsignaled state when 'cmdResetEvent' is
--- executed on the device, then 'cmdResetEvent' has no effect, no event
--- unsignal operation occurs, and no execution dependency is generated.
+-- 'cmdResetEvent' behaves identically to
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdResetEvent2KHR'.
 --
 -- == Valid Usage
 --
@@ -7704,13 +7675,22 @@ foreign import ccall
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
+-- -   #VUID-vkCmdResetEvent-stageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @stageMask@ /must/ not be @0@
+--
 -- -   #VUID-vkCmdResetEvent-stageMask-01153# @stageMask@ /must/ not
 --     include
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
 --
--- -   #VUID-vkCmdResetEvent-event-01156# When this command executes,
---     @event@ /must/ not be waited on by a 'cmdWaitEvents' command that is
---     currently executing
+-- -   #VUID-vkCmdResetEvent-event-03834# There /must/ be an execution
+--     dependency between 'cmdResetEvent' and the execution of any
+--     'cmdWaitEvents' that includes @event@ in its @pEvents@ parameter
+--
+-- -   #VUID-vkCmdResetEvent-event-03835# There /must/ be an execution
+--     dependency between 'cmdResetEvent' and the execution of any
+--     'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR' that
+--     includes @event@ in its @pEvents@ parameter
 --
 -- -   #VUID-vkCmdResetEvent-commandBuffer-01157# @commandBuffer@’s current
 --     device mask /must/ include exactly one physical device
@@ -7851,6 +7831,24 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- = Description
 --
+-- 'cmdWaitEvents' is largely similar to
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR', but /can/
+-- only wait on signal operations defined by 'cmdSetEvent'. As
+-- 'cmdSetEvent' doesn’t define any access scopes, 'cmdWaitEvents' defines
+-- the first access scope for each event signal operation in addition to
+-- its own access scopes.
+--
+-- Note
+--
+-- Since 'cmdSetEvent' doesn’t have any dependency information beyond a
+-- stage mask, implementations do not have the same opportunity to perform
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible availability and visibility operations>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>
+-- in advance as they do with
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdSetEvent2KHR' and
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR'.
+--
 -- When 'cmdWaitEvents' is submitted to a queue, it defines a memory
 -- dependency between prior event signal operations on the same queue or
 -- the host, and subsequent commands. 'cmdWaitEvents' /must/ not be used to
@@ -7906,30 +7904,6 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 -- If no memory barriers are specified, then the second access scope
 -- includes no accesses.
 --
--- Note
---
--- 'cmdWaitEvents' is used with 'cmdSetEvent' to define a memory dependency
--- between two sets of action commands, roughly in the same way as pipeline
--- barriers, but split into two commands such that work between the two
--- /may/ execute unhindered.
---
--- Unlike 'cmdPipelineBarrier', a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
--- /cannot/ be performed using 'cmdWaitEvents'.
---
--- Note
---
--- Applications /should/ be careful to avoid race conditions when using
--- events. There is no direct ordering guarantee between a 'cmdResetEvent'
--- command and 'cmdSetEvent' or 'cmdWaitEvents' commands submitted after
--- it. Similarly, there is no ordering guarantee between sequential
--- 'cmdSetEvent' commands, leading to a race condition on the event status.
--- Waiting on an event in these cases without additional synchronization
--- can result in a data race. Another execution dependency (e.g. a pipeline
--- barrier or semaphore with
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ALL_COMMANDS_BIT')
--- is needed to prevent such race conditions.
---
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdWaitEvents-srcStageMask-04090# If the
@@ -7982,6 +7956,10 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
+-- -   #VUID-vkCmdWaitEvents-srcStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @srcStageMask@ /must/ not be @0@
+--
 -- -   #VUID-vkCmdWaitEvents-dstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -8031,6 +8009,10 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   #VUID-vkCmdWaitEvents-dstStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @dstStageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdWaitEvents-srcAccessMask-02815# The @srcAccessMask@
 --     member of each element of @pMemoryBarriers@ /must/ only include
@@ -8104,6 +8086,10 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 -- -   #VUID-vkCmdWaitEvents-commandBuffer-01167# @commandBuffer@’s current
 --     device mask /must/ include exactly one physical device
 --
+-- -   #VUID-vkCmdWaitEvents-pEvents-03847# Members of @pEvents@ /must/ not
+--     have been signaled by
+--     'Vulkan.Extensions.VK_KHR_synchronization2.cmdSetEvent2KHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdWaitEvents-commandBuffer-parameter# @commandBuffer@
@@ -8118,16 +8104,10 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
 --
--- -   #VUID-vkCmdWaitEvents-srcStageMask-requiredbitmask# @srcStageMask@
---     /must/ not be @0@
---
 -- -   #VUID-vkCmdWaitEvents-dstStageMask-parameter# @dstStageMask@ /must/
 --     be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
---
--- -   #VUID-vkCmdWaitEvents-dstStageMask-requiredbitmask# @dstStageMask@
---     /must/ not be @0@
 --
 -- -   #VUID-vkCmdWaitEvents-pMemoryBarriers-parameter# If
 --     @memoryBarrierCount@ is not @0@, @pMemoryBarriers@ /must/ be a valid
@@ -8255,6 +8235,12 @@ foreign import ccall
 --
 -- = Description
 --
+-- 'cmdPipelineBarrier' operates almost identically to
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdPipelineBarrier2KHR',
+-- other than the scopes and barriers defined as direct parameters rather
+-- than being defined by an
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.DependencyInfoKHR'.
+--
 -- When 'cmdPipelineBarrier' is submitted to a queue, it defines a memory
 -- dependency between commands that were submitted before it, and those
 -- submitted after it.
@@ -8370,6 +8356,10 @@ foreign import ccall
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
+-- -   #VUID-vkCmdPipelineBarrier-srcStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @srcStageMask@ /must/ not be @0@
+--
 -- -   #VUID-vkCmdPipelineBarrier-dstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -8419,6 +8409,10 @@ foreign import ccall
 --     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   #VUID-vkCmdPipelineBarrier-dstStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @dstStageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdPipelineBarrier-srcAccessMask-02815# The @srcAccessMask@
 --     member of each element of @pMemoryBarriers@ /must/ only include
@@ -8592,12 +8586,12 @@ cmdPipelineBarrier :: forall io
                    -> -- | @srcStageMask@ is a bitmask of
                       -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                       -- specifying the
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stages>.
                       ("srcStageMask" ::: PipelineStageFlags)
                    -> -- | @dstStageMask@ is a bitmask of
                       -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                       -- specifying the
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>.
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stages>.
                       ("dstStageMask" ::: PipelineStageFlags)
                    -> -- | @dependencyFlags@ is a bitmask of
                       -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits' specifying

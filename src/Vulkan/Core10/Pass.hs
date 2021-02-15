@@ -1603,16 +1603,10 @@ instance Zero SubpassDescription where
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
 --
--- -   #VUID-VkSubpassDependency-srcStageMask-requiredbitmask#
---     @srcStageMask@ /must/ not be @0@
---
 -- -   #VUID-VkSubpassDependency-dstStageMask-parameter# @dstStageMask@
 --     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
---
--- -   #VUID-VkSubpassDependency-dstStageMask-requiredbitmask#
---     @dstStageMask@ /must/ not be @0@
 --
 -- -   #VUID-VkSubpassDependency-srcAccessMask-parameter# @srcAccessMask@
 --     /must/ be a valid combination of
@@ -1683,8 +1677,6 @@ instance ToCStruct SubpassDependency where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 8 :: Ptr PipelineStageFlags)) (zero)
-    poke ((p `plusPtr` 12 :: Ptr PipelineStageFlags)) (zero)
     f
 
 instance FromCStruct SubpassDependency where

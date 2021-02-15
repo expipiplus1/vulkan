@@ -73,6 +73,16 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR
+                                                        , STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV
+                                                        , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR
+                                                        , STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR
+                                                        , STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR
+                                                        , STRUCTURE_TYPE_SUBMIT_INFO_2_KHR
+                                                        , STRUCTURE_TYPE_DEPENDENCY_INFO_KHR
+                                                        , STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR
+                                                        , STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR
+                                                        , STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR
                                                         , STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT
@@ -548,16 +558,19 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferDeviceAddressInfo',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.BufferMemoryBarrier2KHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.BufferMemoryRequirementsInfo2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.CalibratedTimestampInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.CheckpointData2NV',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.CheckpointDataNV',
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferAllocateInfo',
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.CommandBufferSubmitInfoKHR',
 -- 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo',
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
@@ -584,6 +597,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.DependencyInfoKHR',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
@@ -672,6 +686,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageMemoryRequirementsInfo2',
 -- 'Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface.ImagePipeSurfaceCreateInfoFUCHSIA',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo',
@@ -702,6 +717,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo',
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo',
 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryFdPropertiesKHR',
@@ -844,6 +860,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlPropertiesEXT',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.PhysicalDeviceSynchronization2FeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr.PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT',
@@ -915,6 +932,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Query.QueryPoolCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.QueueFamilyCheckpointProperties2NV',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
@@ -943,6 +961,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.SemaphoreGetFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.SemaphoreGetWin32HandleInfoKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreSignalInfo',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.SemaphoreSubmitInfoKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreWaitInfo',
 -- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo',
@@ -952,6 +971,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.SparseImageMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_GGP_stream_descriptor_surface.StreamDescriptorSurfaceCreateInfoGGP',
 -- 'Vulkan.Core10.Queue.SubmitInfo',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.SubmitInfo2KHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassBeginInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
@@ -1132,6 +1152,26 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV =
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV = StructureType 1000326000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR = StructureType 1000325000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV"
+pattern STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV                      = StructureType 1000314009
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV"
+pattern STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV   = StructureType 1000314008
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR = StructureType 1000314007
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR"
+pattern STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR            = StructureType 1000314006
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR"
+pattern STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR                 = StructureType 1000314005
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBMIT_INFO_2_KHR"
+pattern STRUCTURE_TYPE_SUBMIT_INFO_2_KHR                         = StructureType 1000314004
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR"
+pattern STRUCTURE_TYPE_DEPENDENCY_INFO_KHR                       = StructureType 1000314003
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR"
+pattern STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR                = StructureType 1000314002
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR"
+pattern STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR               = StructureType 1000314001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR"
+pattern STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR                      = StructureType 1000314000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV"
 pattern STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV  = StructureType 1000300001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV"
@@ -2009,6 +2049,16 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES       = StructureType
              STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR,
+             STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV,
+             STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR,
+             STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR,
+             STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR,
+             STRUCTURE_TYPE_SUBMIT_INFO_2_KHR,
+             STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+             STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR,
+             STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR,
+             STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR,
              STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT,
@@ -2509,6 +2559,16 @@ showTableStructureType =
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR
     , "PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR"
     )
+  , (STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV                          , "CHECKPOINT_DATA_2_NV")
+  , (STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV       , "QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV")
+  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR, "PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR")
+  , (STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR                , "COMMAND_BUFFER_SUBMIT_INFO_KHR")
+  , (STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR                     , "SEMAPHORE_SUBMIT_INFO_KHR")
+  , (STRUCTURE_TYPE_SUBMIT_INFO_2_KHR                             , "SUBMIT_INFO_2_KHR")
+  , (STRUCTURE_TYPE_DEPENDENCY_INFO_KHR                           , "DEPENDENCY_INFO_KHR")
+  , (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR                    , "IMAGE_MEMORY_BARRIER_2_KHR")
+  , (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR                   , "BUFFER_MEMORY_BARRIER_2_KHR")
+  , (STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR                          , "MEMORY_BARRIER_2_KHR")
   , (STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV      , "DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV")
   , (STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV, "PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV")
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT
