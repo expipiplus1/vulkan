@@ -297,6 +297,12 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
 -- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
 -- checkpoint info query
 --
+-- = Description
+--
+-- Additional queue family information can be queried by setting
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2'::@pNext@
+-- to point to a 'QueueFamilyCheckpointPropertiesNV' structure.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also

@@ -115,7 +115,8 @@
 --
 --     -   'QueryPoolPerformanceCreateInfoKHR'
 --
--- -   Extending 'Vulkan.Core10.Queue.SubmitInfo':
+-- -   Extending 'Vulkan.Core10.Queue.SubmitInfo',
+--     'Vulkan.Extensions.VK_KHR_synchronization2.SubmitInfo2KHR':
 --
 --     -   'PerformanceQuerySubmitInfoKHR'
 --

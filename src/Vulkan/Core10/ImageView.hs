@@ -437,7 +437,9 @@ instance Zero ComponentMapping where
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier', 'ImageViewCreateInfo',
+-- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR',
+-- 'ImageViewCreateInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearDepthStencilImage'
 data ImageSubresourceRange = ImageSubresourceRange

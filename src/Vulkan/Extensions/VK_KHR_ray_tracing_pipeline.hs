@@ -1191,12 +1191,6 @@ foreign import ccall
 --     @pCallableShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
--- -   #VUID-vkCmdTraceRaysKHR-flags-03695# If the currently bound ray
---     tracing pipeline was created with @flags@ that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     the @deviceAddress@ member of @pHitShaderBindingTable@ /must/ not be
---     zero
---
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03696# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
@@ -1236,16 +1230,16 @@ foreign import ccall
 --     command in order to execute an intersection shader /must/ not be set
 --     to zero
 --
--- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-03720# Any hit group
---     entries in @pHitShaderBindingTable@ accessed by this call from a
---     geometry with a @geometryType@ of
+-- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04735# Any non-zero
+--     hit group entries in @pHitShaderBindingTable@ accessed by this call
+--     from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_TRIANGLES_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR'
 --
--- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-03721# Any hit group
---     entries in @pHitShaderBindingTable@ accessed by this call from a
---     geometry with a @geometryType@ of
+-- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04736# Any non-zero
+--     hit group entries in @pHitShaderBindingTable@ accessed by this call
+--     from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_AABBS_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR'
@@ -2065,12 +2059,6 @@ foreign import ccall
 --     @pCallableShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03695# If the currently bound
---     ray tracing pipeline was created with @flags@ that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     the @deviceAddress@ member of @pHitShaderBindingTable@ /must/ not be
---     zero
---
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03696# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
@@ -2110,16 +2098,16 @@ foreign import ccall
 --     command in order to execute an intersection shader /must/ not be set
 --     to zero
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-03720# Any
---     hit group entries in @pHitShaderBindingTable@ accessed by this call
---     from a geometry with a @geometryType@ of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04735# Any
+--     non-zero hit group entries in @pHitShaderBindingTable@ accessed by
+--     this call from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_TRIANGLES_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR'
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-03721# Any
---     hit group entries in @pHitShaderBindingTable@ accessed by this call
---     from a geometry with a @geometryType@ of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04736# Any
+--     non-zero hit group entries in @pHitShaderBindingTable@ accessed by
+--     this call from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_AABBS_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR'

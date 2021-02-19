@@ -9,6 +9,8 @@ module Vulkan.Core10.Enums.ImageLayout  (ImageLayout( IMAGE_LAYOUT_UNDEFINED
                                                     , IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
                                                     , IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
                                                     , IMAGE_LAYOUT_PREINITIALIZED
+                                                    , IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR
+                                                    , IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR
                                                     , IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
                                                     , IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV
                                                     , IMAGE_LAYOUT_SHARED_PRESENT_KHR
@@ -69,6 +71,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.ResolveImageInfo2KHR',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage',
@@ -81,12 +84,12 @@ import GHC.Show (Show(showsPrec))
 newtype ImageLayout = ImageLayout Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'IMAGE_LAYOUT_UNDEFINED' does not support device access. This layout
--- /must/ only be used as the @initialLayout@ member of
--- 'Vulkan.Core10.Image.ImageCreateInfo' or
--- 'Vulkan.Core10.Pass.AttachmentDescription', or as the @oldLayout@ in an
--- image transition. When transitioning out of this layout, the contents of
--- the memory are not guaranteed to be preserved.
+-- | 'IMAGE_LAYOUT_UNDEFINED' specifies that the layout is unknown. Image
+-- memory /cannot/ be transitioned into this layout. This layout /can/ be
+-- used as the @initialLayout@ member of
+-- 'Vulkan.Core10.Image.ImageCreateInfo'. This layout /can/ be used in
+-- place of the current image layout in a layout transition, but doing so
+-- will cause the contents of the image’s memory to be undefined.
 pattern IMAGE_LAYOUT_UNDEFINED                        = ImageLayout 0
 -- | 'IMAGE_LAYOUT_GENERAL' supports all types of device access.
 pattern IMAGE_LAYOUT_GENERAL                          = ImageLayout 1
@@ -131,20 +134,26 @@ pattern IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL             = ImageLayout 6
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 -- usage bit enabled.
 pattern IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL             = ImageLayout 7
--- | 'IMAGE_LAYOUT_PREINITIALIZED' does not support device access. This
--- layout /must/ only be used as the @initialLayout@ member of
--- 'Vulkan.Core10.Image.ImageCreateInfo' or
--- 'Vulkan.Core10.Pass.AttachmentDescription', or as the @oldLayout@ in an
--- image transition. When transitioning out of this layout, the contents of
--- the memory are preserved. This layout is intended to be used as the
--- initial layout for an image whose contents are written by the host, and
--- hence the data /can/ be written to memory immediately, without first
--- executing a layout transition. Currently, 'IMAGE_LAYOUT_PREINITIALIZED'
--- is only useful with
+-- | 'IMAGE_LAYOUT_PREINITIALIZED' specifies that an image’s memory is in a
+-- defined layout and /can/ be populated by data, but that it has not yet
+-- been initialized by the driver. Image memory /cannot/ be transitioned
+-- into this layout. This layout /can/ be used as the @initialLayout@
+-- member of 'Vulkan.Core10.Image.ImageCreateInfo'. This layout is intended
+-- to be used as the initial layout for an image whose contents are written
+-- by the host, and hence the data /can/ be written to memory immediately,
+-- without first executing a layout transition. Currently,
+-- 'IMAGE_LAYOUT_PREINITIALIZED' is only useful with
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource linear>
 -- images because there is not a standard layout defined for
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL' images.
 pattern IMAGE_LAYOUT_PREINITIALIZED                   = ImageLayout 8
+-- | 'IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR' specifies a layout that /must/
+-- only be used with attachment accesses in the graphics pipeline.
+pattern IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR           = ImageLayout 1000314001
+-- | 'IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR' specifies a layout allowing read
+-- only access as an attachment, or in shaders as a sampled image, combined
+-- image\/sampler, or input attachment.
+pattern IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR            = ImageLayout 1000314000
 -- | 'IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT' /must/ only be used as a
 -- fragment density map attachment in a 'Vulkan.Core10.Handles.RenderPass'.
 -- This layout is valid only for image subresources of images created with
@@ -207,6 +216,8 @@ pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 10
              IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
              IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
              IMAGE_LAYOUT_PREINITIALIZED,
+             IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR,
+             IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR,
              IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT,
              IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV,
              IMAGE_LAYOUT_SHARED_PRESENT_KHR,
@@ -235,6 +246,8 @@ showTableImageLayout =
   , (IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL            , "TRANSFER_SRC_OPTIMAL")
   , (IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL            , "TRANSFER_DST_OPTIMAL")
   , (IMAGE_LAYOUT_PREINITIALIZED                  , "PREINITIALIZED")
+  , (IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR          , "ATTACHMENT_OPTIMAL_KHR")
+  , (IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR           , "READ_ONLY_OPTIMAL_KHR")
   , (IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT, "FRAGMENT_DENSITY_MAP_OPTIMAL_EXT")
   , (IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV         , "SHADING_RATE_OPTIMAL_NV")
   , (IMAGE_LAYOUT_SHARED_PRESENT_KHR              , "SHARED_PRESENT_KHR")

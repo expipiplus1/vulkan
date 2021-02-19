@@ -202,6 +202,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDevice
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup (PhysicalDeviceSubgroupProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subgroup_size_control (PhysicalDeviceSubgroupSizeControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subgroup_size_control (PhysicalDeviceSubgroupSizeControlPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (PhysicalDeviceSynchronization2FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texel_buffer_alignment (PhysicalDeviceTexelBufferAlignmentFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texel_buffer_alignment (PhysicalDeviceTexelBufferAlignmentPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr (PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT)
@@ -224,6 +225,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory 
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (QueueFamilyCheckpointProperties2NV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (QueueFamilyCheckpointPropertiesNV)
 import Vulkan.Core10.DeviceInitialization (QueueFamilyProperties)
 import Vulkan.Core10.Enums.Result (Result)
@@ -674,6 +676,7 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceSynchronization2FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeaturesKHR = Just f
@@ -1315,8 +1318,11 @@ instance es ~ '[] => Zero (PhysicalDeviceImageFormatInfo2 es) where
 -- -   #VUID-VkQueueFamilyProperties2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2'
 --
--- -   #VUID-VkQueueFamilyProperties2-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
+-- -   #VUID-VkQueueFamilyProperties2-pNext-pNext# Each @pNext@ member of
+--     any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_KHR_synchronization2.QueueFamilyCheckpointProperties2NV'
+--     or
 --     'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV'
 --
 -- -   #VUID-VkQueueFamilyProperties2-sType-unique# The @sType@ value of
@@ -1349,6 +1355,7 @@ instance Extensible QueueFamilyProperties2 where
   getNext QueueFamilyProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends QueueFamilyProperties2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @QueueFamilyCheckpointProperties2NV = Just f
     | Just Refl <- eqT @e @QueueFamilyCheckpointPropertiesNV = Just f
     | otherwise = Nothing
 

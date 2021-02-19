@@ -436,6 +436,7 @@ data Queue_T
 --
 -- 'Vulkan.Core10.Queue.getDeviceQueue',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.getQueueCheckpointData2NV',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.getQueueCheckpointDataNV',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.queueBeginDebugUtilsLabelEXT',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.queueBindSparse',
@@ -443,7 +444,9 @@ data Queue_T
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.queueInsertDebugUtilsLabelEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.queueSetPerformanceConfigurationINTEL',
--- 'Vulkan.Core10.Queue.queueSubmit', 'Vulkan.Core10.Queue.queueWaitIdle'
+-- 'Vulkan.Core10.Queue.queueSubmit',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.queueSubmit2KHR',
+-- 'Vulkan.Core10.Queue.queueWaitIdle'
 data Queue = Queue
   { queueHandle :: Ptr Queue_T
   , deviceCmds :: DeviceCmds
@@ -462,6 +465,7 @@ data CommandBuffer_T
 --
 -- = See Also
 --
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.CommandBufferSubmitInfoKHR',
 -- 'Vulkan.Core10.Queue.SubmitInfo',
 -- 'Vulkan.Core10.CommandBuffer.allocateCommandBuffers',
 -- 'Vulkan.Core10.CommandBuffer.beginCommandBuffer',
@@ -539,11 +543,13 @@ data CommandBuffer_T
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.cmdNextSubpass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.cmdNextSubpass2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdPipelineBarrier2KHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPushConstants',
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdResetEvent2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetQueryPool',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResolveImage',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdResolveImage2KHR',
@@ -561,6 +567,7 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_KHR_device_group.cmdSetDeviceMaskKHR',
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdSetEvent2KHR',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV',
 -- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.cmdSetFragmentShadingRateEnumNV',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.cmdSetFragmentShadingRateKHR',
@@ -589,10 +596,13 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdUpdateBuffer',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteBufferMarker2AMD',
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteTimestamp2KHR',
 -- 'Vulkan.Core10.CommandBuffer.endCommandBuffer',
 -- 'Vulkan.Core10.CommandBuffer.freeCommandBuffers',
 -- 'Vulkan.Core10.CommandBuffer.resetCommandBuffer'
@@ -668,6 +678,7 @@ instance Show CommandPool where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferDeviceAddressInfo',
 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.BufferMemoryBarrier2KHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.BufferMemoryRequirementsInfo2',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
@@ -709,6 +720,7 @@ instance Show CommandPool where
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdUpdateBuffer',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteBufferMarker2AMD',
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',
 -- 'Vulkan.Core10.Buffer.createBuffer',
 -- 'Vulkan.Core10.Buffer.destroyBuffer',
@@ -749,6 +761,7 @@ instance Show BufferView where
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.CopyImageToBufferInfo2KHR',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageMemoryRequirementsInfo2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageSparseMemoryRequirementsInfo2',
 -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',
@@ -965,6 +978,7 @@ instance Show DescriptorPool where
 -- 'Vulkan.Core10.Fence.getFenceStatus',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.queueBindSparse',
 -- 'Vulkan.Core10.Queue.queueSubmit',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.queueSubmit2KHR',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDeviceEventEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT',
 -- 'Vulkan.Core10.Fence.resetFences', 'Vulkan.Core10.Fence.waitForFences'
@@ -989,6 +1003,7 @@ instance Show Fence where
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.SemaphoreGetFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.SemaphoreGetWin32HandleInfoKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreSignalInfo',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.SemaphoreSubmitInfoKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreWaitInfo',
 -- 'Vulkan.Core10.Queue.SubmitInfo',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR',
@@ -1010,8 +1025,11 @@ instance Show Semaphore where
 -- = See Also
 --
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdResetEvent2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdSetEvent2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR',
 -- 'Vulkan.Core10.Event.createEvent', 'Vulkan.Core10.Event.destroyEvent',
 -- 'Vulkan.Core10.Event.getEventStatus', 'Vulkan.Core10.Event.resetEvent',
 -- 'Vulkan.Core10.Event.setEvent'
@@ -1037,6 +1055,7 @@ instance Show Event where
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp',
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteTimestamp2KHR',
 -- 'Vulkan.Core10.Query.createQueryPool',
 -- 'Vulkan.Core10.Query.destroyQueryPool',
 -- 'Vulkan.Core10.Query.getQueryPoolResults',

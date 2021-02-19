@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [0.4] - 2021-02-18
+- Bump VMA, support for VK_EXT_memory_priority
+
 ## [0.3.12] - 2021-01-09
 
 - Calling traceEventIO before and after every VulkanMemoryAllocator command if

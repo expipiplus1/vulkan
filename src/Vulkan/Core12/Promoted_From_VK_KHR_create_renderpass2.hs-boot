@@ -51,12 +51,13 @@ instance Show SubpassBeginInfo
 instance FromCStruct SubpassBeginInfo
 
 
-data SubpassDependency2
+type role SubpassDependency2 nominal
+data SubpassDependency2 (es :: [Type])
 
-instance ToCStruct SubpassDependency2
-instance Show SubpassDependency2
+instance (Extendss SubpassDependency2 es, PokeChain es) => ToCStruct (SubpassDependency2 es)
+instance Show (Chain es) => Show (SubpassDependency2 es)
 
-instance FromCStruct SubpassDependency2
+instance (Extendss SubpassDependency2 es, PeekChain es) => FromCStruct (SubpassDependency2 es)
 
 
 type role SubpassDescription2 nominal

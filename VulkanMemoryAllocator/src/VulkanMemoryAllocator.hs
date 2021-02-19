@@ -77,6 +77,7 @@ module VulkanMemoryAllocator  ( createAllocator
                                                        , ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT
                                                        , ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT
                                                        , ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
+                                                       , ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT
                                                        , ..
                                                        )
                               , VulkanFunctions(..)
@@ -233,6 +234,9 @@ import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
+import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
+import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
 import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
@@ -1012,8 +1016,8 @@ allocateMemoryPages :: forall io
 allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
   pPVkMemoryRequirements <- ContT $ allocaBytesAligned @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVkMemoryRequirements `plusPtr` (24 * (i)) :: Ptr MemoryRequirements) (e) . ($ ())) (vkMemoryRequirements)
-  pPCreateInfo <- ContT $ allocaBytesAligned @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 40) 8
-  lift $ Data.Vector.imapM_ (\i e -> poke (pPCreateInfo `plusPtr` (40 * (i)) :: Ptr AllocationCreateInfo) (e)) (createInfo)
+  pPCreateInfo <- ContT $ allocaBytesAligned @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 48) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPCreateInfo `plusPtr` (48 * (i)) :: Ptr AllocationCreateInfo) (e)) (createInfo)
   let pVkMemoryRequirementsLength = Data.Vector.length $ (vkMemoryRequirements)
   lift $ unless ((Data.Vector.length $ (createInfo)) == pVkMemoryRequirementsLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pCreateInfo and pVkMemoryRequirements must have the same length" Nothing Nothing
@@ -2698,6 +2702,26 @@ pattern ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT = AllocatorCreateFlagBit
 -- For more information, see documentation chapter /Enabling buffer device
 -- address/.
 pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT      = AllocatorCreateFlagBits 0x00000020
+-- | Enables usage of VK_EXT_memory_priority extension in the library.
+--
+-- You may set this flag only if you found available and enabled this
+-- device extension, along with
+-- @VkPhysicalDeviceMemoryPriorityFeaturesEXT::memoryPriority == VK_TRUE@,
+-- while creating Vulkan device passed as /VmaAllocatorCreateInfo::device/.
+--
+-- When this flag is used, /VmaAllocationCreateInfo::priority/ and
+-- /VmaPoolCreateInfo::priority/ are used to set priorities of allocated
+-- Vulkan memory. Without it, these variables are ignored.
+--
+-- A priority must be a floating-point value between 0 and 1, indicating
+-- the priority of the allocation relative to other memory allocations.
+-- Larger values are higher priority. The granularity of the priorities is
+-- implementation-dependent. It is automatically passed to every call to
+-- @vkAllocateMemory@ done by the library using structure
+-- @VkMemoryPriorityAllocateInfoEXT@. The value to be used for default
+-- priority is 0.5. For more details, see the documentation of the
+-- VK_EXT_memory_priority extension.
+pattern ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT        = AllocatorCreateFlagBits 0x00000040
 
 conNameAllocatorCreateFlagBits :: String
 conNameAllocatorCreateFlagBits = "AllocatorCreateFlagBits"
@@ -2713,6 +2737,7 @@ showTableAllocatorCreateFlagBits =
   , (ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT         , "EXT_MEMORY_BUDGET_BIT")
   , (ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT, "AMD_DEVICE_COHERENT_MEMORY_BIT")
   , (ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT     , "BUFFER_DEVICE_ADDRESS_BIT")
+  , (ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT       , "EXT_MEMORY_PRIORITY_BIT")
   ]
 
 instance Show AllocatorCreateFlagBits where
@@ -3788,6 +3813,15 @@ data AllocationCreateInfo = AllocationCreateInfo
     -- then copied to internal buffer, so it doesn\'t need to be valid after
     -- allocation call.
     userData :: Ptr ()
+  , -- | A floating-point value between 0 and 1, indicating the priority of the
+    -- allocation relative to other memory allocations.
+    --
+    -- It is used only when 'ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT' flag was
+    -- used during creation of the 'Allocator' object and this allocation ends
+    -- up as dedicated or is explicitly forced as dedicated using
+    -- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT'. Otherwise, it has the priority
+    -- of a memory block where it is placed and this variable is ignored.
+    priority :: Float
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -3796,7 +3830,7 @@ deriving instance Generic (AllocationCreateInfo)
 deriving instance Show AllocationCreateInfo
 
 instance ToCStruct AllocationCreateInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocationCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr AllocationCreateFlags)) (flags)
     poke ((p `plusPtr` 4 :: Ptr MemoryUsage)) (usage)
@@ -3805,8 +3839,9 @@ instance ToCStruct AllocationCreateInfo where
     poke ((p `plusPtr` 16 :: Ptr Word32)) (memoryTypeBits)
     poke ((p `plusPtr` 24 :: Ptr Pool)) (pool)
     poke ((p `plusPtr` 32 :: Ptr (Ptr ()))) (userData)
+    poke ((p `plusPtr` 40 :: Ptr CFloat)) (CFloat (priority))
     f
-  cStructSize = 40
+  cStructSize = 48
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr AllocationCreateFlags)) (zero)
@@ -3814,6 +3849,7 @@ instance ToCStruct AllocationCreateInfo where
     poke ((p `plusPtr` 8 :: Ptr MemoryPropertyFlags)) (zero)
     poke ((p `plusPtr` 12 :: Ptr MemoryPropertyFlags)) (zero)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr CFloat)) (CFloat (zero))
     f
 
 instance FromCStruct AllocationCreateInfo where
@@ -3825,17 +3861,19 @@ instance FromCStruct AllocationCreateInfo where
     memoryTypeBits <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pool <- peek @Pool ((p `plusPtr` 24 :: Ptr Pool))
     pUserData <- peek @(Ptr ()) ((p `plusPtr` 32 :: Ptr (Ptr ())))
+    priority <- peek @CFloat ((p `plusPtr` 40 :: Ptr CFloat))
     pure $ AllocationCreateInfo
-             flags usage requiredFlags preferredFlags memoryTypeBits pool pUserData
+             flags usage requiredFlags preferredFlags memoryTypeBits pool pUserData (coerce @CFloat @Float priority)
 
 instance Storable AllocationCreateInfo where
-  sizeOf ~_ = 40
+  sizeOf ~_ = 48
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero AllocationCreateInfo where
   zero = AllocationCreateInfo
+           zero
            zero
            zero
            zero
@@ -3973,6 +4011,13 @@ data PoolCreateInfo = PoolCreateInfo
     -- If you want to allow any allocations other than used in the current
     -- frame to become lost, set this value to 0.
     frameInUseCount :: Word32
+  , -- | A floating-point value between 0 and 1, indicating the priority of the
+    -- allocations in this pool relative to other memory allocations.
+    --
+    -- It is used only when 'ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT' flag was
+    -- used during creation of the 'Allocator' object. Otherwise, this variable
+    -- is ignored.
+    priority :: Float
   }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -3989,6 +4034,7 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (minBlockCount))
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (maxBlockCount))
     poke ((p `plusPtr` 32 :: Ptr Word32)) (frameInUseCount)
+    poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (priority))
     f
   cStructSize = 40
   cStructAlignment = 8
@@ -3999,6 +4045,7 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (zero))
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (zero))
     poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (zero))
     f
 
 instance FromCStruct PoolCreateInfo where
@@ -4009,8 +4056,9 @@ instance FromCStruct PoolCreateInfo where
     minBlockCount <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     maxBlockCount <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     frameInUseCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    priority <- peek @CFloat ((p `plusPtr` 36 :: Ptr CFloat))
     pure $ PoolCreateInfo
-             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount
+             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount (coerce @CFloat @Float priority)
 
 instance Storable PoolCreateInfo where
   sizeOf ~_ = 40
@@ -4020,6 +4068,7 @@ instance Storable PoolCreateInfo where
 
 instance Zero PoolCreateInfo where
   zero = PoolCreateInfo
+           zero
            zero
            zero
            zero
