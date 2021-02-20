@@ -17,7 +17,7 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
-import           Vulkan.Utils.ShaderQQ
+import           Vulkan.Utils.ShaderQQ.GLSL.Glslang
 import           Vulkan.Zero
 
 import           MonadVulkan

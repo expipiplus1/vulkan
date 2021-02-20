@@ -11,24 +11,24 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Managed
 import           Control.Monad.Trans.Maybe
 import           Data.Bits
-import qualified Data.ByteString               as BS
+import qualified Data.ByteString                   as BS
 import           Data.Foldable
-import           Data.List                      ( nub
-                                                , partition
-                                                )
+import           Data.List                          ( nub
+                                                    , partition
+                                                    )
 import           Data.Ord
-import           Data.String                    ( IsString )
-import           Data.Text               hiding ( maximum
-                                                , partition
-                                                )
-import qualified Data.Text                     as T
+import           Data.String                        ( IsString )
+import           Data.Text                   hiding ( maximum
+                                                    , partition
+                                                    )
+import qualified Data.Text                         as T
 import           Data.Text.Encoding
 import           Data.Traversable
-import qualified Data.Vector                   as V
+import qualified Data.Vector                       as V
 import           Data.Word
-import           Foreign.Ptr                    ( castPtr )
+import           Foreign.Ptr                        ( castPtr )
 import qualified SDL
-import qualified SDL.Video.Vulkan              as SDL
+import qualified SDL.Video.Vulkan                  as SDL
 import           Say
 import           System.Exit
 import           Vulkan.CStruct.Extends
@@ -38,7 +38,8 @@ import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Debug
-import           Vulkan.Utils.ShaderQQ
+import           Vulkan.Utils.ShaderQQ.GLSL.Glslang ( frag )
+import           Vulkan.Utils.ShaderQQ.GLSL.Shaderc ( vert )
 import           Vulkan.Zero
 
 main :: IO ()

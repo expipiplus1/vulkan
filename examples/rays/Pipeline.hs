@@ -14,27 +14,29 @@ module Pipeline
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
-import           Data.Foldable                  ( for_
-                                                , traverse_
-                                                )
-import qualified Data.Vector                   as V
-import           Data.Vector                    ( Vector )
+import           Data.Foldable                       ( for_
+                                                     , traverse_
+                                                     )
+import qualified Data.Vector                        as V
+import           Data.Vector                         ( Vector )
 import           Data.Word
-import           Foreign                        ( nullPtr )
-import           Foreign.Marshal.Utils          ( moveBytes )
-import           Foreign.Ptr                    ( Ptr
-                                                , plusPtr
-                                                )
+import           Foreign                             ( nullPtr )
+import           Foreign.Marshal.Utils               ( moveBytes )
+import           Foreign.Ptr                         ( Ptr
+                                                     , plusPtr
+                                                     )
 import           MonadVulkan
 import           Say
 import           Vulkan.CStruct.Extends
-import           Vulkan.Core10                 as Vk
-                                         hiding ( withBuffer
-                                                , withImage
-                                                )
+import           Vulkan.Core10                      as Vk
+                                              hiding ( withBuffer
+                                                     , withImage
+                                                     )
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
-import           Vulkan.Utils.ShaderQQ
+import           Vulkan.Utils.ShaderQQ.GLSL.Glslang  ( glsl )
+import qualified Vulkan.Utils.ShaderQQ.GLSL.Glslang as Glslang
+import qualified Vulkan.Utils.ShaderQQ.GLSL.Shaderc as Shaderc
 import           Vulkan.Zero
 import           VulkanMemoryAllocator
 import Scene
@@ -186,7 +188,7 @@ createRTDescriptorSets descriptorSetLayout tlas SceneBuffers {..} numDescriptorS
 createRayGenerationShader
   :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayGenerationShader = do
-  let code = $(compileShaderQ (Just "spirv1.4") "rgen" [glsl|
+  let code = $(Glslang.compileShaderQ (Just "spirv1.4") "rgen" Nothing [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 
@@ -238,7 +240,7 @@ createRayGenerationShader = do
 
 createRayHitShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayHitShader = do
-  let code = $(compileShaderQ (Just "spirv1.4") "rchit" [glsl|
+  let code = $(Glslang.compileShaderQ (Just "spirv1.4") "rchit" Nothing [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 
@@ -269,7 +271,7 @@ createRayHitShader = do
 
 createRayIntShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayIntShader = do
-  let code = $(compileShaderQ (Just "spirv1.4") "rint" [glsl|
+  let code = $(Glslang.compileShaderQ (Just "spirv1.4") "rint" Nothing [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 
@@ -311,7 +313,7 @@ createRayIntShader = do
 
 createRayMissShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayMissShader = do
-  let code = $(compileShaderQ (Just "spirv1.4") "rmiss" [glsl|
+  let code = $(Shaderc.compileShaderQ (Just "spv1.4") "rmiss" [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 

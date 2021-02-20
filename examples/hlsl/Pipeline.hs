@@ -9,15 +9,16 @@ module Pipeline
 
 import           Control.Monad.Trans.Resource
 import           Data.Bits
-import           Data.Foldable                  ( traverse_ )
-import qualified Data.Vector                   as V
+import           Data.Foldable                      ( traverse_ )
+import qualified Data.Vector                       as V
 import           MonadVulkan
 import           Vulkan.CStruct.Extends
-import           Vulkan.Core10                 as Vk
-                                         hiding ( withBuffer
-                                                , withImage
-                                                )
-import           Vulkan.Utils.ShaderQQ.Shaderc
+import           Vulkan.Core10                     as Vk
+                                             hiding ( withBuffer
+                                                    , withImage
+                                                    )
+import           Vulkan.Utils.ShaderQQ.HLSL.Glslang ( vert )
+import           Vulkan.Utils.ShaderQQ.HLSL.Shaderc ( frag )
 import           Vulkan.Zero
 
 -- Create the most vanilla rendering pipeline
