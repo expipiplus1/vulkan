@@ -181,7 +181,7 @@ compileShaderQ
   -- ^ Spir-V bytecode
 compileShaderQ targetEnv = Glslang.compileShaderQ targetEnv HLSL
 
-  -- | Compile a HLSL shader to spir-v using glslangValidator.
+-- | Compile a HLSL shader to spir-v using glslangValidator.
 compileShader
   :: MonadIO m
   => Maybe Loc
