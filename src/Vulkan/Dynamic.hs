@@ -60,6 +60,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements
 import {-# SOURCE #-} Vulkan.Core10.Handles (BufferView)
 import {-# SOURCE #-} Vulkan.Core10.BufferView (BufferViewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_calibrated_timestamps (CalibratedTimestampInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (CheckpointData2NV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (CheckpointDataNV)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearAttachment)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearColorValue)
@@ -106,6 +107,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsObjectName
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsObjectTagInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (DeferredOperationKHR)
 import {-# SOURCE #-} Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (DependencyInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.Handles (DescriptorPool)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorPoolCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.Enums.DescriptorPoolResetFlags (DescriptorPoolResetFlags)
@@ -266,6 +268,7 @@ import {-# SOURCE #-} Vulkan.Core10.Handles (PipelineLayout)
 import {-# SOURCE #-} Vulkan.Core10.PipelineLayout (PipelineLayoutCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (PipelineStageFlags2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (PresentInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PrimitiveTopology (PrimitiveTopology)
@@ -320,6 +323,7 @@ import {-# SOURCE #-} Vulkan.Core10.Enums.StencilOp (StencilOp)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GGP_stream_descriptor_surface (StreamDescriptorSurfaceCreateInfoGGP)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (StridedDeviceAddressRegionKHR)
 import {-# SOURCE #-} Vulkan.Core10.Queue (SubmitInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (SubmitInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (SubpassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Enums.SubpassContents (SubpassContents)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (SubpassEndInfo)
@@ -954,6 +958,14 @@ data DeviceCmds = DeviceCmds
   , pVkCmdSetFragmentShadingRateKHR :: FunPtr (Ptr CommandBuffer_T -> ("pFragmentSize" ::: Ptr Extent2D) -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ())
   , pVkCmdSetFragmentShadingRateEnumNV :: FunPtr (Ptr CommandBuffer_T -> FragmentShadingRateNV -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ())
   , pVkGetAccelerationStructureBuildSizesKHR :: FunPtr (Ptr Device_T -> AccelerationStructureBuildTypeKHR -> ("pBuildInfo" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("pMaxPrimitiveCounts" ::: Ptr Word32) -> ("pSizeInfo" ::: Ptr AccelerationStructureBuildSizesInfoKHR) -> IO ())
+  , pVkCmdSetEvent2KHR :: FunPtr (Ptr CommandBuffer_T -> Event -> ("pDependencyInfo" ::: Ptr DependencyInfoKHR) -> IO ())
+  , pVkCmdResetEvent2KHR :: FunPtr (Ptr CommandBuffer_T -> Event -> ("stageMask" ::: PipelineStageFlags2KHR) -> IO ())
+  , pVkCmdWaitEvents2KHR :: FunPtr (Ptr CommandBuffer_T -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr Event) -> ("pDependencyInfos" ::: Ptr DependencyInfoKHR) -> IO ())
+  , pVkCmdPipelineBarrier2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pDependencyInfo" ::: Ptr DependencyInfoKHR) -> IO ())
+  , pVkQueueSubmit2KHR :: FunPtr (Ptr Queue_T -> ("submitCount" ::: Word32) -> ("pSubmits" ::: Ptr (SomeStruct SubmitInfo2KHR)) -> Fence -> IO Result)
+  , pVkCmdWriteTimestamp2KHR :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags2KHR -> QueryPool -> ("query" ::: Word32) -> IO ())
+  , pVkCmdWriteBufferMarker2AMD :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags2KHR -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> IO ())
+  , pVkGetQueueCheckpointData2NV :: FunPtr (Ptr Queue_T -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr CheckpointData2NV) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -961,6 +973,7 @@ deriving instance Show DeviceCmds
 instance Zero DeviceCmds where
   zero = DeviceCmds
     nullPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
@@ -1336,6 +1349,14 @@ initDeviceCmds instanceCmds handle = do
   vkCmdSetFragmentShadingRateKHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetFragmentShadingRateKHR"#)
   vkCmdSetFragmentShadingRateEnumNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetFragmentShadingRateEnumNV"#)
   vkGetAccelerationStructureBuildSizesKHR <- getDeviceProcAddr' handle (Ptr "vkGetAccelerationStructureBuildSizesKHR"#)
+  vkCmdSetEvent2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetEvent2KHR"#)
+  vkCmdResetEvent2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdResetEvent2KHR"#)
+  vkCmdWaitEvents2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdWaitEvents2KHR"#)
+  vkCmdPipelineBarrier2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdPipelineBarrier2KHR"#)
+  vkQueueSubmit2KHR <- getDeviceProcAddr' handle (Ptr "vkQueueSubmit2KHR"#)
+  vkCmdWriteTimestamp2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdWriteTimestamp2KHR"#)
+  vkCmdWriteBufferMarker2AMD <- getDeviceProcAddr' handle (Ptr "vkCmdWriteBufferMarker2AMD"#)
+  vkGetQueueCheckpointData2NV <- getDeviceProcAddr' handle (Ptr "vkGetQueueCheckpointData2NV"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1653,4 +1674,12 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pFragmentSize" ::: Ptr Extent2D) -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ()) vkCmdSetFragmentShadingRateKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> FragmentShadingRateNV -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ()) vkCmdSetFragmentShadingRateEnumNV)
     (castFunPtr @_ @(Ptr Device_T -> AccelerationStructureBuildTypeKHR -> ("pBuildInfo" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("pMaxPrimitiveCounts" ::: Ptr Word32) -> ("pSizeInfo" ::: Ptr AccelerationStructureBuildSizesInfoKHR) -> IO ()) vkGetAccelerationStructureBuildSizesKHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> Event -> ("pDependencyInfo" ::: Ptr DependencyInfoKHR) -> IO ()) vkCmdSetEvent2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> Event -> ("stageMask" ::: PipelineStageFlags2KHR) -> IO ()) vkCmdResetEvent2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr Event) -> ("pDependencyInfos" ::: Ptr DependencyInfoKHR) -> IO ()) vkCmdWaitEvents2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pDependencyInfo" ::: Ptr DependencyInfoKHR) -> IO ()) vkCmdPipelineBarrier2KHR)
+    (castFunPtr @_ @(Ptr Queue_T -> ("submitCount" ::: Word32) -> ("pSubmits" ::: Ptr (SomeStruct SubmitInfo2KHR)) -> Fence -> IO Result) vkQueueSubmit2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> PipelineStageFlags2KHR -> QueryPool -> ("query" ::: Word32) -> IO ()) vkCmdWriteTimestamp2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> PipelineStageFlags2KHR -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> IO ()) vkCmdWriteBufferMarker2AMD)
+    (castFunPtr @_ @(Ptr Queue_T -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr CheckpointData2NV) -> IO ()) vkGetQueueCheckpointData2NV)
 

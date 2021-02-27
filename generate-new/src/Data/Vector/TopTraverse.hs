@@ -56,7 +56,7 @@ topoSortedPermutation getKey getPostSet as = do
         | (a, i) <- Prelude.zip (V.toList as) [0 ..]
         , let ks = getPostSet a
         , -- TODO: error on Nothing here
-          let ps = catMaybes (lookupIndex <$> ks)
+          let ps = Data.Maybe.catMaybes (lookupIndex <$> ks)
         ]
   case topSort graph of
     Left is ->

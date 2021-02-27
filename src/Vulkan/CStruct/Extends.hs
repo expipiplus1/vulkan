@@ -99,10 +99,12 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (BufferImageCopy)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (BufferImageCopy2KHR)
 import {-# SOURCE #-} Vulkan.Core10.OtherTypes (BufferMemoryBarrier)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (BufferMemoryBarrier2KHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (BufferMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.BufferView (BufferViewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_calibrated_timestamps (CalibratedTimestampInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (CheckpointData2NV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (CheckpointDataNV)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearAttachment)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearDepthStencilValue)
@@ -114,6 +116,7 @@ import {-# SOURCE #-} Vulkan.Core10.CommandBuffer (CommandBufferBeginInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (CommandBufferInheritanceConditionalRenderingInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.CommandBuffer (CommandBufferInheritanceInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (CommandBufferInheritanceRenderPassTransformInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (CommandBufferSubmitInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.CommandPool (CommandPoolCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.ImageView (ComponentMapping)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (ComputePipelineCreateInfo)
@@ -142,6 +145,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsObjectTagI
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationBufferCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationImageCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationMemoryAllocateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (DependencyInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorBufferInfo)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorImageInfo)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorPoolCreateInfo)
@@ -255,6 +259,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_image_format_list (Imag
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (ImageFormatProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (ImageFormatProperties2)
 import {-# SOURCE #-} Vulkan.Core10.OtherTypes (ImageMemoryBarrier)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (ImageMemoryBarrier2KHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface (ImagePipeSurfaceCreateInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (ImagePlaneMemoryRequirementsInfo)
@@ -292,6 +297,7 @@ import {-# SOURCE #-} Vulkan.Core10.Memory (MappedMemoryRange)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
 import {-# SOURCE #-} Vulkan.Core10.Memory (MemoryAllocateInfo)
 import {-# SOURCE #-} Vulkan.Core10.OtherTypes (MemoryBarrier)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (MemoryBarrier2KHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedAllocateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedRequirements)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (MemoryFdPropertiesKHR)
@@ -447,6 +453,7 @@ import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup (Physica
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subgroup_size_control (PhysicalDeviceSubgroupSizeControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subgroup_size_control (PhysicalDeviceSubgroupSizeControlPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (PhysicalDeviceSynchronization2FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texel_buffer_alignment (PhysicalDeviceTexelBufferAlignmentFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texel_buffer_alignment (PhysicalDeviceTexelBufferAlignmentPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr (PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT)
@@ -523,6 +530,7 @@ import {-# SOURCE #-} Vulkan.Core10.PipelineLayout (PushConstantRange)
 import {-# SOURCE #-} Vulkan.Core10.Query (QueryPoolCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (QueryPoolPerformanceCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_INTEL_performance_query (QueryPoolPerformanceQueryCreateInfoINTEL)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (QueueFamilyCheckpointProperties2NV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (QueueFamilyCheckpointPropertiesNV)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (QueueFamilyProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (QueueFamilyProperties2)
@@ -556,6 +564,7 @@ import {-# SOURCE #-} Vulkan.Core10.QueueSemaphore (SemaphoreCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_fd (SemaphoreGetFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (SemaphoreGetWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreSignalInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (SemaphoreSubmitInfoKHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreTypeCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreWaitInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (SetStateFlagsIndirectCommandNV)
@@ -582,6 +591,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (StridedDevi
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import {-# SOURCE #-} Vulkan.Core10.Queue (SubmitInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (SubmitInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (SubpassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (SubpassDependency)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (SubpassDependency2)
@@ -847,6 +857,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
+  Extends DeviceCreateInfo PhysicalDeviceSynchronization2FeaturesKHR = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -875,6 +886,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ImageFormatProperties2 AndroidHardwareBufferUsageANDROID = ()
   Extends ImageFormatProperties2 FilterCubicImageViewImageFormatPropertiesEXT = ()
   Extends ImageMemoryBarrier SampleLocationsInfoEXT = ()
+  Extends ImageMemoryBarrier2KHR SampleLocationsInfoEXT = ()
   Extends ImageMemoryRequirementsInfo2 ImagePlaneMemoryRequirementsInfo = ()
   Extends ImageViewCreateInfo ImageViewUsageCreateInfo = ()
   Extends ImageViewCreateInfo SamplerYcbcrConversionInfo = ()
@@ -978,6 +990,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceSynchronization2FeaturesKHR = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1058,6 +1071,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends QueryPoolCreateInfo QueryPoolPerformanceCreateInfoKHR = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceQueryCreateInfoINTEL = ()
   Extends QueueFamilyProperties2 QueueFamilyCheckpointPropertiesNV = ()
+  Extends QueueFamilyProperties2 QueueFamilyCheckpointProperties2NV = ()
   Extends RayTracingPipelineCreateInfoKHR PipelineCreationFeedbackCreateInfoEXT = ()
   Extends RayTracingPipelineCreateInfoNV PipelineCreationFeedbackCreateInfoEXT = ()
   Extends RenderPassBeginInfo DeviceGroupRenderPassBeginInfo = ()
@@ -1083,6 +1097,10 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SubmitInfo ProtectedSubmitInfo = ()
   Extends SubmitInfo TimelineSemaphoreSubmitInfo = ()
   Extends SubmitInfo PerformanceQuerySubmitInfoKHR = ()
+  Extends SubmitInfo2KHR Win32KeyedMutexAcquireReleaseInfoNV = ()
+  Extends SubmitInfo2KHR Win32KeyedMutexAcquireReleaseInfoKHR = ()
+  Extends SubmitInfo2KHR PerformanceQuerySubmitInfoKHR = ()
+  Extends SubpassDependency2 MemoryBarrier2KHR = ()
   Extends SubpassDescription2 SubpassDescriptionDepthStencilResolve = ()
   Extends SubpassDescription2 FragmentShadingRateAttachmentInfoKHR = ()
   Extends SurfaceCapabilities2KHR DisplayNativeHdrSurfaceCapabilitiesAMD = ()
@@ -1466,6 +1484,9 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV -> go @PipelineFragmentShadingRateEnumStateCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE -> go @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
   STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE -> go @MutableDescriptorTypeCreateInfoVALVE
+  STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR -> go @MemoryBarrier2KHR
+  STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV -> go @QueueFamilyCheckpointProperties2NV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR -> go @PhysicalDeviceSynchronization2FeaturesKHR
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -1785,6 +1806,9 @@ infix 6 ::&
 {-# complete (::&) :: PipelineFragmentShadingRateEnumStateCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceMutableDescriptorTypeFeaturesVALVE #-}
 {-# complete (::&) :: MutableDescriptorTypeCreateInfoVALVE #-}
+{-# complete (::&) :: MemoryBarrier2KHR #-}
+{-# complete (::&) :: QueueFamilyCheckpointProperties2NV #-}
+{-# complete (::&) :: PhysicalDeviceSynchronization2FeaturesKHR #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

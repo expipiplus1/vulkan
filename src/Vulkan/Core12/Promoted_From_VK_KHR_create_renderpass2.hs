@@ -90,6 +90,7 @@ import Vulkan.Core10.Enums.Format (Format)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentShadingRateAttachmentInfoKHR)
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (MemoryBarrier2KHR)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint)
@@ -1428,6 +1429,13 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewOffsets@
 -- has on each corresponding subpass dependency.
 --
+-- If an instance of
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR' is
+-- included in the @pNext@ chain, @srcStageMask@, @dstStageMask@,
+-- @srcAccessMask@, and @dstAccessMask@ parameters are ignored. The
+-- synchronization and access scopes instead are defined by the parameters
+-- of 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-03080# If the
@@ -1536,23 +1544,22 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- -   #VUID-VkSubpassDependency2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2'
 --
--- -   #VUID-VkSubpassDependency2-pNext-pNext# @pNext@ /must/ be @NULL@
+-- -   #VUID-VkSubpassDependency2-pNext-pNext# @pNext@ /must/ be @NULL@ or
+--     a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'
+--
+-- -   #VUID-VkSubpassDependency2-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-parameter# @srcStageMask@
 --     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
 --
--- -   #VUID-VkSubpassDependency2-srcStageMask-requiredbitmask#
---     @srcStageMask@ /must/ not be @0@
---
 -- -   #VUID-VkSubpassDependency2-dstStageMask-parameter# @dstStageMask@
 --     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
---
--- -   #VUID-VkSubpassDependency2-dstStageMask-requiredbitmask#
---     @dstStageMask@ /must/ not be @0@
 --
 -- -   #VUID-VkSubpassDependency2-srcAccessMask-parameter# @srcAccessMask@
 --     /must/ be a valid combination of
@@ -1573,8 +1580,10 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags',
 -- 'RenderPassCreateInfo2',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data SubpassDependency2 = SubpassDependency2
-  { -- | @srcSubpass@ is the subpass index of the first subpass in the
+data SubpassDependency2 (es :: [Type]) = SubpassDependency2
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcSubpass@ is the subpass index of the first subpass in the
     -- dependency, or 'Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL'.
     srcSubpass :: Word32
   , -- | @dstSubpass@ is the subpass index of the second subpass in the
@@ -1605,40 +1614,51 @@ data SubpassDependency2 = SubpassDependency2
     -- destination subpass depend on.
     viewOffset :: Int32
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (SubpassDependency2)
+deriving instance Generic (SubpassDependency2 (es :: [Type]))
 #endif
-deriving instance Show SubpassDependency2
+deriving instance Show (Chain es) => Show (SubpassDependency2 es)
 
-instance ToCStruct SubpassDependency2 where
+instance Extensible SubpassDependency2 where
+  extensibleTypeName = "SubpassDependency2"
+  setNext x next = x{next = next}
+  getNext SubpassDependency2{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDependency2 e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @MemoryBarrier2KHR = Just f
+    | otherwise = Nothing
+
+instance (Extendss SubpassDependency2 es, PokeChain es) => ToCStruct (SubpassDependency2 es) where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SubpassDependency2{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (srcSubpass)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (dstSubpass)
-    poke ((p `plusPtr` 24 :: Ptr PipelineStageFlags)) (srcStageMask)
-    poke ((p `plusPtr` 28 :: Ptr PipelineStageFlags)) (dstStageMask)
-    poke ((p `plusPtr` 32 :: Ptr AccessFlags)) (srcAccessMask)
-    poke ((p `plusPtr` 36 :: Ptr AccessFlags)) (dstAccessMask)
-    poke ((p `plusPtr` 40 :: Ptr DependencyFlags)) (dependencyFlags)
-    poke ((p `plusPtr` 44 :: Ptr Int32)) (viewOffset)
-    f
+  pokeCStruct p SubpassDependency2{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (srcSubpass)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (dstSubpass)
+    lift $ poke ((p `plusPtr` 24 :: Ptr PipelineStageFlags)) (srcStageMask)
+    lift $ poke ((p `plusPtr` 28 :: Ptr PipelineStageFlags)) (dstStageMask)
+    lift $ poke ((p `plusPtr` 32 :: Ptr AccessFlags)) (srcAccessMask)
+    lift $ poke ((p `plusPtr` 36 :: Ptr AccessFlags)) (dstAccessMask)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DependencyFlags)) (dependencyFlags)
+    lift $ poke ((p `plusPtr` 44 :: Ptr Int32)) (viewOffset)
+    lift $ f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr PipelineStageFlags)) (zero)
-    poke ((p `plusPtr` 28 :: Ptr PipelineStageFlags)) (zero)
-    poke ((p `plusPtr` 44 :: Ptr Int32)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 44 :: Ptr Int32)) (zero)
+    lift $ f
 
-instance FromCStruct SubpassDependency2 where
+instance (Extendss SubpassDependency2 es, PeekChain es) => FromCStruct (SubpassDependency2 es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcSubpass <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     dstSubpass <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     srcStageMask <- peek @PipelineStageFlags ((p `plusPtr` 24 :: Ptr PipelineStageFlags))
@@ -1648,16 +1668,11 @@ instance FromCStruct SubpassDependency2 where
     dependencyFlags <- peek @DependencyFlags ((p `plusPtr` 40 :: Ptr DependencyFlags))
     viewOffset <- peek @Int32 ((p `plusPtr` 44 :: Ptr Int32))
     pure $ SubpassDependency2
-             srcSubpass dstSubpass srcStageMask dstStageMask srcAccessMask dstAccessMask dependencyFlags viewOffset
+             next srcSubpass dstSubpass srcStageMask dstStageMask srcAccessMask dstAccessMask dependencyFlags viewOffset
 
-instance Storable SubpassDependency2 where
-  sizeOf ~_ = 48
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero SubpassDependency2 where
+instance es ~ '[] => Zero (SubpassDependency2 es) where
   zero = SubpassDependency2
+           ()
            zero
            zero
            zero
@@ -1876,7 +1891,7 @@ data RenderPassCreateInfo2 (es :: [Type]) = RenderPassCreateInfo2
   , -- | @pDependencies@ is a pointer to an array of @dependencyCount@
     -- 'SubpassDependency2' structures describing dependencies between pairs of
     -- subpasses.
-    dependencies :: Vector SubpassDependency2
+    dependencies :: Vector (SomeStruct SubpassDependency2)
   , -- | @pCorrelatedViewMasks@ is a pointer to an array of view masks indicating
     -- sets of views that /may/ be more efficient to render concurrently.
     correlatedViewMasks :: Vector Word32
@@ -1912,9 +1927,9 @@ instance (Extendss RenderPassCreateInfo2 es, PokeChain es) => ToCStruct (RenderP
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubpasses' `plusPtr` (88 * (i)) :: Ptr (SubpassDescription2 _))) (e) . ($ ())) (subpasses)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 _)))) (pPSubpasses')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (dependencies)) :: Word32))
-    pPDependencies' <- ContT $ allocaBytesAligned @SubpassDependency2 ((Data.Vector.length (dependencies)) * 48) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPDependencies' `plusPtr` (48 * (i)) :: Ptr SubpassDependency2) (e)) (dependencies)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency2))) (pPDependencies')
+    pPDependencies' <- ContT $ allocaBytesAligned @(SubpassDependency2 _) ((Data.Vector.length (dependencies)) * 48) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDependencies' `plusPtr` (48 * (i)) :: Ptr (SubpassDependency2 _))) (e) . ($ ())) (dependencies)
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (SubpassDependency2 _)))) (pPDependencies')
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (correlatedViewMasks)) :: Word32))
     pPCorrelatedViewMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (correlatedViewMasks)) * 4) 4
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCorrelatedViewMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (correlatedViewMasks)
@@ -1940,8 +1955,8 @@ instance (Extendss RenderPassCreateInfo2 es, PeekChain es) => FromCStruct (Rende
     pSubpasses <- peek @(Ptr (SubpassDescription2 _)) ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 _))))
     pSubpasses' <- generateM (fromIntegral subpassCount) (\i -> peekSomeCStruct (forgetExtensions ((pSubpasses `advancePtrBytes` (88 * (i)) :: Ptr (SubpassDescription2 _)))))
     dependencyCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
-    pDependencies <- peek @(Ptr SubpassDependency2) ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency2)))
-    pDependencies' <- generateM (fromIntegral dependencyCount) (\i -> peekCStruct @SubpassDependency2 ((pDependencies `advancePtrBytes` (48 * (i)) :: Ptr SubpassDependency2)))
+    pDependencies <- peek @(Ptr (SubpassDependency2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (SubpassDependency2 _))))
+    pDependencies' <- generateM (fromIntegral dependencyCount) (\i -> peekSomeCStruct (forgetExtensions ((pDependencies `advancePtrBytes` (48 * (i)) :: Ptr (SubpassDependency2 _)))))
     correlatedViewMaskCount <- peek @Word32 ((p `plusPtr` 64 :: Ptr Word32))
     pCorrelatedViewMasks <- peek @(Ptr Word32) ((p `plusPtr` 72 :: Ptr (Ptr Word32)))
     pCorrelatedViewMasks' <- generateM (fromIntegral correlatedViewMaskCount) (\i -> peek @Word32 ((pCorrelatedViewMasks `advancePtrBytes` (4 * (i)) :: Ptr Word32)))

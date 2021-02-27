@@ -32,6 +32,8 @@ pattern MAKE_VERSION major minor patch <-
                             .|. fromIntegral minor `shiftL` 32
                             .|. fromIntegral patch
 
+{-# complete MAKE_VERSION #-}
+
 _VERSION_MAJOR :: Version -> Word16
 _VERSION_MAJOR (Version v) = fromIntegral $ (v `shiftR` 48) .&. 0xffff
 

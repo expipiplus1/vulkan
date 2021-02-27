@@ -18,6 +18,9 @@
 - support pass hlsl entry point to glslangValidator and shaderc
 - support pass glsl entry point to glslangValidator
 
+## [0.4.2] - 2021-02-18
+- Relax bounds on `vulkan`
+
 ## [0.4.1] - 2021-01-09
 - Better error message reporting on unsatisfied extension version. See
   https://github.com/expipiplus1/vulkan/issues/249
