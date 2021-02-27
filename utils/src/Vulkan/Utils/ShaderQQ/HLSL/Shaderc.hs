@@ -52,7 +52,7 @@ import qualified Vulkan.Utils.ShaderQQ.HLSL                     as HLSL
 -- An explicit example (@<interactive>@ is from doctest):
 --
 -- >>> let foo = 450 :: Int in [hlsl|const float foo = $foo|]
--- "#line 31 \"<interactive>\"\nconst float foo = 450"
+-- "#line 57 \"<interactive>\"\nconst float foo = 450"
 --
 -- Note that line number will be thrown off if any of the interpolated
 -- variables contain newlines.

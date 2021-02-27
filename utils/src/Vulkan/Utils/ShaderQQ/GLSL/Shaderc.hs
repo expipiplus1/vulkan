@@ -55,7 +55,7 @@ import qualified Vulkan.Utils.ShaderQQ.GLSL                     as GLSL
 -- An explicit example (@<interactive>@ is from doctest):
 --
 -- >>> let version = 450 :: Int in [glsl|#version $version|]
--- "#version 450\n#extension GL_GOOGLE_cpp_style_line_directive : enable\n#line 46 \"<interactive>\"\n"
+-- "#version 450\n#extension GL_GOOGLE_cpp_style_line_directive : enable\n#line 52 \"<interactive>\"\n"
 --
 -- Note that line number will be thrown off if any of the interpolated
 -- variables contain newlines.
