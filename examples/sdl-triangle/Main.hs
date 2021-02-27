@@ -38,8 +38,8 @@ import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Debug
-import           Vulkan.Utils.ShaderQQ.GLSL.Glslang ( frag )
-import           Vulkan.Utils.ShaderQQ.GLSL.Shaderc ( vert )
+import           Vulkan.Utils.ShaderQQ.GLSL.Glslang ( vert
+                                                    , frag )
 import           Vulkan.Zero
 
 main :: IO ()
