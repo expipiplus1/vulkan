@@ -2,6 +2,22 @@
 
 ## WIP
 
+## [0.5.0] - 2021-02-24
+- Refactor module `Vulkan.Utils.ShaderQQ`
+  - Remove `Vulkan.Utils.ShaderQQ`
+  - Remove `Vulkan.Utils.ShaderQQ.Shaderc`
+  - Provide `glsl`/`hlsl`, `vert` .. `comp`, `rgen` .. `rcall`, `mesh`, `task`, `compileShaderQ`, `compileShader` in each ShaderQQ provider module under `Vulkan.Utils.ShaderQQ` for help compile shaders
+  - Add `Vulkan.Utils.ShaderQQ.Backend.Glslang`to help process warning & error messages for glslangValidator
+  - Add `Vulkan.Utils.ShaderQQ.Backend.Shaderc`to help process warning & error messages for glslc
+  - Add `Vulkan.Utils.ShaderQQ.GLSL.Glslang` to compile glsl shaders for glslangValidator
+  - Add `Vulkan.Utils.ShaderQQ.GLSL.Shaderc` to compile glsl shaders for glslc
+  - Add `Vulkan.Utils.ShaderQQ.HLSL.Glslang` to compile hlsl shaders for glslangValidator
+  - Add `Vulkan.Utils.ShaderQQ.HLSL.Shaderc` to compile hlsl shaders for glslc
+- specify `--target-spv` for shaderc ray tracing shaders
+- specify `--target-env` for glslang ray tracing shaders
+- support pass hlsl entry point to glslangValidator and shaderc
+- support pass glsl entry point to glslangValidator
+
 ## [0.4.2] - 2021-02-18
 - Relax bounds on `vulkan`
 

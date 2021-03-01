@@ -5,7 +5,7 @@ cabal-version: 1.24
 -- see: https://github.com/sol/hpack
 
 name:           vulkan-utils
-version:        0.4.2
+version:        0.5.0
 synopsis:       Utils for the vulkan package
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -40,11 +40,21 @@ library
       Vulkan.Utils.QueueAssignment
       Vulkan.Utils.Requirements
       Vulkan.Utils.Requirements.TH
-      Vulkan.Utils.ShaderQQ
       Vulkan.Utils.ShaderQQ.Interpolate
-      Vulkan.Utils.ShaderQQ.Shaderc
+      Vulkan.Utils.ShaderQQ.Backend.Glslang
+      Vulkan.Utils.ShaderQQ.Backend.Shaderc
+      Vulkan.Utils.ShaderQQ.GLSL.Glslang
+      Vulkan.Utils.ShaderQQ.GLSL.Shaderc
+      Vulkan.Utils.ShaderQQ.HLSL.Glslang
+      Vulkan.Utils.ShaderQQ.HLSL.Shaderc
   other-modules:
       Vulkan.Utils.Internal
+      Vulkan.Utils.ShaderQQ.ShaderType
+      Vulkan.Utils.ShaderQQ.Backend.Internal
+      Vulkan.Utils.ShaderQQ.Backend.Glslang.Internal
+      Vulkan.Utils.ShaderQQ.Backend.Shaderc.Internal
+      Vulkan.Utils.ShaderQQ.GLSL
+      Vulkan.Utils.ShaderQQ.HLSL
   hs-source-dirs:
       src
   default-extensions:

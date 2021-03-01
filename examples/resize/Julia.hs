@@ -17,7 +17,7 @@ import           Data.Vector                    ( Vector )
 
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
-import           Vulkan.Utils.ShaderQQ
+import           Vulkan.Utils.ShaderQQ.GLSL.Glslang
 import           Vulkan.Zero
 
 import           Julia.Constants
@@ -100,7 +100,7 @@ juliaDescriptorSet descriptorSetLayout imageViews = do
 
 juliaShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 juliaShader = do
-  let compCode = $(compileShaderQ (Just "vulkan1.0") "comp" [glsl|
+  let compCode = $(compileShaderQ (Just "vulkan1.0") "comp" Nothing [glsl|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
 
