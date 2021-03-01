@@ -1,7 +1,4 @@
-module Vulkan.Utils.ShaderQQ.Backend.Shaderc.Internal
-  ( compileShaderQ
-  , compileShader
-  ) where
+module Vulkan.Utils.ShaderQQ.Backend.Shaderc.Internal where
 
 import           Control.Monad.IO.Class
 import           Data.ByteString                ( ByteString )

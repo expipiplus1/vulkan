@@ -1,6 +1,4 @@
-module Vulkan.Utils.ShaderQQ.Backend.Internal
-  ( messageProcess
-  ) where
+module Vulkan.Utils.ShaderQQ.Backend.Internal where
 
 import           Data.ByteString                ( ByteString )
 import           Data.List.Extra

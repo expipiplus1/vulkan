@@ -2,6 +2,15 @@
 
 ## WIP
 
+## [0.6.0] - 2021-03-02
+- Hide some modules under `Vulkan.Utils.ShaderQQ`
+  - hide module `Vulkan.Utils.ShaderQQ.ShaderType`
+  - hide module `Vulkan.Utils.ShaderQQ.Backend.Internal`
+  - hide module `Vulkan.Utils.ShaderQQ.Backend.Glslang.Internal`
+  - hide module `Vulkan.Utils.ShaderQQ.Backend.Shaderc.Internal`
+  - hide module `Vulkan.Utils.ShaderQQ.GLSL`
+  - hide module `Vulkan.Utils.ShaderQQ.HLSL`
+
 ## [0.5.0] - 2021-02-24
 - Refactor module `Vulkan.Utils.ShaderQQ`
   - Remove `Vulkan.Utils.ShaderQQ`

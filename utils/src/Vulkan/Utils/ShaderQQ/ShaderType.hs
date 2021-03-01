@@ -1,6 +1,4 @@
-module Vulkan.Utils.ShaderQQ.ShaderType
-  ( ShaderType (..)
-  ) where
+module Vulkan.Utils.ShaderQQ.ShaderType where
 
 import           Data.String (IsString (..))
 

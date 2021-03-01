@@ -1,7 +1,4 @@
-module Vulkan.Utils.ShaderQQ.HLSL
-  ( hlsl
-  , insertLineDirective
-  ) where
+module Vulkan.Utils.ShaderQQ.HLSL where
 
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Quote
