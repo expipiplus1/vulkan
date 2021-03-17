@@ -17,6 +17,7 @@ library:
     - Vulkan.Utils.Internal
   dependencies:
     - base <5
+    - aeson
     - bytestring
     - containers
     - dependent-map
