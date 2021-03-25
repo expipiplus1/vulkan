@@ -219,10 +219,10 @@ data ShaderInfo = ShaderInfo
   }
 
 makeShaderInfo :: (Shader, Reflection) -> ShaderInfo
-makeShaderInfo (Shader {..}, Reflection {..}) = do
-  let shaderModuleCreateInfo = makeShaderModuleCreateInfo code
-  let pipelineShaderStageCreateInfos = (SomeStruct <$>) . makePipelineShaderStageCreateInfos stage entryPoints
-  ShaderInfo {..}
+makeShaderInfo (Shader {..}, Reflection {..}) = ShaderInfo {..}
+  where
+    shaderModuleCreateInfo = makeShaderModuleCreateInfo code
+    pipelineShaderStageCreateInfos = (SomeStruct <$>) . makePipelineShaderStageCreateInfos stage entryPoints
 
 makeDescriptorInfo :: Vector (Shader, Reflection) -> Vector (DescriptorSetLayoutCreateInfo '[])
 makeDescriptorInfo = makeDescriptorSetLayoutCreateInfos . join . V.map (makeDescriptorSetLayoutBindings . (stage :: Shader -> ShaderStage) . fst <*> fromMaybe [] . ubos . snd <*> fromMaybe [] . textures . snd)
@@ -274,19 +274,19 @@ makeTextureDescriptorSetLayoutBinding stage Texture {..} = (set, zero
   })
 
 makeDescriptorSetLayoutBindings :: ShaderStage -> Vector Ubo -> Vector Texture -> Vector (Int, DescriptorSetLayoutBinding)
-makeDescriptorSetLayoutBindings stage ubos textures = do
-  let uboBindings = V.map (makeUboDescriptorSetLayoutBinding stage) ubos
-  let textureBindings = V.map (makeTextureDescriptorSetLayoutBinding stage) textures
-  uboBindings <> textureBindings
+makeDescriptorSetLayoutBindings stage ubos textures = uboBindings <> textureBindings
+  where
+    uboBindings = V.map (makeUboDescriptorSetLayoutBinding stage) ubos
+    textureBindings = V.map (makeTextureDescriptorSetLayoutBinding stage) textures
 
 makeDescriptorSetLayoutCreateInfos :: Vector (Int, DescriptorSetLayoutBinding) -> V.Vector (DescriptorSetLayoutCreateInfo '[])
-makeDescriptorSetLayoutCreateInfos bindings = do
-  let setSize = V.maximum . (fst <$>) $ bindings :: Int
-  let sets :: Map Int (Vector DescriptorSetLayoutBinding)
-      sets = M.fromList . map (, []) $ [ 0 .. setSize ]
-  let setsMap :: Map Int (Vector DescriptorSetLayoutBinding)
-      setsMap = M.fromList . map (liftA2 (,) (fst . head) (V.fromList . (snd <$>))) . groupBy ((==) `on` fst) . sortOn fst . V.toList $ bindings
-  V.map makeDescriptorSetLayoutCreateInfo . V.fromList . M.elems . M.unionWith (V.++) sets $ setsMap
+makeDescriptorSetLayoutCreateInfos bindings = V.map makeDescriptorSetLayoutCreateInfo . V.fromList . M.elems . M.unionWith (V.++) sets $ setsMap
+  where
+    setSize = V.maximum . (fst <$>) $ bindings :: Int
+    sets :: Map Int (Vector DescriptorSetLayoutBinding)
+    sets = M.fromList . map (, []) $ [ 0 .. setSize ]
+    setsMap :: Map Int (Vector DescriptorSetLayoutBinding)
+    setsMap = M.fromList . map (liftA2 (,) (fst . head) (V.fromList . (snd <$>))) . groupBy ((==) `on` fst) . sortOn fst . V.toList $ bindings
 
 makeDescriptorSetLayoutCreateInfo :: Vector DescriptorSetLayoutBinding -> DescriptorSetLayoutCreateInfo '[]
 makeDescriptorSetLayoutCreateInfo bindings = zero { bindings = bindings }
@@ -328,14 +328,14 @@ data VertexAttribute = VertexAttribute
 -- [island pipeline](https://github.com/tgfrerer/island/blob/76d0d38cba74181fa3774cef38aba4d96b6861dc/modules/le_backend_vk/le_pipeline.cpp#L21)
 makePipelineVertexInputStateCreateInfo :: Vector Input -> Maybe (PipelineVertexInputStateCreateInfo '[])
 makePipelineVertexInputStateCreateInfo [] = Nothing
-makePipelineVertexInputStateCreateInfo inputs = do
-  let vertexAttributes = join . V.map makeVertexAttribute $ inputs :: Vector VertexAttribute
-  let vertexAttributeDescriptions = makeVertexInputAttributeDescriptions vertexAttributes :: Vector VertexInputAttributeDescription
-  let vertexBindingDescriptions = makeVertexInputBindingDescriptions vertexAttributes :: Vector VertexInputBindingDescription
-  Just zero
-    { vertexBindingDescriptions
-    , vertexAttributeDescriptions
-    }
+makePipelineVertexInputStateCreateInfo inputs = Just zero
+  { vertexBindingDescriptions
+  , vertexAttributeDescriptions
+  }
+  where
+    vertexAttributes = join . V.map makeVertexAttribute $ inputs :: Vector VertexAttribute
+    vertexAttributeDescriptions = makeVertexInputAttributeDescriptions vertexAttributes :: Vector VertexInputAttributeDescription
+    vertexBindingDescriptions = makeVertexInputBindingDescriptions vertexAttributes :: Vector VertexInputBindingDescription
 
 makeVertexInputBindingDescriptions :: Vector VertexAttribute -> Vector VertexInputBindingDescription
 makeVertexInputBindingDescriptions = V.fromList . map makeVertexInputBindingDescription . calculate . groupBy ((==) `on` fst) . sortOn fst . extract
@@ -353,16 +353,17 @@ makeVertexInputBindingDescription (binding, stride) = zero
   }
 
 makeVertexAttribute :: Input -> Vector VertexAttribute
-makeVertexAttribute Input {..} = do
-  let count = maybe 1 V.sum array :: Int
-  let (size, format) = convertVertexAttributeType . fromString . T.unpack $ type'
-  V.map (\i -> VertexAttribute
-    { binding = 0
-    , location = fromIntegral . (+ location) $ i
-    , size
-    , format })
-    [ 0 .. count - 1
-    ]
+makeVertexAttribute Input {..} = V.map (\i -> VertexAttribute
+  { binding = 0
+  , location = fromIntegral . (+ location) $ i
+  , size
+  , format
+  })
+  [ 0 .. count - 1
+  ]
+  where
+    count = maybe 1 V.sum array :: Int
+    (size, format) = convertVertexAttributeType . fromString . T.unpack $ type'
 
 makeVertexInputAttributeDescriptions :: Vector VertexAttribute -> Vector VertexInputAttributeDescription
 makeVertexInputAttributeDescriptions = V.fromList . join . map process . groupBy ((==) `on` (binding :: VertexAttribute -> Word32)) . V.toList
