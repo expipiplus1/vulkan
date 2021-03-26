@@ -203,7 +203,7 @@ instance Convert ShaderStage where
 
 instance FromJSON ShaderStage where
   parseJSON value@(String x) = case eitherFrom @ShaderStage x of
-    Left (ConvertException _e err) -> prependFailure (T.unpack err) . unexpected $ value
+    Left (ConvertException _e err) -> prependFailure (T.unpack $ err <> ", ") . unexpected $ value
     Right _stage -> withText "mode" (pure . from) value
   parseJSON value = withText "mode" (pure . from) value
 
@@ -286,7 +286,7 @@ instance Convert TextureDescriptorType where
 
 instance FromJSON TextureDescriptorType where
   parseJSON value@(String x) = case eitherFrom @TextureDescriptorType x of
-    Left (ConvertException _e err) -> prependFailure (T.unpack err) . unexpected $ value
+    Left (ConvertException _e err) -> prependFailure (T.unpack $ err <> ", ") . unexpected $ value
     Right _stage -> withText "type" (pure . from) value
   parseJSON value = withText "type" (pure . from) value
 
@@ -343,7 +343,7 @@ instance Convert VertexAttributeType where
 
 instance FromJSON VertexAttributeType where
   parseJSON value@(String x) = case eitherFrom @VertexAttributeType x of
-    Left (ConvertException _e err) -> prependFailure (T.unpack err) . unexpected $ value
+    Left (ConvertException _e err) -> prependFailure (T.unpack $ err <> ", ") . unexpected $ value
     Right _stage -> withText "type" (pure . from) value
   parseJSON value = withText "type" (pure . from) value
 
