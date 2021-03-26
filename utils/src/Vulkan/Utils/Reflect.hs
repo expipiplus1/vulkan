@@ -207,7 +207,7 @@ instance Convert ShaderStage where
 instance FromJSON ShaderStage where
   parseJSON value@(String x) | checkConvert @ShaderStage x = prependFailure (T.unpack . convertErrorMessage  @ShaderStage $ x) . unexpected $ value
                              | otherwise = withText "mode" (pure . from) value
-  parseJSON x = withText "mode" (pure . from) x
+  parseJSON value = withText "mode" (pure . from) value
 
 instance ToJSON ShaderStage where
   toJSON = String . to
