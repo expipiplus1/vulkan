@@ -47,7 +47,6 @@ import qualified Data.Vector as V
 import System.FilePath ((</>))
 import System.Process.Typed (proc, readProcess)
 import System.IO.Temp (withSystemTempDirectory)
-import System.IO.Unsafe (unsafePerformIO)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 
 import Data.List (sortOn, groupBy)
@@ -58,7 +57,7 @@ import Data.Maybe (fromMaybe, catMaybes)
 import Data.Word (Word32)
 import Control.Applicative (liftA2)
 import Control.Monad (join)
-import Control.Exception (Exception (..), throw, handle, evaluate)
+import Control.Exception (Exception (..), throw)
 
 data EntryPoint = EntryPoint
   { name :: Text
@@ -145,14 +144,12 @@ data ConvertException = ConvertException Text Text
 instance Exception ConvertException
 
 class Convert a where
+  eitherFrom :: Text -> Either ConvertException a
   from :: Text -> a
+  from x = case eitherFrom x of
+    Left ex -> throw ex
+    Right res -> res
   to :: a -> Text
-
-checkConvert :: forall a . Convert a => Text -> Bool
-checkConvert x = unsafePerformIO $ handle (\(ConvertException _raw _err) -> pure True) (evaluate . flip seq False . (from :: Text -> a) $ x)
-
-convertErrorMessage :: forall a . Convert a => Text -> Text
-convertErrorMessage x = unsafePerformIO $ handle (\(ConvertException _raw err) -> pure err) (evaluate . flip seq "" . (from :: Text -> a) $ x)
 
 data ShaderStage
   = Vert
@@ -172,22 +169,22 @@ data ShaderStage
   deriving (Eq, Show)
 
 instance Convert ShaderStage where
-  from = \case
-    "vert" -> Vert
-    "frag" -> Frag
-    "comp" -> Comp
-    "tesc" -> Tesc
-    "tese" -> Tese
-    "geom" -> Geom
-    "rgen" -> Rgen
-    "rint" -> Rint
-    "rahit" -> Rahit
-    "rchit" -> Rchit
-    "rmiss" -> Rmiss
-    "rcall" -> Rcall
-    "task" -> Task
-    "mesh" -> Mesh
-    unsupport -> throw $ ConvertException unsupport $ "ShaderStage not support '" <> unsupport <> "'"
+  eitherFrom = \case
+    "vert" -> Right Vert
+    "frag" -> Right Frag
+    "comp" -> Right Comp
+    "tesc" -> Right Tesc
+    "tese" -> Right Tese
+    "geom" -> Right Geom
+    "rgen" -> Right Rgen
+    "rint" -> Right Rint
+    "rahit" -> Right Rahit
+    "rchit" -> Right Rchit
+    "rmiss" -> Right Rmiss
+    "rcall" -> Right Rcall
+    "task" -> Right Task
+    "mesh" -> Right Mesh
+    unsupport -> Left $ ConvertException unsupport $ "ShaderStage not support '" <> unsupport <> "'"
   to = \case
     Vert -> "vert"
     Frag -> "frag"
@@ -205,8 +202,9 @@ instance Convert ShaderStage where
     Mesh -> "mesh"
 
 instance FromJSON ShaderStage where
-  parseJSON value@(String x) | checkConvert @ShaderStage x = prependFailure (T.unpack . convertErrorMessage  @ShaderStage $ x) . unexpected $ value
-                             | otherwise = withText "mode" (pure . from) value
+  parseJSON value@(String x) = case eitherFrom @ShaderStage x of
+    Left (ConvertException _e err) -> prependFailure (T.unpack err) . unexpected $ value
+    Right _stage -> withText "mode" (pure . from) value
   parseJSON value = withText "mode" (pure . from) value
 
 instance ToJSON ShaderStage where
@@ -279,9 +277,9 @@ data TextureDescriptorType
   = Sampler2D
 
 instance Convert TextureDescriptorType where
-  from = \case
-    "sampler2D" -> Sampler2D
-    unsupport -> throw $ ConvertException unsupport $ "TextureDescriptorType not support '" <> unsupport <> "'"
+  eitherFrom = \case
+    "sampler2D" -> Right Sampler2D
+    unsupport -> Left $ ConvertException unsupport $ "TextureDescriptorType not support '" <> unsupport <> "'"
   to = \case
     Sampler2D -> "sampler2D"
 
@@ -321,11 +319,11 @@ data VertexAttributeType
   | Vec4
 
 instance Convert VertexAttributeType where
-  from = \case
-    "vec2" -> Vec2
-    "vec3" -> Vec3
-    "vec4" -> Vec4
-    unsupport -> throw $ ConvertException unsupport $ "VertexAttributeType not support '" <> unsupport <> "'"
+  eitherFrom = \case
+    "vec2" -> Right Vec2
+    "vec3" -> Right Vec3
+    "vec4" -> Right Vec4
+    unsupport -> Left $ ConvertException unsupport $ "VertexAttributeType not support '" <> unsupport <> "'"
   to = \case
     Vec2 -> "vec2"
     Vec3 -> "vec3"
