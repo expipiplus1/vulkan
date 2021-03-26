@@ -65,7 +65,7 @@ data EntryPoint = EntryPoint
   } deriving (Show, Generic, FromJSON, ToJSON)
 
 data Input = Input
-  { type' :: Text
+  { type' :: VertexAttributeType
   , name :: Text
   , location :: Int
   , array :: Maybe (Vector Int)
@@ -100,7 +100,7 @@ data Ubo = Ubo
   } deriving (Show, Generic, FromJSON, ToJSON)
 
 data Texture = Texture
-  { type' :: Text
+  { type' :: TextureDescriptorType
   , name :: Text
   , set :: Int
   , binding :: Int
@@ -275,6 +275,7 @@ makeUboDescriptorSetLayoutBinding stage Ubo {..} = (set, zero
 
 data TextureDescriptorType
   = Sampler2D
+  deriving (Show)
 
 instance Convert TextureDescriptorType where
   eitherFrom = \case
@@ -283,6 +284,16 @@ instance Convert TextureDescriptorType where
   to = \case
     Sampler2D -> "sampler2D"
 
+instance FromJSON TextureDescriptorType where
+  parseJSON value@(String x) = case eitherFrom @TextureDescriptorType x of
+    Left (ConvertException _e err) -> prependFailure (T.unpack err) . unexpected $ value
+    Right _stage -> withText "type" (pure . from) value
+  parseJSON value = withText "type" (pure . from) value
+
+instance ToJSON TextureDescriptorType where
+  toJSON = String . to
+  toEncoding = toEncoding . to
+
 convertTextureDescriptorType :: TextureDescriptorType -> DescriptorType
 convertTextureDescriptorType = \case
   Sampler2D -> DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
@@ -290,7 +301,7 @@ convertTextureDescriptorType = \case
 makeTextureDescriptorSetLayoutBinding :: ShaderStage -> Texture -> (Int, DescriptorSetLayoutBinding)
 makeTextureDescriptorSetLayoutBinding stage Texture {..} = (set, zero
   { binding = fromIntegral binding
-  , descriptorType = convertTextureDescriptorType . from $ type'
+  , descriptorType = convertTextureDescriptorType type'
   , descriptorCount = maybe 1 (V.sum . (fromIntegral <$>)) array
   , stageFlags = convertStage stage
   })
@@ -317,6 +328,7 @@ data VertexAttributeType
   = Vec2
   | Vec3
   | Vec4
+  deriving (Show)
 
 instance Convert VertexAttributeType where
   eitherFrom = \case
@@ -328,6 +340,16 @@ instance Convert VertexAttributeType where
     Vec2 -> "vec2"
     Vec3 -> "vec3"
     Vec4 -> "vec4"
+
+instance FromJSON VertexAttributeType where
+  parseJSON value@(String x) = case eitherFrom @VertexAttributeType x of
+    Left (ConvertException _e err) -> prependFailure (T.unpack err) . unexpected $ value
+    Right _stage -> withText "type" (pure . from) value
+  parseJSON value = withText "type" (pure . from) value
+
+instance ToJSON VertexAttributeType where
+  toJSON = String . to
+  toEncoding = toEncoding . to
 
 convertVertexAttributeType :: VertexAttributeType -> (Word32, Format)
 convertVertexAttributeType = \case
@@ -383,7 +405,7 @@ makeVertexAttribute Input {..} = V.map (\i -> VertexAttribute
   ]
   where
     count = maybe 1 V.sum array :: Int
-    (size, format) = convertVertexAttributeType . from $ type'
+    (size, format) = convertVertexAttributeType type'
 
 makeVertexInputAttributeDescriptions :: Vector VertexAttribute -> Vector VertexInputAttributeDescription
 makeVertexInputAttributeDescriptions = V.fromList . join . map process . groupBy ((==) `on` (binding :: VertexAttribute -> Word32)) . V.toList
