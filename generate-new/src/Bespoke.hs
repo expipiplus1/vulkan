@@ -902,8 +902,9 @@ boolConversion = genRe "Bool conversion" $ do
 wsiTypes
   :: (HasErr r, HasRenderParams r) => SpecFlavor -> [Sem r RenderElement]
 wsiTypes = \case
-  SpecVk -> (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp])
-    <> concat [win32', xcb1, waylandShared, wayland, metal, android, directfb]
+  SpecVk ->
+    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp]) <> concat
+      [win32', xcb1, waylandShared, wayland, metal, android, directfb, screen]
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
     <> concat [win32Xr', xcb1, waylandShared, d3d', jni, timespec]
 
@@ -1054,6 +1055,9 @@ android = [voidData "AHardwareBuffer", voidData "ANativeWindow"]
 
 directfb :: HasRenderParams r => [Sem r RenderElement]
 directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
+
+screen :: HasRenderParams r => [Sem r RenderElement]
+screen = [voidData "_screen_window", voidData "screen_context"]
 
 ----------------------------------------------------------------
 -- OpenXR platform stuff
