@@ -139,13 +139,11 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     storageBuffer16BitAccess :: Bool
   , -- | #features-uniformAndStorageBuffer16BitAccess#
     -- @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
-    -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
-    -- storage class with the same decoration /can/ have 16-bit integer and
-    -- 16-bit floating-point members. If this feature is not enabled, 16-bit
-    -- integer or 16-bit floating-point members /must/ not be used in such
-    -- objects. This also specifies whether shader modules /can/ declare the
-    -- @UniformAndStorageBuffer16BitAccess@ capability.
+    -- @Uniform@ storage class with the @Block@ decoration /can/ have 16-bit
+    -- integer and 16-bit floating-point members. If this feature is not
+    -- enabled, 16-bit integer or 16-bit floating-point members /must/ not be
+    -- used in such objects. This also specifies whether shader modules /can/
+    -- declare the @UniformAndStorageBuffer16BitAccess@ capability.
     uniformAndStorageBuffer16BitAccess :: Bool
   , -- | #features-storagePushConstant16# @storagePushConstant16@ specifies
     -- whether objects in the @PushConstant@ storage class /can/ have 16-bit
@@ -529,13 +527,11 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-uniformAndStorageBuffer8BitAccess#
 --     @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
---     @Uniform@ storage class with the @Block@ decoration and in the
---     @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
---     storage class with the same decoration /can/ have 8-bit integer
---     members. If this feature is not enabled, 8-bit integer members
---     /must/ not be used in such objects. This also indicates whether
---     shader modules /can/ declare the @UniformAndStorageBuffer8BitAccess@
---     capability.
+--     @Uniform@ storage class with the @Block@ decoration /can/ have 8-bit
+--     integer members. If this feature is not enabled, 8-bit integer
+--     members /must/ not be used in such objects. This also indicates
+--     whether shader modules /can/ declare the
+--     @UniformAndStorageBuffer8BitAccess@ capability.
 --
 -- -   #features-storagePushConstant8# @storagePushConstant8@ indicates
 --     whether objects in the @PushConstant@ storage class /can/ have 8-bit

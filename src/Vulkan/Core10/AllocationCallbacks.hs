@@ -93,6 +93,7 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Core10.Sampler.createSampler',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversion',
 -- 'Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversionKHR',
+-- 'Vulkan.Extensions.VK_QNX_screen_surface.createScreenSurfaceQNX',
 -- 'Vulkan.Core10.QueueSemaphore.createSemaphore',
 -- 'Vulkan.Core10.Shader.createShaderModule',
 -- 'Vulkan.Extensions.VK_KHR_display_swapchain.createSharedSwapchainsKHR',

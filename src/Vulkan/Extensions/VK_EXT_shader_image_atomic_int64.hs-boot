@@ -51,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires the
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_EXT_shader_image_atomic_int64.html SPV_EXT_shader_image_int64>
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_image_int64.html SPV_EXT_shader_image_int64>
 --         SPIR-V extension.
 --
 --     -   This extension requires the

@@ -23,8 +23,6 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
---     -   Requires @VK_KHR_create_renderpass2@
---
 -- [__Contact__]
 --
 --     -   Tobias Hector
@@ -2316,10 +2314,11 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
--- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-03921# If @srcAccessMask@
+-- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-04747# If @srcAccessMask@
 --     includes 'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT',
 --     @srcStageMask@ /must/ include
 --     'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR',
+--     'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -2544,10 +2543,11 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
--- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-03921# If @dstAccessMask@
+-- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-04747# If @dstAccessMask@
 --     includes 'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT',
 --     @dstStageMask@ /must/ include
 --     'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR',
+--     'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -2937,10 +2937,11 @@ instance Zero MemoryBarrier2KHR where
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
--- -   #VUID-VkImageMemoryBarrier2KHR-srcAccessMask-03921# If
+-- -   #VUID-VkImageMemoryBarrier2KHR-srcAccessMask-04747# If
 --     @srcAccessMask@ includes
 --     'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT', @srcStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR',
+--     'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -3183,10 +3184,11 @@ instance Zero MemoryBarrier2KHR where
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
--- -   #VUID-VkImageMemoryBarrier2KHR-dstAccessMask-03921# If
+-- -   #VUID-VkImageMemoryBarrier2KHR-dstAccessMask-04747# If
 --     @dstAccessMask@ includes
 --     'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT', @dstStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR',
+--     'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -3421,7 +3423,7 @@ instance Zero MemoryBarrier2KHR where
 --     @image@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier2KHR-srcQueueFamilyIndex-03939# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
@@ -3937,10 +3939,11 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
--- -   #VUID-VkBufferMemoryBarrier2KHR-srcAccessMask-03921# If
+-- -   #VUID-VkBufferMemoryBarrier2KHR-srcAccessMask-04747# If
 --     @srcAccessMask@ includes
 --     'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT', @srcStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR',
+--     'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -4183,10 +4186,11 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
--- -   #VUID-VkBufferMemoryBarrier2KHR-dstAccessMask-03921# If
+-- -   #VUID-VkBufferMemoryBarrier2KHR-dstAccessMask-04747# If
 --     @dstAccessMask@ includes
 --     'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT', @dstStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR',
+--     'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --

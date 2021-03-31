@@ -23,8 +23,6 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
---     -   Requires @VK_KHR_create_renderpass2@
---
 -- [__Contact__]
 --
 --     -   Tobias Hector

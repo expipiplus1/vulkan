@@ -602,6 +602,11 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
 --
 -- = Description
 --
+-- Note
+--
+-- Despite their names, @minDepth@ /can/ be less than, equal to, or greater
+-- than @maxDepth@.
+--
 -- The framebuffer depth coordinate @z@f /may/ be represented using either
 -- a fixed-point or floating-point representation. However, a
 -- floating-point representation /must/ be used if the depth\/stencil
@@ -699,8 +704,7 @@ data Viewport = Viewport
     width :: Float
   , -- No documentation found for Nested "VkViewport" "height"
     height :: Float
-  , -- | @minDepth@ and @maxDepth@ are the depth range for the viewport. It is
-    -- valid for @minDepth@ to be greater than or equal to @maxDepth@.
+  , -- | @minDepth@ and @maxDepth@ are the depth range for the viewport.
     minDepth :: Float
   , -- No documentation found for Nested "VkViewport" "maxDepth"
     maxDepth :: Float

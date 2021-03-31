@@ -277,6 +277,24 @@ instance Zero MemoryDedicatedRequirements where
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-04751# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
+--     operation with handle type
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the memory being imported /must/ also be a dedicated image
+--     allocation and @image@ /must/ be identical to the image associated
+--     with the imported memory
+--
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-04752# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
+--     operation with handle type
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the memory being imported /must/ also be a dedicated buffer
+--     allocation and @buffer@ /must/ be identical to the buffer associated
+--     with the imported memory
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkMemoryDedicatedAllocateInfo-sType-sType# @sType@ /must/ be

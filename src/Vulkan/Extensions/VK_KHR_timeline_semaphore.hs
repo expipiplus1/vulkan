@@ -184,9 +184,9 @@
 --
 -- 2) What type of payload the new synchronization primitive has?
 --
--- __RESOLVED__: A 64-bit unsigned integer that can only be set to
--- monotonically increasing values by signal operations and is not changed
--- by wait operations.
+-- __RESOLVED__: A 64-bit unsigned integer that can only be set to strictly
+-- increasing values by signal operations and is not changed by wait
+-- operations.
 --
 -- 3) Does the new synchronization primitive have the same
 -- signal-before-wait requirement as the existing semaphores do?

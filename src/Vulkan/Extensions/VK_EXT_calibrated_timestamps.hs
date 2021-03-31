@@ -113,6 +113,12 @@
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@timestampPeriod@
 -- makes it possible to calculate future device timestamps as follows:
 --
+-- 6) In what queue are timestamp values in time domain
+-- 'TIME_DOMAIN_DEVICE_EXT' captured by 'getCalibratedTimestampsEXT'?
+--
+-- __RESOLVED__: An implementation supporting this extension will have all
+-- its VkQueue share the same time domain.
+--
 -- > futureTimestamp = calibratedTimestamp + deltaNanoseconds / timestampPeriod
 --
 -- 6) Can the host and device timestamp values drift apart over longer
@@ -146,6 +152,10 @@
 -- domains calibrated and thus can never be zero.
 --
 -- == Version History
+--
+-- -   Revision 2, 2021-03-16 (Lionel Landwerlin)
+--
+--     -   Specify requirement on device timestamps
 --
 -- -   Revision 1, 2018-10-04 (Daniel Rakos)
 --
@@ -458,6 +468,15 @@ instance Zero CalibratedTimestampInfoEXT where
 -- | VkTimeDomainEXT - Supported time domains
 --
 -- = Description
+--
+-- Note
+--
+-- An implementation supporting @VK_EXT_calibrated_timestamps@ will use the
+-- same time domain for all its 'Vulkan.Core10.Handles.Queue' so that
+-- timestamp values reported for 'TIME_DOMAIN_DEVICE_EXT' can be matched to
+-- any timestamp captured through
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' or
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteTimestamp2KHR' .
 --
 -- > struct timespec tv;
 -- > clock_gettime(CLOCK_MONOTONIC, &tv);

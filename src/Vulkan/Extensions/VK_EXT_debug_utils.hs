@@ -235,7 +235,7 @@
 -- >     PFN_vkCreateDebugUtilsMessengerEXT pfnCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 -- >     PFN_vkDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 -- >
--- >     VkDebugUtilsMessengeCreateInfoEXT callback1 = {
+-- >     VkDebugUtilsMessengerCreateInfoEXT callback1 = {
 -- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,  // sType
 -- >             NULL,                                                     // pNext
 -- >             0,                                                        // flags
@@ -252,7 +252,7 @@
 -- >     }
 -- >
 -- >     callback1.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
--- >     callback1.pfnCallback = myDebugBreak;
+-- >     callback1.pfnUserCallback = myDebugBreak;
 -- >     callback1.pUserData = NULL;
 -- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, NULL, &cb2);
 -- >     if (res != VK_SUCCESS) {
@@ -2158,13 +2158,16 @@ type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT 
 --
 -- = Description
 --
--- The callback /must/ not call 'destroyDebugUtilsMessengerEXT'.
---
 -- The callback returns a 'Vulkan.Core10.FundamentalTypes.Bool32', which is
 -- interpreted in a layer-specified manner. The application /should/ always
 -- return 'Vulkan.Core10.FundamentalTypes.FALSE'. The
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' value is reserved for use in layer
 -- development.
+--
+-- == Valid Usage
+--
+-- -   #VUID-PFN_vkDebugUtilsMessengerCallbackEXT-None-04769# The callback
+--     /must/ not make calls to any Vulkan commands.
 --
 -- = See Also
 --

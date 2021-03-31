@@ -415,9 +415,6 @@ foreign import ccall
 -- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03274#
 --     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
---     set in the @flags@ field of
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -525,9 +522,6 @@ foreign import ccall
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03278#
 --     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
---     set in the @flags@ field of
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --

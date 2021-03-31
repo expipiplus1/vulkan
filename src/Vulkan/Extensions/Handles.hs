@@ -299,6 +299,7 @@ instance Show DisplayModeKHR where
 -- 'Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface.createImagePipeSurfaceFUCHSIA',
 -- 'Vulkan.Extensions.VK_MVK_macos_surface.createMacOSSurfaceMVK',
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT',
+-- 'Vulkan.Extensions.VK_QNX_screen_surface.createScreenSurfaceQNX',
 -- 'Vulkan.Extensions.VK_GGP_stream_descriptor_surface.createStreamDescriptorSurfaceGGP',
 -- 'Vulkan.Extensions.VK_NN_vi_surface.createViSurfaceNN',
 -- 'Vulkan.Extensions.VK_KHR_wayland_surface.createWaylandSurfaceKHR',
@@ -355,7 +356,7 @@ instance Show SurfaceKHR where
 -- presentation engine. Use of a presentable image /must/ occur only after
 -- the image is returned by
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR', and before it
--- is presented by 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
+-- is released by 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
 -- This includes transitioning the image layout and rendering commands.
 --
 -- An application /can/ acquire use of a presentable image with

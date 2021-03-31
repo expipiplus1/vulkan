@@ -549,6 +549,12 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     @ppEnabledExtensionNames@ /must/ not contain both
 --     @VK_KHR_buffer_device_address@ and @VK_EXT_buffer_device_address@
 --
+-- -   #VUID-VkDeviceCreateInfo-pNext-04748# if the @pNext@ chain includes
+--     a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure and
+--     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@bufferDeviceAddress@
+--     is VK_TRUE, @ppEnabledExtensionNames@ /must/ not contain
+--     @VK_EXT_buffer_device_address@
+--
 -- -   #VUID-VkDeviceCreateInfo-pNext-02829# If the @pNext@ chain includes
 --     a 'Vulkan.Core12.PhysicalDeviceVulkan11Features' structure, then it
 --     /must/ not include a

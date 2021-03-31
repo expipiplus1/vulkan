@@ -27,9 +27,9 @@ newtype SemaphoreType = SemaphoreType Int32
 -- or unsignaled. When created, the semaphore is in the unsignaled state.
 pattern SEMAPHORE_TYPE_BINARY   = SemaphoreType 0
 -- | 'SEMAPHORE_TYPE_TIMELINE' specifies a /timeline semaphore/ type that has
--- a monotonically increasing 64-bit unsigned integer payload indicating
--- whether the semaphore is signaled with respect to a particular reference
--- value. When created, the semaphore payload has the value given by the
+-- a strictly increasing 64-bit unsigned integer payload indicating whether
+-- the semaphore is signaled with respect to a particular reference value.
+-- When created, the semaphore payload has the value given by the
 -- @initialValue@ field of
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.
 pattern SEMAPHORE_TYPE_TIMELINE = SemaphoreType 1

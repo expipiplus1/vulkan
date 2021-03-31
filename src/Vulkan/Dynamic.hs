@@ -204,6 +204,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_fence_fd (ImportFenceFdI
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_fence_win32 (ImportFenceWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_fd (ImportSemaphoreFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (ImportSemaphoreWin32HandleInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_semaphore (ImportSemaphoreZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core10.Enums.IndexType (IndexType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (IndirectCommandsLayoutCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (IndirectCommandsLayoutNV)
@@ -218,12 +219,14 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (MemoryFdPrope
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (MemoryGetAndroidHardwareBufferInfoANDROID)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (MemoryGetFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryGetWin32HandleInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryGetZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (MemoryHostPointerPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags)
 import {-# SOURCE #-} Vulkan.Core10.MemoryManagement (MemoryRequirements)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (MemoryRequirements2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryZirconHandlePropertiesFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ObjectType (ObjectType)
@@ -300,10 +303,13 @@ import {-# SOURCE #-} Vulkan.Core10.Handles (Sampler)
 import {-# SOURCE #-} Vulkan.Core10.Sampler (SamplerCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Handles (SamplerYcbcrConversion)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (SamplerYcbcrConversionCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QNX_screen_surface (ScreenSurfaceCreateInfoQNX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QNX_screen_surface (Screen_window)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Semaphore)
 import {-# SOURCE #-} Vulkan.Core10.QueueSemaphore (SemaphoreCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_fd (SemaphoreGetFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (SemaphoreGetWin32HandleInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_semaphore (SemaphoreGetZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreSignalInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreWaitInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (ShaderGroupShaderKHR)
@@ -352,6 +358,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (XcbSurfaceCreateInfo
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (Xcb_connection_t)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (Xcb_visualid_t)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (XlibSurfaceCreateInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface (Zx_handle_t)
 data InstanceCmds = InstanceCmds
   { instanceCmdsHandle :: Ptr Instance_T
   , pVkDestroyInstance :: FunPtr (Ptr Instance_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
@@ -393,6 +400,8 @@ data InstanceCmds = InstanceCmds
   , pVkGetPhysicalDeviceDirectFBPresentationSupportEXT :: FunPtr (Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("dfb" ::: Ptr IDirectFB) -> IO Bool32)
   , pVkCreateImagePipeSurfaceFUCHSIA :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr ImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
   , pVkCreateStreamDescriptorSurfaceGGP :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr StreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
+  , pVkCreateScreenSurfaceQNX :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr ScreenSurfaceCreateInfoQNX) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
+  , pVkGetPhysicalDeviceScreenPresentationSupportQNX :: FunPtr (Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> Ptr Screen_window -> IO Bool32)
   , pVkCreateDebugReportCallbackEXT :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr DebugReportCallbackCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pCallback" ::: Ptr DebugReportCallbackEXT) -> IO Result)
   , pVkDestroyDebugReportCallbackEXT :: FunPtr (Ptr Instance_T -> DebugReportCallbackEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkDebugReportMessageEXT :: FunPtr (Ptr Instance_T -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> IO ())
@@ -453,7 +462,7 @@ instance Zero InstanceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 -- | A version of 'getInstanceProcAddr' which can be called
 -- with a null pointer for the instance.
@@ -511,6 +520,8 @@ initInstanceCmds handle = do
   vkGetPhysicalDeviceDirectFBPresentationSupportEXT <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceDirectFBPresentationSupportEXT"#)
   vkCreateImagePipeSurfaceFUCHSIA <- getInstanceProcAddr' handle (Ptr "vkCreateImagePipeSurfaceFUCHSIA"#)
   vkCreateStreamDescriptorSurfaceGGP <- getInstanceProcAddr' handle (Ptr "vkCreateStreamDescriptorSurfaceGGP"#)
+  vkCreateScreenSurfaceQNX <- getInstanceProcAddr' handle (Ptr "vkCreateScreenSurfaceQNX"#)
+  vkGetPhysicalDeviceScreenPresentationSupportQNX <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceScreenPresentationSupportQNX"#)
   vkCreateDebugReportCallbackEXT <- getInstanceProcAddr' handle (Ptr "vkCreateDebugReportCallbackEXT"#)
   vkDestroyDebugReportCallbackEXT <- getInstanceProcAddr' handle (Ptr "vkDestroyDebugReportCallbackEXT"#)
   vkDebugReportMessageEXT <- getInstanceProcAddr' handle (Ptr "vkDebugReportMessageEXT"#)
@@ -595,6 +606,8 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("dfb" ::: Ptr IDirectFB) -> IO Bool32) vkGetPhysicalDeviceDirectFBPresentationSupportEXT)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr ImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateImagePipeSurfaceFUCHSIA)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr StreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateStreamDescriptorSurfaceGGP)
+    (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr ScreenSurfaceCreateInfoQNX) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateScreenSurfaceQNX)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> Ptr Screen_window -> IO Bool32) vkGetPhysicalDeviceScreenPresentationSupportQNX)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr DebugReportCallbackCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pCallback" ::: Ptr DebugReportCallbackEXT) -> IO Result) vkCreateDebugReportCallbackEXT)
     (castFunPtr @_ @(Ptr Instance_T -> DebugReportCallbackEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDebugReportCallbackEXT)
     (castFunPtr @_ @(Ptr Instance_T -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> IO ()) vkDebugReportMessageEXT)
@@ -790,10 +803,14 @@ data DeviceCmds = DeviceCmds
   , pVkGetMemoryWin32HandlePropertiesKHR :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> HANDLE -> ("pMemoryWin32HandleProperties" ::: Ptr MemoryWin32HandlePropertiesKHR) -> IO Result)
   , pVkGetMemoryFdKHR :: FunPtr (Ptr Device_T -> ("pGetFdInfo" ::: Ptr MemoryGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result)
   , pVkGetMemoryFdPropertiesKHR :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: CInt) -> ("pMemoryFdProperties" ::: Ptr MemoryFdPropertiesKHR) -> IO Result)
+  , pVkGetMemoryZirconHandleFUCHSIA :: FunPtr (Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr MemoryGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result)
+  , pVkGetMemoryZirconHandlePropertiesFUCHSIA :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("zirconHandle" ::: Zx_handle_t) -> ("pMemoryZirconHandleProperties" ::: Ptr MemoryZirconHandlePropertiesFUCHSIA) -> IO Result)
   , pVkGetSemaphoreWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr SemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result)
   , pVkImportSemaphoreWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr ImportSemaphoreWin32HandleInfoKHR) -> IO Result)
   , pVkGetSemaphoreFdKHR :: FunPtr (Ptr Device_T -> ("pGetFdInfo" ::: Ptr SemaphoreGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result)
   , pVkImportSemaphoreFdKHR :: FunPtr (Ptr Device_T -> ("pImportSemaphoreFdInfo" ::: Ptr ImportSemaphoreFdInfoKHR) -> IO Result)
+  , pVkGetSemaphoreZirconHandleFUCHSIA :: FunPtr (Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr SemaphoreGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result)
+  , pVkImportSemaphoreZirconHandleFUCHSIA :: FunPtr (Ptr Device_T -> ("pImportSemaphoreZirconHandleInfo" ::: Ptr ImportSemaphoreZirconHandleInfoFUCHSIA) -> IO Result)
   , pVkGetFenceWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr FenceGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result)
   , pVkImportFenceWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pImportFenceWin32HandleInfo" ::: Ptr ImportFenceWin32HandleInfoKHR) -> IO Result)
   , pVkGetFenceFdKHR :: FunPtr (Ptr Device_T -> ("pGetFdInfo" ::: Ptr FenceGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result)
@@ -1012,7 +1029,8 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1181,10 +1199,14 @@ initDeviceCmds instanceCmds handle = do
   vkGetMemoryWin32HandlePropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryWin32HandlePropertiesKHR"#)
   vkGetMemoryFdKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryFdKHR"#)
   vkGetMemoryFdPropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryFdPropertiesKHR"#)
+  vkGetMemoryZirconHandleFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetMemoryZirconHandleFUCHSIA"#)
+  vkGetMemoryZirconHandlePropertiesFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetMemoryZirconHandlePropertiesFUCHSIA"#)
   vkGetSemaphoreWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkGetSemaphoreWin32HandleKHR"#)
   vkImportSemaphoreWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkImportSemaphoreWin32HandleKHR"#)
   vkGetSemaphoreFdKHR <- getDeviceProcAddr' handle (Ptr "vkGetSemaphoreFdKHR"#)
   vkImportSemaphoreFdKHR <- getDeviceProcAddr' handle (Ptr "vkImportSemaphoreFdKHR"#)
+  vkGetSemaphoreZirconHandleFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetSemaphoreZirconHandleFUCHSIA"#)
+  vkImportSemaphoreZirconHandleFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkImportSemaphoreZirconHandleFUCHSIA"#)
   vkGetFenceWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkGetFenceWin32HandleKHR"#)
   vkImportFenceWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkImportFenceWin32HandleKHR"#)
   vkGetFenceFdKHR <- getDeviceProcAddr' handle (Ptr "vkGetFenceFdKHR"#)
@@ -1506,10 +1528,14 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> HANDLE -> ("pMemoryWin32HandleProperties" ::: Ptr MemoryWin32HandlePropertiesKHR) -> IO Result) vkGetMemoryWin32HandlePropertiesKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetFdInfo" ::: Ptr MemoryGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result) vkGetMemoryFdKHR)
     (castFunPtr @_ @(Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: CInt) -> ("pMemoryFdProperties" ::: Ptr MemoryFdPropertiesKHR) -> IO Result) vkGetMemoryFdPropertiesKHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr MemoryGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result) vkGetMemoryZirconHandleFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("zirconHandle" ::: Zx_handle_t) -> ("pMemoryZirconHandleProperties" ::: Ptr MemoryZirconHandlePropertiesFUCHSIA) -> IO Result) vkGetMemoryZirconHandlePropertiesFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr SemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result) vkGetSemaphoreWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr ImportSemaphoreWin32HandleInfoKHR) -> IO Result) vkImportSemaphoreWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetFdInfo" ::: Ptr SemaphoreGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result) vkGetSemaphoreFdKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pImportSemaphoreFdInfo" ::: Ptr ImportSemaphoreFdInfoKHR) -> IO Result) vkImportSemaphoreFdKHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr SemaphoreGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result) vkGetSemaphoreZirconHandleFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> ("pImportSemaphoreZirconHandleInfo" ::: Ptr ImportSemaphoreZirconHandleInfoFUCHSIA) -> IO Result) vkImportSemaphoreZirconHandleFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr FenceGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result) vkGetFenceWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pImportFenceWin32HandleInfo" ::: Ptr ImportFenceWin32HandleInfoKHR) -> IO Result) vkImportFenceWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetFdInfo" ::: Ptr FenceGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result) vkGetFenceFdKHR)
