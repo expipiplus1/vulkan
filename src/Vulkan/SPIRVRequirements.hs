@@ -14,6 +14,8 @@ import Data.Bits (Bits)
 import Data.ByteString (ByteString)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (PhysicalDevice)
+import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures)
+import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures(..))
 import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
@@ -30,6 +32,8 @@ import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmen
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT(..))
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR(..))
+import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
+import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
@@ -38,6 +42,8 @@ import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicF
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT(..))
+import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures)
+import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures(..))
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
@@ -50,6 +56,8 @@ import Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImag
 import Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImageFeaturesNV(..))
 import Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackFeaturesEXT(..))
+import Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures)
+import Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import Vulkan.Core12 (PhysicalDeviceVulkan11Features(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan11Properties)
@@ -616,6 +624,17 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
+  "SPV_EXT_shader_atomic_float_add" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
@@ -881,73 +900,38 @@ spirvCapabilityRequirements = \case
                            }
     ]
   "DrawParameters" -> (,)
-    [RequireInstanceVersion $ MAKE_VERSION 1 1 0]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature { featureName   = "shaderDrawParameters"
                            , checkFeature  = shaderDrawParameters :: PhysicalDeviceVulkan11Features -> Bool
                            , enableFeature = \f -> f { shaderDrawParameters = True } :: PhysicalDeviceVulkan11Features
                            }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "MultiView" -> (,)
-    [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
-    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature { featureName   = "multiview"
                            , checkFeature  = multiview :: PhysicalDeviceVulkan11Features -> Bool
                            , enableFeature = \f -> f { multiview = True } :: PhysicalDeviceVulkan11Features
                            }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MULTIVIEW_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "DeviceGroup" -> (,) [RequireInstanceVersion $ MAKE_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_VERSION 1 1 0]
   "VariablePointersStorageBuffer" -> (,)
-    [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
-    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "variablePointersStorageBuffer"
       , checkFeature  = variablePointersStorageBuffer :: PhysicalDeviceVulkan11Features -> Bool
       , enableFeature = \f -> f { variablePointersStorageBuffer = True } :: PhysicalDeviceVulkan11Features
       }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_VARIABLE_POINTERS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "VariablePointers" -> (,)
-    [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
-    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature { featureName   = "variablePointers"
                            , checkFeature  = variablePointers :: PhysicalDeviceVulkan11Features -> Bool
                            , enableFeature = \f -> f { variablePointers = True } :: PhysicalDeviceVulkan11Features
                            }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_VARIABLE_POINTERS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "ShaderClockKHR" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
@@ -1074,90 +1058,38 @@ spirvCapabilityRequirements = \case
                              }
     ]
   "StorageBuffer16BitAccess" -> (,)
-    [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
-    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "storageBuffer16BitAccess"
       , checkFeature  = storageBuffer16BitAccess :: PhysicalDeviceVulkan11Features -> Bool
       , enableFeature = \f -> f { storageBuffer16BitAccess = True } :: PhysicalDeviceVulkan11Features
       }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "UniformAndStorageBuffer16BitAccess" -> (,)
-    [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
-    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "uniformAndStorageBuffer16BitAccess"
       , checkFeature  = uniformAndStorageBuffer16BitAccess :: PhysicalDeviceVulkan11Features -> Bool
       , enableFeature = \f -> f { uniformAndStorageBuffer16BitAccess = True } :: PhysicalDeviceVulkan11Features
       }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "StoragePushConstant16" -> (,)
-    [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
-    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature { featureName   = "storagePushConstant16"
                            , checkFeature  = storagePushConstant16 :: PhysicalDeviceVulkan11Features -> Bool
                            , enableFeature = \f -> f { storagePushConstant16 = True } :: PhysicalDeviceVulkan11Features
                            }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "StorageInputOutput16" -> (,)
-    [ RequireInstanceVersion $ MAKE_VERSION 1 1 0
-    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
+    [RequireInstanceVersion $ MAKE_VERSION 1 2 0]
     [ RequireDeviceFeature { featureName   = "storageInputOutput16"
                            , checkFeature  = storageInputOutput16 :: PhysicalDeviceVulkan11Features -> Bool
                            , enableFeature = \f -> f { storageInputOutput16 = True } :: PhysicalDeviceVulkan11Features
                            }
-    , RequireDeviceVersion $ MAKE_VERSION 1 1 0
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_16BIT_STORAGE_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
+    , RequireDeviceVersion $ MAKE_VERSION 1 2 0
     ]
   "GroupNonUniform" -> (,)
     [RequireInstanceVersion $ MAKE_VERSION 1 1 0]

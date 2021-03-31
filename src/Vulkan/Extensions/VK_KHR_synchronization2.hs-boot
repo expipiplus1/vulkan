@@ -23,8 +23,6 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
---     -   Requires @VK_KHR_create_renderpass2@
---
 -- [__Contact__]
 --
 --     -   Tobias Hector
@@ -431,6 +429,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( BufferMemoryBarrier2KHR
                                                   , SemaphoreSubmitInfoKHR
                                                   , SubmitInfo2KHR
                                                   , PipelineStageFlags2KHR
+                                                  , PipelineStageFlagBits2KHR
                                                   ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -522,5 +521,7 @@ instance Show (Chain es) => Show (SubmitInfo2KHR es)
 instance (Extendss SubmitInfo2KHR es, PeekChain es) => FromCStruct (SubmitInfo2KHR es)
 
 
-data PipelineStageFlags2KHR
+type PipelineStageFlags2KHR = PipelineStageFlagBits2KHR
+
+data PipelineStageFlagBits2KHR
 

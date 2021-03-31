@@ -583,7 +583,7 @@ instance Zero BufferMemoryBarrier where
 --     @image@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-03939# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a

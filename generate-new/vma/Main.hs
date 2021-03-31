@@ -219,12 +219,13 @@ unitEnums state ds = do
           evValue <- exprValue expr'
           pure EnumValue { .. }
 
-      let eName = CName (T.pack n)
-          isMaxEnum EnumValue {..} = "_MAX_ENUM" `T.isSuffixOf` unCName evName
-          eValues = V.filter (not . isMaxEnum) allValues
-          eType   = if "FlagBits" `List.isSuffixOf` n
-            then ABitmask (CName $ T.dropEnd 8 (T.pack n) <> "Flags")
-            else AnEnum
+      let
+        eName = CName (T.pack n)
+        isMaxEnum EnumValue {..} = "_MAX_ENUM" `T.isSuffixOf` unCName evName
+        eValues = V.filter (not . isMaxEnum) allValues
+        eType   = if "FlagBits" `List.isSuffixOf` n
+          then ABitmask (CName $ T.dropEnd 8 (T.pack n) <> "Flags") Bitmask32
+          else AnEnum
       pure (nodeInfo, Enum { .. })
 
 -- TODO: This may be a little fragile

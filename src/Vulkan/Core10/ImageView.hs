@@ -909,6 +909,12 @@ instance Zero ImageSubresourceRange where
 --     flag, the @levelCount@ and @layerCount@ members of
 --     @subresourceRange@ /must/ both be @1@
 --
+-- -   #VUID-VkImageViewCreateInfo-image-04739# If @image@ was created with
+--     the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
+--     flag and @format@ is a non-compressed format, @viewType@ /must/ not
+--     be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'
+--
 -- -   #VUID-VkImageViewCreateInfo-pNext-01585# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure was included in the @pNext@ chain of the
@@ -917,25 +923,6 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     is not zero then @format@ /must/ be one of the formats in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
---
--- -   #VUID-VkImageViewCreateInfo-pNext-04082# If a
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---     structure was included in the @pNext@ chain of the
---     'Vulkan.Core10.Image.ImageCreateInfo' structure used when creating
---     @image@ and
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
---     is not zero then all of the formats in
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
---     /must/ be compatible with the @format@ as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
---
--- -   #VUID-VkImageViewCreateInfo-flags-04083# If @flags@ does not contain
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
---     and the @pNext@ chain include a
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---     structure then
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
---     /must/ be @0@ or @1@
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01586# If @image@ was created with
 --     the

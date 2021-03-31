@@ -5,5 +5,3 @@ packages:
   ./utils
   ./examples
   ./generate-new/
-
-allow-newer: strict Cabal

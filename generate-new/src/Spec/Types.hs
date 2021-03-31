@@ -260,8 +260,11 @@ data EnumValue = EnumValue
 
 data EnumType
   = AnEnum
-  | ABitmask CName
+  | ABitmask CName BitmaskWidth
   -- ^ Stores the name of the "Flags" type
+  deriving (Show, Eq)
+
+data BitmaskWidth = Bitmask32 | Bitmask64
   deriving (Show, Eq)
 
 --

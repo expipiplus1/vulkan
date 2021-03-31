@@ -968,6 +968,43 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
 --
+-- -   #VUID-VkAttachmentReference2-attachment-04754# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a color format, @layout@ /must/ not
+--     be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentReference2-attachment-04755# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a depth\/stencil format which
+--     includes both depth and stencil aspects, and @layout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
+--     structure
+--
+-- -   #VUID-VkAttachmentReference2-attachment-04756# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a depth\/stencil format which
+--     includes only the depth aspect, @layout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentReference2-attachment-04757# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a depth\/stencil format which
+--     includes only the stencil aspect, @layout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAttachmentReference2-sType-sType# @sType@ /must/ be

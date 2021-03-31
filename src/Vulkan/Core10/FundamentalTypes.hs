@@ -13,6 +13,7 @@ module Vulkan.Core10.FundamentalTypes  ( boolToBool32
                                                )
                                        , SampleMask
                                        , Flags
+                                       , Flags64
                                        , DeviceSize
                                        , DeviceAddress
                                        , StructureType(..)
@@ -569,11 +570,11 @@ type SampleMask = Word32
 --
 -- Bitmasks are passed to many commands and structures to compactly
 -- represent options, but 'Flags' is not used directly in the API. Instead,
--- a @Vk*Flags@ type which is an alias of 'Flags', and whose name matches
--- the corresponding @Vk*FlagBits@ that are valid for that type, is used.
+-- a 'Flags' type which is an alias of 'Flags', and whose name matches the
+-- corresponding @Vk*FlagBits@ that are valid for that type, is used.
 --
--- Any @Vk*Flags@ member or parameter used in the API as an input /must/ be
--- a valid combination of bit flags. A valid combination is either zero or
+-- Any 'Flags' member or parameter used in the API as an input /must/ be a
+-- valid combination of bit flags. A valid combination is either zero or
 -- the bitwise OR of valid bit flags. A bit flag is valid if:
 --
 -- -   The bit flag is defined as part of the @Vk*FlagBits@ type, where the
@@ -587,7 +588,7 @@ type SampleMask = Word32
 --     example, in some cases, certain bit flags or combinations of bit
 --     flags are mutually exclusive.
 --
--- Any @Vk*Flags@ member or parameter returned from a query command or
+-- Any 'Flags' member or parameter returned from a query command or
 -- otherwise output from Vulkan to the application /may/ contain bit flags
 -- undefined in its corresponding @Vk*FlagBits@ type. An application
 -- /cannot/ rely on the state of these unspecified bits.
@@ -606,6 +607,10 @@ type SampleMask = Word32
 --
 -- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags'
 type Flags = Word32
+
+
+-- No documentation found for TopLevel "VkFlags64"
+type Flags64 = Word64
 
 
 -- | VkDeviceSize - Vulkan device memory size and offsets

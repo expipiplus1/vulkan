@@ -46,12 +46,11 @@ data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
     storageBuffer8BitAccess :: Bool
   , -- | #extension-features-uniformAndStorageBuffer8BitAccess#
     -- @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
-    -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
-    -- storage class with the same decoration /can/ have 8-bit integer members.
-    -- If this feature is not enabled, 8-bit integer members /must/ not be used
-    -- in such objects. This also indicates whether shader modules /can/
-    -- declare the @UniformAndStorageBuffer8BitAccess@ capability.
+    -- @Uniform@ storage class with the @Block@ decoration /can/ have 8-bit
+    -- integer members. If this feature is not enabled, 8-bit integer members
+    -- /must/ not be used in such objects. This also indicates whether shader
+    -- modules /can/ declare the @UniformAndStorageBuffer8BitAccess@
+    -- capability.
     uniformAndStorageBuffer8BitAccess :: Bool
   , -- | #extension-features-storagePushConstant8# @storagePushConstant8@
     -- indicates whether objects in the @PushConstant@ storage class /can/ have

@@ -92,8 +92,8 @@ import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Handles (Space)
 import OpenXR.Core10.Handles (Space(..))
 import OpenXR.Core10.Handles (Space(Space))
-import OpenXR.Core10.Enums.SpaceLocationFlags (SpaceLocationFlags)
-import OpenXR.Core10.Enums.SpaceVelocityFlags (SpaceVelocityFlags)
+import OpenXR.Core10.Enums.SpaceLocationFlagBits (SpaceLocationFlags)
+import OpenXR.Core10.Enums.SpaceVelocityFlagBits (SpaceVelocityFlags)
 import OpenXR.Core10.Handles (Space_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.FundamentalTypes (Time)
@@ -492,7 +492,8 @@ foreign import ccall
 -- The minimum valid range of values for @time@ are described in
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#prediction-time-limits>.
 -- For values of @time@ outside this range, 'locateSpace' /may/ return a
--- location with no position and @XR_SPACE_LOCATION_POSITION_VALID_BIT@
+-- location with no position and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
 -- unset.
 --
 -- Some devices improve their understanding of the world as the device is
@@ -506,43 +507,49 @@ foreign import ccall
 -- neck model updates, inertial dead reckoning, or a last-known position,
 -- so long as it is still reasonable for the application to use that pose.
 -- While a runtime is providing position data, it /must/ continue to set
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ but it /can/ clear
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ to indicate that the position
--- is inferred or last-known in this way.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- but it /can/ clear
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- to indicate that the position is inferred or last-known in this way.
 --
 -- If the runtime has not yet observed even a last-known pose for how to
 -- locate @space@ in @baseSpace@ (e.g. one space is an action space bound
 -- to a motion controller that has not yet been detected, or the two spaces
 -- are in disconnected fragments of the runtime’s tracked volume), the
 -- runtime /should/ return a location with no position and
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ unset.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- unset.
 --
 -- The runtime /must/ return a location with both
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ set when locating @space@ and
--- @baseSpace@ if both spaces were created relative to the same entity
--- (e.g. two action spaces for the same action), even if the entity is
--- currently untracked. The location in this case is the difference in the
--- two spaces\' application-specified transforms relative to that common
--- entity.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- set when locating @space@ and @baseSpace@ if both spaces were created
+-- relative to the same entity (e.g. two action spaces for the same
+-- action), even if the entity is currently untracked. The location in this
+-- case is the difference in the two spaces\' application-specified
+-- transforms relative to that common entity.
 --
 -- The runtime /should/ return a location with
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ set and
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ unset for spaces tracking two
--- static entities in the world when their relative pose is known to the
--- runtime. This enables applications to make use of the runtime’s latest
--- knowledge of the world, even during tracking loss.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- set and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- unset for spaces tracking two static entities in the world when their
+-- relative pose is known to the runtime. This enables applications to make
+-- use of the runtime’s latest knowledge of the world, even during tracking
+-- loss.
 --
 -- If an 'SpaceVelocity' structure is chained to the @next@ pointer of
 -- 'SpaceLocation' and the velocity is observed or can be calculated by the
 -- runtime, the runtime /must/ fill in the linear velocity of the origin of
 -- space within the reference frame of @baseSpace@ and set the
--- @XR_SPACE_VELOCITY_LINEAR_VALID_BIT@. Similarly, if an 'SpaceVelocity'
--- structure is chained to the @next@ pointer of 'SpaceLocation' and the
--- angular velocity is observed or can be calculated by the runtime, the
--- runtime /must/ fill in the angular velocity of the origin of space
--- within the reference frame of @baseSpace@ and set the
--- @XR_SPACE_VELOCITY_ANGULAR_VALID_BIT@.
+-- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SPACE_VELOCITY_LINEAR_VALID_BIT'.
+-- Similarly, if an 'SpaceVelocity' structure is chained to the @next@
+-- pointer of 'SpaceLocation' and the angular velocity is observed or can
+-- be calculated by the runtime, the runtime /must/ fill in the angular
+-- velocity of the origin of space within the reference frame of
+-- @baseSpace@ and set the
+-- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SPACE_VELOCITY_ANGULAR_VALID_BIT'.
 --
 -- The following example code shows how an application can get both the
 -- location and velocity of a space within a base space using the
@@ -597,7 +604,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'OpenXR.Core10.Handles.Space', 'SpaceLocation',
--- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlagBits XrSpaceLocationFlagBits>,
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlagBits',
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrTime >
 locateSpace :: forall a io
              . (Extendss SpaceLocation a, PokeChain a, PeekChain a, MonadIO io)
@@ -1045,7 +1052,7 @@ instance Zero ActionSpaceCreateInfo where
 -- = See Also
 --
 -- 'Posef', 'OpenXR.Core10.Handles.Space',
--- 'OpenXR.Core10.Enums.SpaceLocationFlags.SpaceLocationFlags',
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlags',
 -- 'SpaceVelocity', 'OpenXR.Core10.Enums.StructureType.StructureType',
 -- 'locateSpace'
 data SpaceLocation (es :: [Type]) = SpaceLocation
@@ -1060,15 +1067,14 @@ data SpaceLocation (es :: [Type]) = SpaceLocation
     -- 'SpaceVelocity'
     next :: Chain es
   , -- | @locationFlags@ is a bitfield, with bit masks defined in
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlagBits XrSpaceLocationFlagBits>,
-    -- to indicate which members contain valid data. If none of the bits are
-    -- set, no other fields in this structure /should/ be considered to be
-    -- valid or meaningful.
+    -- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlagBits', to
+    -- indicate which members contain valid data. If none of the bits are set,
+    -- no other fields in this structure /should/ be considered to be valid or
+    -- meaningful.
     --
     -- #VUID-XrSpaceLocation-locationFlags-parameter# @locationFlags@ /must/ be
     -- @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlagBits XrSpaceLocationFlagBits>
-    -- values
+    -- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlagBits' values
     locationFlags :: SpaceLocationFlags
   , -- | @pose@ is an 'Posef' defining the position and orientation of the origin
     -- of 'locateSpace'::@space@ within the reference frame of
@@ -1092,21 +1098,21 @@ instance Extensible SpaceLocation where
     | otherwise = Nothing
 
 instance (Extendss SpaceLocation es, PokeChain es) => ToCStruct (SpaceLocation es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpaceLocation{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_LOCATION)
     next'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) next''
     lift $ poke ((p `plusPtr` 16 :: Ptr SpaceLocationFlags)) (locationFlags)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Posef)) (pose)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Posef)) (pose)
     lift $ f
-  cStructSize = 48
+  cStructSize = 56
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_LOCATION)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 20 :: Ptr Posef)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Posef)) (zero)
     lift $ f
 
 instance (Extendss SpaceLocation es, PeekChain es) => FromCStruct (SpaceLocation es) where
@@ -1114,7 +1120,7 @@ instance (Extendss SpaceLocation es, PeekChain es) => FromCStruct (SpaceLocation
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
     locationFlags <- peek @SpaceLocationFlags ((p `plusPtr` 16 :: Ptr SpaceLocationFlags))
-    pose <- peekCStruct @Posef ((p `plusPtr` 20 :: Ptr Posef))
+    pose <- peekCStruct @Posef ((p `plusPtr` 24 :: Ptr Posef))
     pure $ SpaceLocation
              next' locationFlags pose
 
@@ -1132,20 +1138,19 @@ instance es ~ '[] => Zero (SpaceLocation es) where
 -- = See Also
 --
 -- 'OpenXR.Core10.Handles.Space', 'SpaceLocation',
--- 'OpenXR.Core10.Enums.SpaceVelocityFlags.SpaceVelocityFlags',
+-- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SpaceVelocityFlags',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'Vector3f',
 -- 'locateSpace'
 data SpaceVelocity = SpaceVelocity
   { -- | @velocityFlags@ is a bitfield, with bit masks defined in
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlagBits XrSpaceVelocityFlagBits>,
-    -- to indicate which members contain valid data. If none of the bits are
-    -- set, no other fields in this structure /should/ be considered to be
-    -- valid or meaningful.
+    -- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SpaceVelocityFlagBits', to
+    -- indicate which members contain valid data. If none of the bits are set,
+    -- no other fields in this structure /should/ be considered to be valid or
+    -- meaningful.
     --
     -- #VUID-XrSpaceVelocity-velocityFlags-parameter# @velocityFlags@ /must/ be
     -- @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlagBits XrSpaceVelocityFlagBits>
-    -- values
+    -- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SpaceVelocityFlagBits' values
     velocityFlags :: SpaceVelocityFlags
   , -- | @linearVelocity@ is the relative linear velocity of the origin of
     -- 'locateSpace'::@space@ with respect to and expressed in the reference
@@ -1172,23 +1177,23 @@ instance ToCStruct SpaceVelocity where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_VELOCITY)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr SpaceVelocityFlags)) (velocityFlags)
-    poke ((p `plusPtr` 20 :: Ptr Vector3f)) (linearVelocity)
-    poke ((p `plusPtr` 32 :: Ptr Vector3f)) (angularVelocity)
+    poke ((p `plusPtr` 24 :: Ptr Vector3f)) (linearVelocity)
+    poke ((p `plusPtr` 36 :: Ptr Vector3f)) (angularVelocity)
     f
   cStructSize = 48
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_VELOCITY)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 20 :: Ptr Vector3f)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Vector3f)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Vector3f)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr Vector3f)) (zero)
     f
 
 instance FromCStruct SpaceVelocity where
   peekCStruct p = do
     velocityFlags <- peek @SpaceVelocityFlags ((p `plusPtr` 16 :: Ptr SpaceVelocityFlags))
-    linearVelocity <- peekCStruct @Vector3f ((p `plusPtr` 20 :: Ptr Vector3f))
-    angularVelocity <- peekCStruct @Vector3f ((p `plusPtr` 32 :: Ptr Vector3f))
+    linearVelocity <- peekCStruct @Vector3f ((p `plusPtr` 24 :: Ptr Vector3f))
+    angularVelocity <- peekCStruct @Vector3f ((p `plusPtr` 36 :: Ptr Vector3f))
     pure $ SpaceVelocity
              velocityFlags linearVelocity angularVelocity
 

@@ -51,24 +51,24 @@ library
       OpenXR.Core10.DisplayTiming
       OpenXR.Core10.Enums
       OpenXR.Core10.Enums.ActionType
-      OpenXR.Core10.Enums.CompositionLayerFlags
+      OpenXR.Core10.Enums.CompositionLayerFlagBits
       OpenXR.Core10.Enums.EnvironmentBlendMode
       OpenXR.Core10.Enums.EyeVisibility
       OpenXR.Core10.Enums.FormFactor
-      OpenXR.Core10.Enums.InputSourceLocalizedNameFlags
-      OpenXR.Core10.Enums.InstanceCreateFlags
+      OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits
+      OpenXR.Core10.Enums.InstanceCreateFlagBits
       OpenXR.Core10.Enums.ObjectType
       OpenXR.Core10.Enums.ReferenceSpaceType
       OpenXR.Core10.Enums.Result
-      OpenXR.Core10.Enums.SessionCreateFlags
+      OpenXR.Core10.Enums.SessionCreateFlagBits
       OpenXR.Core10.Enums.SessionState
-      OpenXR.Core10.Enums.SpaceLocationFlags
-      OpenXR.Core10.Enums.SpaceVelocityFlags
+      OpenXR.Core10.Enums.SpaceLocationFlagBits
+      OpenXR.Core10.Enums.SpaceVelocityFlagBits
       OpenXR.Core10.Enums.StructureType
-      OpenXR.Core10.Enums.SwapchainCreateFlags
-      OpenXR.Core10.Enums.SwapchainUsageFlags
+      OpenXR.Core10.Enums.SwapchainCreateFlagBits
+      OpenXR.Core10.Enums.SwapchainUsageFlagBits
       OpenXR.Core10.Enums.ViewConfigurationType
-      OpenXR.Core10.Enums.ViewStateFlags
+      OpenXR.Core10.Enums.ViewStateFlagBits
       OpenXR.Core10.FuncPointers
       OpenXR.Core10.FundamentalTypes
       OpenXR.Core10.Handles

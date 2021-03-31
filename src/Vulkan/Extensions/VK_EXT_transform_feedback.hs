@@ -823,12 +823,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-01922# @queryPool@ /must/
---     have been created with a @queryType@ that differs from that of any
---     queries that are
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
---     within @commandBuffer@
---
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-None-00807# All queries used by the
 --     command /must/ be unavailable
 --
@@ -884,6 +878,12 @@ foreign import ccall
 --     render pass instance, the sum of @query@ and the number of bits set
 --     in the current subpass’s view mask /must/ be less than or equal to
 --     the number of queries in @queryPool@
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-04753# If the @queryPool@
+--     was created with the same @queryType@ as that of another
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
+--     query within @commandBuffer@, then @index@ /must/ not match the
+--     index used for the active query
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-02338# If the @queryType@
 --     used to create @queryPool@ was
@@ -1189,6 +1189,16 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
@@ -1341,7 +1351,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format.
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
@@ -1587,6 +1597,13 @@ foreign import ccall
 --     then the @blendEnable@ member of the corresponding element of the
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @@ nor the @@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex

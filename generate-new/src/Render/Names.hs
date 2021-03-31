@@ -58,7 +58,7 @@ specRenderedNames Spec {..} = do
     rnEnums  = Set.fromList
       [ mkTyName n
       | Enum {..} <- toList specEnums
-      , n <- eName : [ flags | ABitmask flags <- pure eType ]
+      , n <- eName : [ flags | ABitmask flags _ <- pure eType ]
       ]
     (dispHandles, nonDispHandles) =
       partition ((== Dispatchable) . hDispatchable) $ toList specHandles
@@ -72,8 +72,8 @@ specRenderedNames Spec {..} = do
          , TypeAlias == aType
          ]
       <> [ (mkTyName flags, mkTyName eName)
-         | Enum {..}      <- toList specEnums
-         , ABitmask flags <- pure eType
+         | Enum {..}        <- toList specEnums
+         , ABitmask flags _ <- pure eType
          , flags /= eName
          ]
       )

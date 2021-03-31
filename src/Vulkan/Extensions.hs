@@ -94,6 +94,8 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_validation_flags
                           , module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
                           , module Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+                          , module Vulkan.Extensions.VK_FUCHSIA_external_memory
+                          , module Vulkan.Extensions.VK_FUCHSIA_external_semaphore
                           , module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
                           , module Vulkan.Extensions.VK_GGP_frame_token
                           , module Vulkan.Extensions.VK_GGP_stream_descriptor_surface
@@ -227,6 +229,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
                           , module Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+                          , module Vulkan.Extensions.VK_QNX_screen_surface
                           , module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
                           ) where
 import Vulkan.Extensions.Dependencies
@@ -323,6 +326,8 @@ import Vulkan.Extensions.VK_EXT_validation_features
 import Vulkan.Extensions.VK_EXT_validation_flags
 import Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
 import Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+import Vulkan.Extensions.VK_FUCHSIA_external_memory
+import Vulkan.Extensions.VK_FUCHSIA_external_semaphore
 import Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
 import Vulkan.Extensions.VK_GGP_frame_token
 import Vulkan.Extensions.VK_GGP_stream_descriptor_surface
@@ -456,5 +461,6 @@ import Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
 import Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Vulkan.Extensions.VK_QCOM_render_pass_transform
 import Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+import Vulkan.Extensions.VK_QNX_screen_surface
 import Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
 

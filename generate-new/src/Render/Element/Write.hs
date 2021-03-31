@@ -430,8 +430,8 @@ specTypeInfo Spec {..} = do
         [ (mkConName eExportedName evName, mkTyName eExportedName)
         | Enum {..} <- V.toList specEnums
         , let eExportedName = case eType of
-                AnEnum         -> eName
-                ABitmask flags -> flags
+                AnEnum           -> eName
+                ABitmask flags _ -> flags
         , EnumValue {..} <- V.toList eValues
         ]
   pure $ TypeInfo (`Map.lookup` tyMap)

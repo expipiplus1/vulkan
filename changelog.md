@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [3.10.1] - 2021-03-31
+- Bump API version to v1.2.174
+- Fix https://github.com/expipiplus1/vulkan/issues/266
+
 ## [3.10] - 2021-02-18
 - Bump API version to v1.2.170
 

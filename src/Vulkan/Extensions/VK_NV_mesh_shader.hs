@@ -339,6 +339,16 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
+-- -   #VUID-vkCmdDrawMeshTasksNV-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
 -- -   #VUID-vkCmdDrawMeshTasksNV-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
@@ -489,7 +499,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format.
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
@@ -733,6 +743,13 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawMeshTasksNV-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @@ nor the @@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
 -- -   #VUID-vkCmdDrawMeshTasksNV-taskCount-02119# @taskCount@ /must/ be
 --     less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesNV'::@maxDrawMeshTasksCount@
@@ -821,6 +838,16 @@ foreign import ccall
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
@@ -978,7 +1005,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format.
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
@@ -1225,6 +1252,13 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @@ nor the @@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-buffer-02708# If @buffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
 --     single 'Vulkan.Core10.Handles.DeviceMemory' object
@@ -1357,6 +1391,16 @@ foreign import ccall
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
@@ -1514,7 +1558,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format.
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
@@ -1760,6 +1804,13 @@ foreign import ccall
 --     then the @blendEnable@ member of the corresponding element of the
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-rasterizationSamples-04740#
+--     If rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @@ nor the @@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-buffer-02708# If @buffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a

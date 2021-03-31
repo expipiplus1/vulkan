@@ -54,6 +54,16 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
+-- -   #VUID-vkCmdDrawIndirectCount-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
 -- -   #VUID-vkCmdDrawIndirectCount-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
@@ -204,7 +214,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format.
 --
 -- -   #VUID-vkCmdDrawIndirectCount-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
@@ -448,6 +458,13 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawIndirectCount-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @@ nor the @@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
 -- -   #VUID-vkCmdDrawIndirectCount-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
 --     entry point’s interface /must/ have either valid or
@@ -631,6 +648,16 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
@@ -783,7 +810,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format.
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
@@ -1029,6 +1056,13 @@ foreign import ccall
 --     then the @blendEnable@ member of the corresponding element of the
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @@ nor the @@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex

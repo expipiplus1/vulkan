@@ -91,7 +91,7 @@ import OpenXR.Dynamic (InstanceCmds(pXrGetInstanceProperties))
 import OpenXR.Dynamic (InstanceCmds(pXrPollEvent))
 import OpenXR.Dynamic (InstanceCmds(pXrResultToString))
 import OpenXR.Dynamic (InstanceCmds(pXrStructureTypeToString))
-import OpenXR.Core10.Enums.InstanceCreateFlags (InstanceCreateFlags)
+import OpenXR.Core10.Enums.InstanceCreateFlagBits (InstanceCreateFlags)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_android_create_instance (InstanceCreateInfoAndroidKHR)
 import OpenXR.Core10.Handles (Instance_T)
 import OpenXR.Core10.APIConstants (MAX_API_LAYER_DESCRIPTION_SIZE)
@@ -1229,14 +1229,14 @@ instance Zero ApplicationInfo where
 -- = See Also
 --
 -- 'ApplicationInfo',
--- 'OpenXR.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags',
+-- 'OpenXR.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlags',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'createInstance'
 data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
   { -- | @next@ is @NULL@ or a pointer to the next structure in a structure
     -- chain. No such structures are defined in core OpenXR.
     next :: Chain es
   , -- | @createFlags@ is a bitmask of
-    -- 'OpenXR.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags' that
+    -- 'OpenXR.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlags' that
     -- identifies options that apply to the creation.
     createFlags :: InstanceCreateFlags
   , -- | @applicationInfo@ is an instance of 'ApplicationInfo'. This information

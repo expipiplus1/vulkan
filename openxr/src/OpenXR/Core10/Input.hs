@@ -106,7 +106,7 @@ import OpenXR.CStruct.Extends (Chain)
 import OpenXR.CStruct.Extends (Extends)
 import OpenXR.CStruct.Extends (Extendss)
 import OpenXR.CStruct.Extends (Extensible(..))
-import OpenXR.Core10.Enums.InputSourceLocalizedNameFlags (InputSourceLocalizedNameFlags)
+import OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits (InputSourceLocalizedNameFlags)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
 import OpenXR.Dynamic (InstanceCmds(pXrAttachSessionActionSets))
@@ -2360,7 +2360,7 @@ instance Zero BoundSourcesForActionEnumerateInfo where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.InputSourceLocalizedNameFlags',
+-- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits.InputSourceLocalizedNameFlags',
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrPath >,
 -- 'OpenXR.Core10.Enums.StructureType.StructureType',
 -- 'enumerateBoundSourcesForAction', 'getInputSourceLocalizedName'
@@ -2368,11 +2368,11 @@ data InputSourceLocalizedNameGetInfo = InputSourceLocalizedNameGetInfo
   { -- No documentation found for Nested "XrInputSourceLocalizedNameGetInfo" "sourcePath"
     sourcePath :: Path
   , -- | @whichComponents@ is any set of flags from
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlagBits XrInputSourceLocalizedNameFlagBits>.
+    -- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits.InputSourceLocalizedNameFlagBits'.
     --
     -- #VUID-XrInputSourceLocalizedNameGetInfo-whichComponents-parameter#
     -- @whichComponents@ /must/ be a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlagBits XrInputSourceLocalizedNameFlagBits>
+    -- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits.InputSourceLocalizedNameFlagBits'
     -- values
     --
     -- #VUID-XrInputSourceLocalizedNameGetInfo-whichComponents-requiredbitmask#

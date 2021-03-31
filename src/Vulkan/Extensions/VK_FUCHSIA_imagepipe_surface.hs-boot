@@ -91,10 +91,13 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  (ImagePipeSurfaceCreateInfoFUCHSIA) where
+module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  ( ImagePipeSurfaceCreateInfoFUCHSIA
+                                                       , Zx_handle_t
+                                                       ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Word (Word32)
 import Data.Kind (Type)
 
 data ImagePipeSurfaceCreateInfoFUCHSIA
@@ -103,4 +106,7 @@ instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA
 instance Show ImagePipeSurfaceCreateInfoFUCHSIA
 
 instance FromCStruct ImagePipeSurfaceCreateInfoFUCHSIA
+
+
+type Zx_handle_t = Word32
 

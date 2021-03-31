@@ -104,7 +104,7 @@ import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
 import OpenXR.Core10.Handles (Session(Session))
-import OpenXR.Core10.Enums.SessionCreateFlags (SessionCreateFlags)
+import OpenXR.Core10.Enums.SessionCreateFlagBits (SessionCreateFlags)
 import {-# SOURCE #-} OpenXR.Extensions.XR_EXTX_overlay (SessionCreateInfoOverlayEXTX)
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
@@ -319,7 +319,7 @@ foreign import ccall
 --
 -- 'OpenXR.Core10.Instance.ExtensionProperties',
 -- 'OpenXR.Core10.Handles.Instance', 'OpenXR.Core10.Handles.Session',
--- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags',
+-- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags',
 -- 'SessionCreateInfo', 'OpenXR.Core10.Session.beginSession',
 -- 'destroySession', 'OpenXR.Core10.Session.endSession'
 createSession :: forall a io
@@ -876,7 +876,7 @@ instance Zero SystemTrackingProperties where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags',
+-- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType',
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId >,
 -- 'createSession'
@@ -909,8 +909,8 @@ data SessionCreateInfo (es :: [Type]) = SessionCreateInfo
     -- 'OpenXR.Extensions.XR_EXTX_overlay.SessionCreateInfoOverlayEXTX'
     next :: Chain es
   , -- | @createFlags@ identifies
-    -- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags' that apply
-    -- to the creation.
+    -- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags' that
+    -- apply to the creation.
     --
     -- #VUID-XrSessionCreateInfo-createFlags-zerobitmask# @createFlags@ /must/
     -- be @0@

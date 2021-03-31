@@ -83,6 +83,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (ImportMemoryF
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (ImportMemoryHostPointerInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (ImportMemoryZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedAllocateInfo)
 import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags)
@@ -795,7 +796,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- @pNext@ chain includes one of the following structures:
 --
 -- -   'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'
---     with non-zero @handleType@ value
+--     with a non-zero @handleType@ value
 --
 -- -   'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR'
 --     with a non-zero @handleType@ value
@@ -805,6 +806,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- -   'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     with a non-@NULL@ @buffer@ value
+--
+-- -   'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA'
+--     with a non-zero @handleType@ value
 --
 -- If the parameters define an import operation and the external handle
 -- type is
@@ -1109,6 +1113,23 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     /must/ be zero
 --
+-- -   #VUID-VkMemoryAllocateInfo-None-04749# If the parameters define an
+--     import operation and the external handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the value of @memoryTypeIndex@ /must/ be an index identifying a
+--     memory type from the @memoryTypeBits@ field of the
+--     'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryZirconHandlePropertiesFUCHSIA'
+--     structure populated by a call to
+--     'Vulkan.Extensions.VK_FUCHSIA_external_memory.getMemoryZirconHandlePropertiesFUCHSIA'.
+--
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-04750# If the parameters
+--     define an import operation and the external handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the value of @allocationSize@ /must/ be greater than @0@ and /must/
+--     be less than or equal to the size of the VMO as determined by
+--     @zx_vmo_get_size@(@handle@) where @handle@ is the VMO handle to the
+--     imported external memory.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkMemoryAllocateInfo-sType-sType# @sType@ /must/ be
@@ -1127,6 +1148,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',
 --     'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
+--     'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo',
@@ -1170,6 +1192,7 @@ instance Extensible MemoryAllocateInfo where
     | Just Refl <- eqT @e @MemoryDedicatedAllocateInfo = Just f
     | Just Refl <- eqT @e @MemoryAllocateFlagsInfo = Just f
     | Just Refl <- eqT @e @ImportMemoryFdInfoKHR = Just f
+    | Just Refl <- eqT @e @ImportMemoryZirconHandleInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ExportMemoryAllocateInfo = Just f
@@ -1230,15 +1253,16 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 --     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @offset@ /must/ be within
 --     the currently mapped range of @memory@
 --
--- -   #VUID-VkMappedMemoryRange-size-01389# If @size@ is equal to
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', the end of the current
---     mapping of @memory@ /must/ be a multiple of
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
---     bytes from the beginning of the memory object
---
 -- -   #VUID-VkMappedMemoryRange-offset-00687# @offset@ /must/ be a
 --     multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
+--
+-- -   #VUID-VkMappedMemoryRange-size-01389# If @size@ is equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', the end of the current
+--     mapping of @memory@ /must/ either be a multiple of
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
+--     bytes from the beginning of the memory object, or be equal to the
+--     end of the memory object
 --
 -- -   #VUID-VkMappedMemoryRange-size-01390# If @size@ is not equal to
 --     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ either be a

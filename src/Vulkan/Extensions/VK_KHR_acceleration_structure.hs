@@ -1705,7 +1705,10 @@ foreign import ccall
 --
 -- -   A 64-bit integer of the count of the number of acceleration
 --     structure handles following. This will be zero for a bottom-level
---     acceleration structure.
+--     acceleration structure. For top-level acceleration structures this
+--     number is implementation-dependent; the number of and ordering of
+--     the handles may not match the instance descriptions which were used
+--     to build the acceleration structure.
 --
 -- The corresponding handles matching the values returned by
 -- 'getAccelerationStructureDeviceAddressKHR' or

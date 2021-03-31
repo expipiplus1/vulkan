@@ -69,7 +69,7 @@ int64 :: HasErr r => RE Char (Sem r Int64)
 int64 = readSpec <$> digits <* "LL"
 
 float :: HasErr r => RE Char (Sem r Float)
-float = readSpec <$> (fmap concat . sequenceA $ [digits, ".", digits]) <* "f"
+float = readSpec <$> (fmap concat . sequenceA $ [digits, ".", digits]) <* ("F" <|> "f")
 
 digits :: RE Char String
 digits = many (psym isDigit) <|> ((<>) <$> "0x" <*> many (psym isHexDigit))

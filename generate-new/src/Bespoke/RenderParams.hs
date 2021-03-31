@@ -32,6 +32,7 @@ import           Render.Stmts.Poke              ( CmdsDoc(..) )
 import           Render.Type.Preserve
 import           Spec.Parse
 
+-- This is in `src` rather than `vk` as it's also used by the xr and vma generators
 renderParams :: V.Vector Handle -> RenderParams
 renderParams handles = r
  where
@@ -64,6 +65,7 @@ renderParams handles = r
     , lowerPrefix                    = "vk"
     , upperPrefix                    = "VK"
     , flagsTypeName                  = "VkFlags"
+    , flags64TypeName                = "VkFlags64"
     , alwaysQualifiedNames           = mempty
     , extraNewtypes                  = mempty
     , mkIdiomaticType                =

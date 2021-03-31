@@ -133,7 +133,12 @@ parseSpec bs = do
                   $  bespokeSizes (specFlavor @t)
                   <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
                   <> [ (n, (4, 4))
-                     | Enum { eType = ABitmask n } <- V.toList specEnums
+                     | Enum { eType = ABitmask n Bitmask32 } <- V.toList
+                       specEnums
+                     ]
+                  <> [ (n, (8, 8))
+                     | Enum { eType = ABitmask n Bitmask64 } <- V.toList
+                       specEnums
                      ]
                   <> [ (atName, (8, 8)) | Atom {..} <- V.toList specAtoms ]
                   <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
@@ -661,27 +666,44 @@ parseEmptyBitmasks es = fromList <$> traverseV
   | Element n <- es
   , "type" == name n
   , not (isAlias n)
-  , Nothing        <- pure $ getAttr "requires" n
+  , Nothing        <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
   , Just "bitmask" <- pure $ getAttr "category" n
   ]
  where
   parseEmptyBitmask :: Node -> P Enum'
   parseEmptyBitmask n = do
     eName <- nameElem "bitmask" n
-    pure Enum { eValues = mempty, eType = ABitmask eName, .. }
+    -- TODO: Are these always 32bit?
+    pure Enum { eValues = mempty, eType = ABitmask eName Bitmask32, .. }
 
 parseEnums :: [Content] -> [Content] -> P (Vector Enum')
 parseEnums types es = do
   flagNameMap <- Map.fromList <$> sequence
-    [ liftA2 (,) (decodeName bits) (nameElem "bitmask" n)
+    [ do
+        f        <- decodeName bits
+        b        <- nameElem "bitmask" n
+        typeElem <- traverse decode (elemText "type" n)
+        w        <- case typeElem of
+          Nothing          -> throw ("No type found for bitmask: " <> show bits)
+          Just "VkFlags"   -> pure Bitmask32
+          Just "VkFlags64" -> pure Bitmask64
+          Just "XrFlags32" -> pure Bitmask32
+          Just "XrFlags64" -> pure Bitmask64
+          Just _ -> throw ("Unexpected type for bitmask: " <> show bits)
+        pure (f, (b, w))
     | Element n <- types
     , "type" == name n
     , not (isAlias n)
-    , Just bits      <- pure $ getAttr "requires" n
+    , Just bits      <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
     , Just "bitmask" <- pure $ getAttr "category" n
     ]
   fromList <$> traverseV
-    (uncurry (parseEnum (`Map.lookup` flagNameMap) False))
+    (uncurry
+      (parseEnum (fmap snd . (`Map.lookup` flagNameMap))
+                 (fmap fst . (`Map.lookup` flagNameMap))
+                 False
+      )
+    )
     [ (isBitmask, n)
     | Element n <- es
     , name n == "enums"
@@ -692,16 +714,25 @@ parseEnums types es = do
     ]
 
  where
-  parseEnum :: (CName -> Maybe CName) -> Bool -> Bool -> Node -> P Enum'
-  parseEnum getFlagsName evIsExtension isBitmask n = do
+  parseEnum
+    :: (CName -> Maybe BitmaskWidth)
+    -> (CName -> Maybe CName)
+    -> Bool
+    -> Bool
+    -> Node
+    -> P Enum'
+  parseEnum getBitmaskWidth getFlagsName evIsExtension isBitmask n = do
     eName   <- nameAttr "enum" n
     eValues <- fromList <$> traverseV
       (context (unCName eName) . parseValue)
       [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
-    let eType = if isBitmask
-          then -- If we can't find the flags name, use the bits name
-               ABitmask (fromMaybe eName (getFlagsName eName))
-          else AnEnum
+    eType <- if isBitmask
+      -- If we can't find the flags name, use the bits name
+      then do
+        width <- note ("No width found for bitmask: " <> unCName eName)
+                      (getBitmaskWidth eName)
+        pure $ ABitmask (fromMaybe eName (getFlagsName eName)) width
+      else pure AnEnum
     pure Enum { .. }
    where
     parseValue :: Node -> P EnumValue
@@ -950,7 +981,11 @@ allTypeNames es = do
     ]
   requiresTypeNames <- traverseV
     nameText
-    [ n | Element n <- es, name n == "type", hasAttr "requires" n ]
+    [ n
+    | Element n <- es
+    , name n == "type"
+    , hasAttr "requires" n || hasAttr "bitvalues" n
+    ]
   fromList <$> traverseV
     ( fromEither
     . first fromList
@@ -1029,6 +1064,7 @@ isForbidden n =
     , "VK_DEFINE_HANDLE"
     , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
     , "VK_MAKE_VERSION"
+    , "VK_USE_64_BIT_PTR_DEFINES"
     ]
   xrForbidden =
     [ "openxr_platform_defines"
