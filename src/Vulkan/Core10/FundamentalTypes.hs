@@ -13,6 +13,7 @@ module Vulkan.Core10.FundamentalTypes  ( boolToBool32
                                                )
                                        , SampleMask
                                        , Flags
+                                       , Flags64
                                        , DeviceSize
                                        , DeviceAddress
                                        , StructureType(..)
@@ -606,6 +607,10 @@ type SampleMask = Word32
 --
 -- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags'
 type Flags = Word32
+
+
+-- No documentation found for TopLevel "VkFlags64"
+type Flags64 = Word64
 
 
 -- | VkDeviceSize - Vulkan device memory size and offsets

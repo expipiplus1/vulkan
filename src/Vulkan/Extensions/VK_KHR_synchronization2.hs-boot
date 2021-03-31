@@ -429,6 +429,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( BufferMemoryBarrier2KHR
                                                   , SemaphoreSubmitInfoKHR
                                                   , SubmitInfo2KHR
                                                   , PipelineStageFlags2KHR
+                                                  , PipelineStageFlagBits2KHR
                                                   ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -520,5 +521,7 @@ instance Show (Chain es) => Show (SubmitInfo2KHR es)
 instance (Extendss SubmitInfo2KHR es, PeekChain es) => FromCStruct (SubmitInfo2KHR es)
 
 
-data PipelineStageFlags2KHR
+type PipelineStageFlags2KHR = PipelineStageFlagBits2KHR
+
+data PipelineStageFlagBits2KHR
 

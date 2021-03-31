@@ -444,8 +444,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( cmdSetEvent2KHR
                                                   , QueueFamilyCheckpointProperties2NV(..)
                                                   , CheckpointData2NV(..)
                                                   , PhysicalDeviceSynchronization2FeaturesKHR(..)
-                                                  , AccessFlags2KHR(..)
-                                                  , PipelineStageFlags2KHR(..)
+                                                  , AccessFlags2KHR
                                                   , AccessFlagBits2KHR( ACCESS_2_NONE_KHR
                                                                       , ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR
                                                                       , ACCESS_2_INDEX_READ_BIT_KHR
@@ -480,6 +479,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( cmdSetEvent2KHR
                                                                       , ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT
                                                                       , ..
                                                                       )
+                                                  , PipelineStageFlags2KHR
                                                   , PipelineStageFlagBits2KHR( PIPELINE_STAGE_2_NONE_KHR
                                                                              , PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR
                                                                              , PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR
@@ -524,6 +524,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( cmdSetEvent2KHR
                                                   , pattern KHR_SYNCHRONIZATION_2_SPEC_VERSION
                                                   , KHR_SYNCHRONIZATION_2_EXTENSION_NAME
                                                   , pattern KHR_SYNCHRONIZATION_2_EXTENSION_NAME
+                                                  , Flags64
                                                   ) where
 
 import Vulkan.Internal.Utils (enumReadPrec)
@@ -609,6 +610,7 @@ import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags64)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.ImageView (ImageSubresourceRange)
@@ -642,6 +644,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUEUE_FAM
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBMIT_INFO_2_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.FundamentalTypes (Flags64)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -2623,16 +2626,16 @@ deriving instance Generic (MemoryBarrier2KHR)
 deriving instance Show MemoryBarrier2KHR
 
 instance ToCStruct MemoryBarrier2KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryBarrier2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2KHR)) (srcStageMask)
-    poke ((p `plusPtr` 20 :: Ptr AccessFlags2KHR)) (srcAccessMask)
-    poke ((p `plusPtr` 24 :: Ptr PipelineStageFlags2KHR)) (dstStageMask)
-    poke ((p `plusPtr` 28 :: Ptr AccessFlags2KHR)) (dstAccessMask)
+    poke ((p `plusPtr` 24 :: Ptr AccessFlags2KHR)) (srcAccessMask)
+    poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR)) (dstStageMask)
+    poke ((p `plusPtr` 40 :: Ptr AccessFlags2KHR)) (dstAccessMask)
     f
-  cStructSize = 32
+  cStructSize = 48
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR)
@@ -2642,14 +2645,14 @@ instance ToCStruct MemoryBarrier2KHR where
 instance FromCStruct MemoryBarrier2KHR where
   peekCStruct p = do
     srcStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 16 :: Ptr PipelineStageFlags2KHR))
-    srcAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 20 :: Ptr AccessFlags2KHR))
-    dstStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 24 :: Ptr PipelineStageFlags2KHR))
-    dstAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 28 :: Ptr AccessFlags2KHR))
+    srcAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 24 :: Ptr AccessFlags2KHR))
+    dstStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR))
+    dstAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 40 :: Ptr AccessFlags2KHR))
     pure $ MemoryBarrier2KHR
              srcStageMask srcAccessMask dstStageMask dstAccessMask
 
 instance Storable MemoryBarrier2KHR where
-  sizeOf ~_ = 32
+  sizeOf ~_ = 48
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -3627,34 +3630,34 @@ instance Extensible ImageMemoryBarrier2KHR where
     | otherwise = Nothing
 
 instance (Extendss ImageMemoryBarrier2KHR es, PokeChain es) => ToCStruct (ImageMemoryBarrier2KHR es) where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryBarrier2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2KHR)) (srcStageMask)
-    lift $ poke ((p `plusPtr` 20 :: Ptr AccessFlags2KHR)) (srcAccessMask)
-    lift $ poke ((p `plusPtr` 24 :: Ptr PipelineStageFlags2KHR)) (dstStageMask)
-    lift $ poke ((p `plusPtr` 28 :: Ptr AccessFlags2KHR)) (dstAccessMask)
-    lift $ poke ((p `plusPtr` 32 :: Ptr ImageLayout)) (oldLayout)
-    lift $ poke ((p `plusPtr` 36 :: Ptr ImageLayout)) (newLayout)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (srcQueueFamilyIndex)
-    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (dstQueueFamilyIndex)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Image)) (image)
-    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (subresourceRange)
+    lift $ poke ((p `plusPtr` 24 :: Ptr AccessFlags2KHR)) (srcAccessMask)
+    lift $ poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR)) (dstStageMask)
+    lift $ poke ((p `plusPtr` 40 :: Ptr AccessFlags2KHR)) (dstAccessMask)
+    lift $ poke ((p `plusPtr` 48 :: Ptr ImageLayout)) (oldLayout)
+    lift $ poke ((p `plusPtr` 52 :: Ptr ImageLayout)) (newLayout)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (srcQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (dstQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 64 :: Ptr Image)) (image)
+    lift $ poke ((p `plusPtr` 72 :: Ptr ImageSubresourceRange)) (subresourceRange)
     lift $ f
-  cStructSize = 80
+  cStructSize = 96
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 32 :: Ptr ImageLayout)) (zero)
-    lift $ poke ((p `plusPtr` 36 :: Ptr ImageLayout)) (zero)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Image)) (zero)
-    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (zero)
+    lift $ poke ((p `plusPtr` 48 :: Ptr ImageLayout)) (zero)
+    lift $ poke ((p `plusPtr` 52 :: Ptr ImageLayout)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 64 :: Ptr Image)) (zero)
+    lift $ poke ((p `plusPtr` 72 :: Ptr ImageSubresourceRange)) (zero)
     lift $ f
 
 instance (Extendss ImageMemoryBarrier2KHR es, PeekChain es) => FromCStruct (ImageMemoryBarrier2KHR es) where
@@ -3662,15 +3665,15 @@ instance (Extendss ImageMemoryBarrier2KHR es, PeekChain es) => FromCStruct (Imag
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
     srcStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 16 :: Ptr PipelineStageFlags2KHR))
-    srcAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 20 :: Ptr AccessFlags2KHR))
-    dstStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 24 :: Ptr PipelineStageFlags2KHR))
-    dstAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 28 :: Ptr AccessFlags2KHR))
-    oldLayout <- peek @ImageLayout ((p `plusPtr` 32 :: Ptr ImageLayout))
-    newLayout <- peek @ImageLayout ((p `plusPtr` 36 :: Ptr ImageLayout))
-    srcQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    dstQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    image <- peek @Image ((p `plusPtr` 48 :: Ptr Image))
-    subresourceRange <- peekCStruct @ImageSubresourceRange ((p `plusPtr` 56 :: Ptr ImageSubresourceRange))
+    srcAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 24 :: Ptr AccessFlags2KHR))
+    dstStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR))
+    dstAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 40 :: Ptr AccessFlags2KHR))
+    oldLayout <- peek @ImageLayout ((p `plusPtr` 48 :: Ptr ImageLayout))
+    newLayout <- peek @ImageLayout ((p `plusPtr` 52 :: Ptr ImageLayout))
+    srcQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
+    dstQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 60 :: Ptr Word32))
+    image <- peek @Image ((p `plusPtr` 64 :: Ptr Image))
+    subresourceRange <- peekCStruct @ImageSubresourceRange ((p `plusPtr` 72 :: Ptr ImageSubresourceRange))
     pure $ ImageMemoryBarrier2KHR
              next srcStageMask srcAccessMask dstStageMask dstAccessMask oldLayout newLayout srcQueueFamilyIndex dstQueueFamilyIndex image subresourceRange
 
@@ -4359,48 +4362,48 @@ deriving instance Generic (BufferMemoryBarrier2KHR)
 deriving instance Show BufferMemoryBarrier2KHR
 
 instance ToCStruct BufferMemoryBarrier2KHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferMemoryBarrier2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2KHR)) (srcStageMask)
-    poke ((p `plusPtr` 20 :: Ptr AccessFlags2KHR)) (srcAccessMask)
-    poke ((p `plusPtr` 24 :: Ptr PipelineStageFlags2KHR)) (dstStageMask)
-    poke ((p `plusPtr` 28 :: Ptr AccessFlags2KHR)) (dstAccessMask)
-    poke ((p `plusPtr` 32 :: Ptr Word32)) (srcQueueFamilyIndex)
-    poke ((p `plusPtr` 36 :: Ptr Word32)) (dstQueueFamilyIndex)
-    poke ((p `plusPtr` 40 :: Ptr Buffer)) (buffer)
-    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (offset)
-    poke ((p `plusPtr` 56 :: Ptr DeviceSize)) (size)
+    poke ((p `plusPtr` 24 :: Ptr AccessFlags2KHR)) (srcAccessMask)
+    poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR)) (dstStageMask)
+    poke ((p `plusPtr` 40 :: Ptr AccessFlags2KHR)) (dstAccessMask)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (srcQueueFamilyIndex)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (dstQueueFamilyIndex)
+    poke ((p `plusPtr` 56 :: Ptr Buffer)) (buffer)
+    poke ((p `plusPtr` 64 :: Ptr DeviceSize)) (offset)
+    poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (size)
     f
-  cStructSize = 64
+  cStructSize = 80
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr Buffer)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 56 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr Buffer)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (zero)
     f
 
 instance FromCStruct BufferMemoryBarrier2KHR where
   peekCStruct p = do
     srcStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 16 :: Ptr PipelineStageFlags2KHR))
-    srcAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 20 :: Ptr AccessFlags2KHR))
-    dstStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 24 :: Ptr PipelineStageFlags2KHR))
-    dstAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 28 :: Ptr AccessFlags2KHR))
-    srcQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
-    dstQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
-    buffer <- peek @Buffer ((p `plusPtr` 40 :: Ptr Buffer))
-    offset <- peek @DeviceSize ((p `plusPtr` 48 :: Ptr DeviceSize))
-    size <- peek @DeviceSize ((p `plusPtr` 56 :: Ptr DeviceSize))
+    srcAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 24 :: Ptr AccessFlags2KHR))
+    dstStageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR))
+    dstAccessMask <- peek @AccessFlags2KHR ((p `plusPtr` 40 :: Ptr AccessFlags2KHR))
+    srcQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
+    dstQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
+    buffer <- peek @Buffer ((p `plusPtr` 56 :: Ptr Buffer))
+    offset <- peek @DeviceSize ((p `plusPtr` 64 :: Ptr DeviceSize))
+    size <- peek @DeviceSize ((p `plusPtr` 72 :: Ptr DeviceSize))
     pure $ BufferMemoryBarrier2KHR
              srcStageMask srcAccessMask dstStageMask dstAccessMask srcQueueFamilyIndex dstQueueFamilyIndex buffer offset size
 
 instance Storable BufferMemoryBarrier2KHR where
-  sizeOf ~_ = 64
+  sizeOf ~_ = 80
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -4497,16 +4500,16 @@ instance ToCStruct DependencyInfoKHR where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DependencyFlags)) (dependencyFlags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32))
-    pPMemoryBarriers' <- ContT $ allocaBytesAligned @MemoryBarrier2KHR ((Data.Vector.length (memoryBarriers)) * 32) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers' `plusPtr` (32 * (i)) :: Ptr MemoryBarrier2KHR) (e)) (memoryBarriers)
+    pPMemoryBarriers' <- ContT $ allocaBytesAligned @MemoryBarrier2KHR ((Data.Vector.length (memoryBarriers)) * 48) 8
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers' `plusPtr` (48 * (i)) :: Ptr MemoryBarrier2KHR) (e)) (memoryBarriers)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr MemoryBarrier2KHR))) (pPMemoryBarriers')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32))
-    pPBufferMemoryBarriers' <- ContT $ allocaBytesAligned @BufferMemoryBarrier2KHR ((Data.Vector.length (bufferMemoryBarriers)) * 64) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers' `plusPtr` (64 * (i)) :: Ptr BufferMemoryBarrier2KHR) (e)) (bufferMemoryBarriers)
+    pPBufferMemoryBarriers' <- ContT $ allocaBytesAligned @BufferMemoryBarrier2KHR ((Data.Vector.length (bufferMemoryBarriers)) * 80) 8
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers' `plusPtr` (80 * (i)) :: Ptr BufferMemoryBarrier2KHR) (e)) (bufferMemoryBarriers)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferMemoryBarrier2KHR))) (pPBufferMemoryBarriers')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32))
-    pPImageMemoryBarriers' <- ContT $ allocaBytesAligned @(ImageMemoryBarrier2KHR _) ((Data.Vector.length (imageMemoryBarriers)) * 80) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers' `plusPtr` (80 * (i)) :: Ptr (ImageMemoryBarrier2KHR _))) (e) . ($ ())) (imageMemoryBarriers)
+    pPImageMemoryBarriers' <- ContT $ allocaBytesAligned @(ImageMemoryBarrier2KHR _) ((Data.Vector.length (imageMemoryBarriers)) * 96) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers' `plusPtr` (96 * (i)) :: Ptr (ImageMemoryBarrier2KHR _))) (e) . ($ ())) (imageMemoryBarriers)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (ImageMemoryBarrier2KHR _)))) (pPImageMemoryBarriers')
     lift $ f
   cStructSize = 64
@@ -4521,13 +4524,13 @@ instance FromCStruct DependencyInfoKHR where
     dependencyFlags <- peek @DependencyFlags ((p `plusPtr` 16 :: Ptr DependencyFlags))
     memoryBarrierCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pMemoryBarriers <- peek @(Ptr MemoryBarrier2KHR) ((p `plusPtr` 24 :: Ptr (Ptr MemoryBarrier2KHR)))
-    pMemoryBarriers' <- generateM (fromIntegral memoryBarrierCount) (\i -> peekCStruct @MemoryBarrier2KHR ((pMemoryBarriers `advancePtrBytes` (32 * (i)) :: Ptr MemoryBarrier2KHR)))
+    pMemoryBarriers' <- generateM (fromIntegral memoryBarrierCount) (\i -> peekCStruct @MemoryBarrier2KHR ((pMemoryBarriers `advancePtrBytes` (48 * (i)) :: Ptr MemoryBarrier2KHR)))
     bufferMemoryBarrierCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pBufferMemoryBarriers <- peek @(Ptr BufferMemoryBarrier2KHR) ((p `plusPtr` 40 :: Ptr (Ptr BufferMemoryBarrier2KHR)))
-    pBufferMemoryBarriers' <- generateM (fromIntegral bufferMemoryBarrierCount) (\i -> peekCStruct @BufferMemoryBarrier2KHR ((pBufferMemoryBarriers `advancePtrBytes` (64 * (i)) :: Ptr BufferMemoryBarrier2KHR)))
+    pBufferMemoryBarriers' <- generateM (fromIntegral bufferMemoryBarrierCount) (\i -> peekCStruct @BufferMemoryBarrier2KHR ((pBufferMemoryBarriers `advancePtrBytes` (80 * (i)) :: Ptr BufferMemoryBarrier2KHR)))
     imageMemoryBarrierCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pImageMemoryBarriers <- peek @(Ptr (ImageMemoryBarrier2KHR _)) ((p `plusPtr` 56 :: Ptr (Ptr (ImageMemoryBarrier2KHR _))))
-    pImageMemoryBarriers' <- generateM (fromIntegral imageMemoryBarrierCount) (\i -> peekSomeCStruct (forgetExtensions ((pImageMemoryBarriers `advancePtrBytes` (80 * (i)) :: Ptr (ImageMemoryBarrier2KHR _)))))
+    pImageMemoryBarriers' <- generateM (fromIntegral imageMemoryBarrierCount) (\i -> peekSomeCStruct (forgetExtensions ((pImageMemoryBarriers `advancePtrBytes` (96 * (i)) :: Ptr (ImageMemoryBarrier2KHR _)))))
     pure $ DependencyInfoKHR
              dependencyFlags pMemoryBarriers' pBufferMemoryBarriers' pImageMemoryBarriers'
 
@@ -4637,23 +4640,23 @@ deriving instance Generic (SemaphoreSubmitInfoKHR)
 deriving instance Show SemaphoreSubmitInfoKHR
 
 instance ToCStruct SemaphoreSubmitInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreSubmitInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Semaphore)) (semaphore)
     poke ((p `plusPtr` 24 :: Ptr Word64)) (value)
     poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR)) (stageMask)
-    poke ((p `plusPtr` 36 :: Ptr Word32)) (deviceIndex)
+    poke ((p `plusPtr` 40 :: Ptr Word32)) (deviceIndex)
     f
-  cStructSize = 40
+  cStructSize = 48
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Semaphore)) (zero)
     poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
-    poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct SemaphoreSubmitInfoKHR where
@@ -4661,12 +4664,12 @@ instance FromCStruct SemaphoreSubmitInfoKHR where
     semaphore <- peek @Semaphore ((p `plusPtr` 16 :: Ptr Semaphore))
     value <- peek @Word64 ((p `plusPtr` 24 :: Ptr Word64))
     stageMask <- peek @PipelineStageFlags2KHR ((p `plusPtr` 32 :: Ptr PipelineStageFlags2KHR))
-    deviceIndex <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
+    deviceIndex <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     pure $ SemaphoreSubmitInfoKHR
              semaphore value stageMask deviceIndex
 
 instance Storable SemaphoreSubmitInfoKHR where
-  sizeOf ~_ = 40
+  sizeOf ~_ = 48
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -4886,16 +4889,16 @@ instance (Extendss SubmitInfo2KHR es, PokeChain es) => ToCStruct (SubmitInfo2KHR
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr SubmitFlagsKHR)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (waitSemaphoreInfos)) :: Word32))
-    pPWaitSemaphoreInfos' <- ContT $ allocaBytesAligned @SemaphoreSubmitInfoKHR ((Data.Vector.length (waitSemaphoreInfos)) * 40) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreInfos' `plusPtr` (40 * (i)) :: Ptr SemaphoreSubmitInfoKHR) (e)) (waitSemaphoreInfos)
+    pPWaitSemaphoreInfos' <- ContT $ allocaBytesAligned @SemaphoreSubmitInfoKHR ((Data.Vector.length (waitSemaphoreInfos)) * 48) 8
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreInfos' `plusPtr` (48 * (i)) :: Ptr SemaphoreSubmitInfoKHR) (e)) (waitSemaphoreInfos)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr SemaphoreSubmitInfoKHR))) (pPWaitSemaphoreInfos')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (commandBufferInfos)) :: Word32))
     pPCommandBufferInfos' <- ContT $ allocaBytesAligned @CommandBufferSubmitInfoKHR ((Data.Vector.length (commandBufferInfos)) * 32) 8
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBufferInfos' `plusPtr` (32 * (i)) :: Ptr CommandBufferSubmitInfoKHR) (e)) (commandBufferInfos)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CommandBufferSubmitInfoKHR))) (pPCommandBufferInfos')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (signalSemaphoreInfos)) :: Word32))
-    pPSignalSemaphoreInfos' <- ContT $ allocaBytesAligned @SemaphoreSubmitInfoKHR ((Data.Vector.length (signalSemaphoreInfos)) * 40) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreInfos' `plusPtr` (40 * (i)) :: Ptr SemaphoreSubmitInfoKHR) (e)) (signalSemaphoreInfos)
+    pPSignalSemaphoreInfos' <- ContT $ allocaBytesAligned @SemaphoreSubmitInfoKHR ((Data.Vector.length (signalSemaphoreInfos)) * 48) 8
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreInfos' `plusPtr` (48 * (i)) :: Ptr SemaphoreSubmitInfoKHR) (e)) (signalSemaphoreInfos)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SemaphoreSubmitInfoKHR))) (pPSignalSemaphoreInfos')
     lift $ f
   cStructSize = 64
@@ -4913,13 +4916,13 @@ instance (Extendss SubmitInfo2KHR es, PeekChain es) => FromCStruct (SubmitInfo2K
     flags <- peek @SubmitFlagsKHR ((p `plusPtr` 16 :: Ptr SubmitFlagsKHR))
     waitSemaphoreInfoCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pWaitSemaphoreInfos <- peek @(Ptr SemaphoreSubmitInfoKHR) ((p `plusPtr` 24 :: Ptr (Ptr SemaphoreSubmitInfoKHR)))
-    pWaitSemaphoreInfos' <- generateM (fromIntegral waitSemaphoreInfoCount) (\i -> peekCStruct @SemaphoreSubmitInfoKHR ((pWaitSemaphoreInfos `advancePtrBytes` (40 * (i)) :: Ptr SemaphoreSubmitInfoKHR)))
+    pWaitSemaphoreInfos' <- generateM (fromIntegral waitSemaphoreInfoCount) (\i -> peekCStruct @SemaphoreSubmitInfoKHR ((pWaitSemaphoreInfos `advancePtrBytes` (48 * (i)) :: Ptr SemaphoreSubmitInfoKHR)))
     commandBufferInfoCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pCommandBufferInfos <- peek @(Ptr CommandBufferSubmitInfoKHR) ((p `plusPtr` 40 :: Ptr (Ptr CommandBufferSubmitInfoKHR)))
     pCommandBufferInfos' <- generateM (fromIntegral commandBufferInfoCount) (\i -> peekCStruct @CommandBufferSubmitInfoKHR ((pCommandBufferInfos `advancePtrBytes` (32 * (i)) :: Ptr CommandBufferSubmitInfoKHR)))
     signalSemaphoreInfoCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pSignalSemaphoreInfos <- peek @(Ptr SemaphoreSubmitInfoKHR) ((p `plusPtr` 56 :: Ptr (Ptr SemaphoreSubmitInfoKHR)))
-    pSignalSemaphoreInfos' <- generateM (fromIntegral signalSemaphoreInfoCount) (\i -> peekCStruct @SemaphoreSubmitInfoKHR ((pSignalSemaphoreInfos `advancePtrBytes` (40 * (i)) :: Ptr SemaphoreSubmitInfoKHR)))
+    pSignalSemaphoreInfos' <- generateM (fromIntegral signalSemaphoreInfoCount) (\i -> peekCStruct @SemaphoreSubmitInfoKHR ((pSignalSemaphoreInfos `advancePtrBytes` (48 * (i)) :: Ptr SemaphoreSubmitInfoKHR)))
     pure $ SubmitInfo2KHR
              next flags pWaitSemaphoreInfos' pCommandBufferInfos' pSignalSemaphoreInfos'
 
@@ -5120,71 +5123,7 @@ instance Zero PhysicalDeviceSynchronization2FeaturesKHR where
            zero
 
 
--- | VkAccessFlags2KHR - 64-bit mask of access flags
---
--- = See Also
---
--- 'BufferMemoryBarrier2KHR', 'ImageMemoryBarrier2KHR', 'MemoryBarrier2KHR'
-newtype AccessFlags2KHR = AccessFlags2KHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
-
-
-conNameAccessFlags2KHR :: String
-conNameAccessFlags2KHR = "AccessFlags2KHR"
-
-enumPrefixAccessFlags2KHR :: String
-enumPrefixAccessFlags2KHR = ""
-
-showTableAccessFlags2KHR :: [(AccessFlags2KHR, String)]
-showTableAccessFlags2KHR = []
-
-instance Show AccessFlags2KHR where
-  showsPrec = enumShowsPrec enumPrefixAccessFlags2KHR
-                            showTableAccessFlags2KHR
-                            conNameAccessFlags2KHR
-                            (\(AccessFlags2KHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read AccessFlags2KHR where
-  readPrec = enumReadPrec enumPrefixAccessFlags2KHR showTableAccessFlags2KHR conNameAccessFlags2KHR AccessFlags2KHR
-
-
--- | VkPipelineStageFlags2KHR - 64-bit mask of pipeline stage flags
---
--- = See Also
---
--- 'BufferMemoryBarrier2KHR', 'CheckpointData2NV',
--- 'ImageMemoryBarrier2KHR', 'MemoryBarrier2KHR',
--- 'QueueFamilyCheckpointProperties2NV', 'SemaphoreSubmitInfoKHR',
--- 'cmdResetEvent2KHR', 'cmdWriteBufferMarker2AMD', 'cmdWriteTimestamp2KHR'
-newtype PipelineStageFlags2KHR = PipelineStageFlags2KHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
-
-
-conNamePipelineStageFlags2KHR :: String
-conNamePipelineStageFlags2KHR = "PipelineStageFlags2KHR"
-
-enumPrefixPipelineStageFlags2KHR :: String
-enumPrefixPipelineStageFlags2KHR = ""
-
-showTablePipelineStageFlags2KHR :: [(PipelineStageFlags2KHR, String)]
-showTablePipelineStageFlags2KHR = []
-
-instance Show PipelineStageFlags2KHR where
-  showsPrec = enumShowsPrec enumPrefixPipelineStageFlags2KHR
-                            showTablePipelineStageFlags2KHR
-                            conNamePipelineStageFlags2KHR
-                            (\(PipelineStageFlags2KHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read PipelineStageFlags2KHR where
-  readPrec = enumReadPrec enumPrefixPipelineStageFlags2KHR
-                          showTablePipelineStageFlags2KHR
-                          conNamePipelineStageFlags2KHR
-                          PipelineStageFlags2KHR
-
+type AccessFlags2KHR = AccessFlagBits2KHR
 
 -- | VkAccessFlagBits2KHR - Access flags for VkAccessFlags2KHR
 --
@@ -5207,30 +5146,30 @@ instance Read PipelineStageFlags2KHR where
 -- = See Also
 --
 -- No cross-references are available
-newtype AccessFlagBits2KHR = AccessFlagBits2KHR Flags
+newtype AccessFlagBits2KHR = AccessFlagBits2KHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'ACCESS_2_NONE_KHR' specifies no accesses.
-pattern ACCESS_2_NONE_KHR                               = AccessFlagBits2KHR 0x00000000
+pattern ACCESS_2_NONE_KHR                               = AccessFlagBits2KHR 0x0000000000000000
 -- | 'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR' specifies read access to
 -- indirect buffers in the 'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR'
 -- pipeline stage.
-pattern ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR          = AccessFlagBits2KHR 0x00000001
+pattern ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR          = AccessFlagBits2KHR 0x0000000000000001
 -- | 'ACCESS_2_INDEX_READ_BIT_KHR' specifies read access to an index buffer
 -- in the 'PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR' pipeline stage.
-pattern ACCESS_2_INDEX_READ_BIT_KHR                     = AccessFlagBits2KHR 0x00000002
+pattern ACCESS_2_INDEX_READ_BIT_KHR                     = AccessFlagBits2KHR 0x0000000000000002
 -- | 'ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR' specifies read access to a
 -- vertex buffer in the 'PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR'
 -- pipeline stage.
-pattern ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR          = AccessFlagBits2KHR 0x00000004
+pattern ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR          = AccessFlagBits2KHR 0x0000000000000004
 -- | 'ACCESS_2_UNIFORM_READ_BIT_KHR' specifies read access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer>
 -- in any shader pipeline stage.
-pattern ACCESS_2_UNIFORM_READ_BIT_KHR                   = AccessFlagBits2KHR 0x00000008
+pattern ACCESS_2_UNIFORM_READ_BIT_KHR                   = AccessFlagBits2KHR 0x0000000000000008
 -- | 'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR' specifies read access to an
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass input attachment>
 -- in the 'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR' pipeline stage.
-pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR          = AccessFlagBits2KHR 0x00000010
+pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR          = AccessFlagBits2KHR 0x0000000000000010
 -- | 'ACCESS_2_SHADER_READ_BIT_KHR' is equivalent to the logical OR of:
 --
 -- -   VK_ACCESS_2_UNIFORM_READ_BIT_KHR
@@ -5238,64 +5177,64 @@ pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR          = AccessFlagBits2KHR 0x0
 -- -   VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR
 --
 -- -   VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR
-pattern ACCESS_2_SHADER_READ_BIT_KHR                    = AccessFlagBits2KHR 0x00000020
+pattern ACCESS_2_SHADER_READ_BIT_KHR                    = AccessFlagBits2KHR 0x0000000000000020
 -- | 'ACCESS_2_SHADER_WRITE_BIT_KHR' is equivalent to
 -- 'ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR'.
-pattern ACCESS_2_SHADER_WRITE_BIT_KHR                   = AccessFlagBits2KHR 0x00000040
+pattern ACCESS_2_SHADER_WRITE_BIT_KHR                   = AccessFlagBits2KHR 0x0000000000000040
 -- | 'ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR' specifies read access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass color attachment>
 -- (excluding
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>)
 -- in the 'PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR' pipeline
 -- stage.
-pattern ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR          = AccessFlagBits2KHR 0x00000080
+pattern ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR          = AccessFlagBits2KHR 0x0000000000000080
 -- | 'ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR' specifies write access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass color or resolve attachment>
 -- in the 'PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR' pipeline
 -- stage.
-pattern ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR         = AccessFlagBits2KHR 0x00000100
+pattern ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR         = AccessFlagBits2KHR 0x0000000000000100
 -- | 'ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR' specifies read access
 -- to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass depth\/stencil attachment>
 -- in the 'PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR' or
 -- 'PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR' pipeline stages.
-pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR  = AccessFlagBits2KHR 0x00000200
+pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR  = AccessFlagBits2KHR 0x0000000000000200
 -- | 'ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR' specifies write access
 -- to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass depth\/stencil attachment>
 -- in the 'PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR' or
 -- 'PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR' pipeline stages.
-pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR = AccessFlagBits2KHR 0x00000400
+pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR = AccessFlagBits2KHR 0x0000000000000400
 -- | 'ACCESS_2_TRANSFER_READ_BIT_KHR' specifies read access to an image or
 -- buffer in the 'PIPELINE_STAGE_2_COPY_BIT_KHR',
 -- 'PIPELINE_STAGE_2_BLIT_BIT_KHR', or 'PIPELINE_STAGE_2_RESOLVE_BIT_KHR'
 -- pipeline stages.
-pattern ACCESS_2_TRANSFER_READ_BIT_KHR                  = AccessFlagBits2KHR 0x00000800
+pattern ACCESS_2_TRANSFER_READ_BIT_KHR                  = AccessFlagBits2KHR 0x0000000000000800
 -- | 'ACCESS_2_TRANSFER_WRITE_BIT_KHR' specifies write access to an image or
 -- buffer in the 'PIPELINE_STAGE_2_COPY_BIT_KHR',
 -- 'PIPELINE_STAGE_2_BLIT_BIT_KHR', 'PIPELINE_STAGE_2_CLEAR_BIT_KHR', or
 -- 'PIPELINE_STAGE_2_RESOLVE_BIT_KHR' pipeline stages.
-pattern ACCESS_2_TRANSFER_WRITE_BIT_KHR                 = AccessFlagBits2KHR 0x00001000
+pattern ACCESS_2_TRANSFER_WRITE_BIT_KHR                 = AccessFlagBits2KHR 0x0000000000001000
 -- | 'ACCESS_2_HOST_READ_BIT_KHR' specifies read access to memory in the
 -- 'PIPELINE_STAGE_2_HOST_BIT_KHR' pipeline stage.
-pattern ACCESS_2_HOST_READ_BIT_KHR                      = AccessFlagBits2KHR 0x00002000
+pattern ACCESS_2_HOST_READ_BIT_KHR                      = AccessFlagBits2KHR 0x0000000000002000
 -- | 'ACCESS_2_HOST_WRITE_BIT_KHR' specifies write access to memory in the
 -- 'PIPELINE_STAGE_2_HOST_BIT_KHR' pipeline stage.
-pattern ACCESS_2_HOST_WRITE_BIT_KHR                     = AccessFlagBits2KHR 0x00004000
+pattern ACCESS_2_HOST_WRITE_BIT_KHR                     = AccessFlagBits2KHR 0x0000000000004000
 -- | 'ACCESS_2_MEMORY_READ_BIT_KHR' specifies all read accesses. It is always
 -- valid in any access mask, and is treated as equivalent to setting all
 -- @READ@ access flags that are valid where it is used.
-pattern ACCESS_2_MEMORY_READ_BIT_KHR                    = AccessFlagBits2KHR 0x00008000
+pattern ACCESS_2_MEMORY_READ_BIT_KHR                    = AccessFlagBits2KHR 0x0000000000008000
 -- | 'ACCESS_2_MEMORY_WRITE_BIT_KHR' specifies all write accesses. It is
 -- always valid in any access mask, and is treated as equivalent to setting
 -- all @WRITE@ access flags that are valid where it is used.
-pattern ACCESS_2_MEMORY_WRITE_BIT_KHR                   = AccessFlagBits2KHR 0x00010000
+pattern ACCESS_2_MEMORY_WRITE_BIT_KHR                   = AccessFlagBits2KHR 0x0000000000010000
 -- | 'ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR' specifies read access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled image>
 -- in any shader pipeline stage.
-pattern ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR            = AccessFlagBits2KHR 0x100000000
+pattern ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR            = AccessFlagBits2KHR 0x0000000100000000
 -- | 'ACCESS_2_SHADER_STORAGE_READ_BIT_KHR' specifies read access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-physical-storage-buffer physical storage buffer>,
@@ -5303,7 +5242,7 @@ pattern ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR            = AccessFlagBits2KHR 0x1
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>
 -- in any shader pipeline stage.
-pattern ACCESS_2_SHADER_STORAGE_READ_BIT_KHR            = AccessFlagBits2KHR 0x200000000
+pattern ACCESS_2_SHADER_STORAGE_READ_BIT_KHR            = AccessFlagBits2KHR 0x0000000200000000
 -- | 'ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR' specifies write access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-physical-storage-buffer physical storage buffer>,
@@ -5311,7 +5250,7 @@ pattern ACCESS_2_SHADER_STORAGE_READ_BIT_KHR            = AccessFlagBits2KHR 0x2
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>
 -- in any shader pipeline stage.
-pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR           = AccessFlagBits2KHR 0x400000000
+pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR           = AccessFlagBits2KHR 0x0000000400000000
 -- | 'ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' specifies read
 -- access to
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass color attachments>,
@@ -5319,48 +5258,48 @@ pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR           = AccessFlagBits2KHR 0x4
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>,
 -- in the 'PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR' pipeline
 -- stage.
-pattern ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = AccessFlagBits2KHR 0x00080000
+pattern ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = AccessFlagBits2KHR 0x0000000000080000
 -- | 'ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT' specifies read access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
 -- in the 'PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT' pipeline
 -- stage.
-pattern ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT      = AccessFlagBits2KHR 0x01000000
+pattern ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT      = AccessFlagBits2KHR 0x0000000001000000
 -- | 'ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR' specifies write access
 -- to an acceleration structure in the
 -- 'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' pipeline stage.
-pattern ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR   = AccessFlagBits2KHR 0x00400000
+pattern ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR   = AccessFlagBits2KHR 0x0000000000400000
 -- | 'ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR' specifies read access to
 -- an acceleration structure in the
 -- 'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' or
 -- 'PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR' pipeline stages.
-pattern ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR    = AccessFlagBits2KHR 0x00200000
+pattern ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR    = AccessFlagBits2KHR 0x0000000000200000
 -- No documentation found for Nested "VkAccessFlagBits2KHR" "VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"
-pattern ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR = AccessFlagBits2KHR 0x00800000
+pattern ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR = AccessFlagBits2KHR 0x0000000000800000
 -- | 'ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV' specifies writes to the
 -- target command buffer in the
 -- 'PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV' pipeline stage.
-pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV        = AccessFlagBits2KHR 0x00040000
+pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV        = AccessFlagBits2KHR 0x0000000000040000
 -- | 'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV' specifies reads from
 -- 'Vulkan.Core10.Handles.Buffer' inputs to
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'
 -- in the 'PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV' pipeline stage.
-pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV         = AccessFlagBits2KHR 0x00020000
+pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV         = AccessFlagBits2KHR 0x0000000000020000
 -- | 'ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT' specifies read access to a
 -- predicate in the 'PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT'
 -- pipeline stage.
-pattern ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT     = AccessFlagBits2KHR 0x00100000
+pattern ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT     = AccessFlagBits2KHR 0x0000000000100000
 -- | 'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT' specifies write
 -- access to a transform feedback counter buffer in the
 -- 'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT' pipeline stage.
-pattern ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT = AccessFlagBits2KHR 0x08000000
+pattern ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT = AccessFlagBits2KHR 0x0000000008000000
 -- | 'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT' specifies read access
 -- to a transform feedback counter buffer in the
 -- 'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT' pipeline stage.
-pattern ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT = AccessFlagBits2KHR 0x04000000
+pattern ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT = AccessFlagBits2KHR 0x0000000004000000
 -- | 'ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT' specifies write access to a
 -- transform feedback buffer in the
 -- 'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT' pipeline stage.
-pattern ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT       = AccessFlagBits2KHR 0x02000000
+pattern ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT       = AccessFlagBits2KHR 0x0000000002000000
 
 conNameAccessFlagBits2KHR :: String
 conNameAccessFlagBits2KHR = "AccessFlagBits2KHR"
@@ -5416,6 +5355,8 @@ instance Read AccessFlagBits2KHR where
     enumReadPrec enumPrefixAccessFlagBits2KHR showTableAccessFlagBits2KHR conNameAccessFlagBits2KHR AccessFlagBits2KHR
 
 
+type PipelineStageFlags2KHR = PipelineStageFlagBits2KHR
+
 -- | VkPipelineStageFlagBits2KHR - Pipeline stage flags for
 -- VkPipelineStageFlags2KHR
 --
@@ -5438,65 +5379,65 @@ instance Read AccessFlagBits2KHR where
 -- = See Also
 --
 -- No cross-references are available
-newtype PipelineStageFlagBits2KHR = PipelineStageFlagBits2KHR Flags
+newtype PipelineStageFlagBits2KHR = PipelineStageFlagBits2KHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'PIPELINE_STAGE_2_NONE_KHR' specifies no stages of execution.
-pattern PIPELINE_STAGE_2_NONE_KHR                               = PipelineStageFlagBits2KHR 0x00000000
+pattern PIPELINE_STAGE_2_NONE_KHR                               = PipelineStageFlagBits2KHR 0x0000000000000000
 -- | 'PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR' is equivalent to
 -- 'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR' with 'AccessFlags2KHR' set to
 -- @0@ when specified in the second synchronization scope, but equivalent
 -- to 'PIPELINE_STAGE_2_NONE_KHR' in the first scope.
-pattern PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR                    = PipelineStageFlagBits2KHR 0x00000001
+pattern PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR                    = PipelineStageFlagBits2KHR 0x0000000000000001
 -- | 'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR' specifies the stage of the
 -- pipeline where indirect command parameters are consumed. This stage also
 -- includes reading commands written by
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'.
-pattern PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR                  = PipelineStageFlagBits2KHR 0x00000002
+pattern PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR                  = PipelineStageFlagBits2KHR 0x0000000000000002
 -- | 'PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR' is equivalent to the logical OR
 -- of:
 --
 -- -   'PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR'
 --
 -- -   'PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR'
-pattern PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR                   = PipelineStageFlagBits2KHR 0x00000004
+pattern PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR                   = PipelineStageFlagBits2KHR 0x0000000000000004
 -- | 'PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR' specifies the vertex shader
 -- stage.
-pattern PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR                  = PipelineStageFlagBits2KHR 0x00000008
+pattern PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR                  = PipelineStageFlagBits2KHR 0x0000000000000008
 -- | 'PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT_KHR' specifies the
 -- tessellation control shader stage.
-pattern PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT_KHR    = PipelineStageFlagBits2KHR 0x00000010
+pattern PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT_KHR    = PipelineStageFlagBits2KHR 0x0000000000000010
 -- | 'PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT_KHR' specifies the
 -- tessellation evaluation shader stage.
-pattern PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT_KHR = PipelineStageFlagBits2KHR 0x00000020
+pattern PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT_KHR = PipelineStageFlagBits2KHR 0x0000000000000020
 -- | 'PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT_KHR' specifies the geometry shader
 -- stage.
-pattern PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT_KHR                = PipelineStageFlagBits2KHR 0x00000040
+pattern PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT_KHR                = PipelineStageFlagBits2KHR 0x0000000000000040
 -- | 'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR' specifies the fragment shader
 -- stage.
-pattern PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR                = PipelineStageFlagBits2KHR 0x00000080
+pattern PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR                = PipelineStageFlagBits2KHR 0x0000000000000080
 -- | 'PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR' specifies the stage of
 -- the pipeline where early fragment tests (depth and stencil tests before
 -- fragment shading) are performed. This stage also includes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-load-store-ops subpass load operations>
 -- for framebuffer attachments with a depth\/stencil format.
-pattern PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR           = PipelineStageFlagBits2KHR 0x00000100
+pattern PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR           = PipelineStageFlagBits2KHR 0x0000000000000100
 -- | 'PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR' specifies the stage of
 -- the pipeline where late fragment tests (depth and stencil tests after
 -- fragment shading) are performed. This stage also includes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-load-store-ops subpass store operations>
 -- for framebuffer attachments with a depth\/stencil format.
-pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR            = PipelineStageFlagBits2KHR 0x00000200
+pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR            = PipelineStageFlagBits2KHR 0x0000000000000200
 -- | 'PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR' specifies the stage
 -- of the pipeline after blending where the final color values are output
 -- from the pipeline. This stage also includes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-load-store-ops subpass load and store operations>
 -- and multisample resolve operations for framebuffer attachments with a
 -- color or depth\/stencil format.
-pattern PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR        = PipelineStageFlagBits2KHR 0x00000400
+pattern PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR        = PipelineStageFlagBits2KHR 0x0000000000000400
 -- | 'PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR' specifies the compute shader
 -- stage.
-pattern PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR                 = PipelineStageFlagBits2KHR 0x00000800
+pattern PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR                 = PipelineStageFlagBits2KHR 0x0000000000000800
 -- | 'PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR' is equivalent to specifying all
 -- of:
 --
@@ -5507,16 +5448,16 @@ pattern PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR                 = PipelineStageF
 -- -   'PIPELINE_STAGE_2_RESOLVE_BIT_KHR'
 --
 -- -   'PIPELINE_STAGE_2_CLEAR_BIT_KHR'
-pattern PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR                   = PipelineStageFlagBits2KHR 0x00001000
+pattern PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR                   = PipelineStageFlagBits2KHR 0x0000000000001000
 -- | 'PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT_KHR' is equivalent to
 -- 'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR' with 'AccessFlags2KHR' set to
 -- @0@ when specified in the first synchronization scope, but equivalent to
 -- 'PIPELINE_STAGE_2_NONE_KHR' in the second scope.
-pattern PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT_KHR                 = PipelineStageFlagBits2KHR 0x00002000
+pattern PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT_KHR                 = PipelineStageFlagBits2KHR 0x0000000000002000
 -- | 'PIPELINE_STAGE_2_HOST_BIT_KHR' specifies a pseudo-stage indicating
 -- execution on the host of reads\/writes of device memory. This stage is
 -- not invoked by any commands recorded in a command buffer.
-pattern PIPELINE_STAGE_2_HOST_BIT_KHR                           = PipelineStageFlagBits2KHR 0x00004000
+pattern PIPELINE_STAGE_2_HOST_BIT_KHR                           = PipelineStageFlagBits2KHR 0x0000000000004000
 -- | 'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR' specifies the execution of all
 -- graphics pipeline stages, and is equivalent to the logical OR of:
 --
@@ -5551,31 +5492,31 @@ pattern PIPELINE_STAGE_2_HOST_BIT_KHR                           = PipelineStageF
 -- -   'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   'PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
-pattern PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR                   = PipelineStageFlagBits2KHR 0x00008000
+pattern PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR                   = PipelineStageFlagBits2KHR 0x0000000000008000
 -- | 'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR' specifies all operations
 -- performed by all commands supported on the queue it is used with.
-pattern PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR                   = PipelineStageFlagBits2KHR 0x00010000
+pattern PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR                   = PipelineStageFlagBits2KHR 0x0000000000010000
 -- | 'PIPELINE_STAGE_2_COPY_BIT_KHR' specifies the execution of all
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>,
 -- including 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'.
-pattern PIPELINE_STAGE_2_COPY_BIT_KHR                           = PipelineStageFlagBits2KHR 0x100000000
+pattern PIPELINE_STAGE_2_COPY_BIT_KHR                           = PipelineStageFlagBits2KHR 0x0000000100000000
 -- | 'PIPELINE_STAGE_2_RESOLVE_BIT_KHR' specifies the execution of
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResolveImage'.
-pattern PIPELINE_STAGE_2_RESOLVE_BIT_KHR                        = PipelineStageFlagBits2KHR 0x200000000
+pattern PIPELINE_STAGE_2_RESOLVE_BIT_KHR                        = PipelineStageFlagBits2KHR 0x0000000200000000
 -- | 'PIPELINE_STAGE_2_BLIT_BIT_KHR' specifies the execution of
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'.
-pattern PIPELINE_STAGE_2_BLIT_BIT_KHR                           = PipelineStageFlagBits2KHR 0x400000000
+pattern PIPELINE_STAGE_2_BLIT_BIT_KHR                           = PipelineStageFlagBits2KHR 0x0000000400000000
 -- | 'PIPELINE_STAGE_2_CLEAR_BIT_KHR' specifies the execution of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>,
 -- with the exception of
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearAttachments'.
-pattern PIPELINE_STAGE_2_CLEAR_BIT_KHR                          = PipelineStageFlagBits2KHR 0x800000000
+pattern PIPELINE_STAGE_2_CLEAR_BIT_KHR                          = PipelineStageFlagBits2KHR 0x0000000800000000
 -- | 'PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR' specifies the stage of the
 -- pipeline where index buffers are consumed.
-pattern PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR                    = PipelineStageFlagBits2KHR 0x1000000000
+pattern PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR                    = PipelineStageFlagBits2KHR 0x0000001000000000
 -- | 'PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR' specifies the stage of
 -- the pipeline where vertex buffers are consumed.
-pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR         = PipelineStageFlagBits2KHR 0x2000000000
+pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR         = PipelineStageFlagBits2KHR 0x0000002000000000
 -- | 'PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR' is equivalent to
 -- specifying all supported stages from:
 --
@@ -5590,22 +5531,22 @@ pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR         = PipelineStageF
 -- -   'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
 -- -   'PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
-pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR      = PipelineStageFlagBits2KHR 0x4000000000
+pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR      = PipelineStageFlagBits2KHR 0x0000004000000000
 -- | 'PIPELINE_STAGE_2_MESH_SHADER_BIT_NV' specifies the mesh shader stage.
-pattern PIPELINE_STAGE_2_MESH_SHADER_BIT_NV                     = PipelineStageFlagBits2KHR 0x00100000
+pattern PIPELINE_STAGE_2_MESH_SHADER_BIT_NV                     = PipelineStageFlagBits2KHR 0x0000000000100000
 -- | 'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV' specifies the task shader stage.
-pattern PIPELINE_STAGE_2_TASK_SHADER_BIT_NV                     = PipelineStageFlagBits2KHR 0x00080000
+pattern PIPELINE_STAGE_2_TASK_SHADER_BIT_NV                     = PipelineStageFlagBits2KHR 0x0000000000080000
 -- | 'PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT' specifies the stage
 -- of the pipeline where the fragment density map is read to
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymapops generate the fragment areas>.
-pattern PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT       = PipelineStageFlagBits2KHR 0x00800000
+pattern PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT       = PipelineStageFlagBits2KHR 0x0000000000800000
 -- | 'PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR' specifies the execution of
 -- the ray tracing shader stages.
-pattern PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR             = PipelineStageFlagBits2KHR 0x00200000
+pattern PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR             = PipelineStageFlagBits2KHR 0x0000000000200000
 -- | 'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' specifies the
 -- execution of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure commands>.
-pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR   = PipelineStageFlagBits2KHR 0x02000000
+pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR   = PipelineStageFlagBits2KHR 0x0000000002000000
 -- | 'PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
 -- the stage of the pipeline where the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
@@ -5613,19 +5554,19 @@ pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR   = PipelineStageF
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-attachment shading rate image>
 -- is read to determine the fragment shading rate for portions of a
 -- rasterized primitive.
-pattern PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineStageFlagBits2KHR 0x00400000
+pattern PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineStageFlagBits2KHR 0x0000000000400000
 -- | 'PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV' specifies the stage of the
 -- pipeline where device-side generation of commands via
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'
 -- is handled.
-pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV              = PipelineStageFlagBits2KHR 0x00020000
+pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV              = PipelineStageFlagBits2KHR 0x0000000000020000
 -- | 'PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT' specifies the stage of
 -- the pipeline where the predicate of conditional rendering is consumed.
-pattern PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT          = PipelineStageFlagBits2KHR 0x00040000
+pattern PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT          = PipelineStageFlagBits2KHR 0x0000000000040000
 -- | 'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT' specifies the stage of the
 -- pipeline where vertex attribute output values are written to the
 -- transform feedback buffers.
-pattern PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT             = PipelineStageFlagBits2KHR 0x01000000
+pattern PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT             = PipelineStageFlagBits2KHR 0x0000000001000000
 
 conNamePipelineStageFlagBits2KHR :: String
 conNamePipelineStageFlagBits2KHR = "PipelineStageFlagBits2KHR"
