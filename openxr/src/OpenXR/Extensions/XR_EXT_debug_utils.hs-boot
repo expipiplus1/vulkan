@@ -43,7 +43,9 @@ module OpenXR.Extensions.XR_EXT_debug_utils  ( DebugUtilsLabelEXT
                                              , DebugUtilsMessengerCreateInfoEXT
                                              , DebugUtilsObjectNameInfoEXT
                                              , DebugUtilsMessageSeverityFlagsEXT
+                                             , DebugUtilsMessageSeverityFlagBitsEXT
                                              , DebugUtilsMessageTypeFlagsEXT
+                                             , DebugUtilsMessageTypeFlagBitsEXT
                                              ) where
 
 import OpenXR.CStruct (FromCStruct)
@@ -82,8 +84,12 @@ instance Show DebugUtilsObjectNameInfoEXT
 instance FromCStruct DebugUtilsObjectNameInfoEXT
 
 
-data DebugUtilsMessageSeverityFlagsEXT
+type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
+
+data DebugUtilsMessageSeverityFlagBitsEXT
 
 
-data DebugUtilsMessageTypeFlagsEXT
+type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
+
+data DebugUtilsMessageTypeFlagBitsEXT
 

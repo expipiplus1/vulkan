@@ -46,8 +46,10 @@ module OpenXR.Extensions.XR_KHR_vulkan_enable2  ( createVulkanInstanceKHR
                                                 , VulkanInstanceCreateInfoKHR(..)
                                                 , VulkanDeviceCreateInfoKHR(..)
                                                 , VulkanGraphicsDeviceGetInfoKHR(..)
-                                                , VulkanInstanceCreateFlagsKHR(..)
-                                                , VulkanDeviceCreateFlagsKHR(..)
+                                                , VulkanInstanceCreateFlagsKHR
+                                                , VulkanInstanceCreateFlagBitsKHR(..)
+                                                , VulkanDeviceCreateFlagsKHR
+                                                , VulkanDeviceCreateFlagBitsKHR(..)
                                                 , GraphicsBindingVulkan2KHR
                                                 , SwapchainImageVulkan2KHR
                                                 , GraphicsRequirementsVulkan2KHR
@@ -742,70 +744,66 @@ instance Zero VulkanGraphicsDeviceGetInfoKHR where
            zero
 
 
--- | XrVulkanInstanceCreateFlagsKHR - Vulkan Instance Create Info Flags
---
--- = See Also
---
--- 'VulkanInstanceCreateInfoKHR'
-newtype VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR Flags64
+type VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagBitsKHR
+
+-- No documentation found for TopLevel "XrVulkanInstanceCreateFlagBitsKHR"
+newtype VulkanInstanceCreateFlagBitsKHR = VulkanInstanceCreateFlagBitsKHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
-conNameVulkanInstanceCreateFlagsKHR :: String
-conNameVulkanInstanceCreateFlagsKHR = "VulkanInstanceCreateFlagsKHR"
+conNameVulkanInstanceCreateFlagBitsKHR :: String
+conNameVulkanInstanceCreateFlagBitsKHR = "VulkanInstanceCreateFlagBitsKHR"
 
-enumPrefixVulkanInstanceCreateFlagsKHR :: String
-enumPrefixVulkanInstanceCreateFlagsKHR = ""
+enumPrefixVulkanInstanceCreateFlagBitsKHR :: String
+enumPrefixVulkanInstanceCreateFlagBitsKHR = ""
 
-showTableVulkanInstanceCreateFlagsKHR :: [(VulkanInstanceCreateFlagsKHR, String)]
-showTableVulkanInstanceCreateFlagsKHR = []
+showTableVulkanInstanceCreateFlagBitsKHR :: [(VulkanInstanceCreateFlagBitsKHR, String)]
+showTableVulkanInstanceCreateFlagBitsKHR = []
 
-instance Show VulkanInstanceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixVulkanInstanceCreateFlagsKHR
-                            showTableVulkanInstanceCreateFlagsKHR
-                            conNameVulkanInstanceCreateFlagsKHR
-                            (\(VulkanInstanceCreateFlagsKHR x) -> x)
+instance Show VulkanInstanceCreateFlagBitsKHR where
+  showsPrec = enumShowsPrec enumPrefixVulkanInstanceCreateFlagBitsKHR
+                            showTableVulkanInstanceCreateFlagBitsKHR
+                            conNameVulkanInstanceCreateFlagBitsKHR
+                            (\(VulkanInstanceCreateFlagBitsKHR x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read VulkanInstanceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixVulkanInstanceCreateFlagsKHR
-                          showTableVulkanInstanceCreateFlagsKHR
-                          conNameVulkanInstanceCreateFlagsKHR
-                          VulkanInstanceCreateFlagsKHR
+instance Read VulkanInstanceCreateFlagBitsKHR where
+  readPrec = enumReadPrec enumPrefixVulkanInstanceCreateFlagBitsKHR
+                          showTableVulkanInstanceCreateFlagBitsKHR
+                          conNameVulkanInstanceCreateFlagBitsKHR
+                          VulkanInstanceCreateFlagBitsKHR
 
 
--- | XrVulkanDeviceCreateFlagsKHR - Vulkan Device Create Info Flags
---
--- = See Also
---
--- 'VulkanDeviceCreateInfoKHR'
-newtype VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR Flags64
+type VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagBitsKHR
+
+-- No documentation found for TopLevel "XrVulkanDeviceCreateFlagBitsKHR"
+newtype VulkanDeviceCreateFlagBitsKHR = VulkanDeviceCreateFlagBitsKHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
-conNameVulkanDeviceCreateFlagsKHR :: String
-conNameVulkanDeviceCreateFlagsKHR = "VulkanDeviceCreateFlagsKHR"
+conNameVulkanDeviceCreateFlagBitsKHR :: String
+conNameVulkanDeviceCreateFlagBitsKHR = "VulkanDeviceCreateFlagBitsKHR"
 
-enumPrefixVulkanDeviceCreateFlagsKHR :: String
-enumPrefixVulkanDeviceCreateFlagsKHR = ""
+enumPrefixVulkanDeviceCreateFlagBitsKHR :: String
+enumPrefixVulkanDeviceCreateFlagBitsKHR = ""
 
-showTableVulkanDeviceCreateFlagsKHR :: [(VulkanDeviceCreateFlagsKHR, String)]
-showTableVulkanDeviceCreateFlagsKHR = []
+showTableVulkanDeviceCreateFlagBitsKHR :: [(VulkanDeviceCreateFlagBitsKHR, String)]
+showTableVulkanDeviceCreateFlagBitsKHR = []
 
-instance Show VulkanDeviceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixVulkanDeviceCreateFlagsKHR
-                            showTableVulkanDeviceCreateFlagsKHR
-                            conNameVulkanDeviceCreateFlagsKHR
-                            (\(VulkanDeviceCreateFlagsKHR x) -> x)
+instance Show VulkanDeviceCreateFlagBitsKHR where
+  showsPrec = enumShowsPrec enumPrefixVulkanDeviceCreateFlagBitsKHR
+                            showTableVulkanDeviceCreateFlagBitsKHR
+                            conNameVulkanDeviceCreateFlagBitsKHR
+                            (\(VulkanDeviceCreateFlagBitsKHR x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read VulkanDeviceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixVulkanDeviceCreateFlagsKHR
-                          showTableVulkanDeviceCreateFlagsKHR
-                          conNameVulkanDeviceCreateFlagsKHR
-                          VulkanDeviceCreateFlagsKHR
+instance Read VulkanDeviceCreateFlagBitsKHR where
+  readPrec = enumReadPrec enumPrefixVulkanDeviceCreateFlagBitsKHR
+                          showTableVulkanDeviceCreateFlagBitsKHR
+                          conNameVulkanDeviceCreateFlagBitsKHR
+                          VulkanDeviceCreateFlagBitsKHR
 
 
 -- | XrGraphicsBindingVulkan2KHR - The graphics binding structure to be

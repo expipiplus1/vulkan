@@ -95,7 +95,7 @@ import OpenXR.Core10.Handles (Space_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.FundamentalTypes (Time)
 import OpenXR.Core10.Enums.ViewConfigurationType (ViewConfigurationType)
-import OpenXR.Core10.Enums.ViewStateFlags (ViewStateFlags)
+import OpenXR.Core10.Enums.ViewStateFlagBits (ViewStateFlags)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_FRAME_BEGIN_INFO))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_FRAME_END_INFO))
@@ -806,16 +806,15 @@ instance Zero ViewLocateInfo where
 -- = See Also
 --
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'View',
--- 'OpenXR.Core10.Enums.ViewStateFlags.ViewStateFlags', 'locateViews'
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlags', 'locateViews'
 data ViewState = ViewState
   { -- | @viewStateFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlagBits XrViewStateFlagBits>
-    -- indicating state for all views.
+    -- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlagBits' indicating
+    -- state for all views.
     --
     -- #VUID-XrViewState-viewStateFlags-parameter# @viewStateFlags@ /must/ be
     -- @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlagBits XrViewStateFlagBits>
-    -- values
+    -- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlagBits' values
     viewStateFlags :: ViewStateFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

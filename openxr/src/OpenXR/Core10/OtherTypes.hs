@@ -73,7 +73,7 @@ import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_cylinder (Compo
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_depth (CompositionLayerDepthInfoKHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_equirect2 (CompositionLayerEquirect2KHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_equirect (CompositionLayerEquirectKHR)
-import OpenXR.Core10.Enums.CompositionLayerFlags (CompositionLayerFlags)
+import OpenXR.Core10.Enums.CompositionLayerFlagBits (CompositionLayerFlags)
 import OpenXR.Core10.FundamentalTypes (Duration)
 import {-# SOURCE #-} OpenXR.Extensions.XR_FB_display_refresh_rate (EventDataDisplayRefreshRateChangedFB)
 import {-# SOURCE #-} OpenXR.Extensions.XR_EXTX_overlay (EventDataMainSessionVisibilityChangedEXTX)
@@ -438,7 +438,7 @@ instance Zero SwapchainSubImage where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'OpenXR.Core10.DisplayTiming.FrameEndInfo',
 -- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationLayerInfoMSFT',
 -- 'OpenXR.Core10.Handles.Space',
@@ -467,12 +467,12 @@ data CompositionLayerBaseHeader (es :: [Type]) = CompositionLayerBaseHeader
     -- 'OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.CompositionLayerColorScaleBiasKHR'
     next :: Chain es
   , -- | @layerFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- describing flags to apply to the layer.
     --
     -- #VUID-XrCompositionLayerBaseHeader-layerFlags-parameter# @layerFlags@
     -- /must/ be @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- values
     layerFlags :: CompositionLayerFlags
   , -- | @space@ is the 'OpenXR.Core10.Handles.Space' in which the layer will be
@@ -687,7 +687,7 @@ instance es ~ '[] => Zero (CompositionLayerProjectionView es) where
 --
 -- -   #VUID-XrCompositionLayerProjection-layerFlags-parameter#
 --     @layerFlags@ /must/ be @0@ or a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+--     'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
 --     values
 --
 -- -   #VUID-XrCompositionLayerProjection-space-parameter# @space@ /must/
@@ -703,12 +703,12 @@ instance es ~ '[] => Zero (CompositionLayerProjectionView es) where
 -- = See Also
 --
 -- 'CompositionLayerBaseHeader',
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'CompositionLayerProjectionView', 'OpenXR.Core10.Handles.Space',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'SwapchainSubImage'
 data CompositionLayerProjection = CompositionLayerProjection
   { -- | @layerFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- describing flags to apply to the layer.
     layerFlags :: CompositionLayerFlags
   , -- | @space@ is the 'OpenXR.Core10.Handles.Space' in which the @pose@ of each
@@ -791,19 +791,19 @@ instance Zero CompositionLayerProjection where
 -- = See Also
 --
 -- 'CompositionLayerBaseHeader',
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'OpenXR.Core10.FundamentalTypes.Extent2Df',
 -- 'OpenXR.Core10.Enums.EyeVisibility.EyeVisibility',
 -- 'OpenXR.Core10.Space.Posef', 'OpenXR.Core10.Handles.Space',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'SwapchainSubImage'
 data CompositionLayerQuad = CompositionLayerQuad
   { -- | @layerFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- describing flags to apply to the layer.
     --
     -- #VUID-XrCompositionLayerQuad-layerFlags-parameter# @layerFlags@ /must/
     -- be @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- values
     layerFlags :: CompositionLayerFlags
   , -- | @space@ is the 'OpenXR.Core10.Handles.Space' in which the @pose@ of the

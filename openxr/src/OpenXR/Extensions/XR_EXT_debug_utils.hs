@@ -50,8 +50,20 @@ module OpenXR.Extensions.XR_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              , DebugUtilsLabelEXT(..)
                                              , DebugUtilsMessengerCallbackDataEXT(..)
                                              , DebugUtilsMessengerCreateInfoEXT(..)
-                                             , DebugUtilsMessageSeverityFlagsEXT(..)
-                                             , DebugUtilsMessageTypeFlagsEXT(..)
+                                             , DebugUtilsMessageSeverityFlagsEXT
+                                             , DebugUtilsMessageSeverityFlagBitsEXT( DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+                                                                                   , DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+                                                                                   , DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+                                                                                   , DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+                                                                                   , ..
+                                                                                   )
+                                             , DebugUtilsMessageTypeFlagsEXT
+                                             , DebugUtilsMessageTypeFlagBitsEXT( DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+                                                                               , DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+                                                                               , DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+                                                                               , DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+                                                                               , ..
+                                                                               )
                                              , PFN_xrDebugUtilsMessengerCallbackEXT
                                              , FN_xrDebugUtilsMessengerCallbackEXT
                                              , EXT_debug_utils_SPEC_VERSION
@@ -421,16 +433,14 @@ foreign import ccall
 --
 -- -   #VUID-xrSubmitDebugUtilsMessageEXT-messageSeverity-parameter#
 --     @messageSeverity@ /must/ be a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagBitsEXT XrDebugUtilsMessageSeverityFlagBitsEXT>
---     values
+--     'DebugUtilsMessageSeverityFlagBitsEXT' values
 --
 -- -   #VUID-xrSubmitDebugUtilsMessageEXT-messageSeverity-requiredbitmask#
 --     @messageSeverity@ /must/ not be @0@
 --
 -- -   #VUID-xrSubmitDebugUtilsMessageEXT-messageTypes-parameter#
 --     @messageTypes@ /must/ be a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagBitsEXT XrDebugUtilsMessageTypeFlagBitsEXT>
---     values
+--     'DebugUtilsMessageTypeFlagBitsEXT' values
 --
 -- -   #VUID-xrSubmitDebugUtilsMessageEXT-messageTypes-requiredbitmask#
 --     @messageTypes@ /must/ not be @0@
@@ -477,8 +487,8 @@ submitDebugUtilsMessageEXT :: forall io
                               -- 'DebugUtilsMessageSeverityFlagsEXT' severity of this event\/message.
                               DebugUtilsMessageSeverityFlagsEXT
                            -> -- | @messageTypes@ is an 'DebugUtilsMessageTypeFlagsEXT' bitmask of
-                              -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagBitsEXT XrDebugUtilsMessageTypeFlagBitsEXT>
-                              -- specifying which types of event to identify this message with.
+                              -- 'DebugUtilsMessageTypeFlagBitsEXT' specifying which types of event to
+                              -- identify this message with.
                               ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT)
                            -> -- | @callbackData@ contains all the callback related data in the
                               -- 'DebugUtilsMessengerCallbackDataEXT' structure.
@@ -1030,16 +1040,14 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 --
 -- -   #VUID-XrDebugUtilsMessengerCreateInfoEXT-messageSeverities-parameter#
 --     @messageSeverities@ /must/ be a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagBitsEXT XrDebugUtilsMessageSeverityFlagBitsEXT>
---     values
+--     'DebugUtilsMessageSeverityFlagBitsEXT' values
 --
 -- -   #VUID-XrDebugUtilsMessengerCreateInfoEXT-messageSeverities-requiredbitmask#
 --     @messageSeverities@ /must/ not be @0@
 --
 -- -   #VUID-XrDebugUtilsMessengerCreateInfoEXT-messageTypes-parameter#
 --     @messageTypes@ /must/ be a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagBitsEXT XrDebugUtilsMessageTypeFlagBitsEXT>
---     values
+--     'DebugUtilsMessageTypeFlagBitsEXT' values
 --
 -- -   #VUID-XrDebugUtilsMessengerCreateInfoEXT-messageTypes-requiredbitmask#
 --     @messageTypes@ /must/ not be @0@
@@ -1056,17 +1064,17 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 -- event occurs is as follows:
 --
 -- -   The runtime will perform a bitwise AND of the event’s
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagBitsEXT XrDebugUtilsMessageSeverityFlagBitsEXT>
---     with the 'DebugUtilsMessengerCreateInfoEXT'::@messageSeverities@
---     provided during creation of the
+--     'DebugUtilsMessageSeverityFlagBitsEXT' with the
+--     'DebugUtilsMessengerCreateInfoEXT'::@messageSeverities@ provided
+--     during creation of the
 --     'OpenXR.Extensions.Handles.DebugUtilsMessengerEXT' object.
 --
 -- -   If this results in @0@, the message is skipped.
 --
 -- -   The runtime will perform bitwise AND of the event’s
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagBitsEXT XrDebugUtilsMessageTypeFlagBitsEXT>
---     with the 'DebugUtilsMessengerCreateInfoEXT'::@messageTypes@ provided
---     during the creation of the
+--     'DebugUtilsMessageTypeFlagBitsEXT' with the
+--     'DebugUtilsMessengerCreateInfoEXT'::@messageTypes@ provided during
+--     the creation of the
 --     'OpenXR.Extensions.Handles.DebugUtilsMessengerEXT' object.
 --
 -- -   If this results in @0@, the message is skipped.
@@ -1086,12 +1094,10 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 -- 'createDebugUtilsMessengerEXT'
 data DebugUtilsMessengerCreateInfoEXT = DebugUtilsMessengerCreateInfoEXT
   { -- | @messageSeverities@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageSeverityFlagBitsEXT XrDebugUtilsMessageSeverityFlagBitsEXT>
-    -- specifying which severity of event(s) that will cause this callback to
-    -- be called.
+    -- 'DebugUtilsMessageSeverityFlagBitsEXT' specifying which severity of
+    -- event(s) that will cause this callback to be called.
     messageSeverities :: DebugUtilsMessageSeverityFlagsEXT
-  , -- | @messageTypes@ is a combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrDebugUtilsMessageTypeFlagBitsEXT XrDebugUtilsMessageTypeFlagBitsEXT>
+  , -- | @messageTypes@ is a combination of 'DebugUtilsMessageTypeFlagBitsEXT'
     -- specifying which type of event(s) will cause this callback to be called.
     messageTypes :: DebugUtilsMessageTypeFlagsEXT
   , -- | @userCallback@ is the application defined callback function to call.
@@ -1106,36 +1112,36 @@ deriving instance Generic (DebugUtilsMessengerCreateInfoEXT)
 deriving instance Show DebugUtilsMessengerCreateInfoEXT
 
 instance ToCStruct DebugUtilsMessengerCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr DebugUtilsMessageSeverityFlagsEXT)) (messageSeverities)
-    poke ((p `plusPtr` 20 :: Ptr DebugUtilsMessageTypeFlagsEXT)) (messageTypes)
-    poke ((p `plusPtr` 24 :: Ptr PFN_xrDebugUtilsMessengerCallbackEXT)) (userCallback)
-    poke ((p `plusPtr` 32 :: Ptr (Ptr ()))) (userData)
+    poke ((p `plusPtr` 24 :: Ptr DebugUtilsMessageTypeFlagsEXT)) (messageTypes)
+    poke ((p `plusPtr` 32 :: Ptr PFN_xrDebugUtilsMessengerCallbackEXT)) (userCallback)
+    poke ((p `plusPtr` 40 :: Ptr (Ptr ()))) (userData)
     f
-  cStructSize = 40
+  cStructSize = 48
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr DebugUtilsMessageSeverityFlagsEXT)) (zero)
-    poke ((p `plusPtr` 20 :: Ptr DebugUtilsMessageTypeFlagsEXT)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr PFN_xrDebugUtilsMessengerCallbackEXT)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr DebugUtilsMessageTypeFlagsEXT)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr PFN_xrDebugUtilsMessengerCallbackEXT)) (zero)
     f
 
 instance FromCStruct DebugUtilsMessengerCreateInfoEXT where
   peekCStruct p = do
     messageSeverities <- peek @DebugUtilsMessageSeverityFlagsEXT ((p `plusPtr` 16 :: Ptr DebugUtilsMessageSeverityFlagsEXT))
-    messageTypes <- peek @DebugUtilsMessageTypeFlagsEXT ((p `plusPtr` 20 :: Ptr DebugUtilsMessageTypeFlagsEXT))
-    userCallback <- peek @PFN_xrDebugUtilsMessengerCallbackEXT ((p `plusPtr` 24 :: Ptr PFN_xrDebugUtilsMessengerCallbackEXT))
-    userData <- peek @(Ptr ()) ((p `plusPtr` 32 :: Ptr (Ptr ())))
+    messageTypes <- peek @DebugUtilsMessageTypeFlagsEXT ((p `plusPtr` 24 :: Ptr DebugUtilsMessageTypeFlagsEXT))
+    userCallback <- peek @PFN_xrDebugUtilsMessengerCallbackEXT ((p `plusPtr` 32 :: Ptr PFN_xrDebugUtilsMessengerCallbackEXT))
+    userData <- peek @(Ptr ()) ((p `plusPtr` 40 :: Ptr (Ptr ())))
     pure $ DebugUtilsMessengerCreateInfoEXT
              messageSeverities messageTypes userCallback userData
 
 instance Storable DebugUtilsMessengerCreateInfoEXT where
-  sizeOf ~_ = 40
+  sizeOf ~_ = 48
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -1148,71 +1154,99 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
            zero
 
 
--- | XrDebugUtilsMessageSeverityFlagsEXT -
--- XrDebugUtilsMessageSeverityFlagsEXT
+type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
+
+-- | XrDebugUtilsMessageSeverityFlagBitsEXT -
+-- XrDebugUtilsMessageSeverityFlagBitsEXT
 --
 -- = See Also
 --
--- 'DebugUtilsMessengerCreateInfoEXT', 'submitDebugUtilsMessageEXT'
-newtype DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT Flags64
+-- No cross-references are available
+newtype DebugUtilsMessageSeverityFlagBitsEXT = DebugUtilsMessageSeverityFlagBitsEXT Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000000001
+-- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT    = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000000010
+-- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000000100
+-- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000001000
 
+conNameDebugUtilsMessageSeverityFlagBitsEXT :: String
+conNameDebugUtilsMessageSeverityFlagBitsEXT = "DebugUtilsMessageSeverityFlagBitsEXT"
 
-conNameDebugUtilsMessageSeverityFlagsEXT :: String
-conNameDebugUtilsMessageSeverityFlagsEXT = "DebugUtilsMessageSeverityFlagsEXT"
+enumPrefixDebugUtilsMessageSeverityFlagBitsEXT :: String
+enumPrefixDebugUtilsMessageSeverityFlagBitsEXT = "DEBUG_UTILS_MESSAGE_SEVERITY_"
 
-enumPrefixDebugUtilsMessageSeverityFlagsEXT :: String
-enumPrefixDebugUtilsMessageSeverityFlagsEXT = ""
+showTableDebugUtilsMessageSeverityFlagBitsEXT :: [(DebugUtilsMessageSeverityFlagBitsEXT, String)]
+showTableDebugUtilsMessageSeverityFlagBitsEXT =
+  [ (DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT, "VERBOSE_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT   , "INFO_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT, "WARNING_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT  , "ERROR_BIT_EXT")
+  ]
 
-showTableDebugUtilsMessageSeverityFlagsEXT :: [(DebugUtilsMessageSeverityFlagsEXT, String)]
-showTableDebugUtilsMessageSeverityFlagsEXT = []
-
-instance Show DebugUtilsMessageSeverityFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageSeverityFlagsEXT
-                            showTableDebugUtilsMessageSeverityFlagsEXT
-                            conNameDebugUtilsMessageSeverityFlagsEXT
-                            (\(DebugUtilsMessageSeverityFlagsEXT x) -> x)
+instance Show DebugUtilsMessageSeverityFlagBitsEXT where
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+                            showTableDebugUtilsMessageSeverityFlagBitsEXT
+                            conNameDebugUtilsMessageSeverityFlagBitsEXT
+                            (\(DebugUtilsMessageSeverityFlagBitsEXT x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read DebugUtilsMessageSeverityFlagsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessageSeverityFlagsEXT
-                          showTableDebugUtilsMessageSeverityFlagsEXT
-                          conNameDebugUtilsMessageSeverityFlagsEXT
-                          DebugUtilsMessageSeverityFlagsEXT
+instance Read DebugUtilsMessageSeverityFlagBitsEXT where
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+                          showTableDebugUtilsMessageSeverityFlagBitsEXT
+                          conNameDebugUtilsMessageSeverityFlagBitsEXT
+                          DebugUtilsMessageSeverityFlagBitsEXT
 
 
--- | XrDebugUtilsMessageTypeFlagsEXT - XrDebugUtilsMessageTypeFlagsEXT
+type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
+
+-- | XrDebugUtilsMessageTypeFlagBitsEXT - XrDebugUtilsMessageTypeFlagBitsEXT
 --
 -- = See Also
 --
--- 'DebugUtilsMessengerCreateInfoEXT', 'submitDebugUtilsMessageEXT'
-newtype DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT Flags64
+-- No cross-references are available
+newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000001
+-- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000002
+-- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000004
+-- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT"
+pattern DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000008
 
+conNameDebugUtilsMessageTypeFlagBitsEXT :: String
+conNameDebugUtilsMessageTypeFlagBitsEXT = "DebugUtilsMessageTypeFlagBitsEXT"
 
-conNameDebugUtilsMessageTypeFlagsEXT :: String
-conNameDebugUtilsMessageTypeFlagsEXT = "DebugUtilsMessageTypeFlagsEXT"
+enumPrefixDebugUtilsMessageTypeFlagBitsEXT :: String
+enumPrefixDebugUtilsMessageTypeFlagBitsEXT = "DEBUG_UTILS_MESSAGE_TYPE_"
 
-enumPrefixDebugUtilsMessageTypeFlagsEXT :: String
-enumPrefixDebugUtilsMessageTypeFlagsEXT = ""
+showTableDebugUtilsMessageTypeFlagBitsEXT :: [(DebugUtilsMessageTypeFlagBitsEXT, String)]
+showTableDebugUtilsMessageTypeFlagBitsEXT =
+  [ (DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT    , "GENERAL_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT , "VALIDATION_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT, "PERFORMANCE_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT, "CONFORMANCE_BIT_EXT")
+  ]
 
-showTableDebugUtilsMessageTypeFlagsEXT :: [(DebugUtilsMessageTypeFlagsEXT, String)]
-showTableDebugUtilsMessageTypeFlagsEXT = []
-
-instance Show DebugUtilsMessageTypeFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageTypeFlagsEXT
-                            showTableDebugUtilsMessageTypeFlagsEXT
-                            conNameDebugUtilsMessageTypeFlagsEXT
-                            (\(DebugUtilsMessageTypeFlagsEXT x) -> x)
+instance Show DebugUtilsMessageTypeFlagBitsEXT where
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+                            showTableDebugUtilsMessageTypeFlagBitsEXT
+                            conNameDebugUtilsMessageTypeFlagBitsEXT
+                            (\(DebugUtilsMessageTypeFlagBitsEXT x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read DebugUtilsMessageTypeFlagsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessageTypeFlagsEXT
-                          showTableDebugUtilsMessageTypeFlagsEXT
-                          conNameDebugUtilsMessageTypeFlagsEXT
-                          DebugUtilsMessageTypeFlagsEXT
+instance Read DebugUtilsMessageTypeFlagBitsEXT where
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+                          showTableDebugUtilsMessageTypeFlagBitsEXT
+                          conNameDebugUtilsMessageTypeFlagBitsEXT
+                          DebugUtilsMessageTypeFlagBitsEXT
 
 
 type FN_xrDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> Ptr DebugUtilsMessengerCallbackDataEXT -> ("userData" ::: Ptr ()) -> IO Bool32

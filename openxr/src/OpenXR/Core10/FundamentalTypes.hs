@@ -475,13 +475,13 @@ instance Read Bool32 where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
--- 'OpenXR.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags',
--- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags',
--- 'OpenXR.Core10.Enums.SpaceLocationFlags.SpaceLocationFlags',
--- 'OpenXR.Core10.Enums.SwapchainCreateFlags.SwapchainCreateFlags',
--- 'OpenXR.Core10.Enums.SwapchainUsageFlags.SwapchainUsageFlags',
--- 'OpenXR.Core10.Enums.ViewStateFlags.ViewStateFlags'
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlags',
+-- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags',
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlags',
+-- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SwapchainCreateFlags',
+-- 'OpenXR.Core10.Enums.SwapchainUsageFlagBits.SwapchainUsageFlags',
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlags'
 type Flags64 = Word64
 
 

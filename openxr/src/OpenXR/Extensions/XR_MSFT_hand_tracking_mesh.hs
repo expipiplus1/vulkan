@@ -158,17 +158,21 @@ foreign import ccall
 -- hand mesh space may be not locatable when the hand is outside of the
 -- tracking range, or if focus is removed from the application. In these
 -- cases, the runtime /must/ not set the
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and
--- @XR_SPACE_LOCATION_ORIENTATION_VALID_BIT@ bits on calls to
--- 'OpenXR.Core10.Space.locateSpace' with the hand mesh space, and the
--- application /should/ avoid using the returned poses or query for hand
--- mesh data.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_ORIENTATION_VALID_BIT'
+-- bits on calls to 'OpenXR.Core10.Space.locateSpace' with the hand mesh
+-- space, and the application /should/ avoid using the returned poses or
+-- query for hand mesh data.
 --
 -- If the underlying 'OpenXR.Extensions.Handles.HandTrackerEXT' is
 -- destroyed, the runtime /must/ continue to support
 -- 'OpenXR.Core10.Space.locateSpace' using the hand mesh space, and it
--- /must/ return space location with @XR_SPACE_LOCATION_POSITION_VALID_BIT@
--- and @XR_SPACE_LOCATION_ORIENTATION_VALID_BIT@ unset.
+-- /must/ return space location with
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_ORIENTATION_VALID_BIT'
+-- unset.
 --
 -- The application /may/ create a mesh space for the reference hand by
 -- setting @handPoseType@ to 'HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT'.
