@@ -33,7 +33,6 @@ module VulkanMemoryAllocator  ( createAllocator
                               , withMemoryForImage
                               , freeMemory
                               , freeMemoryPages
-                              , resizeAllocation
                               , getAllocationInfo
                               , touchAllocation
                               , setAllocationUserData
@@ -1191,36 +1190,6 @@ freeMemoryPages allocator allocations = liftIO . evalContT $ do
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   lift $ traceAroundEvent "vmaFreeMemoryPages" ((ffiVmaFreeMemoryPages) (allocator) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocations))
   pure $ ()
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vmaResizeAllocation" ffiVmaResizeAllocation
-  :: Allocator -> Allocation -> DeviceSize -> IO Result
-
--- | Deprecated.
---
--- /Deprecated/
---
--- In version 2.2.0 it used to try to change allocation\'s size without
--- moving or reallocating it. In current version it returns @VK_SUCCESS@
--- only if @newSize@ equals current allocation\'s size. Otherwise returns
--- @VK_ERROR_OUT_OF_POOL_MEMORY@, indicating that allocation\'s size could
--- not be changed.
-resizeAllocation :: forall io
-                  . (MonadIO io)
-                 => -- No documentation found for Nested "vmaResizeAllocation" "allocator"
-                    Allocator
-                 -> -- No documentation found for Nested "vmaResizeAllocation" "allocation"
-                    Allocation
-                 -> -- No documentation found for Nested "vmaResizeAllocation" "newSize"
-                    ("newSize" ::: DeviceSize)
-                 -> io ()
-resizeAllocation allocator allocation newSize = liftIO $ do
-  r <- traceAroundEvent "vmaResizeAllocation" ((ffiVmaResizeAllocation) (allocator) (allocation) (newSize))
-  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall

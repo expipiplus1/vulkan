@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump VMA, deprecates resizeAllocation
 
 ## [0.4] - 2021-02-18
 - Bump VMA, support for VK_EXT_memory_priority
