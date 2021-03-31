@@ -863,6 +863,7 @@ bespokeElements = \case
       $  shared
       <> [ baseType "VkSampleMask"    ''Word32
          , baseType "VkFlags"         ''Word32
+         , baseType "VkFlags64"       ''Word64
          , baseType "VkDeviceSize"    ''Word64
          , baseType "VkDeviceAddress" ''Word64
          ]

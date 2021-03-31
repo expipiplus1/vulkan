@@ -56,6 +56,7 @@ renderParams handles = r
     , lowerPrefix                    = "vma"
     , upperPrefix                    = "VMA"
     , flagsTypeName                  = "VkFlags"
+    , flags64TypeName                = "VkFlags64"
     , alwaysQualifiedNames           = mempty
     , extraNewtypes                  = mempty
     , mkIdiomaticType = let dropVulkanModule = transformBi

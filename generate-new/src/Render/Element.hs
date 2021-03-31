@@ -251,7 +251,9 @@ data RenderParams = RenderParams
   , upperPrefix                 :: Text
     -- ^ "VK" or "XR" or "VMA"
   , flagsTypeName               :: CName
-    -- ^ "VkFlags" or "XrFlags64"
+    -- ^ 32 bit flag type
+  , flags64TypeName             :: CName
+    -- ^ 64 bit flag type
   , alwaysQualifiedNames        :: Vector Name
   , extraNewtypes               :: Vector Name
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType

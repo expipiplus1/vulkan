@@ -27,9 +27,9 @@ marshalParams spec@Spec {..} = do
     bitmaskNames :: HashSet CName
     bitmaskNames = fromList
       [ n
-      | Enum {..}      <- toList specEnums
-      , ABitmask flags <- pure eType
-      , n              <- [eName, flags]
+      | Enum {..}        <- toList specEnums
+      , ABitmask flags _ <- pure eType
+      , n                <- [eName, flags]
       ]
     isBitmask     = (`member` bitmaskNames)
     isBitmaskType = \case
