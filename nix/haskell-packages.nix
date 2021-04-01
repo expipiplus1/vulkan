@@ -66,7 +66,7 @@ let
           (addBuildTools (mod drv) [ pkgs.glslang pkgs.shaderc ])
           pkgs.renderdoc;
         returnShellEnv = false;
-        cabal2nixOptions = "--flag=renderdoc";
+        cabal2nixOptions = "--flag=renderdoc --flag=vr";
       };
       generate-new = self.developPackage {
         name = "generate-new";

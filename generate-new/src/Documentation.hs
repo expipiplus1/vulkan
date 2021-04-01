@@ -117,8 +117,14 @@ splitDocumentation parent (Pandoc meta bs) = do
     -- If the description section is a list of documentation for enumeration
     -- values or members, split them into separate documentation elements
     xs@(Section sectionTag bs'' rem)
-      | h : _ <- xs, sectionTag
-        `elem` ["_parameters", "_description", "_members"]
+      | h : _ <- xs
+      , sectionTag
+        `elem` [ "_parameters"
+               , "_description"
+               , "_members"
+               , "fundamentals-successcodes"
+               , "fundamentals-errorcodes"
+               ]
       -> case memberDocs parent m bs'' of
         Left  _                    -> pure (Nothing, xs)
         Right (ds, []            ) -> pure (Just ds, rem)
@@ -166,6 +172,8 @@ memberDocs parent m blocks =
           enumDoc :: [Block] -> Either Text Documentation
           enumDoc = \case
             p@(Para (dropBeginningSpan -> Code ("", [], []) memberName : _)) : ps
+              | -- To avoid drawing in a list of suffixes (OpenXR's XrResult)
+                not ("_" `T.isPrefixOf` memberName)
               -> pure Documentation
                 { dDocumentee    = Nested parent (CName memberName)
                 , dDocumentation = Pandoc m (p : ps)
@@ -173,6 +181,18 @@ memberDocs parent m blocks =
             _ -> Left "Unhandled member documentation declaration"
         in
           (, []) <$> traverse enumDoc bullets
+      Table _attrs _caption _align (TableHead _ [Row _ [Cell _ _ _ _ [Plain [Str "Enum"]], Cell _ _ _ _ [Plain [Str "Description"]]]]) [TableBody _ _ [] rows] _foot
+        -> let
+             enumDoc :: Row -> Either Text Documentation
+             enumDoc = \case
+               (Row _ [Cell _ _ _ _ [Para [Code ("", [], []) memberName]], Cell _ _ _ _ bs])
+                 -> pure Documentation
+                   { dDocumentee    = Nested parent (CName memberName)
+                   , dDocumentation = Pandoc m bs
+                   }
+               _ -> Left "Unhandled enum doc row"
+           in
+             (, []) <$> traverse enumDoc rows
       d -> Right ([], [d])
   in  mconcat <$> traverse extractBulletList blocks
 

@@ -1,6 +1,10 @@
 cabal-version: 2.2
 
+<<<<<<< HEAD
 -- This file has been generated from package.yaml by hpack version 0.34.4.
+=======
+-- This file has been generated from package.yaml by hpack version 0.34.3.
+>>>>>>> 27af240b (Up to creating swapchains for vrcube)
 --
 -- see: https://github.com/sol/hpack
 
@@ -628,6 +632,11 @@ executable timeline-semaphore
 executable vrcube
   main-is: Main.hs
   other-modules:
+      InitVk
+      InitXr
+      MonadVulkan
+      MonadXr
+      XrUtils
       Paths_vulkan_examples
   hs-source-dirs:
       vrcube
@@ -680,10 +689,10 @@ executable vrcube
     , nothunks >=0.1.2
     , opentelemetry
     , openxr
+    , pretty-simple
     , random
     , resourcet >=1.2.4
     , say
-    , sdl2 >=2.5.2.0
     , template-haskell
     , text
     , transformers

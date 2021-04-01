@@ -203,7 +203,6 @@ executables:
     source-dirs: vrcube
     dependencies:
     - VulkanMemoryAllocator
-    - openxr
     - autoapply >= 0.4
     - base <5
     - bytestring
@@ -215,10 +214,11 @@ executables:
     - linear
     - nothunks >= 0.1.2
     - opentelemetry
+    - openxr
+    - pretty-simple
     - random
     - resourcet >= 1.2.4
     - say
-    - sdl2 >= 2.5.2.0
     - template-haskell
     - text
     - transformers
@@ -255,8 +255,8 @@ flags:
     default: yes
     manual: yes
   vr:
-    description: Set this flag if you have a system with the OpenXR loader
-      installed. It enables building the OpenXR examples.
+    description: Set this flag if you have a system with the OpenXR loader installed.
+      It enables building the OpenXR examples.
     default: no
     manual: yes
 

@@ -125,133 +125,169 @@ pattern FAILED <- ((SUCCESS >) -> True)
 -- Some common suffixes shared across many of the return codes are defined
 -- below:
 --
+-- -   @_INVALID@: The specified handle, atom or value is formatted
+--     incorrectly, or the specified handle was never created or has been
+--     destroyed.
+--
+-- -   @_UNSUPPORTED@: The specified handle, atom, enumerant or value is
+--     formatted correctly but cannot be used for the lifetime of this
+--     function’s parent handle.
+--
+-- -   @_UNAVAILABLE@: The specified handle, atom, enumerant or value is
+--     supported by this function’s parent handle but not at this moment.
+--
 -- = See Also
 --
 -- 'OpenXR.Core10.Instance.resultToString'
 newtype Result = Result Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- No documentation found for Nested "XrResult" "XR_SUCCESS"
+-- | Function successfully completed.
 pattern SUCCESS                            = Result 0
--- No documentation found for Nested "XrResult" "XR_TIMEOUT_EXPIRED"
+-- | The specified timeout time occurred before the operation could complete.
 pattern TIMEOUT_EXPIRED                    = Result 1
--- No documentation found for Nested "XrResult" "XR_SESSION_LOSS_PENDING"
+-- | The session will be lost soon.
 pattern SESSION_LOSS_PENDING               = Result 3
--- No documentation found for Nested "XrResult" "XR_EVENT_UNAVAILABLE"
+-- | No event was available.
 pattern EVENT_UNAVAILABLE                  = Result 4
--- No documentation found for Nested "XrResult" "XR_SPACE_BOUNDS_UNAVAILABLE"
+-- | The space’s bounds are not known at the moment.
 pattern SPACE_BOUNDS_UNAVAILABLE           = Result 7
--- No documentation found for Nested "XrResult" "XR_SESSION_NOT_FOCUSED"
+-- | The session is not in the focused state.
 pattern SESSION_NOT_FOCUSED                = Result 8
--- No documentation found for Nested "XrResult" "XR_FRAME_DISCARDED"
+-- | A frame has been discarded from composition.
 pattern FRAME_DISCARDED                    = Result 9
--- No documentation found for Nested "XrResult" "XR_ERROR_VALIDATION_FAILURE"
+-- | The function usage was invalid in some way.
 pattern ERROR_VALIDATION_FAILURE           = Result (-1)
--- No documentation found for Nested "XrResult" "XR_ERROR_RUNTIME_FAILURE"
+-- | The runtime failed to handle the function in an unexpected way that is
+-- not covered by another error result.
 pattern ERROR_RUNTIME_FAILURE              = Result (-2)
--- No documentation found for Nested "XrResult" "XR_ERROR_OUT_OF_MEMORY"
+-- | A memory allocation has failed.
 pattern ERROR_OUT_OF_MEMORY                = Result (-3)
--- No documentation found for Nested "XrResult" "XR_ERROR_API_VERSION_UNSUPPORTED"
+-- | The runtime does not support the requested API version.
 pattern ERROR_API_VERSION_UNSUPPORTED      = Result (-4)
--- No documentation found for Nested "XrResult" "XR_ERROR_INITIALIZATION_FAILED"
+-- | Initialization of object could not be completed.
 pattern ERROR_INITIALIZATION_FAILED        = Result (-6)
--- No documentation found for Nested "XrResult" "XR_ERROR_FUNCTION_UNSUPPORTED"
+-- | The requested function was not found or is otherwise unsupported.
 pattern ERROR_FUNCTION_UNSUPPORTED         = Result (-7)
--- No documentation found for Nested "XrResult" "XR_ERROR_FEATURE_UNSUPPORTED"
+-- | The requested feature is not supported.
 pattern ERROR_FEATURE_UNSUPPORTED          = Result (-8)
--- No documentation found for Nested "XrResult" "XR_ERROR_EXTENSION_NOT_PRESENT"
+-- | A requested extension is not supported.
 pattern ERROR_EXTENSION_NOT_PRESENT        = Result (-9)
--- No documentation found for Nested "XrResult" "XR_ERROR_LIMIT_REACHED"
+-- | The runtime supports no more of the requested resource.
 pattern ERROR_LIMIT_REACHED                = Result (-10)
--- No documentation found for Nested "XrResult" "XR_ERROR_SIZE_INSUFFICIENT"
+-- | The supplied size was smaller than required.
 pattern ERROR_SIZE_INSUFFICIENT            = Result (-11)
--- No documentation found for Nested "XrResult" "XR_ERROR_HANDLE_INVALID"
+-- | A supplied object handle was invalid.
 pattern ERROR_HANDLE_INVALID               = Result (-12)
--- No documentation found for Nested "XrResult" "XR_ERROR_INSTANCE_LOST"
+-- | The 'OpenXR.Core10.Handles.Instance' was lost or could not be found. It
+-- will need to be destroyed and optionally recreated.
 pattern ERROR_INSTANCE_LOST                = Result (-13)
--- No documentation found for Nested "XrResult" "XR_ERROR_SESSION_RUNNING"
+-- | The session
+-- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#session_running is already running>.
 pattern ERROR_SESSION_RUNNING              = Result (-14)
--- No documentation found for Nested "XrResult" "XR_ERROR_SESSION_NOT_RUNNING"
+-- | The session
+-- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#session_not_running is not yet running>.
 pattern ERROR_SESSION_NOT_RUNNING          = Result (-16)
--- No documentation found for Nested "XrResult" "XR_ERROR_SESSION_LOST"
+-- | The 'OpenXR.Core10.Handles.Session' was lost. It will need to be
+-- destroyed and optionally recreated.
 pattern ERROR_SESSION_LOST                 = Result (-17)
--- No documentation found for Nested "XrResult" "XR_ERROR_SYSTEM_INVALID"
+-- | The provided
+-- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId >
+-- was invalid.
 pattern ERROR_SYSTEM_INVALID               = Result (-18)
--- No documentation found for Nested "XrResult" "XR_ERROR_PATH_INVALID"
+-- | The provided
+-- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrPath >
+-- was not valid.
 pattern ERROR_PATH_INVALID                 = Result (-19)
--- No documentation found for Nested "XrResult" "XR_ERROR_PATH_COUNT_EXCEEDED"
+-- | The maximum number of supported semantic paths has been reached.
 pattern ERROR_PATH_COUNT_EXCEEDED          = Result (-20)
--- No documentation found for Nested "XrResult" "XR_ERROR_PATH_FORMAT_INVALID"
+-- | The semantic path character format is invalid.
 pattern ERROR_PATH_FORMAT_INVALID          = Result (-21)
--- No documentation found for Nested "XrResult" "XR_ERROR_PATH_UNSUPPORTED"
+-- | The semantic path is unsupported.
 pattern ERROR_PATH_UNSUPPORTED             = Result (-22)
--- No documentation found for Nested "XrResult" "XR_ERROR_LAYER_INVALID"
+-- | The layer was NULL or otherwise invalid.
 pattern ERROR_LAYER_INVALID                = Result (-23)
--- No documentation found for Nested "XrResult" "XR_ERROR_LAYER_LIMIT_EXCEEDED"
+-- | The number of specified layers is greater than the supported number.
 pattern ERROR_LAYER_LIMIT_EXCEEDED         = Result (-24)
--- No documentation found for Nested "XrResult" "XR_ERROR_SWAPCHAIN_RECT_INVALID"
+-- | The image rect was negatively sized or otherwise invalid.
 pattern ERROR_SWAPCHAIN_RECT_INVALID       = Result (-25)
--- No documentation found for Nested "XrResult" "XR_ERROR_SWAPCHAIN_FORMAT_UNSUPPORTED"
+-- | The image format is not supported by the runtime or platform.
 pattern ERROR_SWAPCHAIN_FORMAT_UNSUPPORTED = Result (-26)
--- No documentation found for Nested "XrResult" "XR_ERROR_ACTION_TYPE_MISMATCH"
+-- | The API used to retrieve an action’s state does not match the action’s
+-- type.
 pattern ERROR_ACTION_TYPE_MISMATCH         = Result (-27)
--- No documentation found for Nested "XrResult" "XR_ERROR_SESSION_NOT_READY"
+-- | The session is not in the ready state.
 pattern ERROR_SESSION_NOT_READY            = Result (-28)
--- No documentation found for Nested "XrResult" "XR_ERROR_SESSION_NOT_STOPPING"
+-- | The session is not in the stopping state.
 pattern ERROR_SESSION_NOT_STOPPING         = Result (-29)
--- No documentation found for Nested "XrResult" "XR_ERROR_TIME_INVALID"
+-- | The provided
+-- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrTime >
+-- was zero, negative, or out of range.
 pattern ERROR_TIME_INVALID                 = Result (-30)
--- No documentation found for Nested "XrResult" "XR_ERROR_REFERENCE_SPACE_UNSUPPORTED"
+-- | The specified reference space is not supported by the runtime or system.
 pattern ERROR_REFERENCE_SPACE_UNSUPPORTED  = Result (-31)
--- No documentation found for Nested "XrResult" "XR_ERROR_FILE_ACCESS_ERROR"
+-- | The file could not be accessed.
 pattern ERROR_FILE_ACCESS_ERROR            = Result (-32)
--- No documentation found for Nested "XrResult" "XR_ERROR_FILE_CONTENTS_INVALID"
+-- | The file’s contents were invalid.
 pattern ERROR_FILE_CONTENTS_INVALID        = Result (-33)
--- No documentation found for Nested "XrResult" "XR_ERROR_FORM_FACTOR_UNSUPPORTED"
+-- | The specified form factor is not supported by the current runtime or
+-- platform.
 pattern ERROR_FORM_FACTOR_UNSUPPORTED      = Result (-34)
--- No documentation found for Nested "XrResult" "XR_ERROR_FORM_FACTOR_UNAVAILABLE"
+-- | The specified form factor is supported, but the device is currently not
+-- available, e.g. not plugged in or powered off.
 pattern ERROR_FORM_FACTOR_UNAVAILABLE      = Result (-35)
--- No documentation found for Nested "XrResult" "XR_ERROR_API_LAYER_NOT_PRESENT"
+-- | A requested API layer is not present or could not be loaded.
 pattern ERROR_API_LAYER_NOT_PRESENT        = Result (-36)
--- No documentation found for Nested "XrResult" "XR_ERROR_CALL_ORDER_INVALID"
+-- | The call was made without having made a previously required call.
 pattern ERROR_CALL_ORDER_INVALID           = Result (-37)
--- No documentation found for Nested "XrResult" "XR_ERROR_GRAPHICS_DEVICE_INVALID"
+-- | The given graphics device is not in a valid state. The graphics device
+-- could be lost or initialized without meeting graphics requirements.
 pattern ERROR_GRAPHICS_DEVICE_INVALID      = Result (-38)
--- No documentation found for Nested "XrResult" "XR_ERROR_POSE_INVALID"
+-- | The supplied pose was invalid with respect to the requirements.
 pattern ERROR_POSE_INVALID                 = Result (-39)
--- No documentation found for Nested "XrResult" "XR_ERROR_INDEX_OUT_OF_RANGE"
+-- | The supplied index was outside the range of valid indices.
 pattern ERROR_INDEX_OUT_OF_RANGE           = Result (-40)
--- No documentation found for Nested "XrResult" "XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED"
+-- | The specified view configuration type is not supported by the runtime or
+-- platform.
 pattern ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED = Result (-41)
--- No documentation found for Nested "XrResult" "XR_ERROR_ENVIRONMENT_BLEND_MODE_UNSUPPORTED"
+-- | The specified environment blend mode is not supported by the runtime or
+-- platform.
 pattern ERROR_ENVIRONMENT_BLEND_MODE_UNSUPPORTED = Result (-42)
--- No documentation found for Nested "XrResult" "XR_ERROR_NAME_DUPLICATED"
+-- | The name provided was a duplicate of an already-existing resource.
 pattern ERROR_NAME_DUPLICATED              = Result (-44)
--- No documentation found for Nested "XrResult" "XR_ERROR_NAME_INVALID"
+-- | The name provided was invalid.
 pattern ERROR_NAME_INVALID                 = Result (-45)
--- No documentation found for Nested "XrResult" "XR_ERROR_ACTIONSET_NOT_ATTACHED"
+-- | A referenced action set is not attached to the session.
 pattern ERROR_ACTIONSET_NOT_ATTACHED       = Result (-46)
--- No documentation found for Nested "XrResult" "XR_ERROR_ACTIONSETS_ALREADY_ATTACHED"
+-- | The session already has attached action sets.
 pattern ERROR_ACTIONSETS_ALREADY_ATTACHED  = Result (-47)
--- No documentation found for Nested "XrResult" "XR_ERROR_LOCALIZED_NAME_DUPLICATED"
+-- | The localized name provided was a duplicate of an already-existing
+-- resource.
 pattern ERROR_LOCALIZED_NAME_DUPLICATED    = Result (-48)
--- No documentation found for Nested "XrResult" "XR_ERROR_LOCALIZED_NAME_INVALID"
+-- | The localized name provided was invalid.
 pattern ERROR_LOCALIZED_NAME_INVALID       = Result (-49)
--- No documentation found for Nested "XrResult" "XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING"
+-- | The @xrGetGraphicsRequirements@* call was not made before calling
+-- 'OpenXR.Core10.Device.createSession'.
 pattern ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING = Result (-50)
--- No documentation found for Nested "XrResult" "XR_ERROR_COLOR_SPACE_UNSUPPORTED_FB"
+-- | The color space is not supported by the runtime. (Added by the @@
+-- extension)
 pattern ERROR_COLOR_SPACE_UNSUPPORTED_FB   = Result (-1000108000)
--- No documentation found for Nested "XrResult" "XR_ERROR_DISPLAY_REFRESH_RATE_UNSUPPORTED_FB"
+-- | The display refresh rate is not supported by the platform. (Added by the
+-- @@ extension)
 pattern ERROR_DISPLAY_REFRESH_RATE_UNSUPPORTED_FB = Result (-1000101000)
--- No documentation found for Nested "XrResult" "XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT"
+-- | The controller model key is invalid. (Added by the @@ extension)
 pattern ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT = Result (-1000055000)
--- No documentation found for Nested "XrResult" "XR_ERROR_SECONDARY_VIEW_CONFIGURATION_TYPE_NOT_ENABLED_MSFT"
+-- | The secondary view configuration was not enabled when creating the
+-- session. (Added by the @@ extension)
 pattern ERROR_SECONDARY_VIEW_CONFIGURATION_TYPE_NOT_ENABLED_MSFT = Result (-1000053000)
--- No documentation found for Nested "XrResult" "XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT"
+-- | Spatial anchor could not be created at that location. (Added by the @@
+-- extension)
 pattern ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT = Result (-1000039001)
--- No documentation found for Nested "XrResult" "XR_ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR"
+-- | xrSetAndroidApplicationThreadKHR failed setting the thread
+-- attributes\/priority. (Added by the @@ extension)
 pattern ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR = Result (-1000003001)
--- No documentation found for Nested "XrResult" "XR_ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR"
+-- | xrSetAndroidApplicationThreadKHR failed as thread id is invalid. (Added
+-- by the @@ extension)
 pattern ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR = Result (-1000003000)
 {-# complete SUCCESS,
              TIMEOUT_EXPIRED,

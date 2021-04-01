@@ -1,34 +1,33 @@
 {-# LANGUAGE QuasiQuotes #-}
-
-module Init
-  ( Init.createInstance
-  , Init.createDevice
+module InitVk
+  ( InitVk.createInstance
+  , InitVk.createDevice
   , PhysicalDeviceInfo(..)
   , createVMA
   , createCommandPools
   ) where
 
 import           Control.Applicative
+import           Control.Monad                  ( guard )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
-import qualified Data.ByteString               as BS
 import           Data.Foldable                  ( for_
                                                 , traverse_
                                                 )
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Data.Word
+import           Foreign.Ptr
 import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
                                                 , IOException(IOError)
                                                 )
 import           HasVulkan
+import           InitXr                         ( XrReqs(..) )
 import           MonadVulkan                    ( Queues(..)
                                                 , RTInfo(..)
                                                 , checkCommands
                                                 )
-import qualified SDL.Video                     as SDL
-import qualified SDL.Video.Vulkan              as SDL
 import           Say
 import           UnliftIO.Exception
 import           Vulkan.CStruct.Extends
@@ -44,7 +43,6 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
-import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Requirement
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
@@ -56,7 +54,6 @@ import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
                                                 , withAllocator
                                                 )
-import           Window
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_1
@@ -66,21 +63,19 @@ myApiVersion = API_VERSION_1_1
 ----------------------------------------------------------------
 
 -- | Create an instance with a debug messenger
-createInstance :: MonadResource m => SDL.Window -> m Instance
-createInstance win = do
-  windowExtensions <-
-    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions win
+createInstance :: MonadResource m => XrReqs a -> m Instance
+createInstance xrReqs = do
   let createInfo = zero
         { applicationInfo = Just zero { applicationName = Nothing
                                       , apiVersion      = myApiVersion
                                       }
         }
       requirements =
-        (\n -> RequireInstanceExtension Nothing n minBound)
-          <$> ( KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-              : windowExtensions
-              )
-  createDebugInstanceFromRequirements requirements [] createInfo
+        (   (\n -> RequireInstanceExtension Nothing n minBound)
+          <$> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+          )
+          <> xrVkInstReqs xrReqs
+  createInstanceFromRequirements requirements [] createInfo
 
 ----------------------------------------------------------------
 -- Device creation
@@ -91,20 +86,17 @@ createDevice
   :: forall m
    . (MonadResource m)
   => Instance
-  -> SDL.Window
+  -> XrReqs (Ptr PhysicalDevice_T)
   -> m
        ( PhysicalDevice
        , PhysicalDeviceInfo
        , Device
        , Queues (QueueFamilyIndex, Queue)
-       , SurfaceKHR
        )
-createDevice inst win = do
-  (_                    , surf) <- createSurface inst win
-
+createDevice inst xrReqs = do
   ((pdi, SomeStruct dci), phys) <-
     maybe (noSuchThing "Unable to find appropriate PhysicalDevice") pure
-      =<< pickPhysicalDevice inst (physicalDeviceInfo surf) (pdiScore . fst)
+      =<< pickPhysicalDevice inst (physicalDeviceInfo xrReqs) (pdiScore . fst)
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
 
   (_, dev) <- withDevice phys dci Nothing allocate
@@ -113,7 +105,7 @@ createDevice inst win = do
 
   queues <- liftIO $ pdiGetQueues pdi dev
 
-  pure (phys, pdi, dev, queues, surf)
+  pure (phys, pdi, dev, queues)
 
 deviceRequirements :: [DeviceRequirement]
 deviceRequirements = [reqs|
@@ -154,10 +146,13 @@ pdiScore = pdiTotalMemory
 
 physicalDeviceInfo
   :: MonadIO m
-  => SurfaceKHR
+  => XrReqs (Ptr PhysicalDevice_T)
   -> PhysicalDevice
   -> m (Maybe (PhysicalDeviceInfo, SomeStruct DeviceCreateInfo))
-physicalDeviceInfo surf phys = runMaybeT $ do
+physicalDeviceInfo xrReqs phys = runMaybeT $ do
+  -- Check that this is the device that OpenXr wants
+  guard (xrPhysicalDevice xrReqs == physicalDeviceHandle phys)
+
   --
   -- Check device requirements
   --
@@ -171,7 +166,7 @@ physicalDeviceInfo surf phys = runMaybeT $ do
   -- Assign queues
   --
   (pdiQueueCreateInfos, pdiGetQueues) <- MaybeT
-    $ assignQueues phys (queueRequirements phys surf)
+    $ assignQueues phys (queueRequirements phys xrReqs)
   let dci =
         dciNoQueues { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos }
 
@@ -189,15 +184,13 @@ physicalDeviceInfo surf phys = runMaybeT $ do
 
   pure (PhysicalDeviceInfo { .. }, SomeStruct dci)
 
--- | Requirements for a 'Queue' which has graphics suppor and can present to
--- the specified surface.
+-- | Requirements for a 'Queue' which has graphics support
 queueRequirements
-  :: MonadIO m => PhysicalDevice -> SurfaceKHR -> Queues (QueueSpec m)
-queueRequirements phys surf = Queues (QueueSpec 1 isGraphicsPresentQueue)
+  :: MonadIO m => PhysicalDevice -> XrReqs a -> Queues (QueueSpec m)
+queueRequirements phys xrReqs = Queues (QueueSpec 1 isGraphicsPresentQueue)
  where
   isGraphicsPresentQueue queueFamilyIndex queueFamilyProperties =
     pure (isGraphicsQueueFamily queueFamilyProperties)
-      <&&> isPresentQueueFamily phys surf queueFamilyIndex
 
 ----------------------------------------------------------------
 -- Physical device tools
