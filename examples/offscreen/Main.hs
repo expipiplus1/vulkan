@@ -63,7 +63,7 @@ C.context
     }
   )
 
-C.include "<renderdoc.h>"
+C.include "<renderdoc_app.h>"
 C.include "<dlfcn.h>"
 C.include "<assert.h>"
 C.include "<stddef.h>"
