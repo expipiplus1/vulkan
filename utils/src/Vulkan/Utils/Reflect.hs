@@ -5,7 +5,6 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
@@ -38,7 +37,7 @@ import GHC.Generics (Generic)
 import qualified Data.ByteString.Lazy.Char8 as BL
 import qualified Data.ByteString.Char8 as B
 import Data.Aeson ((.=), (.:), (.:?), FromJSON (..), ToJSON (..), Value (String), decode, object, pairs, withObject, withText)
-import Data.Aeson.Types (prependFailure, unexpected)
+import Data.Aeson.Types (Parser, parseFail)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
@@ -57,7 +56,6 @@ import Data.Maybe (fromMaybe, catMaybes)
 import Data.Word (Word32)
 import Control.Applicative (liftA2)
 import Control.Monad (join)
-import Control.Exception (Exception (..), throw)
 
 data EntryPoint = EntryPoint
   { name :: Text
@@ -138,18 +136,14 @@ data Reflection = Reflection
   , ubos :: Maybe (Vector Ubo)
   } deriving (Show, Generic, FromJSON, ToJSON)
 
-data ConvertException = ConvertException Text Text
-  deriving (Show)
-
-instance Exception ConvertException
-
-class Convert a where
-  eitherFrom :: Text -> Either ConvertException a
-  from :: Text -> a
-  from x = case eitherFrom x of
-    Left ex -> throw ex
-    Right res -> res
-  to :: a -> Text
+withTextMaybe :: String -> (Text -> Maybe a) -> Value -> Parser a
+withTextMaybe label fromText =
+  withText label $ \text ->
+    case fromText text of
+      Nothing ->
+        parseFail $ "Unexpected " <> label <> " value: " <> show text
+      Just known ->
+        pure known
 
 data ShaderStage
   = Vert
@@ -168,24 +162,26 @@ data ShaderStage
   | Mesh
   deriving (Eq, Show)
 
-instance Convert ShaderStage where
-  eitherFrom = \case
-    "vert" -> Right Vert
-    "frag" -> Right Frag
-    "comp" -> Right Comp
-    "tesc" -> Right Tesc
-    "tese" -> Right Tese
-    "geom" -> Right Geom
-    "rgen" -> Right Rgen
-    "rint" -> Right Rint
-    "rahit" -> Right Rahit
-    "rchit" -> Right Rchit
-    "rmiss" -> Right Rmiss
-    "rcall" -> Right Rcall
-    "task" -> Right Task
-    "mesh" -> Right Mesh
-    unsupport -> Left $ ConvertException unsupport $ "ShaderStage not support '" <> unsupport <> "'"
-  to = \case
+shaderStageFromText :: Text -> Maybe ShaderStage
+shaderStageFromText = \case
+  "vert" -> Just Vert
+  "frag" -> Just Frag
+  "comp" -> Just Comp
+  "tesc" -> Just Tesc
+  "tese" -> Just Tese
+  "geom" -> Just Geom
+  "rgen" -> Just Rgen
+  "rint" -> Just Rint
+  "rahit" -> Just Rahit
+  "rchit" -> Just Rchit
+  "rmiss" -> Just Rmiss
+  "rcall" -> Just Rcall
+  "task" -> Just Task
+  "mesh" -> Just Mesh
+  _ -> Nothing
+
+shaderStageToText :: ShaderStage -> Text
+shaderStageToText = \case
     Vert -> "vert"
     Frag -> "frag"
     Comp -> "comp"
@@ -202,17 +198,14 @@ instance Convert ShaderStage where
     Mesh -> "mesh"
 
 instance FromJSON ShaderStage where
-  parseJSON value@(String x) = case eitherFrom @ShaderStage x of
-    Left (ConvertException _e err) -> prependFailure (T.unpack $ err <> ", ") . unexpected $ value
-    Right _stage -> withText "mode" (pure . from) value
-  parseJSON value = withText "mode" (pure . from) value
+  parseJSON = withTextMaybe "mode" shaderStageFromText
 
 instance ToJSON ShaderStage where
-  toJSON = String . to
-  toEncoding = toEncoding . to
+  toJSON = String . shaderStageToText
+  toEncoding = toEncoding . shaderStageToText
 
-convertStage :: ShaderStage -> ShaderStageFlagBits
-convertStage = \case
+shaderStageFlagBits :: ShaderStage -> ShaderStageFlagBits
+shaderStageFlagBits = \case
   Vert -> SHADER_STAGE_VERTEX_BIT
   Frag -> SHADER_STAGE_FRAGMENT_BIT
   Comp -> SHADER_STAGE_COMPUTE_BIT
@@ -255,7 +248,7 @@ makeShaderModuleCreateInfo code = zero { code = code }
 
 makePipelineShaderStageCreateInfo :: ShaderStage -> ShaderModule -> EntryPoint -> PipelineShaderStageCreateInfo '[]
 makePipelineShaderStageCreateInfo stage shaderModule EntryPoint {..} = zero
-  { stage = convertStage stage
+  { stage = shaderStageFlagBits stage
   , module' = shaderModule
   , name = B.pack . T.unpack $ name
   }
@@ -270,29 +263,28 @@ makeUboDescriptorSetLayoutBinding stage Ubo {..} = (set, zero
   { binding = fromIntegral binding
   , descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER
   , descriptorCount = maybe 1 (V.sum . (fromIntegral <$>)) array
-  , stageFlags = convertStage stage
+  , stageFlags = shaderStageFlagBits stage
   })
 
 data TextureDescriptorType
   = Sampler2D
   deriving (Show)
 
-instance Convert TextureDescriptorType where
-  eitherFrom = \case
-    "sampler2D" -> Right Sampler2D
-    unsupport -> Left $ ConvertException unsupport $ "TextureDescriptorType not support '" <> unsupport <> "'"
-  to = \case
-    Sampler2D -> "sampler2D"
+textureDescriptorTypeFromText :: Text -> Maybe TextureDescriptorType
+textureDescriptorTypeFromText = \case
+  "sampler2D" -> Just Sampler2D
+  _ -> Nothing
+
+textureDescriptorTypeToText :: TextureDescriptorType -> Text
+textureDescriptorTypeToText = \case
+  Sampler2D -> "sampler2D"
 
 instance FromJSON TextureDescriptorType where
-  parseJSON value@(String x) = case eitherFrom @TextureDescriptorType x of
-    Left (ConvertException _e err) -> prependFailure (T.unpack $ err <> ", ") . unexpected $ value
-    Right _stage -> withText "type" (pure . from) value
-  parseJSON value = withText "type" (pure . from) value
+  parseJSON = withTextMaybe "type" textureDescriptorTypeFromText
 
 instance ToJSON TextureDescriptorType where
-  toJSON = String . to
-  toEncoding = toEncoding . to
+  toJSON = String . textureDescriptorTypeToText
+  toEncoding = toEncoding . textureDescriptorTypeToText
 
 convertTextureDescriptorType :: TextureDescriptorType -> DescriptorType
 convertTextureDescriptorType = \case
@@ -303,7 +295,7 @@ makeTextureDescriptorSetLayoutBinding stage Texture {..} = (set, zero
   { binding = fromIntegral binding
   , descriptorType = convertTextureDescriptorType type'
   , descriptorCount = maybe 1 (V.sum . (fromIntegral <$>)) array
-  , stageFlags = convertStage stage
+  , stageFlags = shaderStageFlagBits stage
   })
 
 makeDescriptorSetLayoutBindings :: ShaderStage -> Vector Ubo -> Vector Texture -> Vector (Int, DescriptorSetLayoutBinding)
@@ -330,26 +322,25 @@ data VertexAttributeType
   | Vec4
   deriving (Show)
 
-instance Convert VertexAttributeType where
-  eitherFrom = \case
-    "vec2" -> Right Vec2
-    "vec3" -> Right Vec3
-    "vec4" -> Right Vec4
-    unsupport -> Left $ ConvertException unsupport $ "VertexAttributeType not support '" <> unsupport <> "'"
-  to = \case
-    Vec2 -> "vec2"
-    Vec3 -> "vec3"
-    Vec4 -> "vec4"
+vertexAttributeTypeFromText :: Text -> Maybe VertexAttributeType
+vertexAttributeTypeFromText = \case
+  "vec2" -> Just Vec2
+  "vec3" -> Just Vec3
+  "vec4" -> Just Vec4
+  _ -> Nothing
+
+vertexAttributeTypeToText :: VertexAttributeType -> Text
+vertexAttributeTypeToText = \case
+  Vec2 -> "vec2"
+  Vec3 -> "vec3"
+  Vec4 -> "vec4"
 
 instance FromJSON VertexAttributeType where
-  parseJSON value@(String x) = case eitherFrom @VertexAttributeType x of
-    Left (ConvertException _e err) -> prependFailure (T.unpack $ err <> ", ") . unexpected $ value
-    Right _stage -> withText "type" (pure . from) value
-  parseJSON value = withText "type" (pure . from) value
+  parseJSON = withTextMaybe "type" vertexAttributeTypeFromText
 
 instance ToJSON VertexAttributeType where
-  toJSON = String . to
-  toEncoding = toEncoding . to
+  toJSON = String . vertexAttributeTypeToText
+  toEncoding = toEncoding . vertexAttributeTypeToText
 
 convertVertexAttributeType :: VertexAttributeType -> (Word32, Format)
 convertVertexAttributeType = \case
@@ -423,7 +414,7 @@ makeVertexInputAttributeDescription offset VertexAttribute {..} = (offset + size
 
 reflect :: MonadIO m => ShaderStage -> "code" ::: Text -> m (B.ByteString, BL.ByteString)
 reflect shaderStage code = liftIO . withSystemTempDirectory "th-spirv" $ \dir -> do
-  let stage = T.unpack . to $ shaderStage
+  let stage = T.unpack . shaderStageToText $ shaderStage
   let shader = dir </> "glsl." <> stage
   let spv = dir </> stage <> ".spv"
   T.writeFile shader code
