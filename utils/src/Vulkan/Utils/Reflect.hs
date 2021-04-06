@@ -4,6 +4,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -46,15 +47,19 @@ import           Vulkan.Zero                    ( zero )
 import           Control.Monad.IO.Class         ( MonadIO
                                                 , liftIO
                                                 )
+import           Control.Monad.Trans.Except     ( ExceptT
+                                                , except
+                                                , runExceptT
+                                                , throwE
+                                                )
 import           Data.Aeson                     ( (.:)
                                                 , (.:?)
                                                 , (.=)
                                                 , FromJSON(..)
                                                 , ToJSON(..)
                                                 , Value(String)
-                                                , decode
+                                                , eitherDecodeStrict'
                                                 , object
-                                                , pairs
                                                 , withObject
                                                 , withText
                                                 )
@@ -68,9 +73,11 @@ import qualified Data.Text                     as T
 import qualified Data.Text.IO                  as T
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
-import           Foreign.Storable               ( Storable(sizeOf) )
 import           GHC.Generics                   ( Generic )
-import           System.FilePath                ( (</>) )
+import           GHC.IO.Exception               ( ExitCode(..) )
+import           System.FilePath                ( (<.>)
+                                                , (</>)
+                                                )
 import           System.IO.Temp                 ( withSystemTempDirectory )
 import           System.Process.Typed           ( proc
                                                 , readProcess
@@ -79,7 +86,8 @@ import           System.Process.Typed           ( proc
 import           Control.Applicative            ( liftA2 )
 import           Control.Monad                  ( join )
 import           Data.Function                  ( on )
-import           Data.List                      ( groupBy
+import           Data.List                      ( foldl'
+                                                , groupBy
                                                 , sortOn
                                                 )
 import           Data.Map                       ( Map )
@@ -110,16 +118,6 @@ instance FromJSON Input where
 instance ToJSON Input where
   toJSON (Input type' name location array) = object
     ["type" .= type', "name" .= name, "location" .= location, "array" .= array]
-  toEncoding (Input type' name location array) = pairs
-    (  "type"
-    .= type'
-    <> "name"
-    .= name
-    <> "location"
-    .= location
-    <> "array"
-    .= array
-    )
 
 data Ubo = Ubo
   { name    :: Text
@@ -160,18 +158,6 @@ instance ToJSON Texture where
     , "binding" .= binding
     , "array" .= array
     ]
-  toEncoding (Texture type' name set binding array) = pairs
-    (  "type"
-    .= type'
-    <> "name"
-    .= name
-    <> "set"
-    .= set
-    <> "binding"
-    .= binding
-    <> "array"
-    .= array
-    )
 
 data Reflection = Reflection
   { entryPoints :: Vector EntryPoint
@@ -285,15 +271,17 @@ makeDescriptorInfo
   :: Vector (Shader, Reflection) -> Vector (DescriptorSetLayoutCreateInfo '[])
 makeDescriptorInfo = makeDescriptorSetLayoutCreateInfos . join . V.map
   (   makeDescriptorSetLayoutBindings
-  .   (stage :: Shader -> ShaderStage)
-  .   fst
-  <*> fromMaybe []
-  .   ubos
-  .   snd
-  <*> fromMaybe []
-  .   textures
-  .   snd
+  <$> makeShaderStage
+  <*> makeUbos
+  <*> makeTextures
   )
+ where
+  makeShaderStage :: (Shader, Reflection) -> ShaderStage
+  makeShaderStage = (stage :: Shader -> ShaderStage) . fst
+  makeUbos :: (Shader, Reflection) -> Vector Ubo
+  makeUbos = fromMaybe [] . ubos . snd
+  makeTextures :: (Shader, Reflection) -> Vector Texture
+  makeTextures = fromMaybe [] . textures . snd
 
 makeInputInfo
   :: Vector (Shader, Reflection)
@@ -373,7 +361,7 @@ makeTextureDescriptorSetLayoutBinding stage Texture {..} =
   ( set
   , zero { binding         = fromIntegral binding
          , descriptorType  = convertTextureDescriptorType type'
-         , descriptorCount = maybe 1 (V.sum . (fromIntegral <$>)) array
+         , descriptorCount = maybe 1 (fromIntegral . V.sum) array
          , stageFlags      = shaderStageFlagBits stage
          }
   )
@@ -444,14 +432,10 @@ instance ToJSON VertexAttributeType where
 
 convertVertexAttributeType :: VertexAttributeType -> (Word32, Format)
 convertVertexAttributeType = \case
-  Vec2 ->
-    (fromIntegral $ 2 * sizeOf (undefined :: Word32), FORMAT_R32G32_SFLOAT)
-  Vec3 ->
-    (fromIntegral $ 3 * sizeOf (undefined :: Word32), FORMAT_R32G32B32_SFLOAT)
-  Vec4 ->
-    ( fromIntegral $ 4 * sizeOf (undefined :: Word32)
-    , FORMAT_R32G32B32A32_SFLOAT
-    )
+  Vec2 -> (2 * floatSize, FORMAT_R32G32_SFLOAT)
+  Vec3 -> (3 * floatSize, FORMAT_R32G32B32_SFLOAT)
+  Vec4 -> (4 * floatSize, FORMAT_R32G32B32A32_SFLOAT)
+  where floatSize = 4
 
 data VertexAttribute = VertexAttribute
   { binding  :: Word32
@@ -486,26 +470,20 @@ makeVertexInputBindingDescriptions
   :: Vector VertexAttribute -> Vector VertexInputBindingDescription
 makeVertexInputBindingDescriptions =
   V.fromList
-    . map makeVertexInputBindingDescription
-    . calculate
+    . map (makeVertexInputBindingDescription . calculate)
     . groupBy ((==) `on` fst)
     . sortOn fst
-    . extract
+    . map extract
+    . V.toList
  where
-  extract :: Vector VertexAttribute -> [("binding" ::: Int, "size" ::: Int)]
-  extract =
-    map
-        (   (,)
-        .   fromIntegral
-        .   (binding :: VertexAttribute -> Word32)
-        <*> fromIntegral
-        .   size
-        )
-      . V.toList
+  extract :: VertexAttribute -> ("binding" ::: Int, "size" ::: Int)
+  extract = liftA2 (,)
+                   (fromIntegral . (binding :: VertexAttribute -> Word32))
+                   (fromIntegral . size)
   calculate
-    :: [[("binding" ::: Int, "size" ::: Int)]]
-    -> [("binding" ::: Int, "stride" ::: Int)]
-  calculate = map (liftA2 (,) (fst . head) (sum . (snd <$>)))
+    :: [("binding" ::: Int, "size" ::: Int)]
+    -> ("binding" ::: Int, "stride" ::: Int)
+  calculate = liftA2 (,) (fst . head) (sum . (snd <$>))
 
 makeVertexInputBindingDescription
   :: ("binding" ::: Int, "stride" ::: Int) -> VertexInputBindingDescription
@@ -516,14 +494,14 @@ makeVertexInputBindingDescription (binding, stride) = zero
   }
 
 makeVertexAttribute :: Input -> Vector VertexAttribute
-makeVertexAttribute Input {..} = V.map
+makeVertexAttribute Input {..} = V.generate
+  count
   (\i -> VertexAttribute { binding  = 0
                          , location = fromIntegral . (+ location) $ i
                          , size
                          , format
                          }
   )
-  [0 .. count - 1]
  where
   count          = maybe 1 V.sum array :: Int
   (size, format) = convertVertexAttributeType type'
@@ -538,7 +516,7 @@ makeVertexInputAttributeDescriptions =
     . V.toList
  where
   process :: [VertexAttribute] -> [VertexInputAttributeDescription]
-  process = snd . foldl
+  process = snd . foldl'
     (\(nextOffset, acc) cur -> liftA2
       (,)
       fst
@@ -552,51 +530,72 @@ makeVertexInputAttributeDescription
 makeVertexInputAttributeDescription offset VertexAttribute {..} =
   (offset + size, zero { binding, location, offset, format })
 
+readProcessHandler
+  :: MonadIO m
+  => (ExitCode, BL.ByteString, BL.ByteString)
+  -> ExceptT String m BL.ByteString
+readProcessHandler (exitCode, result, err) = case exitCode of
+  ExitFailure errCode ->
+    throwE $ "errCode: " <> show errCode <> ", " <> BL.unpack
+      (if BL.null err then result else err)
+  ExitSuccess -> pure result
+
 reflect
   :: MonadIO m
   => ShaderStage
   -> "code" ::: Text
-  -> m (B.ByteString, BL.ByteString)
+  -> m (Either String (B.ByteString, BL.ByteString))
 reflect shaderStage code =
-  liftIO . withSystemTempDirectory "th-spirv" $ \dir -> do
+  liftIO . runExceptT . withSystemTempDirectory "th-spirv" $ \dir -> do
     let stage  = T.unpack . shaderStageToText $ shaderStage
-    let shader = dir </> "glsl." <> stage
-    let spv    = dir </> stage <> ".spv"
-    T.writeFile shader code
-    (_exitCode, _spv, _err) <-
-      readProcess
-      . proc "glslangValidator"
-      $ ["-S", stage, "-V", shader, "-o", spv]
-    spirv                            <- B.readFile spv
-    (_exitCode, reflectionRaw, _err) <-
-      readProcess
-      . proc "spirv-cross"
-      $ [spv, "--vulkan-semantics", "--reflect"]
+    let shader = dir </> stage <.> "glsl"
+    let spv    = dir </> stage <.> "spv"
+    liftIO . T.writeFile shader $ code
+    _spv <-
+      readProcessHandler
+        =<< ( readProcess
+            . proc "glslangValidator"
+            $ ["-S", stage, "-V", shader, "-o", spv]
+            )
+    spirv         <- liftIO . B.readFile $ spv
+    reflectionRaw <-
+      readProcessHandler
+        =<< ( readProcess
+            . proc "spirv-cross"
+            $ [spv, "--vulkan-semantics", "--reflect"]
+            )
     pure (spirv, reflectionRaw)
 
-reflect' :: MonadIO m => "spirv" ::: B.ByteString -> m BL.ByteString
-reflect' spirv = liftIO . withSystemTempDirectory "th-spirv" $ \dir -> do
-  let spv = dir </> "glsl.spv"
-  B.writeFile spv spirv
-  (_exitCode, reflectionRaw, _err) <-
-    readProcess . proc "spirv-cross" $ [spv, "--vulkan-semantics", "--reflect"]
-  pure reflectionRaw
+reflect'
+  :: MonadIO m => "spirv" ::: B.ByteString -> m (Either String BL.ByteString)
+reflect' spirv =
+  liftIO . runExceptT . withSystemTempDirectory "th-spirv" $ \dir -> do
+    let spv = dir </> "shader" <.> "spv"
+    liftIO . B.writeFile spv $ spirv
+    readProcessHandler
+      =<< ( readProcess
+          . proc "spirv-cross"
+          $ [spv, "--vulkan-semantics", "--reflect"]
+          )
 
 reflection
-  :: MonadIO m => ShaderStage -> "code" ::: Text -> m (Shader, Reflection)
-reflection stage code = do
-  (spirv, reflectionRaw) <- reflect stage code
-  case decode reflectionRaw of
-    Just reflection -> pure (Shader { stage, code = spirv }, reflection)
-    Nothing         -> error "fail to reflect"
+  :: MonadIO m
+  => ShaderStage
+  -> "code" ::: Text
+  -> m (Either String (Shader, Reflection))
+reflection stage code = runExceptT $ do
+  (spirv, reflectionRaw) <- except =<< reflect stage code
+  ref <- except . eitherDecodeStrict' @Reflection . BL.toStrict $ reflectionRaw
+  pure (Shader { stage, code = spirv }, ref)
 
-reflection' :: MonadIO m => "spirv" ::: B.ByteString -> m (Shader, Reflection)
-reflection' spirv = do
-  reflectionRaw <- reflect' spirv
-  case decode reflectionRaw of
-    Just reflection -> pure
-      (Shader { stage = getShaderStage reflection, code = spirv }, reflection)
-    Nothing -> error "fail to reflect"
+reflection'
+  :: MonadIO m
+  => "spirv" ::: B.ByteString
+  -> m (Either String (Shader, Reflection))
+reflection' spirv = runExceptT $ do
+  reflectionRaw <- except =<< reflect' spirv
+  ref <- except . eitherDecodeStrict' @Reflection . BL.toStrict $ reflectionRaw
+  pure (Shader { stage = getShaderStage ref, code = spirv }, ref)
 
 getShaderStage :: Reflection -> ShaderStage
 getShaderStage Reflection {..} = mode . V.head $ entryPoints
