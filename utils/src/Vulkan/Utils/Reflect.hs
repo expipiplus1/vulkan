@@ -86,15 +86,13 @@ import           System.Process.Typed           ( proc
 import           Control.Applicative            ( liftA2 )
 import           Control.Monad                  ( join )
 import           Data.Function                  ( on )
-import           Data.List                      ( foldl'
-                                                , groupBy
+import           Data.List                      ( groupBy
+                                                , mapAccumL
                                                 , sortOn
                                                 )
 import           Data.Map                       ( Map )
 import qualified Data.Map                      as M
-import           Data.Maybe                     ( catMaybes
-                                                , fromMaybe
-                                                )
+import           Data.Maybe                     ( fromMaybe )
 import           Data.Word                      ( Word32 )
 
 data EntryPoint = EntryPoint
@@ -290,11 +288,9 @@ makeInputInfo =
   (SomeStruct <$>)
     . makePipelineVertexInputStateCreateInfo
     . join
-    . V.fromList
-    . catMaybes
+    . V.mapMaybe (id <$>)
     . (inputs . snd <$>)
-    . filter ((== Vert) . (stage :: Shader -> ShaderStage) . fst)
-    . V.toList
+    . V.filter ((== Vert) . (stage :: Shader -> ShaderStage) . fst)
 
 makeShaderModuleCreateInfo
   :: "code" ::: B.ByteString -> ShaderModuleCreateInfo '[]
@@ -327,7 +323,7 @@ makeUboDescriptorSetLayoutBinding stage Ubo {..} =
   ( set
   , zero { binding         = fromIntegral binding
          , descriptorType  = DESCRIPTOR_TYPE_UNIFORM_BUFFER
-         , descriptorCount = maybe 1 (V.sum . (fromIntegral <$>)) array
+         , descriptorCount = maybe 1 (fromIntegral . V.sum) array
          , stageFlags      = shaderStageFlagBits stage
          }
   )
@@ -497,7 +493,7 @@ makeVertexAttribute :: Input -> Vector VertexAttribute
 makeVertexAttribute Input {..} = V.generate
   count
   (\i -> VertexAttribute { binding  = 0
-                         , location = fromIntegral . (+ location) $ i
+                         , location = fromIntegral $ location + i
                          , size
                          , format
                          }
@@ -516,14 +512,7 @@ makeVertexInputAttributeDescriptions =
     . V.toList
  where
   process :: [VertexAttribute] -> [VertexInputAttributeDescription]
-  process = snd . foldl'
-    (\(nextOffset, acc) cur -> liftA2
-      (,)
-      fst
-      ((acc ++) . pure . snd)
-      (makeVertexInputAttributeDescription nextOffset cur)
-    )
-    (0, [])
+  process = snd . mapAccumL makeVertexInputAttributeDescription 0
 
 makeVertexInputAttributeDescription
   :: Word32 -> VertexAttribute -> (Word32, VertexInputAttributeDescription)
@@ -540,6 +529,9 @@ readProcessHandler (exitCode, result, err) = case exitCode of
       (if BL.null err then result else err)
   ExitSuccess -> pure result
 
+procE :: MonadIO m => FilePath -> [String] -> ExceptT String m BL.ByteString
+procE = fmap ((readProcessHandler =<<) . readProcess) . proc
+
 reflect
   :: MonadIO m
   => ShaderStage
@@ -551,19 +543,10 @@ reflect shaderStage code =
     let shader = dir </> stage <.> "glsl"
     let spv    = dir </> stage <.> "spv"
     liftIO . T.writeFile shader $ code
-    _spv <-
-      readProcessHandler
-        =<< ( readProcess
-            . proc "glslangValidator"
-            $ ["-S", stage, "-V", shader, "-o", spv]
-            )
-    spirv         <- liftIO . B.readFile $ spv
-    reflectionRaw <-
-      readProcessHandler
-        =<< ( readProcess
-            . proc "spirv-cross"
-            $ [spv, "--vulkan-semantics", "--reflect"]
-            )
+    _spv <- procE "glslangValidator" ["-S", stage, "-V", shader, "-o", spv]
+    spirv <- liftIO . B.readFile $ spv
+    reflectionRaw <- procE "spirv-cross"
+                           [spv, "--vulkan-semantics", "--reflect"]
     pure (spirv, reflectionRaw)
 
 reflect'
@@ -572,11 +555,7 @@ reflect' spirv =
   liftIO . runExceptT . withSystemTempDirectory "th-spirv" $ \dir -> do
     let spv = dir </> "shader" <.> "spv"
     liftIO . B.writeFile spv $ spirv
-    readProcessHandler
-      =<< ( readProcess
-          . proc "spirv-cross"
-          $ [spv, "--vulkan-semantics", "--reflect"]
-          )
+    procE "spirv-cross" [spv, "--vulkan-semantics", "--reflect"]
 
 reflection
   :: MonadIO m
