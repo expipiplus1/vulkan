@@ -88,8 +88,8 @@ import           Control.Monad                  ( join )
 import           Data.Function                  ( on )
 import           Data.List                      ( groupBy
                                                 , mapAccumL
-                                                , sortOn
                                                 )
+import qualified Data.List.NonEmpty            as NE
 import           Data.Map                       ( Map )
 import qualified Data.Map                      as M
 import           Data.Maybe                     ( fromMaybe )
@@ -171,80 +171,79 @@ withTextMaybe label fromText = withText label $ \text -> case fromText text of
   Just known -> pure known
 
 data ShaderStage
-  = Vert
-  | Frag
-  | Comp
-  | Tesc
-  | Tese
-  | Geom
-  | Rgen
-  | Rint
-  | Rahit
-  | Rchit
-  | Rmiss
-  | Rcall
+  = Vertex
+  | Fragment
+  | Compute
+  | TessellationControl
+  | TessellationEvaluation
+  | Geometry
+  | Raygen
+  | Intersection
+  | AnyHit
+  | ClosestHit
+  | Miss
+  | Callable
   | Task
   | Mesh
   deriving (Eq, Show)
 
 shaderStageFromText :: Text -> Maybe ShaderStage
 shaderStageFromText = \case
-  "vert"  -> Just Vert
-  "frag"  -> Just Frag
-  "comp"  -> Just Comp
-  "tesc"  -> Just Tesc
-  "tese"  -> Just Tese
-  "geom"  -> Just Geom
-  "rgen"  -> Just Rgen
-  "rint"  -> Just Rint
-  "rahit" -> Just Rahit
-  "rchit" -> Just Rchit
-  "rmiss" -> Just Rmiss
-  "rcall" -> Just Rcall
+  "vert"  -> Just Vertex
+  "frag"  -> Just Fragment
+  "comp"  -> Just Compute
+  "tesc"  -> Just TessellationControl
+  "tese"  -> Just TessellationEvaluation
+  "geom"  -> Just Geometry
+  "rgen"  -> Just Raygen
+  "rint"  -> Just Intersection
+  "rahit" -> Just AnyHit
+  "rchit" -> Just ClosestHit
+  "rmiss" -> Just Miss
+  "rcall" -> Just Callable
   "task"  -> Just Task
   "mesh"  -> Just Mesh
   _       -> Nothing
 
 shaderStageToText :: ShaderStage -> Text
 shaderStageToText = \case
-  Vert  -> "vert"
-  Frag  -> "frag"
-  Comp  -> "comp"
-  Tesc  -> "tesc"
-  Tese  -> "tese"
-  Geom  -> "geom"
-  Rgen  -> "rgen"
-  Rint  -> "rint"
-  Rahit -> "rahit"
-  Rchit -> "rchit"
-  Rmiss -> "rmiss"
-  Rcall -> "rcall"
-  Task  -> "task"
-  Mesh  -> "mesh"
+  Vertex                 -> "vert"
+  Fragment               -> "frag"
+  Compute                -> "comp"
+  TessellationControl    -> "tesc"
+  TessellationEvaluation -> "tese"
+  Geometry               -> "geom"
+  Raygen                 -> "rgen"
+  Intersection           -> "rint"
+  AnyHit                 -> "rahit"
+  ClosestHit             -> "rchit"
+  Miss                   -> "rmiss"
+  Callable               -> "rcall"
+  Task                   -> "task"
+  Mesh                   -> "mesh"
 
 instance FromJSON ShaderStage where
   parseJSON = withTextMaybe "mode" shaderStageFromText
 
 instance ToJSON ShaderStage where
-  toJSON     = String . shaderStageToText
-  toEncoding = toEncoding . shaderStageToText
+  toJSON = String . shaderStageToText
 
 shaderStageFlagBits :: ShaderStage -> ShaderStageFlagBits
 shaderStageFlagBits = \case
-  Vert  -> SHADER_STAGE_VERTEX_BIT
-  Frag  -> SHADER_STAGE_FRAGMENT_BIT
-  Comp  -> SHADER_STAGE_COMPUTE_BIT
-  Tesc  -> SHADER_STAGE_TESSELLATION_CONTROL_BIT
-  Tese  -> SHADER_STAGE_TESSELLATION_EVALUATION_BIT
-  Geom  -> SHADER_STAGE_GEOMETRY_BIT
-  Rgen  -> SHADER_STAGE_RAYGEN_BIT_KHR
-  Rint  -> SHADER_STAGE_INTERSECTION_BIT_KHR
-  Rahit -> SHADER_STAGE_ANY_HIT_BIT_KHR
-  Rchit -> SHADER_STAGE_CLOSEST_HIT_BIT_KHR
-  Rmiss -> SHADER_STAGE_MISS_BIT_KHR
-  Rcall -> SHADER_STAGE_CALLABLE_BIT_KHR
-  Task  -> SHADER_STAGE_TASK_BIT_NV
-  Mesh  -> SHADER_STAGE_MESH_BIT_NV
+  Vertex                 -> SHADER_STAGE_VERTEX_BIT
+  Fragment               -> SHADER_STAGE_FRAGMENT_BIT
+  Compute                -> SHADER_STAGE_COMPUTE_BIT
+  TessellationControl    -> SHADER_STAGE_TESSELLATION_CONTROL_BIT
+  TessellationEvaluation -> SHADER_STAGE_TESSELLATION_EVALUATION_BIT
+  Geometry               -> SHADER_STAGE_GEOMETRY_BIT
+  Raygen                 -> SHADER_STAGE_RAYGEN_BIT_KHR
+  Intersection           -> SHADER_STAGE_INTERSECTION_BIT_KHR
+  AnyHit                 -> SHADER_STAGE_ANY_HIT_BIT_KHR
+  ClosestHit             -> SHADER_STAGE_CLOSEST_HIT_BIT_KHR
+  Miss                   -> SHADER_STAGE_MISS_BIT_KHR
+  Callable               -> SHADER_STAGE_CALLABLE_BIT_KHR
+  Task                   -> SHADER_STAGE_TASK_BIT_NV
+  Mesh                   -> SHADER_STAGE_MESH_BIT_NV
 
 data Shader = Shader
   { stage :: ShaderStage
@@ -267,19 +266,11 @@ makeShaderInfo (Shader {..}, Reflection {..}) = ShaderInfo { .. }
 
 makeDescriptorInfo
   :: Vector (Shader, Reflection) -> Vector (DescriptorSetLayoutCreateInfo '[])
-makeDescriptorInfo = makeDescriptorSetLayoutCreateInfos . join . V.map
-  (   makeDescriptorSetLayoutBindings
-  <$> makeShaderStage
-  <*> makeUbos
-  <*> makeTextures
-  )
- where
-  makeShaderStage :: (Shader, Reflection) -> ShaderStage
-  makeShaderStage = (stage :: Shader -> ShaderStage) . fst
-  makeUbos :: (Shader, Reflection) -> Vector Ubo
-  makeUbos = fromMaybe [] . ubos . snd
-  makeTextures :: (Shader, Reflection) -> Vector Texture
-  makeTextures = fromMaybe [] . textures . snd
+makeDescriptorInfo xs = makeDescriptorSetLayoutCreateInfos $ do
+  (Shader { stage }, Reflection { ubos, textures }) <- xs
+  makeDescriptorSetLayoutBindings stage
+                                  (fromMaybe [] ubos)
+                                  (fromMaybe [] textures)
 
 makeInputInfo
   :: Vector (Shader, Reflection)
@@ -288,9 +279,8 @@ makeInputInfo =
   (SomeStruct <$>)
     . makePipelineVertexInputStateCreateInfo
     . join
-    . V.mapMaybe (id <$>)
-    . (inputs . snd <$>)
-    . V.filter ((== Vert) . (stage :: Shader -> ShaderStage) . fst)
+    . V.mapMaybe (inputs . snd)
+    . V.filter ((== Vertex) . (stage :: Shader -> ShaderStage) . fst)
 
 makeShaderModuleCreateInfo
   :: "code" ::: B.ByteString -> ShaderModuleCreateInfo '[]
@@ -344,8 +334,7 @@ instance FromJSON TextureDescriptorType where
   parseJSON = withTextMaybe "type" textureDescriptorTypeFromText
 
 instance ToJSON TextureDescriptorType where
-  toJSON     = String . textureDescriptorTypeToText
-  toEncoding = toEncoding . textureDescriptorTypeToText
+  toJSON = String . textureDescriptorTypeToText
 
 convertTextureDescriptorType :: TextureDescriptorType -> DescriptorType
 convertTextureDescriptorType = \case
@@ -391,8 +380,8 @@ makeDescriptorSetLayoutCreateInfos bindings =
   setsMap =
     M.fromList
       . map (liftA2 (,) (fst . head) (V.fromList . (snd <$>)))
-      . groupBy ((==) `on` fst)
-      . sortOn fst
+      . (NE.toList <$>)
+      . NE.groupAllWith fst
       . V.toList
       $ bindings
 
@@ -423,8 +412,7 @@ instance FromJSON VertexAttributeType where
   parseJSON = withTextMaybe "type" vertexAttributeTypeFromText
 
 instance ToJSON VertexAttributeType where
-  toJSON     = String . vertexAttributeTypeToText
-  toEncoding = toEncoding . vertexAttributeTypeToText
+  toJSON = String . vertexAttributeTypeToText
 
 convertVertexAttributeType :: VertexAttributeType -> (Word32, Format)
 convertVertexAttributeType = \case
@@ -467,19 +455,18 @@ makeVertexInputBindingDescriptions
 makeVertexInputBindingDescriptions =
   V.fromList
     . map (makeVertexInputBindingDescription . calculate)
-    . groupBy ((==) `on` fst)
-    . sortOn fst
+    . (NE.toList <$>)
+    . NE.groupAllWith fst
     . map extract
     . V.toList
  where
   extract :: VertexAttribute -> ("binding" ::: Int, "size" ::: Int)
-  extract = liftA2 (,)
-                   (fromIntegral . (binding :: VertexAttribute -> Word32))
-                   (fromIntegral . size)
+  extract attr =
+    (fromIntegral $ binding (attr :: VertexAttribute), fromIntegral $ size attr)
   calculate
     :: [("binding" ::: Int, "size" ::: Int)]
     -> ("binding" ::: Int, "stride" ::: Int)
-  calculate = liftA2 (,) (fst . head) (sum . (snd <$>))
+  calculate groups = (fst $ head groups, sum $ map snd groups)
 
 makeVertexInputBindingDescription
   :: ("binding" ::: Int, "stride" ::: Int) -> VertexInputBindingDescription
