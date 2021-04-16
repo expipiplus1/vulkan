@@ -629,20 +629,20 @@ parseHandles = onTypes "handle" parseHandle
         "VkDevice"   -> pure Device
         "XrInstance" -> pure Instance
         _            -> case getAttr "parent" n of
-          Nothing                 -> pure NoHandleLevel
+          Nothing                  -> pure NoHandleLevel
           -- TODO: derive this from the spec
-          Just "VkInstance"       -> pure Instance
-          Just "VkPhysicalDevice" -> pure Instance
-          Just "VkDevice"         -> pure Device
-          Just "VkCommandPool"    -> pure Device
-          Just "VkDescriptorPool" -> pure Device
-          Just "VkDisplayKHR"     -> pure Instance
-          Just "VkSurfaceKHR"     -> pure Instance
-          Just "VkVideoSessionParametersKHR" -> pure Device
-          Just "XrInstance"       -> pure Instance
-          Just "XrSession"        -> pure Instance
-          Just "XrActionSet"      -> pure Instance
-          _                       -> throw "Unknown handle level"
+          Just "VkInstance"        -> pure Instance
+          Just "VkPhysicalDevice"  -> pure Instance
+          Just "VkDevice"          -> pure Device
+          Just "VkCommandPool"     -> pure Device
+          Just "VkDescriptorPool"  -> pure Device
+          Just "VkDisplayKHR"      -> pure Instance
+          Just "VkSurfaceKHR"      -> pure Instance
+          Just "VkVideoSessionKHR" -> pure Device
+          Just "XrInstance"        -> pure Instance
+          Just "XrSession"         -> pure Instance
+          Just "XrActionSet"       -> pure Instance
+          _                        -> throw "Unknown handle level"
       pure Handle { .. }
 
 parseFuncPointers :: [Content] -> P (Vector FuncPointer)
