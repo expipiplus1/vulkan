@@ -638,6 +638,7 @@ parseHandles = onTypes "handle" parseHandle
           Just "VkDescriptorPool" -> pure Device
           Just "VkDisplayKHR"     -> pure Instance
           Just "VkSurfaceKHR"     -> pure Instance
+          Just "VkVideoSessionParametersKHR" -> pure Device
           Just "XrInstance"       -> pure Instance
           Just "XrSession"        -> pure Instance
           Just "XrActionSet"      -> pure Instance
