@@ -83,7 +83,6 @@ import           System.Process.Typed           ( proc
                                                 , readProcess
                                                 )
 
-import           Control.Applicative            ( liftA2 )
 import           Control.Monad                  ( join )
 import           Data.Function                  ( on )
 import           Data.List                      ( groupBy
@@ -370,20 +369,20 @@ makeDescriptorSetLayoutCreateInfos bindings =
   V.map makeDescriptorSetLayoutCreateInfo
     . V.fromList
     . M.elems
-    . M.unionWith (V.++) sets
+    . M.unionWith (V.++) emptySetsMap
     $ setsMap
  where
-  setSize = V.maximum . (fst <$>) $ bindings :: Int
-  sets :: Map Int (Vector DescriptorSetLayoutBinding)
-  sets = M.fromList . map (, []) $ [0 .. setSize]
+  setLayoutsSize = V.maximum . fmap fst $ bindings :: Int
+  emptySetsMap :: Map Int (Vector DescriptorSetLayoutBinding)
+  emptySetsMap = M.fromList . map (, []) $ [0 .. setLayoutsSize]
   setsMap :: Map Int (Vector DescriptorSetLayoutBinding)
   setsMap =
-    M.fromList
-      . map (liftA2 (,) (fst . head) (V.fromList . (snd <$>)))
-      . (NE.toList <$>)
-      . NE.groupAllWith fst
-      . V.toList
-      $ bindings
+    M.fromList . map extract . NE.groupAllWith fst . V.toList $ bindings
+  extract
+    :: NE.NonEmpty (Int, DescriptorSetLayoutBinding)
+    -> (Int, Vector DescriptorSetLayoutBinding)
+  extract groups =
+    (fst $ NE.head groups, V.fromList $ NE.toList $ fmap snd groups)
 
 makeDescriptorSetLayoutCreateInfo
   :: Vector DescriptorSetLayoutBinding -> DescriptorSetLayoutCreateInfo '[]
@@ -455,7 +454,6 @@ makeVertexInputBindingDescriptions
 makeVertexInputBindingDescriptions =
   V.fromList
     . map (makeVertexInputBindingDescription . calculate)
-    . (NE.toList <$>)
     . NE.groupAllWith fst
     . map extract
     . V.toList
@@ -464,9 +462,9 @@ makeVertexInputBindingDescriptions =
   extract attr =
     (fromIntegral $ binding (attr :: VertexAttribute), fromIntegral $ size attr)
   calculate
-    :: [("binding" ::: Int, "size" ::: Int)]
+    :: NE.NonEmpty ("binding" ::: Int, "size" ::: Int)
     -> ("binding" ::: Int, "stride" ::: Int)
-  calculate groups = (fst $ head groups, sum $ map snd groups)
+  calculate groups = (fst $ NE.head groups, sum $ fmap snd groups)
 
 makeVertexInputBindingDescription
   :: ("binding" ::: Int, "stride" ::: Int) -> VertexInputBindingDescription
