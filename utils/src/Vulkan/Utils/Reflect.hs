@@ -63,9 +63,7 @@ import           Data.Aeson                     ( (.:)
                                                 , withObject
                                                 , withText
                                                 )
-import           Data.Aeson.Types               ( Parser
-                                                , parseFail
-                                                )
+import           Data.Aeson.Types               ( Parser )
 import qualified Data.ByteString.Char8         as B
 import qualified Data.ByteString.Lazy.Char8    as BL
 import           Data.Text                      ( Text )
@@ -166,7 +164,7 @@ data Reflection = Reflection
 
 withTextMaybe :: String -> (Text -> Maybe a) -> Value -> Parser a
 withTextMaybe label fromText = withText label $ \text -> case fromText text of
-  Nothing    -> parseFail $ "Unexpected " <> label <> " value: " <> show text
+  Nothing    -> fail $ "Unexpected " <> label <> " value: " <> show text
   Just known -> pure known
 
 data ShaderStage
