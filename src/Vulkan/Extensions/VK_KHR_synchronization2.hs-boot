@@ -30,12 +30,14 @@
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
---     2020-12-03 Interactions and External Dependencies:
+-- [__Last Modified Date__]
+--     2020-12-03
+--
+-- [__Interactions and External Dependencies__]
 --
 --     -   Interacts with @VK_KHR_create_renderpass2@
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Tobias Hector
 --

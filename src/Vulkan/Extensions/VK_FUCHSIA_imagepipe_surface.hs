@@ -254,7 +254,7 @@ data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
   , -- | @imagePipeHandle@ is a @zx_handle_t@ referring to the ImagePipe to
     -- associate with the surface.
     --
-    -- #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-imagePipeHandle-00000#
+    -- #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-imagePipeHandle-04863#
     -- @imagePipeHandle@ /must/ be a valid @zx_handle_t@
     imagePipeHandle :: Zx_handle_t
   }

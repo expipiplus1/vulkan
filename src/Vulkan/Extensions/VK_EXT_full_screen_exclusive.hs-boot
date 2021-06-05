@@ -158,7 +158,7 @@
 --
 -- 1) What should the extension & flag be called?
 --
--- RESOLVED: VK_EXT_full_screen_exclusive.
+-- __RESOLVED__: VK_EXT_full_screen_exclusive.
 --
 -- Other options considered (prior to the app-controlled mode) were:
 --
@@ -176,7 +176,7 @@
 --
 -- 2) Do we need more than a boolean toggle?
 --
--- RESOLVED: Yes.
+-- __RESOLVED__: Yes.
 --
 -- Using an enum with default\/allowed\/disallowed\/app-controlled enables
 -- applications to accept driver default behavior, specifically override it
@@ -185,13 +185,13 @@
 --
 -- 3) Should this be a KHR or EXT extension?
 --
--- RESOLVED: EXT, in order to allow it to be shipped faster.
+-- __RESOLVED__: EXT, in order to allow it to be shipped faster.
 --
 -- 4) Can the fullscreen hint affect the surface capabilities, and if so,
 -- should the hint also be specified as input when querying the surface
 -- capabilities?
 --
--- RESOLVED: Yes on both accounts.
+-- __RESOLVED__: Yes on both accounts.
 --
 -- While the hint does not guarantee a particular fullscreen mode will be
 -- used when the swapchain is created, it can sometimes imply particular
@@ -206,7 +206,7 @@
 --
 -- 5) Should full-screen be one word or two?
 --
--- RESOLVED: Two words.
+-- __RESOLVED__: Two words.
 --
 -- \"Fullscreen\" is not in my dictionary, and web searches did not turn up
 -- definitive proof that it is a colloquially accepted compound word.

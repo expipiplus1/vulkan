@@ -61,7 +61,7 @@
 -- of @Workgroup@ storage class memory and create aliases between variables
 -- from that storage class in a compute shader.
 --
--- The aliasing feature allows different \"views\" on the same data, so the
+-- The aliasing feature allows different “views” on the same data, so the
 -- shader can bulk copy data from another storage class using one type
 -- (e.g. an array of large vectors), and then use the data with a more
 -- specific type. It also enables reducing the amount of workgroup memory

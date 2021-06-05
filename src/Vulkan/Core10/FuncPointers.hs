@@ -38,6 +38,10 @@ type FN_vkInternalFreeNotification = ("pUserData" ::: Ptr ()) -> CSize -> Intern
 -- | PFN_vkInternalFreeNotification - Application-defined memory free
 -- notification function
 --
+-- = Description
+--
+-- > described link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-host-allocation-scope[here^].
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'

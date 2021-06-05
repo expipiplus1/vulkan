@@ -310,10 +310,6 @@ foreign import ccall
 --
 -- = Description
 --
--- @pAllocator@ controls host memory allocation as described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
--- chapter.
---
 -- The created descriptor pool is returned in @pDescriptorPool@.
 --
 -- == Valid Usage (Implicit)
@@ -593,7 +589,7 @@ foreign import ccall
 -- fail due to lack of space if the call to 'allocateDescriptorSets' would
 -- cause the number of any given descriptor type to exceed the sum of all
 -- the @descriptorCount@ members of each element of
--- 'DescriptorPoolCreateInfo'::@pPoolSizes@ with a @member@ equal to that
+-- 'DescriptorPoolCreateInfo'::@pPoolSizes@ with a @type@ equal to that
 -- type.
 --
 -- Additionally, the allocation /may/ also fail if a call to
@@ -875,7 +871,8 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
   pure $ ()
 
 
--- | VkDescriptorBufferInfo - Structure specifying descriptor buffer info
+-- | VkDescriptorBufferInfo - Structure specifying descriptor buffer
+-- information
 --
 -- = Description
 --
@@ -986,7 +983,8 @@ instance Zero DescriptorBufferInfo where
            zero
 
 
--- | VkDescriptorImageInfo - Structure specifying descriptor image info
+-- | VkDescriptorImageInfo - Structure specifying descriptor image
+-- information
 --
 -- = Description
 --
@@ -1153,7 +1151,10 @@ instance Zero DescriptorImageInfo where
 -- element zero. If a binding has a @descriptorCount@ of zero, it is
 -- skipped. This behavior applies recursively, with the update affecting
 -- consecutive bindings as needed to update all @descriptorCount@
--- descriptors.
+-- descriptors. Consecutive bindings /must/ have identical
+-- elink::VkDescriptorType, elink::VkShaderStageFlags,
+-- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits',
+-- and immutable samplers references.
 --
 -- Note
 --
@@ -1485,11 +1486,6 @@ instance Zero DescriptorImageInfo where
 --     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
 --
--- -   #VUID-VkWriteDescriptorSet-descriptorCount-03048# All consecutive
---     bindings updated via a single 'WriteDescriptorSet' structure, except
---     those with a @descriptorCount@ of zero, /must/ have identical
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
---
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02752# If @descriptorType@
 --     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
 --     then @dstSet@ /must/ not have been allocated with a layout that
@@ -1551,17 +1547,26 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- then @dstArrayElement@ specifies the starting byte offset within the
     -- binding.
     dstArrayElement :: Word32
-  , -- | @descriptorCount@ is the number of descriptors to update (the number of
-    -- elements in @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ , or a
-    -- value matching the @dataSize@ member of a
-    -- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
-    -- structure in the @pNext@ chain , or a value matching the
-    -- @accelerationStructureCount@ of a
-    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
-    -- structure in the @pNext@ chain ). If the descriptor binding identified
-    -- by @dstSet@ and @dstBinding@ has a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+  , -- | @descriptorCount@ is the number of descriptors to update. If the
+    -- descriptor binding identified by @dstSet@ and @dstBinding@ has a
+    -- descriptor type of
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
     -- then @descriptorCount@ specifies the number of bytes to update.
+    -- Otherwise, @descriptorCount@ is one of
+    --
+    -- -   the number of elements in @pImageInfo@
+    --
+    -- -   the number of elements in @pBufferInfo@
+    --
+    -- -   the number of elements in @pTexelBufferView@
+    --
+    -- -   a value matching the @dataSize@ member of a
+    --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
+    --     structure in the @pNext@ chain
+    --
+    -- -   a value matching the @accelerationStructureCount@ of a
+    --     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+    --     structure in the @pNext@ chain
     descriptorCount :: Word32
   , -- | @descriptorType@ is a
     -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying the type
@@ -1770,11 +1775,13 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set
 --
--- -   #VUID-VkCopyDescriptorSet-srcSet-01919# If @srcSet@’s layout was
---     created without the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-04885# If @srcSet@’s layout was
+--     created with neither
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     flag set, then @dstSet@’s layout /must/ also have been created
---     without the
+--     nor
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     flags set, then @dstSet@’s layout /must/ have been created without
+--     the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set
 --
@@ -1786,11 +1793,13 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
--- -   #VUID-VkCopyDescriptorSet-srcSet-01921# If the descriptor pool from
---     which @srcSet@ was allocated was created without the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-04887# If the descriptor pool from
+--     which @srcSet@ was allocated was created with neither
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     flag set, then the descriptor pool from which @dstSet@ was allocated
---     /must/ also have been created without the
+--     nor
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     flags set, then the descriptor pool from which @dstSet@ was
+--     allocated /must/ have been created without the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
@@ -1962,15 +1971,15 @@ instance Zero CopyDescriptorSet where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     descriptor with immutable samplers does not modify the samplers (the
 --     image views are updated, but the sampler updates are ignored). If
---     @pImmutableSamplers@ is not @NULL@, then it points to an array of
---     sampler handles that will be copied into the set layout and used for
---     the corresponding binding. Only the sampler handles are copied; the
---     sampler objects /must/ not be destroyed before the final use of the
---     set layout and any descriptor pools and sets created using it. If
---     @pImmutableSamplers@ is @NULL@, then the sampler slots are dynamic
---     and sampler handles /must/ be bound into descriptor sets using this
---     layout. If @descriptorType@ is not one of these descriptor types,
---     then @pImmutableSamplers@ is ignored.
+--     @pImmutableSamplers@ is not @NULL@, then it is a pointer to an array
+--     of sampler handles that will be copied into the set layout and used
+--     for the corresponding binding. Only the sampler handles are copied;
+--     the sampler objects /must/ not be destroyed before the final use of
+--     the set layout and any descriptor pools and sets created using it.
+--     If @pImmutableSamplers@ is @NULL@, then the sampler slots are
+--     dynamic and sampler handles /must/ be bound into descriptor sets
+--     using this layout. If @descriptorType@ is not one of these
+--     descriptor types, then @pImmutableSamplers@ is ignored.
 --
 -- The above layout definition allows the descriptor bindings to be
 -- specified sparsely such that not all binding numbers between 0 and the
@@ -2057,10 +2066,10 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
     -- type of resource descriptors are used for this binding.
     descriptorType :: DescriptorType
   , -- | @descriptorCount@ is the number of descriptors contained in the binding,
-    -- accessed in a shader as an array , except if @descriptorType@ is
+    -- accessed in a shader as an array, except if @descriptorType@ is
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
     -- in which case @descriptorCount@ is the size in bytes of the inline
-    -- uniform block . If @descriptorCount@ is zero this binding entry is
+    -- uniform block. If @descriptorCount@ is zero this binding entry is
     -- reserved and the resource /must/ not be accessed from any stage via this
     -- binding within any pipeline using the set layout.
     descriptorCount :: Word32
@@ -2407,9 +2416,10 @@ instance Zero DescriptorPoolSize where
 --
 -- = Description
 --
--- If multiple 'DescriptorPoolSize' structures appear in the @pPoolSizes@
--- array then the pool will be created with enough storage for the total
--- number of descriptors of each type.
+-- If multiple 'DescriptorPoolSize' structures containing the same
+-- descriptor type appear in the @pPoolSizes@ array then the pool will be
+-- created with enough storage for the total number of descriptors of each
+-- type.
 --
 -- Fragmentation of a descriptor pool is possible and /may/ lead to
 -- descriptor set allocation failures. A failure due to fragmentation is
@@ -2464,7 +2474,26 @@ instance Zero DescriptorPoolSize where
 -- descriptor. A mutable descriptor /can/ be allocated from a pool entry if
 -- the type list in 'DescriptorSetLayoutCreateInfo' is a subset of the type
 -- list declared in the descriptor pool, or if the pool entry is created
--- without a descriptor type list.
+-- without a descriptor type list. Multiple @pPoolSizes@ entries with
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE' /can/
+-- be declared. When multiple such pool entries are present in
+-- @pPoolSizes@, they specify sets of supported descriptor types which
+-- either fully overlap, partially overlap, or are disjoint. Two sets fully
+-- overlap if the sets of supported descriptor types are equal. If the sets
+-- are not disjoint they partially overlap. A pool entry without a
+-- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE'
+-- assigned to it is considered to partially overlap any other pool entry
+-- which has a
+-- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE'
+-- assigned to it. The application /must/ ensure that partial overlap does
+-- not exist in @pPoolSizes@.
+--
+-- Note
+--
+-- The requirement of no partial overlap is intended to resolve ambiguity
+-- for validation as there is no confusion which @pPoolSizes@ entries will
+-- be allocated from. An implementation is not expected to depend on this
+-- requirement.
 --
 -- == Valid Usage
 --
@@ -2488,6 +2517,14 @@ instance Zero DescriptorPoolSize where
 --     bit set,
 --     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'::@mutableDescriptorType@
 --     /must/ be enabled
+--
+-- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-04787# If @pPoolSizes@
+--     contains a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     any other
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     element in @pPoolSizes@ /must/ not have sets of supported descriptor
+--     types which partially overlap
 --
 -- == Valid Usage (Implicit)
 --

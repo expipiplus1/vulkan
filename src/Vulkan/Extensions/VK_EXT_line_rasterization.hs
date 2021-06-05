@@ -103,9 +103,8 @@
 -- == Issues
 --
 -- > (1) Do we need to support Bresenham-style and smooth lines with more than
--- >     one rasterization sample? i.e. the equivalent of
--- >     glDisable(GL_MULTISAMPLE) in OpenGL when the framebuffer has more than
--- >     one sample?
+-- > one rasterization sample? i.e. the equivalent of glDisable(GL_MULTISAMPLE)
+-- > in OpenGL when the framebuffer has more than one sample?
 --
 -- > RESOLVED: Yes.
 -- > For simplicity, Bresenham line rasterization carries forward a few
@@ -270,18 +269,19 @@ cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceLineRasterizationFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceLineRasterizationFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceLineRasterizationFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceLineRasterizationFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -382,17 +382,15 @@ instance Zero PhysicalDeviceLineRasterizationFeaturesEXT where
 -- | VkPhysicalDeviceLineRasterizationPropertiesEXT - Structure describing
 -- line rasterization properties supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceLineRasterizationPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceLineRasterizationPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

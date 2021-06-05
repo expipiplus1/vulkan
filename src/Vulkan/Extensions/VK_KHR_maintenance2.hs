@@ -205,7 +205,7 @@
 -- >         ...
 -- >         .pNext = &specifyAspects,
 -- >         ...
--- >     }
+-- >     };
 -- >
 -- >     vkCreateRenderPass(...);
 --

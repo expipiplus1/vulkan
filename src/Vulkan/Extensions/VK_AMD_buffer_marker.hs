@@ -201,7 +201,7 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04081# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @pipelineStage@ /must/ not be
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-dstOffset-01798# @dstOffset@ /must/
 --     be less than or equal to the size of @dstBuffer@ minus @4@
@@ -274,10 +274,10 @@ cmdWriteBufferMarkerAMD :: forall io
                         => -- | @commandBuffer@ is the command buffer into which the command will be
                            -- recorded.
                            CommandBuffer
-                        -> -- | @pipelineStage@ is one of the
-                           -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
-                           -- values, specifying the pipeline stage whose completion triggers the
-                           -- marker write.
+                        -> -- | @pipelineStage@ is a
+                           -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits' value
+                           -- specifying the pipeline stage whose completion triggers the marker
+                           -- write.
                            PipelineStageFlagBits
                         -> -- | @dstBuffer@ is the buffer where the marker will be written to.
                            ("dstBuffer" ::: Buffer)

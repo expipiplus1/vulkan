@@ -145,9 +145,9 @@
 -- the compilation process and about which you can query properties and
 -- statistics?
 --
--- __RESOLVED__: Call them \"executables\". The name \"binary\" was used in
--- early drafts of the extension but it was determined that \"pipeline
--- binary\" could have a fairly broad meaning (such as a binary serialized
+-- __RESOLVED__: Call them “executables”. The name “binary” was used in
+-- early drafts of the extension but it was determined that “pipeline
+-- binary” could have a fairly broad meaning (such as a binary serialized
 -- form of an entire pipeline) and was too big of a namespace for the very
 -- specific needs of this extension.
 --
@@ -296,15 +296,17 @@ foreign import ccall
 --
 -- = Description
 --
--- If @pProperties@ is @NULL@, then the number of executables associated
--- with the pipeline is returned in @pExecutableCount@. Otherwise,
--- @pExecutableCount@ /must/ point to a variable set by the user to the
--- number of elements in the @pProperties@ array, and on return the
+-- If @pProperties@ is @NULL@, then the number of pipeline executables
+-- associated with the pipeline is returned in @pExecutableCount@.
+-- Otherwise, @pExecutableCount@ /must/ point to a variable set by the user
+-- to the number of elements in the @pProperties@ array, and on return the
 -- variable is overwritten with the number of structures actually written
 -- to @pProperties@. If @pExecutableCount@ is less than the number of
--- executables associated with the pipeline, at most @pExecutableCount@
--- structures will be written and 'getPipelineExecutablePropertiesKHR' will
--- return 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
+-- pipeline executables associated with the pipeline, at most
+-- @pExecutableCount@ structures will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available properties were returned.
 --
 -- == Valid Usage
 --
@@ -398,9 +400,10 @@ foreign import ccall
 -- variable is overwritten with the number of structures actually written
 -- to @pStatistics@. If @pStatisticCount@ is less than the number of
 -- statistics associated with the pipeline executable, at most
--- @pStatisticCount@ structures will be written and
--- 'getPipelineExecutableStatisticsKHR' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
+-- @pStatisticCount@ structures will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available statistics were returned.
 --
 -- == Valid Usage
 --
@@ -500,14 +503,15 @@ foreign import ccall
 -- actually written to @pInternalRepresentations@. If
 -- @pInternalRepresentationCount@ is less than the number of internal
 -- representations associated with the pipeline executable, at most
--- @pInternalRepresentationCount@ structures will be written and
--- 'getPipelineExecutableInternalRepresentationsKHR' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
+-- @pInternalRepresentationCount@ structures will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available representations were returned.
 --
 -- While the details of the internal representations remain implementation
 -- dependent, the implementation /should/ order the internal
--- representations in the order in which they occur in the compile pipeline
--- with the final shader assembly (if any) last.
+-- representations in the order in which they occur in the compiled
+-- pipeline with the final shader assembly (if any) last.
 --
 -- == Valid Usage
 --
@@ -593,19 +597,20 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
 --
 -- = Members
 --
--- The members of the
--- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' structure
--- is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
+-- is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -616,7 +621,7 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
 data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR = PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
   { -- | #features-pipelineExecutableInfo# @pipelineExecutableInfo@ indicates
     -- that the implementation supports reporting properties and statistics
-    -- about the executables associated with a compiled pipeline.
+    -- about the pipeline executables associated with a compiled pipeline.
     pipelineExecutableInfo :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -714,17 +719,15 @@ instance Zero PipelineInfoKHR where
 --
 -- = Description
 --
--- The @stages@ field /may/ be zero or it /may/ contain one or more bits
--- describing the stages principally used to compile this pipeline. Not all
--- implementations have a 1:1 mapping between shader stages and pipeline
--- executables and some implementations /may/ reduce a given shader stage
--- to fixed function hardware programming such that no executable is
--- available. No guarantees are provided about the mapping between shader
--- stages and pipeline executables and @stages@ /should/ be considered a
--- best effort hint. Because the application /cannot/ rely on the @stages@
--- field to provide an exact description, @name@ and @description@ provide
--- a human readable name and description which more accurately describes
--- the given pipeline executable.
+-- Not all implementations have a 1:1 mapping between shader stages and
+-- pipeline executables and some implementations /may/ reduce a given
+-- shader stage to fixed function hardware programming such that no
+-- pipeline executable is available. No guarantees are provided about the
+-- mapping between shader stages and pipeline executables and @stages@
+-- /should/ be considered a best effort hint. Because the application
+-- /cannot/ rely on the @stages@ field to provide an exact description,
+-- @name@ and @description@ provide a human readable name and description
+-- which more accurately describes the given pipeline executable.
 --
 -- == Valid Usage (Implicit)
 --
@@ -734,22 +737,22 @@ instance Zero PipelineInfoKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutablePropertiesKHR'
 data PipelineExecutablePropertiesKHR = PipelineExecutablePropertiesKHR
-  { -- | @stages@ is a bitmask of
+  { -- | @stages@ is a bitmask of zero or more
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' indicating
     -- which shader stages (if any) were principally used as inputs to compile
     -- this pipeline executable.
     stages :: ShaderStageFlags
   , -- | @name@ is an array of 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE'
     -- @char@ containing a null-terminated UTF-8 string which is a short human
-    -- readable name for this executable.
+    -- readable name for this pipeline executable.
     name :: ByteString
   , -- | @description@ is an array of
     -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE' @char@ containing a
     -- null-terminated UTF-8 string which is a human readable description for
-    -- this executable.
+    -- this pipeline executable.
     description :: ByteString
-  , -- | @subgroupSize@ is the subgroup size with which this executable is
-    -- dispatched.
+  , -- | @subgroupSize@ is the subgroup size with which this pipeline executable
+    -- is dispatched.
     subgroupSize :: Word32
   }
   deriving (Typeable)
@@ -819,12 +822,12 @@ data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
     -- #VUID-VkPipelineExecutableInfoKHR-pipeline-parameter# @pipeline@ /must/
     -- be a valid 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline
-  , -- | @executableIndex@ is the index of the executable to query in the array
-    -- of executable properties returned by
+  , -- | @executableIndex@ is the index of the pipeline executable to query in
+    -- the array of executable properties returned by
     -- 'getPipelineExecutablePropertiesKHR'.
     --
     -- #VUID-VkPipelineExecutableInfoKHR-executableIndex-03275#
-    -- @executableIndex@ /must/ be less than the number of executables
+    -- @executableIndex@ /must/ be less than the number of pipeline executables
     -- associated with @pipeline@ as returned in the @pExecutableCount@
     -- parameter of 'getPipelineExecutablePropertiesKHR'
     executableIndex :: Word32
@@ -953,12 +956,14 @@ instance Zero PipelineExecutableStatisticKHR where
 -- return @dataSize@ is overwritten with the number of bytes of data
 -- actually written to @pData@ including any trailing null character. If
 -- @dataSize@ is less than the size, in bytes, of the internal
--- representation data, at most @dataSize@ bytes of data will be written to
--- @pData@ and 'getPipelineExecutableInternalRepresentationsKHR' will
--- return 'Vulkan.Core10.Enums.Result.INCOMPLETE'. If @isText@ is
--- 'Vulkan.Core10.FundamentalTypes.TRUE' and @pData@ is not @NULL@ and
--- @dataSize@ is not zero, the last byte written to @pData@ will be a null
--- character.
+-- representation’s data, at most @dataSize@ bytes of data will be written
+-- to @pData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
+-- all the available representation was returned.
+--
+-- If @isText@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and @pData@ is not
+-- @NULL@ and @dataSize@ is not zero, the last byte written to @pData@ will
+-- be a null character.
 --
 -- == Valid Usage (Implicit)
 --
@@ -983,11 +988,10 @@ data PipelineExecutableInternalRepresentationKHR = PipelineExecutableInternalRep
     -- string.
     isText :: Bool
   , -- | @dataSize@ is an integer related to the size, in bytes, of the internal
-    -- representation data, as described below.
+    -- representation’s data, as described below.
     dataSize :: Word64
-  , -- | @pData@ is either @NULL@ or a pointer to an block of data into which the
-    -- implementation will write the textual form of the internal
-    -- representation.
+  , -- | @pData@ is either @NULL@ or a pointer to a block of data into which the
+    -- implementation will write the internal representation.
     data' :: Ptr ()
   }
   deriving (Typeable)

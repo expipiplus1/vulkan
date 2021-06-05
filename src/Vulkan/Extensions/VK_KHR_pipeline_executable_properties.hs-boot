@@ -145,9 +145,9 @@
 -- the compilation process and about which you can query properties and
 -- statistics?
 --
--- __RESOLVED__: Call them \"executables\". The name \"binary\" was used in
--- early drafts of the extension but it was determined that \"pipeline
--- binary\" could have a fairly broad meaning (such as a binary serialized
+-- __RESOLVED__: Call them “executables”. The name “binary” was used in
+-- early drafts of the extension but it was determined that “pipeline
+-- binary” could have a fairly broad meaning (such as a binary serialized
 -- form of an entire pipeline) and was too big of a namespace for the very
 -- specific needs of this extension.
 --

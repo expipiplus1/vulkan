@@ -307,7 +307,7 @@
 -- __RESOLVED__: Accept a semaphore to signal as an object handle. This
 -- avoids the need to specify whether the application must destroy the
 -- semaphore or whether it is owned by the swapchain, and if the latter,
--- what its lifetime is and whether it can be re-used for other operations
+-- what its lifetime is and whether it can be reused for other operations
 -- once it is received from 'acquireNextImageKHR'.
 --
 -- 11) What types of swapchain queuing behavior should be exposed? Options
@@ -329,7 +329,7 @@
 --     single-entry queue is used to hold pending presentation requests. If
 --     the queue is full when a new presentation request is received, the
 --     new request replaces the existing entry, and any images associated
---     with the prior entry become available for re-use by the application.
+--     with the prior entry become available for reuse by the application.
 --
 -- -   FIFO queue: Waits for the next vertical blanking period to update
 --     the current image. No tearing should be observed. An internal queue
@@ -340,10 +340,10 @@
 --     queue is non-empty
 --
 -- Not all surfaces will support all of these modes, so the modes supported
--- will be returned using a surface info query. All surfaces must support
--- the FIFO queue mode. Applications must choose one of these modes up
--- front when creating a swapchain. Switching modes can be accomplished by
--- recreating the swapchain.
+-- will be returned using a surface information query. All surfaces must
+-- support the FIFO queue mode. Applications must choose one of these modes
+-- up front when creating a swapchain. Switching modes can be accomplished
+-- by recreating the swapchain.
 --
 -- 12) Can 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR'
 -- provide non-blocking guarantees for 'acquireNextImageKHR'? If so, what
@@ -379,11 +379,11 @@
 -- to indicate there are no practical limits on the number of images in a
 -- swapchain?
 --
--- __RESOLVED__: Yes. There where often be cases where there is no
--- practical limit to the number of images in a swapchain other than the
--- amount of available resources (I.e., memory) in the system. Trying to
--- derive a hard limit from things like memory size is prone to failure. It
--- is better in such cases to leave it to applications to figure such soft
+-- __RESOLVED__: Yes. There will often be cases where there is no practical
+-- limit to the number of images in a swapchain other than the amount of
+-- available resources (i.e., memory) in the system. Trying to derive a
+-- hard limit from things like memory size is prone to failure. It is
+-- better in such cases to leave it to applications to figure such soft
 -- limits out via trial\/failure iterations.
 --
 -- 15) Should there be a special value for
@@ -411,7 +411,7 @@
 -- __RESOLVED__: Applications can query both the supported and current
 -- transforms of a surface. Both are specified relative to the device’s
 -- “natural” display rotation and direction. The supported transforms
--- indicates which orientations the presentation engine accepts images in.
+-- indicate which orientations the presentation engine accepts images in.
 -- For example, a presentation engine that does not support transforming
 -- surfaces as part of presentation, and which is presenting to a surface
 -- that is displayed with a 90-degree rotation, would return only one
@@ -484,7 +484,7 @@
 -- obscuring their target surface?
 --
 -- __RESOLVED__: Applications can choose which behavior they prefer.
--- Allowing the content to be clipped could enable more optimal
+-- Allowing the content to be clipped could enable more efficient
 -- presentation methods on some platforms, but some applications might rely
 -- on the content of presentable images to perform techniques such as
 -- partial updates or motion blurs.
@@ -513,9 +513,9 @@
 -- using such formats does not guarantee working in a specific color space.
 -- It merely means that the hardware can directly support applying the
 -- non-linear transfer functions defined by the sRGB standard color space
--- when reading from or writing to images of that these formats. Still, it
--- is unlikely that a swapchain will expose a @*_SRGB@ format along with
--- any color space other than
+-- when reading from or writing to images of those formats. Still, it is
+-- unlikely that a swapchain will expose a @*_SRGB@ format along with any
+-- color space other than
 -- 'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_SRGB_NONLINEAR_KHR'.
 --
 -- On the other hand, non-@*_SRGB@ formats will be very likely exposed in
@@ -525,7 +525,7 @@
 -- characteristics. In this case the application is responsible for
 -- applying the transfer function, for instance by using shader math.
 --
--- 25) How are the lifetime of surfaces and swapchains targeting them
+-- 25) How are the lifetimes of surfaces and swapchains targeting them
 -- related?
 --
 -- __RESOLVED__: A surface must outlive any swapchains targeting it. A
@@ -665,7 +665,7 @@
 --
 --     -   Renamed VkSurfaceCapabilityPropertiesKHR to
 --         VkSurfacePropertiesKHR to better convey the mutable nature of
---         the info it contains.
+--         the information it contains.
 --
 -- -   Revision 12, 2015-05-28 (James Jones)
 --
@@ -753,8 +753,8 @@
 -- -   Revision 24, 2015-06-19 (Ian Elliott)
 --
 --     -   Changed special value for VkSurfacePropertiesKHR::currentExtent
---         back to \"-1\" from \"0\". This value will never need to be
---         unsigned, and \"0\" is actually a legal value.
+--         back to “-1” from “0”. This value will never need to be
+--         unsigned, and “0” is actually a legal value.
 --
 -- -   Revision 25, 2015-06-23 (Ian Elliott)
 --
@@ -773,12 +773,12 @@
 --
 -- -   Revision 28, 2015-06-25 (James Jones)
 --
---     -   Added the \"inherit\" bits to the rotation and mirroring flags
---         and the associated issue 21.
+--     -   Added the “inherit” bits to the rotation and mirroring flags and
+--         the associated issue 21.
 --
 -- -   Revision 29, 2015-06-25 (James Jones)
 --
---     -   Added the \"clipped\" flag to VkSwapchainCreateInfoKHR, and the
+--     -   Added the “clipped” flag to VkSwapchainCreateInfoKHR, and the
 --         associated issue 22.
 --
 --     -   Specified that presenting an image does not modify it.
@@ -791,13 +791,13 @@
 --
 -- -   Revision 31, 2015-06-26 (Ian Elliott)
 --
---     -   Example of new VkSwapchainCreateInfoKHR members,
---         \"oldSwapchain\" and \"clipped\".
+--     -   Example of new VkSwapchainCreateInfoKHR members, “oldSwapchain”
+--         and “clipped”.
 --
 --     -   Example of using VkSurfacePropertiesKHR::{min|max}ImageCount to
 --         set VkSwapchainCreateInfoKHR::minImageCount.
 --
---     -   Rename vkGetSurfaceInfoKHR()\'s 4th parameter to \"pDataSize\",
+--     -   Rename vkGetSurfaceInfoKHR()\'s 4th parameter to “pDataSize”,
 --         for consistency with other functions.
 --
 --     -   Add macro with C-string name of extension (just to header file).
@@ -805,7 +805,7 @@
 -- -   Revision 32, 2015-06-26 (James Jones)
 --
 --     -   Minor adjustments to the language describing the behavior of
---         \"oldSwapchain\"
+--         “oldSwapchain”
 --
 --     -   Fixed the version date on my previous two updates.
 --
@@ -815,7 +815,7 @@
 --
 -- -   Revision 34, 2015-06-26 (Ian Elliott)
 --
---     -   Rename vkQueuePresentKHR()\'s 2nd parameter to \"pPresentInfo\",
+--     -   Rename vkQueuePresentKHR()\'s 2nd parameter to “pPresentInfo”,
 --         for consistency with other functions.
 --
 -- -   Revision 35, 2015-06-26 (Jason Ekstrand)
@@ -855,8 +855,8 @@
 --
 -- -   Revision 40, 2015-07-10 (Ian Elliott)
 --
---     -   Updated to work with version 138 of the \"vulkan.h\" header.
---         This includes declaring the VkSwapchainKHR type using the new
+--     -   Updated to work with version 138 of the @vulkan.h@ header. This
+--         includes declaring the VkSwapchainKHR type using the new
 --         VK_DEFINE_NONDISP_HANDLE macro, and no longer extending
 --         VkObjectType (which was eliminated).
 --
@@ -869,7 +869,7 @@
 --     -   Updated query mechanism to reflect the convention changes done
 --         in the core spec.
 --
---     -   Removed \"queue\" from the name of
+--     -   Removed “queue” from the name of
 --         VK_STRUCTURE_TYPE_QUEUE_PRESENT_INFO_KHR to be consistent with
 --         the established naming convention.
 --
@@ -895,7 +895,7 @@
 --         VkSwapchainCreateInfoKHR struct).
 --
 --     -   Corrected a typo in header file (last parameter in
---         PFN_vkGetSurfacePropertiesKHR was missing \"KHR\" at the end of
+--         PFN_vkGetSurfacePropertiesKHR was missing “KHR” at the end of
 --         type: VkSurfacePropertiesKHR).
 --
 -- -   Revision 46, 2015-08-20 (Ian Elliott)
@@ -904,7 +904,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 --     -   Made improvements to several descriptions.
@@ -918,7 +918,7 @@
 --     from James Jones)
 --
 --     -   Moved the surface transform enums to VK_WSI_swapchain so they
---         could be re-used by VK_WSI_display.
+--         could be reused by VK_WSI_display.
 --
 -- -   Revision 48, 2015-09-01 (James Jones)
 --
@@ -1029,22 +1029,21 @@
 --
 -- -   Revision 68, 2016-04-05 (Ian Elliott)
 --
---     -   Moved the \"validity\" include for vkAcquireNextImage to be in
---         its proper place, after the prototype and list of parameters.
+--     -   Moved the “validity” include for vkAcquireNextImage to be in its
+--         proper place, after the prototype and list of parameters.
 --
 --     -   Clarified language about presentable images, including how they
 --         are acquired, when applications can and cannot use them, etc. As
---         part of this, removed language about \"ownership\" of
---         presentable images, and replaced it with more-consistent
---         language about presentable images being \"acquired\" by the
---         application.
+--         part of this, removed language about “ownership” of presentable
+--         images, and replaced it with more-consistent language about
+--         presentable images being “acquired” by the application.
 --
 -- -   2016-08-23 (Ian Elliott)
 --
 --     -   Update the example code, to use the final API command names, to
 --         not have so many characters per line, and to split out a new
 --         example to show how to obtain function pointers. This code is
---         more similar to the LunarG \"cube\" demo program.
+--         more similar to the LunarG “cube” demo program.
 --
 -- -   2016-08-25 (Ian Elliott)
 --
@@ -1516,11 +1515,10 @@ foreign import ccall
 -- variable is overwritten with the number of structures actually written
 -- to @pSwapchainImages@. If the value of @pSwapchainImageCount@ is less
 -- than the number of presentable images for @swapchain@, at most
--- @pSwapchainImageCount@ structures will be written. If
--- @pSwapchainImageCount@ is smaller than the number of presentable images
--- for @swapchain@, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate
--- that not all the available values were returned.
+-- @pSwapchainImageCount@ structures will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available presentable images were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -2201,11 +2199,10 @@ foreign import ccall
 -- elements in the @pRects@ array, and on return the variable is
 -- overwritten with the number of structures actually written to @pRects@.
 -- If the value of @pRectCount@ is less than the number of rectangles, at
--- most @pRectCount@ structures will be written. If @pRectCount@ is smaller
--- than the number of rectangles used for the given @surface@,
+-- most @pRectCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available rectangles were returned.
 --
 -- The values returned by this command are not invariant, and /may/ change
 -- in response to the surface being moved, resized, or occluded.
@@ -2287,84 +2284,6 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 -- created swapchain object
 --
 -- = Description
---
--- Note
---
--- On some platforms, it is normal that @maxImageExtent@ /may/ become @(0,
--- 0)@, for example when the window is minimized. In such a case, it is not
--- possible to create a swapchain due to the Valid Usage requirements.
---
--- -   @imageArrayLayers@ is the number of views in a multiview\/stereo
---     surface. For non-stereoscopic-3D applications, this value is 1.
---
--- -   @imageUsage@ is a bitmask of
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits'
---     describing the intended usage of the (acquired) swapchain images.
---
--- -   @imageSharingMode@ is the sharing mode used for the image(s) of the
---     swapchain.
---
--- -   @queueFamilyIndexCount@ is the number of queue families having
---     access to the image(s) of the swapchain when @imageSharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
---
--- -   @pQueueFamilyIndices@ is a pointer to an array of queue family
---     indices having access to the images(s) of the swapchain when
---     @imageSharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
---
--- -   @preTransform@ is a
---     'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
---     describing the transform, relative to the presentation engine’s
---     natural orientation, applied to the image content prior to
---     presentation. If it does not match the @currentTransform@ value
---     returned by
---     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
---     the presentation engine will transform the image content as part of
---     the presentation operation.
---
--- -   @compositeAlpha@ is a
---     'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR' value
---     indicating the alpha compositing mode to use when this surface is
---     composited together with other surfaces on certain window systems.
---
--- -   @presentMode@ is the presentation mode the swapchain will use. A
---     swapchain’s present mode determines how incoming present requests
---     will be processed and queued internally.
---
--- -   @clipped@ specifies whether the Vulkan implementation is allowed to
---     discard rendering operations that affect regions of the surface that
---     are not visible.
---
---     -   If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the presentable
---         images associated with the swapchain /may/ not own all of their
---         pixels. Pixels in the presentable images that correspond to
---         regions of the target surface obscured by another window on the
---         desktop, or subject to some other clipping mechanism will have
---         undefined content when read back. Fragment shaders /may/ not
---         execute for these pixels, and thus any side effects they would
---         have had will not occur. 'Vulkan.Core10.FundamentalTypes.TRUE'
---         value does not guarantee any clipping will occur, but allows
---         more optimal presentation methods to be used on some platforms.
---
---     -   If set to 'Vulkan.Core10.FundamentalTypes.FALSE', presentable
---         images associated with the swapchain will own all of the pixels
---         they contain.
---
--- Note
---
--- Applications /should/ set this value to
--- 'Vulkan.Core10.FundamentalTypes.TRUE' if they do not expect to read back
--- the content of presentable images before presenting them or after
--- reacquiring them, and if their fragment shaders do not have any side
--- effects that require them to run for all pixels in the presentable
--- image.
---
--- -   @oldSwapchain@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or the
---     existing non-retired swapchain currently associated with @surface@.
---     Providing a valid @oldSwapchain@ /may/ aid in the resource reuse,
---     and also allows the application to still present any images that are
---     already acquired from it.
 --
 -- Upon calling 'createSwapchainKHR' with an @oldSwapchain@ that is not
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', @oldSwapchain@ is
@@ -2691,24 +2610,78 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     -- behavior is platform-dependent if the image extent does not match the
     -- surface’s @currentExtent@ as returned by
     -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'.
+    --
+    -- Note
+    --
+    -- On some platforms, it is normal that @maxImageExtent@ /may/ become @(0,
+    -- 0)@, for example when the window is minimized. In such a case, it is not
+    -- possible to create a swapchain due to the Valid Usage requirements.
     imageExtent :: Extent2D
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageArrayLayers"
+  , -- | @imageArrayLayers@ is the number of views in a multiview\/stereo
+    -- surface. For non-stereoscopic-3D applications, this value is 1.
     imageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageUsage"
+  , -- | @imageUsage@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' describing
+    -- the intended usage of the (acquired) swapchain images.
     imageUsage :: ImageUsageFlags
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageSharingMode"
+  , -- | @imageSharingMode@ is the sharing mode used for the image(s) of the
+    -- swapchain.
     imageSharingMode :: SharingMode
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "pQueueFamilyIndices"
+  , -- | @pQueueFamilyIndices@ is a pointer to an array of queue family indices
+    -- having access to the images(s) of the swapchain when @imageSharingMode@
+    -- is 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
     queueFamilyIndices :: Vector Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "preTransform"
+  , -- | @preTransform@ is a
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
+    -- describing the transform, relative to the presentation engine’s natural
+    -- orientation, applied to the image content prior to presentation. If it
+    -- does not match the @currentTransform@ value returned by
+    -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
+    -- the presentation engine will transform the image content as part of the
+    -- presentation operation.
     preTransform :: SurfaceTransformFlagBitsKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "compositeAlpha"
+  , -- | @compositeAlpha@ is a
+    -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR' value
+    -- indicating the alpha compositing mode to use when this surface is
+    -- composited together with other surfaces on certain window systems.
     compositeAlpha :: CompositeAlphaFlagBitsKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "presentMode"
+  , -- | @presentMode@ is the presentation mode the swapchain will use. A
+    -- swapchain’s present mode determines how incoming present requests will
+    -- be processed and queued internally.
     presentMode :: PresentModeKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "clipped"
+  , -- | @clipped@ specifies whether the Vulkan implementation is allowed to
+    -- discard rendering operations that affect regions of the surface that are
+    -- not visible.
+    --
+    -- -   If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the presentable
+    --     images associated with the swapchain /may/ not own all of their
+    --     pixels. Pixels in the presentable images that correspond to regions
+    --     of the target surface obscured by another window on the desktop, or
+    --     subject to some other clipping mechanism will have undefined content
+    --     when read back. Fragment shaders /may/ not execute for these pixels,
+    --     and thus any side effects they would have had will not occur.
+    --     Setting 'Vulkan.Core10.FundamentalTypes.TRUE' does not guarantee any
+    --     clipping will occur, but allows more efficient presentation methods
+    --     to be used on some platforms.
+    --
+    -- -   If set to 'Vulkan.Core10.FundamentalTypes.FALSE', presentable images
+    --     associated with the swapchain will own all of the pixels they
+    --     contain.
+    --
+    --     Note
+    --
+    --     Applications /should/ set this value to
+    --     'Vulkan.Core10.FundamentalTypes.TRUE' if they do not expect to read
+    --     back the content of presentable images before presenting them or
+    --     after reacquiring them, and if their fragment shaders do not have
+    --     any side effects that require them to run for all pixels in the
+    --     presentable image.
     clipped :: Bool
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "oldSwapchain"
+  , -- | @oldSwapchain@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or the
+    -- existing non-retired swapchain currently associated with @surface@.
+    -- Providing a valid @oldSwapchain@ /may/ aid in the resource reuse, and
+    -- also allows the application to still present any images that are already
+    -- acquired from it.
     oldSwapchain :: SwapchainKHR
   }
   deriving (Typeable)
@@ -3482,8 +3455,8 @@ data DeviceGroupPresentInfoKHR = DeviceGroupPresentInfoKHR
   { -- | @pDeviceMasks@ is a pointer to an array of device masks, one for each
     -- element of 'PresentInfoKHR'::pSwapchains.
     deviceMasks :: Vector Word32
-  , -- | @mode@ is the device group present mode that will be used for this
-    -- present.
+  , -- | @mode@ is a 'DeviceGroupPresentModeFlagBitsKHR' value specifying the
+    -- device group present mode that will be used for this present.
     mode :: DeviceGroupPresentModeFlagBitsKHR
   }
   deriving (Typeable)
@@ -3657,7 +3630,7 @@ newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
 -- | 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' specifies that the images of
 -- the swapchain /can/ be used to create a
 -- 'Vulkan.Core10.Handles.ImageView' with a different format than what the
--- swapchain was created with. The list of allowed image view formats are
+-- swapchain was created with. The list of allowed image view formats is
 -- specified by adding a
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 -- structure to the @pNext@ chain of 'SwapchainCreateInfoKHR'. In addition,

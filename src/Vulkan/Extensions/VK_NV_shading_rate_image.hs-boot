@@ -142,7 +142,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
 --
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
+--     -   'ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
@@ -152,17 +152,17 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
 --
---     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
+--     -   'IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -201,8 +201,7 @@
 -- perform such a query, it could instead just set its own order, also
 -- using custom per-pixel sample locations if required.
 --
--- (2) For the pipeline stage
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
+-- (2) For the pipeline stage 'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
 -- should we specify a precise location in the pipeline the shading rate
 -- image is accessed (after geometry shading, but before the early fragment
 -- tests) or leave it under-specified in case there are other

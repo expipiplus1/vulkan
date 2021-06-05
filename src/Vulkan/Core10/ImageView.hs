@@ -377,7 +377,7 @@ instance Zero ComponentMapping where
 --
 -- When using an image view of a depth\/stencil image to populate a
 -- descriptor set (e.g. for sampling in the shader, or for use as an input
--- attachment), the @aspectMask@ /must/ only include one bit and selects
+-- attachment), the @aspectMask@ /must/ only include one bit, which selects
 -- whether the image view is used for depth reads (i.e. using a
 -- floating-point sampler or input attachment in the shader) or stencil
 -- reads (i.e. using an unsigned integer sampler or input attachment in the
@@ -521,8 +521,8 @@ instance Zero ImageSubresourceRange where
 -- implicit @usage@ /can/ be overriden by adding a
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
 -- structure to the @pNext@ chain, but the view usage /must/ be a subset of
--- the image usage. If the image was has a depth-stencil format and was
--- created with a
+-- the image usage. If @image@ has a depth-stencil format and was created
+-- with a
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 -- structure included in the @pNext@ chain of
 -- 'Vulkan.Core10.Image.ImageCreateInfo', the usage is calculated based on
@@ -573,8 +573,8 @@ instance Zero ImageSubresourceRange where
 -- flag, @format@ /must/ be /compatible/ with the image’s format as
 -- described above, or /must/ be an uncompressed format in which case it
 -- /must/ be /size-compatible/ with the image’s format, as defined for
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-images-format-size-compatibility copying data between images>
--- In this case the resulting image view’s texel dimensions equal the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-images-format-size-compatibility copying data between images>.
+-- In this case, the resulting image view’s texel dimensions equal the
 -- dimensions of the selected mip level divided by the compressed texel
 -- block size and rounded up.
 --
@@ -601,9 +601,9 @@ instance Zero ImageSubresourceRange where
 -- If the image has a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- @format@ and @subresourceRange.aspectMask@ is
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
--- @format@ /must/ be identical to the image @format@, and the sampler to
--- be used with the image view /must/ enable
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT', then
+-- the @format@ /must/ be identical to the image @format@, and the sampler
+-- to be used with the image view /must/ enable
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
 --
 -- If @image@ was created with the
@@ -998,7 +998,7 @@ instance Zero ImageSubresourceRange where
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02086# If @image@ was created with
 --     @usage@ containing
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     @viewType@ /must/ be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
@@ -1006,13 +1006,13 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-image-02087# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage feature>
 --     is enabled, and If @image@ was created with @usage@ containing
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-04550# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
 --     is enabled, and the @usage@ for the image view includes
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
@@ -1021,7 +1021,7 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-usage-04551# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
 --     is enabled, the @usage@ for the image view includes
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-layeredShadingRateAttachments layeredShadingRateAttachments>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE',
@@ -1153,8 +1153,10 @@ instance Zero ImageSubresourceRange where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>,
 --     or
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfilesKHR VkVideoProfilesKHR>
 --
 -- -   #VUID-VkImageViewCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -1203,12 +1205,12 @@ data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' describing the format
     -- and type used to interpret texel blocks in the image.
     format :: Format
-  , -- | @components@ is a 'ComponentMapping' specifies a remapping of color
-    -- components (or of depth or stencil components after they have been
+  , -- | @components@ is a 'ComponentMapping' structure specifying a remapping of
+    -- color components (or of depth or stencil components after they have been
     -- converted into color components).
     components :: ComponentMapping
-  , -- | @subresourceRange@ is a 'ImageSubresourceRange' selecting the set of
-    -- mipmap levels and array layers to be accessible to the view.
+  , -- | @subresourceRange@ is a 'ImageSubresourceRange' structure selecting the
+    -- set of mipmap levels and array layers to be accessible to the view.
     subresourceRange :: ImageSubresourceRange
   }
   deriving (Typeable)

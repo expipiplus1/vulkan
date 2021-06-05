@@ -95,14 +95,14 @@ import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
-import Vulkan.Version (pattern MAKE_VERSION)
+import Vulkan.Version (pattern MAKE_API_VERSION)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 pattern API_VERSION_1_2 :: Word32
-pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
+pattern API_VERSION_1_2 = MAKE_API_VERSION 1 2 0
 
 
 -- | VkPhysicalDeviceVulkan11Features - Structure describing the Vulkan 1.1
@@ -110,17 +110,19 @@ pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceVulkan11Features' structure describe
--- the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceVulkan11Features' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceVulkan11Features' /can/ also be used in the @pNext@ chain
--- of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVulkan11Features' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -290,8 +292,18 @@ instance Zero PhysicalDeviceVulkan11Features where
 --
 -- = Description
 --
--- The members of 'PhysicalDeviceVulkan11Properties' /must/ have the same
--- values as the corresponding members of
+-- If the 'PhysicalDeviceVulkan11Properties' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These properties correspond to Vulkan 1.1 functionality.
+--
+-- The members of 'PhysicalDeviceVulkan11Properties' have the same values
+-- as the corresponding members of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
@@ -497,10 +509,14 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceVulkan12Features' structure describe
--- the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #features-samplerMirrorClampToEdge# @samplerMirrorClampToEdge@
 --     indicates whether the implementation supports the
@@ -806,8 +822,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     vectors of these types in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
 --     with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
---     the implementation supports the types.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>,
+--     if the implementation supports the types.
 --
 -- -   #features-separateDepthStencilLayouts# @separateDepthStencilLayouts@
 --     indicates whether the implementation supports a
@@ -895,11 +911,14 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     constants.
 --
 -- If the 'PhysicalDeviceVulkan12Features' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceVulkan12Features' /can/ also be used in the @pNext@ chain
--- of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVulkan12Features' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1233,6 +1252,16 @@ instance Zero PhysicalDeviceVulkan12Features where
 -- device properties for functionality promoted to Vulkan 1.2
 --
 -- = Description
+--
+-- If the 'PhysicalDeviceVulkan12Properties' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These properties correspond to Vulkan 1.2 functionality.
 --
 -- The members of 'PhysicalDeviceVulkan12Properties' /must/ have the same
 -- values as the corresponding members of

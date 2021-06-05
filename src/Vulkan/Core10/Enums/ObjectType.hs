@@ -34,6 +34,8 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_VALIDATION_CACHE_EXT
                                                   , OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
                                                   , OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
+                                                  , OBJECT_TYPE_CU_FUNCTION_NVX
+                                                  , OBJECT_TYPE_CU_MODULE_NVX
                                                   , OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
                                                   , OBJECT_TYPE_DISPLAY_MODE_KHR
                                                   , OBJECT_TYPE_DISPLAY_KHR
@@ -225,6 +227,10 @@ pattern OBJECT_TYPE_VALIDATION_CACHE_EXT            = ObjectType 1000160000
 pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR      = ObjectType 1000150000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
 pattern OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT       = ObjectType 1000128000
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_CU_FUNCTION_NVX"
+pattern OBJECT_TYPE_CU_FUNCTION_NVX                 = ObjectType 1000029001
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_CU_MODULE_NVX"
+pattern OBJECT_TYPE_CU_MODULE_NVX                   = ObjectType 1000029000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT"
 pattern OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT       = ObjectType 1000011000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DISPLAY_MODE_KHR"
@@ -273,6 +279,8 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION        = ObjectType 1000156000
              OBJECT_TYPE_VALIDATION_CACHE_EXT,
              OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR,
              OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT,
+             OBJECT_TYPE_CU_FUNCTION_NVX,
+             OBJECT_TYPE_CU_MODULE_NVX,
              OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT,
              OBJECT_TYPE_DISPLAY_MODE_KHR,
              OBJECT_TYPE_DISPLAY_KHR,
@@ -323,6 +331,8 @@ showTableObjectType =
   , (OBJECT_TYPE_VALIDATION_CACHE_EXT           , "VALIDATION_CACHE_EXT")
   , (OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR     , "ACCELERATION_STRUCTURE_KHR")
   , (OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT      , "DEBUG_UTILS_MESSENGER_EXT")
+  , (OBJECT_TYPE_CU_FUNCTION_NVX                , "CU_FUNCTION_NVX")
+  , (OBJECT_TYPE_CU_MODULE_NVX                  , "CU_MODULE_NVX")
   , (OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT      , "DEBUG_REPORT_CALLBACK_EXT")
   , (OBJECT_TYPE_DISPLAY_MODE_KHR               , "DISPLAY_MODE_KHR")
   , (OBJECT_TYPE_DISPLAY_KHR                    , "DISPLAY_KHR")

@@ -131,7 +131,7 @@
 --
 --     -   Added presentation support query for (Display*, VisualID) pair.
 --
---     -   Removed \"root\" parameter from CreateXlibSurfaceKHR(), as it is
+--     -   Removed “root” parameter from CreateXlibSurfaceKHR(), as it is
 --         redundant when a window on the same screen is specified as well.
 --
 --     -   Added appropriate X errors.

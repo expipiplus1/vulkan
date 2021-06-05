@@ -100,6 +100,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_blend_operation_advanced (Physica
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_device_coherent_memory (PhysicalDeviceCoherentMemoryFeaturesAMD)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_color_write_enable (PhysicalDeviceColorWriteEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (PhysicalDeviceConditionalRenderingFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conservative_rasterization (PhysicalDeviceConservativeRasterizationPropertiesEXT)
@@ -121,6 +122,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (Physica
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PhysicalDeviceDiscardRectanglePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state2 (PhysicalDeviceExtendedDynamicState2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state (PhysicalDeviceExtendedDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceExternalImageFormatInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (PhysicalDeviceExternalMemoryHostPropertiesEXT)
@@ -143,6 +145,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_robustness (PhysicalDeviceI
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_filter_cubic (PhysicalDeviceImageViewImageFormatInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (PhysicalDeviceImagelessFramebufferFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_index_type_uint8 (PhysicalDeviceIndexTypeUint8FeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (PhysicalDeviceInheritedViewportScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
@@ -169,6 +172,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (PhysicalDevicePriva
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceProperties)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_push_descriptor (PhysicalDevicePushDescriptorPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
@@ -214,12 +219,14 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (PhysicalDeviceVertexInputDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Properties)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model (PhysicalDeviceVulkanMemoryModelFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats (PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_image_arrays (PhysicalDeviceYcbcrImageArraysFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory (PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR)
 import Vulkan.Core10.Handles (PhysicalDevice_T)
@@ -301,10 +308,10 @@ foreign import ccall
 --
 -- = Description
 --
--- Each structure in @pProperties@ and its @pNext@ chain contain members
--- corresponding to properties or implementation-dependent limits.
--- 'getPhysicalDeviceProperties2' writes each member to a value indicating
--- the value of that property or limit.
+-- Each structure in @pProperties@ and its @pNext@ chain contains members
+-- corresponding to implementation-dependent properties, behaviors, or
+-- limits. 'getPhysicalDeviceProperties2' fills in each member to specify
+-- the corresponding value for the implementation.
 --
 -- == Valid Usage (Implicit)
 --
@@ -608,7 +615,7 @@ foreign import ccall
 getPhysicalDeviceSparseImageFormatProperties2 :: forall io
                                                . (MonadIO io)
                                               => -- | @physicalDevice@ is the physical device from which to query the sparse
-                                                 -- image capabilities.
+                                                 -- image format properties.
                                                  PhysicalDevice
                                               -> -- | @pFormatInfo@ is a pointer to a 'PhysicalDeviceSparseImageFormatInfo2'
                                                  -- structure containing input parameters to the command.
@@ -634,10 +641,6 @@ getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO
 
 -- | VkPhysicalDeviceFeatures2 - Structure describing the fine-grained
 -- features that can be supported by an implementation
---
--- = Members
---
--- The 'PhysicalDeviceFeatures2' structure is defined as:
 --
 -- = Description
 --
@@ -676,7 +679,12 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceProvokingVertexFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceInheritedViewportScissorFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSynchronization2FeaturesKHR = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceColorWriteEnableFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceVertexInputDynamicStateFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeaturesKHR = Just f
@@ -689,6 +697,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceRobustness2FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDiagnosticsConfigFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceExtendedDynamicState2FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExtendedDynamicStateFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCustomBorderColorFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCoherentMemoryFeaturesAMD = Just f
@@ -833,6 +842,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetPropertiesKHR',
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
+--     'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexPropertiesEXT',
 --     'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelinePropertiesKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV',
@@ -883,6 +893,7 @@ instance Extensible PhysicalDeviceProperties2 where
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceProvokingVertexPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRatePropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDevicePortabilitySubsetPropertiesKHR = Just f
@@ -969,9 +980,13 @@ instance es ~ '[] => Zero (PhysicalDeviceProperties2 es) where
 -- -   #VUID-VkFormatProperties2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FORMAT_PROPERTIES_2'
 --
--- -   #VUID-VkFormatProperties2-pNext-pNext# @pNext@ /must/ be @NULL@ or a
---     pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesListEXT'
+-- -   #VUID-VkFormatProperties2-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesListEXT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>,
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfilesKHR VkVideoProfilesKHR>
 --
 -- -   #VUID-VkFormatProperties2-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -1321,9 +1336,10 @@ instance es ~ '[] => Zero (PhysicalDeviceImageFormatInfo2 es) where
 -- -   #VUID-VkQueueFamilyProperties2-pNext-pNext# Each @pNext@ member of
 --     any structure (including this one) in the @pNext@ chain /must/ be
 --     either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_synchronization2.QueueFamilyCheckpointProperties2NV'
+--     'Vulkan.Extensions.VK_KHR_synchronization2.QueueFamilyCheckpointProperties2NV',
+--     'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV',
 --     or
---     'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoQueueFamilyProperties2KHR VkVideoQueueFamilyProperties2KHR>
 --
 -- -   #VUID-VkQueueFamilyProperties2-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -1548,8 +1564,9 @@ data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
     -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-type-parameter# @type@
     -- /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
     type' :: ImageType
-  , -- | @samples@ is the number of samples per texel as defined in
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+  , -- | @samples@ is a
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+    -- specifying the number of samples per texel.
     --
     -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-samples-01095# @samples@
     -- /must/ be a bit value that is set in

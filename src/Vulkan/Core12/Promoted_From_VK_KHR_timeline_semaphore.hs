@@ -169,7 +169,7 @@ foreign import ccall
 waitSemaphoresSafeOrUnsafe :: forall io
                             . (MonadIO io)
                            => (FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result)
-                           -> -- | @device@ is the logical device that owns the semaphore.
+                           -> -- | @device@ is the logical device that owns the semaphores.
                               --
                               -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
                               -- 'Vulkan.Core10.Handles.Device' handle
@@ -207,7 +207,7 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 -- whichever is sooner.
 --
 -- If @timeout@ is zero, then 'waitSemaphores' does not wait, but simply
--- returns information about the current state of the semaphore.
+-- returns information about the current state of the semaphores.
 -- 'Vulkan.Core10.Enums.Result.TIMEOUT' will be returned in this case if
 -- the condition is not satisfied, even though no actual wait was
 -- performed.
@@ -244,7 +244,7 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreWaitInfo'
 waitSemaphores :: forall io
                 . (MonadIO io)
-               => -- | @device@ is the logical device that owns the semaphore.
+               => -- | @device@ is the logical device that owns the semaphores.
                   --
                   -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
                   -- 'Vulkan.Core10.Handles.Device' handle
@@ -266,7 +266,7 @@ waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnsafe
 -- | A variant of 'waitSemaphores' which makes a *safe* FFI call
 waitSemaphoresSafe :: forall io
                     . (MonadIO io)
-                   => -- | @device@ is the logical device that owns the semaphore.
+                   => -- | @device@ is the logical device that owns the semaphores.
                       --
                       -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
                       -- 'Vulkan.Core10.Handles.Device' handle
@@ -352,18 +352,19 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTimelineSemaphoreFeatures' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTimelineSemaphoreFeatures' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceTimelineSemaphoreFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTimelineSemaphoreFeatures' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -419,10 +420,15 @@ instance Zero PhysicalDeviceTimelineSemaphoreFeatures where
 -- | VkPhysicalDeviceTimelineSemaphoreProperties - Structure describing
 -- timeline semaphore properties that can be supported by an implementation
 --
--- = Members
+-- = Description
 --
--- The members of the 'PhysicalDeviceTimelineSemaphoreProperties' structure
--- describe the following implementation-dependent limits:
+-- If the 'PhysicalDeviceTimelineSemaphoreProperties' structure is included
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -476,14 +482,17 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 -- | VkSemaphoreTypeCreateInfo - Structure specifying the type of a newly
 -- created semaphore
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   #VUID-VkSemaphoreTypeCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO'
+-- To create a semaphore of a specific type, add a
+-- 'SemaphoreTypeCreateInfo' structure to the
+-- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@pNext@ chain.
 --
--- -   #VUID-VkSemaphoreTypeCreateInfo-semaphoreType-parameter#
---     @semaphoreType@ /must/ be a valid
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
+-- If no 'SemaphoreTypeCreateInfo' structure is included in the @pNext@
+-- chain of 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo', then the
+-- created semaphore will have a default
+-- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
 --
 -- == Valid Usage
 --
@@ -497,11 +506,14 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY',
 --     @initialValue@ /must/ be zero
 --
--- If no 'SemaphoreTypeCreateInfo' structure is included in the @pNext@
--- chain of 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo', then the
--- created semaphore will have a default
--- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
--- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSemaphoreTypeCreateInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO'
+--
+-- -   #VUID-VkSemaphoreTypeCreateInfo-semaphoreType-parameter#
+--     @semaphoreType@ /must/ be a valid
+--     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
 --
 -- = See Also
 --
@@ -594,17 +606,17 @@ data TimelineSemaphoreSubmitInfo = TimelineSemaphoreSubmitInfo
   { -- | @waitSemaphoreValueCount@ is the number of semaphore wait values
     -- specified in @pWaitSemaphoreValues@.
     waitSemaphoreValueCount :: Word32
-  , -- | @pWaitSemaphoreValues@ is an array of length @waitSemaphoreValueCount@
-    -- containing values for the corresponding semaphores in
+  , -- | @pWaitSemaphoreValues@ is a pointer to an array of
+    -- @waitSemaphoreValueCount@ values for the corresponding semaphores in
     -- 'Vulkan.Core10.Queue.SubmitInfo'::@pWaitSemaphores@ to wait for.
     waitSemaphoreValues :: Vector Word64
   , -- | @signalSemaphoreValueCount@ is the number of semaphore signal values
     -- specified in @pSignalSemaphoreValues@.
     signalSemaphoreValueCount :: Word32
-  , -- | @pSignalSemaphoreValues@ is an array of length
-    -- @signalSemaphoreValueCount@ containing values for the corresponding
-    -- semaphores in 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ to
-    -- set when signaled.
+  , -- | @pSignalSemaphoreValues@ is a pointer to an array
+    -- @signalSemaphoreValueCount@ values for the corresponding semaphores in
+    -- 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ to set when
+    -- signaled.
     signalSemaphoreValues :: Vector Word64
   }
   deriving (Typeable)

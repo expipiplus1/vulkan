@@ -336,11 +336,11 @@
 --
 --     -   Added query function, formats as RGB, clarifications
 --
--- -   Revision 5, 2017-04 (Andrew Garrard)
+-- -   Revision 5, 2017-04-?? (Andrew Garrard)
 --
 --     -   Simplified query and removed output conversions
 --
--- -   Revision 6, 2017-4-24 (Andrew Garrard)
+-- -   Revision 6, 2017-04-24 (Andrew Garrard)
 --
 --     -   Tidying, incorporated new image query, restored transfer
 --         functions
@@ -348,7 +348,7 @@
 -- -   Revision 7, 2017-04-25 (Andrew Garrard)
 --
 --     -   Added cosited option\/midpoint requirement for formats,
---         \"bypassConversion\"
+--         “bypassConversion”
 --
 -- -   Revision 8, 2017-04-25 (Andrew Garrard)
 --

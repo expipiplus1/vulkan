@@ -356,10 +356,6 @@ foreign import ccall
 -- -   #VUID-vkGetQueryPoolResults-firstQuery-00813# @firstQuery@ /must/ be
 --     less than the number of queries in @queryPool@
 --
--- -   #VUID-vkGetQueryPoolResults-flags-02827# If
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
---     set in @flags@, then @pData@ and @stride@ /must/ be multiples of @4@
---
 -- -   #VUID-vkGetQueryPoolResults-flags-02828# If
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
 --     set in @flags@ and the @queryType@ used to create @queryPool@ was
@@ -514,8 +510,9 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryType-03222# If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     the @pNext@ chain /must/ include a structure of type
+--     the @pNext@ chain /must/ include a
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
+--     structure
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryCount-02763# @queryCount@ /must/ be
 --     greater than 0
@@ -528,9 +525,10 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 -- -   #VUID-VkQueryPoolCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
+--     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
 --     or
---     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>
 --
 -- -   #VUID-VkQueryPoolCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique

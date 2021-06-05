@@ -29,7 +29,7 @@ newtype ImageTiling = ImageTiling Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'IMAGE_TILING_OPTIMAL' specifies optimal tiling (texels are laid out in
--- an implementation-dependent arrangement, for more optimal memory
+-- an implementation-dependent arrangement, for more efficient memory
 -- access).
 pattern IMAGE_TILING_OPTIMAL                 = ImageTiling 0
 -- | 'IMAGE_TILING_LINEAR' specifies linear tiling (texels are laid out in

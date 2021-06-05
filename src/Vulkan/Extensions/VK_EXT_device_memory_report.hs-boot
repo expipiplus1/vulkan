@@ -114,9 +114,9 @@
 -- instead of adding the new callback structure in this extension?
 --
 -- __RESOLVED__: No. Our memory reporting layer that combines this
--- information with other memory info it collects directly (e.g. bindings
--- of resources to 'Vulkan.Core10.Handles.DeviceMemory') would have to
--- intercept all entry points that take a
+-- information with other memory information it collects directly (e.g.
+-- bindings of resources to 'Vulkan.Core10.Handles.DeviceMemory') would
+-- have to intercept all entry points that take a
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' parameter and
 -- inject its own @pfnInternalAllocation@ and @pfnInternalFree@. That’s
 -- maybe doable for the extensions we know about, but not for ones we
@@ -130,9 +130,9 @@
 --
 -- We’re interested in both alloc\/free and import\/unimport. The latter is
 -- fairly important for tracking (and avoiding double-counting) of
--- swapchain images (still true with \"native swapchains\" based on
--- external memory) and media\/camera interop. Though we might be able to
--- handle this with additional
+-- swapchain images (still true with “native swapchains” based on external
+-- memory) and media\/camera interop. Though we might be able to handle
+-- this with additional
 -- 'Vulkan.Core10.Enums.InternalAllocationType.InternalAllocationType'
 -- values, for import\/export we do want to be able to tie this to the
 -- external resource, which is one thing that the @memoryObjectId@ is for.
@@ -153,7 +153,7 @@
 -- do) leading up to 1.0.
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' is described in
--- a section called \"Host memory\" and the intro to it is very explicitly
+-- a section called “Host memory” and the intro to it is very explicitly
 -- about host memory. The other callbacks are all inherently about host
 -- memory. But this extension is very focused on device memory.
 --
@@ -201,7 +201,7 @@
 -- in the same thread with the Vulkan commands, and the note is to remind
 -- the applications to handle this case properly.
 --
--- 7) Should we add an additional \"allocation failed\" event type with
+-- 7) Should we add an additional “allocation failed” event type with
 -- things like size and heap index reported?
 --
 -- __RESOLVED__ Yes. This fits in well with the callback infrastructure

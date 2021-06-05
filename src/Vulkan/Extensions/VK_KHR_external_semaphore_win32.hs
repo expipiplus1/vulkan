@@ -475,12 +475,14 @@ data ImportSemaphoreWin32HandleInfoKHR = ImportSemaphoreWin32HandleInfoKHR
     -- specifying additional parameters for the semaphore payload import
     -- operation.
     flags :: SemaphoreImportFlags
-  , -- | @handleType@ specifies the type of @handle@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of @handle@.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
-  , -- | @handle@ is the external handle to import, or @NULL@.
+  , -- | @handle@ is @NULL@ or the external handle to import.
     handle :: HANDLE
-  , -- | @name@ is a null-terminated UTF-16 string naming the underlying
-    -- synchronization primitive to import, or @NULL@.
+  , -- | @name@ is @NULL@ or a null-terminated UTF-16 string naming the
+    -- underlying synchronization primitive to import.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
@@ -693,13 +695,13 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 --     @waitSemaphoreValuesCount@ /must/ be the same value as
 --     'Vulkan.Core10.Queue.SubmitInfo'::@waitSemaphoreCount@, where
 --     'Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@ chain of this
---     'D3D12FenceSubmitInfoKHR' structure
+--     'D3D12FenceSubmitInfoKHR' structure.
 --
 -- -   #VUID-VkD3D12FenceSubmitInfoKHR-signalSemaphoreValuesCount-00080#
 --     @signalSemaphoreValuesCount@ /must/ be the same value as
 --     'Vulkan.Core10.Queue.SubmitInfo'::@signalSemaphoreCount@, where
 --     'Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@ chain of this
---     'D3D12FenceSubmitInfoKHR' structure
+--     'D3D12FenceSubmitInfoKHR' structure.
 --
 -- == Valid Usage (Implicit)
 --
@@ -881,7 +883,9 @@ instance Zero D3D12FenceSubmitInfoKHR where
 data SemaphoreGetWin32HandleInfoKHR = SemaphoreGetWin32HandleInfoKHR
   { -- | @semaphore@ is the semaphore from which state will be exported.
     semaphore :: Semaphore
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable, Eq)

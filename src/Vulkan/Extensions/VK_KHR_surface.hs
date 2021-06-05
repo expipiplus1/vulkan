@@ -165,16 +165,16 @@
 -- 'Vulkan.Core10.Handles.Device' (and therefore on enabled extensions and
 -- features) for the queries, Vulkan was released only with the
 -- 'Vulkan.Core10.Handles.PhysicalDevice' versions. Many cases can be
--- resolved by a Valid Usage. And\\or by a separate @pNext@ chain version
--- of the query struct specific to a given extension or parameters, via
--- extensible versions of the queries:
+-- resolved by a Valid Usage statement, and\/or by a separate @pNext@ chain
+-- version of the query struct specific to a given extension or parameters,
+-- via extensible versions of the queries:
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR',
--- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceFormats2KHR',
+-- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceFormats2KHR'.
 -- and
--- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT'.
+-- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 --
--- 3) Should Vulkan include support Xlib or XCB as the API for accessing
--- the X Window System platform?
+-- 3) Should Vulkan support Xlib or XCB as the API for accessing the X
+-- Window System platform?
 --
 -- __RESOLVED__: Both. XCB is a more modern and efficient API, but Xlib
 -- usage is deeply ingrained in many applications and likely will remain in
@@ -262,9 +262,9 @@
 --     -   Added error section describing when each error is expected to be
 --         reported.
 --
---     -   Replaced the term \"queue node index\" with \"queue family
---         index\" in the spec as that is the agreed term to be used in the
---         latest version of the core header and spec.
+--     -   Replaced the term “queue node index” with “queue family index”
+--         in the spec as that is the agreed term to be used in the latest
+--         version of the core header and spec.
 --
 --     -   Replaced bool32_t with VkBool32.
 --
@@ -278,7 +278,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 --     -   Did miscellaneous cleanup, etc.
@@ -287,7 +287,7 @@
 --     from James Jones)
 --
 --     -   Moved the surface transform enums here from VK_WSI_swapchain so
---         they could be re-used by VK_WSI_display.
+--         they could be reused by VK_WSI_display.
 --
 -- -   Revision 16, 2015-09-01 (James Jones)
 --
@@ -746,12 +746,10 @@ foreign import ccall
 -- return the variable is overwritten with the number of structures
 -- actually written to @pSurfaceFormats@. If the value of
 -- @pSurfaceFormatCount@ is less than the number of format pairs supported,
--- at most @pSurfaceFormatCount@ structures will be written. If
--- @pSurfaceFormatCount@ is smaller than the number of format pairs
--- supported for the given @surface@,
+-- at most @pSurfaceFormatCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available format pairs were returned.
 --
 -- The number of format pairs supported /must/ be greater than or equal to
 -- 1. @pSurfaceFormats@ /must/ not contain an entry whose value for
@@ -864,11 +862,10 @@ foreign import ccall
 -- return the variable is overwritten with the number of values actually
 -- written to @pPresentModes@. If the value of @pPresentModeCount@ is less
 -- than the number of presentation modes supported, at most
--- @pPresentModeCount@ values will be written. If @pPresentModeCount@ is
--- smaller than the number of presentation modes supported for the given
--- @surface@, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
--- instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all
--- the available values were returned.
+-- @pPresentModeCount@ values will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available modes were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1025,8 +1022,8 @@ data SurfaceCapabilitiesKHR = SurfaceCapabilitiesKHR
     -- 'PRESENT_MODE_MAILBOX_KHR', 'PRESENT_MODE_FIFO_KHR' or
     -- 'PRESENT_MODE_FIFO_RELAXED_KHR' for the surface on the specified device.
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
-    -- /must/ be included in the set but implementations /may/ support
-    -- additional usages.
+    -- /must/ be included in the set. Implementations /may/ support additional
+    -- usages.
     supportedUsageFlags :: ImageUsageFlags
   }
   deriving (Typeable)
@@ -1058,7 +1055,10 @@ instance ToCStruct SurfaceCapabilitiesKHR where
     poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 24 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr SurfaceTransformFlagsKHR)) (zero)
     poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr CompositeAlphaFlagsKHR)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr ImageUsageFlags)) (zero)
     f
 
 instance FromCStruct SurfaceCapabilitiesKHR where

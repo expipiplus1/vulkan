@@ -30,6 +30,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_blend_operation_advanced
                           , module Vulkan.Extensions.VK_EXT_buffer_device_address
                           , module Vulkan.Extensions.VK_EXT_calibrated_timestamps
+                          , module Vulkan.Extensions.VK_EXT_color_write_enable
                           , module Vulkan.Extensions.VK_EXT_conditional_rendering
                           , module Vulkan.Extensions.VK_EXT_conservative_rasterization
                           , module Vulkan.Extensions.VK_EXT_custom_border_color
@@ -46,6 +47,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_display_control
                           , module Vulkan.Extensions.VK_EXT_display_surface_counter
                           , module Vulkan.Extensions.VK_EXT_extended_dynamic_state
+                          , module Vulkan.Extensions.VK_EXT_extended_dynamic_state2
                           , module Vulkan.Extensions.VK_EXT_external_memory_dma_buf
                           , module Vulkan.Extensions.VK_EXT_external_memory_host
                           , module Vulkan.Extensions.VK_EXT_filter_cubic
@@ -70,6 +72,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
                           , module Vulkan.Extensions.VK_EXT_private_data
+                          , module Vulkan.Extensions.VK_EXT_provoking_vertex
                           , module Vulkan.Extensions.VK_EXT_queue_family_foreign
                           , module Vulkan.Extensions.VK_EXT_robustness2
                           , module Vulkan.Extensions.VK_EXT_sample_locations
@@ -93,6 +96,8 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_validation_features
                           , module Vulkan.Extensions.VK_EXT_validation_flags
                           , module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+                          , module Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
+                          , module Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
                           , module Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
                           , module Vulkan.Extensions.VK_FUCHSIA_external_memory
                           , module Vulkan.Extensions.VK_FUCHSIA_external_semaphore
@@ -190,6 +195,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_MVK_ios_surface
                           , module Vulkan.Extensions.VK_MVK_macos_surface
                           , module Vulkan.Extensions.VK_NN_vi_surface
+                          , module Vulkan.Extensions.VK_NVX_binary_import
                           , module Vulkan.Extensions.VK_NVX_image_view_handle
                           , module Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
                           , module Vulkan.Extensions.VK_NV_acquire_winrt_display
@@ -213,6 +219,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
                           , module Vulkan.Extensions.VK_NV_geometry_shader_passthrough
                           , module Vulkan.Extensions.VK_NV_glsl_shader
+                          , module Vulkan.Extensions.VK_NV_inherited_viewport_scissor
                           , module Vulkan.Extensions.VK_NV_mesh_shader
                           , module Vulkan.Extensions.VK_NV_ray_tracing
                           , module Vulkan.Extensions.VK_NV_representative_fragment_test
@@ -262,6 +269,7 @@ import Vulkan.Extensions.VK_EXT_astc_decode_mode
 import Vulkan.Extensions.VK_EXT_blend_operation_advanced
 import Vulkan.Extensions.VK_EXT_buffer_device_address
 import Vulkan.Extensions.VK_EXT_calibrated_timestamps
+import Vulkan.Extensions.VK_EXT_color_write_enable
 import Vulkan.Extensions.VK_EXT_conditional_rendering
 import Vulkan.Extensions.VK_EXT_conservative_rasterization
 import Vulkan.Extensions.VK_EXT_custom_border_color
@@ -278,6 +286,7 @@ import Vulkan.Extensions.VK_EXT_discard_rectangles
 import Vulkan.Extensions.VK_EXT_display_control
 import Vulkan.Extensions.VK_EXT_display_surface_counter
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state
+import Vulkan.Extensions.VK_EXT_extended_dynamic_state2
 import Vulkan.Extensions.VK_EXT_external_memory_dma_buf
 import Vulkan.Extensions.VK_EXT_external_memory_host
 import Vulkan.Extensions.VK_EXT_filter_cubic
@@ -302,6 +311,7 @@ import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Vulkan.Extensions.VK_EXT_private_data
+import Vulkan.Extensions.VK_EXT_provoking_vertex
 import Vulkan.Extensions.VK_EXT_queue_family_foreign
 import Vulkan.Extensions.VK_EXT_robustness2
 import Vulkan.Extensions.VK_EXT_sample_locations
@@ -325,6 +335,8 @@ import Vulkan.Extensions.VK_EXT_validation_cache
 import Vulkan.Extensions.VK_EXT_validation_features
 import Vulkan.Extensions.VK_EXT_validation_flags
 import Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+import Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
+import Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
 import Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
 import Vulkan.Extensions.VK_FUCHSIA_external_memory
 import Vulkan.Extensions.VK_FUCHSIA_external_semaphore
@@ -422,6 +434,7 @@ import Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
 import Vulkan.Extensions.VK_MVK_ios_surface
 import Vulkan.Extensions.VK_MVK_macos_surface
 import Vulkan.Extensions.VK_NN_vi_surface
+import Vulkan.Extensions.VK_NVX_binary_import
 import Vulkan.Extensions.VK_NVX_image_view_handle
 import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
 import Vulkan.Extensions.VK_NV_acquire_winrt_display
@@ -445,6 +458,7 @@ import Vulkan.Extensions.VK_NV_fragment_shading_rate_enums
 import Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
 import Vulkan.Extensions.VK_NV_geometry_shader_passthrough
 import Vulkan.Extensions.VK_NV_glsl_shader
+import Vulkan.Extensions.VK_NV_inherited_viewport_scissor
 import Vulkan.Extensions.VK_NV_mesh_shader
 import Vulkan.Extensions.VK_NV_ray_tracing
 import Vulkan.Extensions.VK_NV_representative_fragment_test

@@ -355,7 +355,9 @@ getPhysicalDeviceMultisamplePropertiesEXT :: forall io
                                              -- @physicalDevice@ /must/ be a valid
                                              -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                              PhysicalDevice
-                                          -> -- | @samples@ is the sample count to query the capabilities for.
+                                          -> -- | @samples@ is a
+                                             -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+                                             -- specifying the sample count to query capabilities for.
                                              --
                                              -- #VUID-vkGetPhysicalDeviceMultisamplePropertiesEXT-samples-parameter#
                                              -- @samples@ /must/ be a valid
@@ -384,10 +386,8 @@ getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . eval
 -- The values specified in a 'SampleLocationEXT' structure are always
 -- clamped to the implementation-dependent sample location coordinate range
 -- [@sampleLocationCoordinateRange@[0],@sampleLocationCoordinateRange@[1]]
--- that /can/ be queried by adding a
--- 'PhysicalDeviceSampleLocationsPropertiesEXT' structure to the @pNext@
--- chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'.
+-- that /can/ be queried using
+-- 'PhysicalDeviceSampleLocationsPropertiesEXT'.
 --
 -- = See Also
 --
@@ -846,17 +846,15 @@ instance Zero PipelineSampleLocationsStateCreateInfoEXT where
 -- | VkPhysicalDeviceSampleLocationsPropertiesEXT - Structure describing
 -- sample location limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceSampleLocationsPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceSampleLocationsPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

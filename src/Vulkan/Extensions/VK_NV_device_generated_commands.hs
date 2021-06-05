@@ -304,7 +304,7 @@
 -- the command buffer reservation process, however as the memory
 -- requirements can be substantial, we want to give developers the ability
 -- to budget the memory themselves. By lowering the @maxSequencesCount@ the
--- memory consumption can be reduced. Furthermore re-use of the memory is
+-- memory consumption can be reduced. Furthermore reuse of the memory is
 -- possible, for example for doing explicit preprocessing and execution in
 -- a ping-pong fashion.
 --
@@ -334,7 +334,7 @@
 --
 -- 8) How do we allow re-using already “generated” @indirectCommands@?
 --
--- Expose a @preprocessBuffer@ to re-use implementation-dependencyFlags
+-- Expose a @preprocessBuffer@ to reuse implementation-dependencyFlags
 -- data. Set the @isPreprocessed@ to true in
 -- 'cmdExecuteGeneratedCommandsNV'.
 --
@@ -505,6 +505,15 @@
 -- -   Revision 1, 2020-02-20 (Christoph Kubisch)
 --
 --     -   Initial version
+--
+-- -   Revision 2, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Remove VK_EXT_debug_report interactions
+--
+-- -   Revision 3, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Fix naming VkPhysicalDeviceGenerated to
+--         VkPhysicalDeviceDeviceGenerated
 --
 -- = See Also
 --
@@ -696,8 +705,8 @@ foreign import ccall
   "dynamic" mkVkCmdExecuteGeneratedCommandsNV
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> Ptr GeneratedCommandsInfoNV -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> Ptr GeneratedCommandsInfoNV -> IO ()
 
--- | vkCmdExecuteGeneratedCommandsNV - Performs the generation and execution
--- of commands on the device
+-- | vkCmdExecuteGeneratedCommandsNV - Generate and execute commands on the
+-- device
 --
 -- == Valid Usage
 --
@@ -801,9 +810,9 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02859# There /must/ not
 --     have been any calls to dynamic state setting commands for any state
@@ -973,7 +982,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -987,7 +996,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -1003,7 +1012,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -1086,13 +1095,54 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
+--     drawing command, and the @primitiveTopology@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04875# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04876# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04877# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-logicOp-04878# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04879# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -1105,7 +1155,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -1126,6 +1176,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStrides-04884# If the bound
+--     graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
@@ -1664,18 +1724,19 @@ destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- the features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV' /can/ also
+-- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- to selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1730,6 +1791,16 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsFeaturesNV where
 -- | VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV - Structure
 -- describing push descriptor limits that can be supported by an
 -- implementation
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1882,14 +1953,15 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
 -- 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data GraphicsShaderGroupCreateInfoNV = GraphicsShaderGroupCreateInfoNV
-  { -- | @pStages@ is an array of size @stageCount@ structures of type
-    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' describing the
-    -- set of the shader stages to be included in this shader group.
+  { -- | @pStages@ is a pointer to an array
+    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' structures
+    -- specifying the set of the shader stages to be included in this shader
+    -- group.
     stages :: Vector (SomeStruct PipelineShaderStageCreateInfo)
-  , -- | @pVertexInputState@ is a pointer to an instance of the
+  , -- | @pVertexInputState@ is a pointer to a
     -- 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo' structure.
     vertexInputState :: Maybe (SomeStruct PipelineVertexInputStateCreateInfo)
-  , -- | @pTessellationState@ is a pointer to an instance of the
+  , -- | @pTessellationState@ is a pointer to a
     -- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo' structure,
     -- and is ignored if the shader group does not include a tessellation
     -- control shader stage and tessellation evaluation shader stage.
@@ -2021,14 +2093,14 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 -- 'GraphicsShaderGroupCreateInfoNV', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data GraphicsPipelineShaderGroupsCreateInfoNV = GraphicsPipelineShaderGroupsCreateInfoNV
-  { -- | @pGroups@ is an array of 'GraphicsShaderGroupCreateInfoNV' values
-    -- specifying which state of the original
+  { -- | @pGroups@ is a pointer to an array of 'GraphicsShaderGroupCreateInfoNV'
+    -- structures specifying which state of the original
     -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' each shader group
     -- overrides.
     groups :: Vector GraphicsShaderGroupCreateInfoNV
-  , -- | @pPipelines@ is an array of graphics 'Vulkan.Core10.Handles.Pipeline',
-    -- which are referenced within the created pipeline, including all their
-    -- shader groups.
+  , -- | @pPipelines@ is a pointer to an array of graphics
+    -- 'Vulkan.Core10.Handles.Pipeline' structures which are referenced within
+    -- the created pipeline, including all their shader groups.
     pipelines :: Vector Pipeline
   }
   deriving (Typeable)
@@ -2463,11 +2535,11 @@ instance Zero IndirectCommandsStreamNV where
 --     @pushconstantSize@ and for each push constant range that overlaps
 --     that byte, @pushconstantShaderStageFlags@ /must/ include all stages
 --     in that push constant range’s
---     'Vulkan.Core10.PipelineLayout.PushConstantRange'::@pushconstantShaderStageFlags@
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange'::@stageFlags@
 --
 -- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02984# If
 --     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV',
---     @indirectStateFlags@ /must/ not be ´0´
+--     @indirectStateFlags@ /must/ not be @0@
 --
 -- == Valid Usage (Implicit)
 --
@@ -2706,9 +2778,6 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --     /must/ be a valid combination of
 --     'IndirectCommandsLayoutUsageFlagBitsNV' values
 --
--- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-flags-requiredbitmask#
---     @flags@ /must/ not be @0@
---
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pipelineBindPoint-parameter#
 --     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
@@ -2776,7 +2845,6 @@ instance ToCStruct IndirectCommandsLayoutCreateInfoNV where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr IndirectCommandsLayoutUsageFlagsNV)) (zero)
     poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (zero)
     f
 
@@ -2972,8 +3040,9 @@ data GeneratedCommandsInfoNV = GeneratedCommandsInfoNV
     -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' that provides the
     -- command sequence to generate.
     indirectCommandsLayout :: IndirectCommandsLayoutNV
-  , -- | @pStreams@ provides an array of 'IndirectCommandsStreamNV' that provide
-    -- the input data for the tokens used in @indirectCommandsLayout@.
+  , -- | @pStreams@ is a pointer to an array of @streamCount@
+    -- 'IndirectCommandsStreamNV' structures providing the input data for the
+    -- tokens used in @indirectCommandsLayout@.
     streams :: Vector IndirectCommandsStreamNV
   , -- | @sequencesCount@ is the maximum number of sequences to reserve. If
     -- @sequencesCountBuffer@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', this

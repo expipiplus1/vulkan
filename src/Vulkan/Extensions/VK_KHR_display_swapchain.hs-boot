@@ -85,7 +85,7 @@
 -- already complex enough.
 --
 -- 2) Should the @srcRect@ and @dstRect@ parameters be specified as part of
--- the present command, or at swapchain creation time?
+-- the presentation command, or at swapchain creation time?
 --
 -- __RESOLVED__: As part of the presentation command. This allows moving
 -- and scaling the image on the screen without the need to respecify the
@@ -149,7 +149,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 -- -   Revision 3, 2015-09-01 (James Jones)

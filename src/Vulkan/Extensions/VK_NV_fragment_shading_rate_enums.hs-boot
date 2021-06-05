@@ -43,10 +43,10 @@
 --
 -- This extension builds on the fragment shading rate functionality
 -- provided by the VK_KHR_fragment_shading_rate extension, adding support
--- for \"supersample\" fragment shading rates that trigger multiple
--- fragment shader invocations per pixel as well as a \"no invocations\"
--- shading rate that discards any portions of a primitive that would use
--- that shading rate.
+-- for “supersample” fragment shading rates that trigger multiple fragment
+-- shader invocations per pixel as well as a “no invocations” shading rate
+-- that discards any portions of a primitive that would use that shading
+-- rate.
 --
 -- == New Commands
 --
@@ -93,9 +93,9 @@
 --
 -- 1.  Why was this extension created? How should it be named?
 --
---     RESOLVED: The primary goal of this extension was to expose support
---     for supersample and \"no invocations\" shading rates, which are
---     supported by the VK_NV_shading_rate_image extension but not by
+--     __RESOLVED__: The primary goal of this extension was to expose
+--     support for supersample and “no invocations” shading rates, which
+--     are supported by the VK_NV_shading_rate_image extension but not by
 --     VK_KHR_fragment_shading_rate. Because VK_KHR_fragment_shading_rate
 --     specifies the primitive shading rate using a fragment size in
 --     pixels, it lacks a good way to specify supersample rates. To deal
@@ -109,32 +109,33 @@
 --
 -- 2.  Is this a standalone extension?
 --
---     RESOLVED: No, this extension requires VK_KHR_fragment_shading_rate.
---     In order to use the features of this extension, applications must
---     enable the relevant features of KHR extension.
+--     __RESOLVED__: No, this extension requires
+--     VK_KHR_fragment_shading_rate. In order to use the features of this
+--     extension, applications must enable the relevant features of KHR
+--     extension.
 --
 -- 3.  How are the shading rate enums used, and how were the enum values
 --     assigned?
 --
---     RESOLVED: The shading rates supported by the enums in this extension
---     are accepted as pipeline, primitive, and attachment shading rates
---     and behave identically. For the shading rates also supported by the
---     KHR extension, the values assigned to the corresponding enums are
---     identical to the values already used for the primitive and
---     attachment shading rates in the KHR extension. For those enums, bits
---     0 and 1 specify the base two logarithm of the fragment height and
---     bits 2 and 3 specify the base two logarithm of the fragment width.
---     For the new shading rates added by this extension, we chose to use
---     11 through 14 (10 plus the base two logarithm of the invocation
---     count) for the supersample rates and 15 for the \"no invocations\"
---     rate. None of those values are supported as primitive or attachment
---     shading rates by the KHR extension.
+--     __RESOLVED__: The shading rates supported by the enums in this
+--     extension are accepted as pipeline, primitive, and attachment
+--     shading rates and behave identically. For the shading rates also
+--     supported by the KHR extension, the values assigned to the
+--     corresponding enums are identical to the values already used for the
+--     primitive and attachment shading rates in the KHR extension. For
+--     those enums, bits 0 and 1 specify the base two logarithm of the
+--     fragment height and bits 2 and 3 specify the base two logarithm of
+--     the fragment width. For the new shading rates added by this
+--     extension, we chose to use 11 through 14 (10 plus the base two
+--     logarithm of the invocation count) for the supersample rates and 15
+--     for the “no invocations” rate. None of those values are supported as
+--     primitive or attachment shading rates by the KHR extension.
 --
 -- 4.  Between this extension, VK_KHR_fragment_shading_rate, and
 --     VK_NV_shading_rate_image, there are three different ways to specify
 --     shading rate state in a pipeline. How should we handle this?
 --
---     RESOLVED: We don’t allow the concurrent use of
+--     __RESOLVED__: We don’t allow the concurrent use of
 --     VK_NV_shading_rate_image and VK_KHR_fragment_shading_rate; it is an
 --     error to enable shading rate features from both extensions. But we
 --     do allow applications to enable this extension together with

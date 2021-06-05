@@ -466,7 +466,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'
 --         → 'AccelerationStructureCreateInfoKHR' (reshuffle geometry
---         layout\/info)
+--         layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV'
 --         → 'PhysicalDeviceAccelerationStructurePropertiesKHR' (for
@@ -486,7 +486,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV'
 --         → 'createAccelerationStructureKHR' (device address, different
---         geometry layout\/info)
+--         geometry layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureMemoryRequirementsNV'
 --         (deleted - replaced by allocating on top of
@@ -755,7 +755,7 @@
 --
 --     -   add a new
 --         'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
---         buffer usage such buffers
+--         buffer usage for such buffers
 --
 --     -   add a new 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' acceleration
 --         structure type for layering
@@ -786,12 +786,12 @@
 --
 -- (5) What is 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' for?
 --
--- RESOLVED: It is primarily intended for API layering. In DXR, the
+-- __RESOLVED__: It is primarily intended for API layering. In DXR, the
 -- acceleration structure is basically just a buffer in a special layout,
 -- and you don’t know at creation time whether it will be used as a top or
 -- bottom level acceleration structure. We thus added a generic
 -- acceleration structure type whose type is unknown at creation time, but
--- is specified at build type instead. Applications which are written
+-- is specified at build time instead. Applications which are written
 -- directly for Vulkan should not use it.
 --
 -- == Version History
@@ -815,7 +815,7 @@
 --         better match its type (!3523)
 --
 --     -   Allow VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS for pipeline
---         creation if shader group handles cannot be re-used. (!3523)
+--         creation if shader group handles cannot be reused (!3523)
 --
 --     -   update documentation for the
 --         VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS error code and add
@@ -1429,7 +1429,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 destroyAccelerationStructureKHR :: forall io
                                  . (MonadIO io)
-                                => -- | @device@ is the logical device that destroys the buffer.
+                                => -- | @device@ is the logical device that destroys the acceleration structure.
                                    Device
                                 -> -- | @accelerationStructure@ is the acceleration structure to destroy.
                                    AccelerationStructureKHR
@@ -1461,7 +1461,7 @@ foreign import ccall
 --
 -- = Description
 --
--- Accesses to @pInfo@->@src@ and @pInfo@->@dst@ /must/ be
+-- Accesses to @pInfo->src@ and @pInfo->dst@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -1477,10 +1477,10 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureKHR-buffer-03737# The @buffer@
---     used to create @pInfo@->@src@ /must/ be bound to device memory
+--     used to create @pInfo->src@ /must/ be bound to device memory
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureKHR-buffer-03738# The @buffer@
---     used to create @pInfo@->@dst@ /must/ be bound to device memory
+--     used to create @pInfo->dst@ /must/ be bound to device memory
 --
 -- == Valid Usage (Implicit)
 --
@@ -1571,12 +1571,10 @@ foreign import ccall
 --     @deferredOperation@ /must/ be complete
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03727# The @buffer@ used
---     to create @pInfo@->@src@ /must/ be bound to host-visible device
---     memory
+--     to create @pInfo->src@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03728# The @buffer@ used
---     to create @pInfo@->@dst@ /must/ be bound to host-visible device
---     memory
+--     to create @pInfo->dst@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-accelerationStructureHostCommands-03582#
 --     The
@@ -1584,11 +1582,11 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03780# The @buffer@ used
---     to create @pInfo@->@src@ /must/ be bound to memory that was not
+--     to create @pInfo->src@ /must/ be bound to memory that was not
 --     allocated with multiple instances
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03781# The @buffer@ used
---     to create @pInfo@->@dst@ /must/ be bound to memory that was not
+--     to create @pInfo->dst@ /must/ be bound to memory that was not
 --     allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
@@ -1666,7 +1664,7 @@ foreign import ccall
 --
 -- = Description
 --
--- Accesses to @pInfo@->@src@ /must/ be
+-- Accesses to @pInfo->src@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -1675,8 +1673,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'.
--- Accesses to the buffer indicated by @pInfo@->@dst.deviceAddress@ /must/
--- be synchronized with the
+-- Accesses to the buffer indicated by @pInfo->dst.deviceAddress@ /must/ be
+-- synchronized with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 -- pipeline stage and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT'.
@@ -1722,19 +1720,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pInfo-03739#
---     @pInfo@->@dst.deviceAddress@ /must/ be a valid device address for a
---     buffer bound to device memory.
+--     @pInfo->dst.deviceAddress@ /must/ be a valid device address for a
+--     buffer bound to device memory
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pInfo-03740#
---     @pInfo@->@dst.deviceAddress@ /must/ be aligned to @256@ bytes
+--     @pInfo->dst.deviceAddress@ /must/ be aligned to @256@ bytes
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pInfo-03741# If the
---     buffer pointed to by @pInfo@->@dst.deviceAddress@ is non-sparse then
+--     buffer pointed to by @pInfo->dst.deviceAddress@ is non-sparse then
 --     it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-None-03559# The
---     @buffer@ used to create @pInfo@->@src@ /must/ be bound to device
+--     @buffer@ used to create @pInfo->src@ /must/ be bound to device
 --     memory
 --
 -- == Valid Usage (Implicit)
@@ -1834,14 +1832,14 @@ foreign import ccall
 --     @deferredOperation@ /must/ be complete
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-buffer-03731# The
---     @buffer@ used to create @pInfo@->@src@ /must/ be bound to
---     host-visible device memory
+--     @buffer@ used to create @pInfo->src@ /must/ be bound to host-visible
+--     device memory
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-pInfo-03732#
---     @pInfo@->@dst.hostAddress@ /must/ be a valid host pointer
+--     @pInfo->dst.hostAddress@ /must/ be a valid host pointer
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-pInfo-03751#
---     @pInfo@->@dst.hostAddress@ /must/ be aligned to 16 bytes
+--     @pInfo->dst.hostAddress@ /must/ be aligned to 16 bytes
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-accelerationStructureHostCommands-03584#
 --     The
@@ -1849,8 +1847,8 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-buffer-03783# The
---     @buffer@ used to create @pInfo@->@src@ /must/ be bound to memory
---     that was not allocated with multiple instances
+--     @buffer@ used to create @pInfo->src@ /must/ be bound to memory that
+--     was not allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
 --
@@ -1893,7 +1891,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 copyAccelerationStructureToMemoryKHR :: forall io
                                       . (MonadIO io)
-                                     => -- | @device@ is the device which owns @pInfo@->@src@.
+                                     => -- | @device@ is the device which owns @pInfo->src@.
                                         Device
                                      -> -- | @deferredOperation@ is an optional
                                         -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
@@ -1927,7 +1925,7 @@ foreign import ccall
 --
 -- = Description
 --
--- Accesses to @pInfo@->@dst@ /must/ be
+-- Accesses to @pInfo->dst@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -1936,8 +1934,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
--- Accesses to the buffer indicated by @pInfo@->@src.deviceAddress@ /must/
--- be synchronized with the
+-- Accesses to the buffer indicated by @pInfo->src.deviceAddress@ /must/ be
+-- synchronized with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 -- pipeline stage and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_READ_BIT'.
@@ -1955,19 +1953,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03742#
---     @pInfo@->@src.deviceAddress@ /must/ be a valid device address for a
+--     @pInfo->src.deviceAddress@ /must/ be a valid device address for a
 --     buffer bound to device memory.
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03743#
---     @pInfo@->@src.deviceAddress@ /must/ be aligned to @256@ bytes
+--     @pInfo->src.deviceAddress@ /must/ be aligned to @256@ bytes
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03744# If the
---     buffer pointed to by @pInfo@->@src.deviceAddress@ is non-sparse then
+--     buffer pointed to by @pInfo->src.deviceAddress@ is non-sparse then
 --     it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-buffer-03745# The
---     @buffer@ used to create @pInfo@->@dst@ /must/ be bound to device
+--     @buffer@ used to create @pInfo->dst@ /must/ be bound to device
 --     memory
 --
 -- == Valid Usage (Implicit)
@@ -2063,14 +2061,14 @@ foreign import ccall
 --     @deferredOperation@ /must/ be complete
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-pInfo-03729#
---     @pInfo@->@src.hostAddress@ /must/ be a valid host pointer
+--     @pInfo->src.hostAddress@ /must/ be a valid host pointer
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-pInfo-03750#
---     @pInfo@->@src.hostAddress@ /must/ be aligned to 16 bytes
+--     @pInfo->src.hostAddress@ /must/ be aligned to 16 bytes
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-buffer-03730# The
---     @buffer@ used to create @pInfo@->@dst@ /must/ be bound to
---     host-visible device memory
+--     @buffer@ used to create @pInfo->dst@ /must/ be bound to host-visible
+--     device memory
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-accelerationStructureHostCommands-03583#
 --     The
@@ -2078,8 +2076,8 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-buffer-03782# The
---     @buffer@ used to create @pInfo@->@dst@ /must/ be bound to memory
---     that was not allocated with multiple instances
+--     @buffer@ used to create @pInfo->dst@ /must/ be bound to memory that
+--     was not allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
 --
@@ -2180,6 +2178,10 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-buffer-03736#
 --     The @buffer@ used to create each acceleration structure in
 --     @pAccelerationStructures@ /must/ be bound to device memory
+--
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-query-04880# The
+--     sum of @query@ plus @accelerationStructureCount@ /must/ be less than
+--     or equal to the number of queries in @queryPool@
 --
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-accelerationStructures-03431#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
@@ -2407,8 +2409,8 @@ writeAccelerationStructuresPropertiesKHR :: forall io
                                          => -- | @device@ is the device which owns the acceleration structures in
                                             -- @pAccelerationStructures@.
                                             Device
-                                         -> -- | @pAccelerationStructures@ points to an array of existing previously
-                                            -- built acceleration structures.
+                                         -> -- | @pAccelerationStructures@ is a pointer to an array of existing
+                                            -- previously built acceleration structures.
                                             ("accelerationStructures" ::: Vector AccelerationStructureKHR)
                                          -> -- | @queryType@ is a 'Vulkan.Core10.Enums.QueryType.QueryType' value
                                             -- specifying the property to be queried.
@@ -2473,8 +2475,8 @@ getDeviceAccelerationStructureCompatibilityKHR :: forall io
                                                 . (MonadIO io)
                                                => -- | @device@ is the device to check the version against.
                                                   Device
-                                               -> -- | @pVersionInfo@ points to the 'AccelerationStructureVersionInfoKHR'
-                                                  -- version information to check against the device.
+                                               -> -- | @pVersionInfo@ is a pointer to a 'AccelerationStructureVersionInfoKHR'
+                                                  -- structure specifying version information to check against the device.
                                                   AccelerationStructureVersionInfoKHR
                                                -> io (AccelerationStructureCompatibilityKHR)
 getDeviceAccelerationStructureCompatibilityKHR device versionInfo = liftIO . evalContT $ do
@@ -2643,7 +2645,7 @@ foreign import ccall
 -- the builds.
 --
 -- Accesses to the acceleration structure scratch buffers as identified by
--- the 'AccelerationStructureBuildGeometryInfoKHR'→@scratchData@ buffer
+-- the 'AccelerationStructureBuildGeometryInfoKHR'::@scratchData@ buffer
 -- device addresses /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
@@ -2656,16 +2658,16 @@ foreign import ccall
 -- or
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
 -- Similarly for accesses to each
--- 'AccelerationStructureBuildGeometryInfoKHR'→@srcAccelerationStructure@
+-- 'AccelerationStructureBuildGeometryInfoKHR'::@srcAccelerationStructure@
 -- and
--- 'AccelerationStructureBuildGeometryInfoKHR'→@dstAccelerationStructure@.
+-- 'AccelerationStructureBuildGeometryInfoKHR'::@dstAccelerationStructure@.
 --
 -- Accesses to other input buffers as identified by any used values of
--- 'AccelerationStructureGeometryTrianglesDataKHR'→@vertexData@,
--- 'AccelerationStructureGeometryTrianglesDataKHR'→@indexData@,
--- 'AccelerationStructureGeometryTrianglesDataKHR'→@transformData@,
--- 'AccelerationStructureGeometryAabbsDataKHR'→@data@, and
--- 'AccelerationStructureGeometryInstancesDataKHR'→@data@ /must/ be
+-- 'AccelerationStructureGeometryTrianglesDataKHR'::@vertexData@,
+-- 'AccelerationStructureGeometryTrianglesDataKHR'::@indexData@,
+-- 'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@,
+-- 'AccelerationStructureGeometryAabbsDataKHR'::@data@, and
+-- 'AccelerationStructureGeometryInstancesDataKHR'::@data@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -2785,12 +2787,6 @@ foreign import ccall
 --     'GEOMETRY_TYPE_INSTANCES_KHR' in any other element of @pInfos@,
 --     which is accessed by this command
 --
--- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03666# For each
---     element of @pInfos@, if its @mode@ member is
---     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03667# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
@@ -2811,19 +2807,19 @@ foreign import ccall
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @geometryCount@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03759# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @flags@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03760# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @type@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03761# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2831,7 +2827,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @geometryType@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03762# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2839,7 +2835,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @flags@ member /must/
 --     have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03763# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2848,7 +2844,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.vertexFormat@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03764# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2857,7 +2853,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.maxVertex@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03765# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2866,7 +2862,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.indexType@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03766# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2875,7 +2871,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
 --     @geometry.triangles.transformData@ member was NULL when
---     @srcAccelerationStructure@ was last built, then it must be NULL.
+--     @srcAccelerationStructure@ was last built, then it /must/ be NULL
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03767# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2884,7 +2880,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
 --     @geometry.triangles.transformData@ member was not NULL when
---     @srcAccelerationStructure@ was last built, then it may not be NULL.
+--     @srcAccelerationStructure@ was last built, then it may not be NULL
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03768# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2893,20 +2889,20 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', and @geometry.triangles.indexType@ is
 --     not 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then the
---     value of each index referenced index must be the same as the
+--     value of each index referenced /must/ be the same as the
 --     corresponding index value when @srcAccelerationStructure@ was last
---     built.
+--     built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-primitiveCount-03769# For
 --     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built.
+--     which was specified when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-firstVertex-03770# For
 --     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, if the corresponding geometry uses indices, its
 --     @firstVertex@ member /must/ have the same value which was specified
---     when @srcAccelerationStructure@ was last built.
+--     when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03801# For each
 --     element of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@
@@ -2959,7 +2955,8 @@ foreign import ccall
 --     @geometry.triangles.vertexData@, @geometry.triangles.indexData@,
 --     @geometry.triangles.transformData@, @geometry.aabbs.data@, and
 --     @geometry.instances.data@ members of all @pInfos@[i].@pGeometries@
---     and @pInfos@[i].@ppGeometries@ /must/ have been created with the
+--     and @pInfos@[i].@ppGeometries@ are queried /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
 --     usage flag
 --
@@ -3186,16 +3183,16 @@ cmdBuildAccelerationStructuresKHR :: forall io
                                   => -- | @commandBuffer@ is the command buffer into which the command will be
                                      -- recorded.
                                      CommandBuffer
-                                  -> -- | @pInfos@ is an array of @infoCount@
+                                  -> -- | @pInfos@ is a pointer to an array of @infoCount@
                                      -- 'AccelerationStructureBuildGeometryInfoKHR' structures defining the
                                      -- geometry used to build each acceleration structure.
                                      ("infos" ::: Vector AccelerationStructureBuildGeometryInfoKHR)
-                                  -> -- | @ppBuildRangeInfos@ is an array of @infoCount@ pointers to arrays of
-                                     -- 'AccelerationStructureBuildRangeInfoKHR' structures. Each
-                                     -- @ppBuildRangeInfos@[i] is an array of @pInfos@[i].@geometryCount@
-                                     -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
-                                     -- offsets to the addresses where geometry data is stored, as defined by
-                                     -- @pInfos@[i].
+                                  -> -- | @ppBuildRangeInfos@ is a pointer to an array of @infoCount@ pointers to
+                                     -- arrays of 'AccelerationStructureBuildRangeInfoKHR' structures. Each
+                                     -- @ppBuildRangeInfos@[i] is a pointer to an array of
+                                     -- @pInfos@[i].@geometryCount@ 'AccelerationStructureBuildRangeInfoKHR'
+                                     -- structures defining dynamic offsets to the addresses where geometry data
+                                     -- is stored, as defined by @pInfos@[i].
                                      ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                   -> io ()
 cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO . evalContT $ do
@@ -3354,12 +3351,6 @@ foreign import ccall
 --     'GEOMETRY_TYPE_INSTANCES_KHR' in any other element of @pInfos@,
 --     which is accessed by this command
 --
--- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03666# For
---     each element of @pInfos@, if its @mode@ member is
---     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03667# For
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
@@ -3380,19 +3371,19 @@ foreign import ccall
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @geometryCount@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03759# For
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @flags@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03760# For
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @type@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03761# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3400,7 +3391,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @geometryType@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03762# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3408,7 +3399,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @flags@ member /must/
 --     have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03763# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3417,7 +3408,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.vertexFormat@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03764# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3426,7 +3417,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.maxVertex@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03765# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3435,7 +3426,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.indexType@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03766# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3444,7 +3435,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
 --     @geometry.triangles.transformData@ member was NULL when
---     @srcAccelerationStructure@ was last built, then it must be NULL.
+--     @srcAccelerationStructure@ was last built, then it /must/ be NULL
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03767# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3453,7 +3444,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
 --     @geometry.triangles.transformData@ member was not NULL when
---     @srcAccelerationStructure@ was last built, then it may not be NULL.
+--     @srcAccelerationStructure@ was last built, then it may not be NULL
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03768# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3462,20 +3453,20 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', and @geometry.triangles.indexType@ is
 --     not 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then the
---     value of each index referenced index must be the same as the
+--     value of each index referenced /must/ be the same as the
 --     corresponding index value when @srcAccelerationStructure@ was last
---     built.
+--     built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-primitiveCount-03769#
 --     For each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built.
+--     which was specified when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-firstVertex-03770#
 --     For each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, if the corresponding geometry uses indices, its
 --     @firstVertex@ member /must/ have the same value which was specified
---     when @srcAccelerationStructure@ was last built.
+--     when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03801# For
 --     each element of @pInfos@[i].@pGeometries@ or
@@ -3529,7 +3520,8 @@ foreign import ccall
 --     @geometry.triangles.vertexData@, @geometry.triangles.indexData@,
 --     @geometry.triangles.transformData@, @geometry.aabbs.data@, and
 --     @geometry.instances.data@ members of all @pInfos@[i].@pGeometries@
---     and @pInfos@[i].@ppGeometries@ /must/ have been created with the
+--     and @pInfos@[i].@ppGeometries@ are queried /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
 --     usage flag
 --
@@ -3709,7 +3701,7 @@ foreign import ccall
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pIndirectDeviceAddresses-03646#
 --     For any element of @pIndirectDeviceAddresses@[i], all device
 --     addresses between @pIndirectDeviceAddresses@[i] and
---     @pIndirectDeviceAddresses@[i] + (@pInfos@[i]→geometryCount ×
+--     @pIndirectDeviceAddresses@[i] + (@pInfos@[i].@geometryCount@ ×
 --     @pIndirectStrides@[i]) - 1 /must/ be in the buffer device address
 --     range of the same buffer
 --
@@ -3817,22 +3809,23 @@ cmdBuildAccelerationStructuresIndirectKHR :: forall io
                                           => -- | @commandBuffer@ is the command buffer into which the command will be
                                              -- recorded.
                                              CommandBuffer
-                                          -> -- | @pInfos@ is an array of @infoCount@
+                                          -> -- | @pInfos@ is a pointer to an array of @infoCount@
                                              -- 'AccelerationStructureBuildGeometryInfoKHR' structures defining the
                                              -- geometry used to build each acceleration structure.
                                              ("infos" ::: Vector AccelerationStructureBuildGeometryInfoKHR)
-                                          -> -- | @pIndirectDeviceAddresses@ is an array of @infoCount@ buffer device
-                                             -- addresses which point to @pInfos@[i]→@geometryCount@
+                                          -> -- | @pIndirectDeviceAddresses@ is a pointer to an array of @infoCount@
+                                             -- buffer device addresses which point to @pInfos@[i].@geometryCount@
                                              -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
                                              -- offsets to the addresses where geometry data is stored, as defined by
                                              -- @pInfos@[i].
                                              ("indirectDeviceAddresses" ::: Vector DeviceAddress)
-                                          -> -- | @pIndirectStrides@ is an array of @infoCount@ byte strides between
-                                             -- elements of @pIndirectDeviceAddresses@.
+                                          -> -- | @pIndirectStrides@ is a pointer to an array of @infoCount@ byte strides
+                                             -- between elements of @pIndirectDeviceAddresses@.
                                              ("indirectStrides" ::: Vector Word32)
-                                          -> -- | @ppMaxPrimitiveCounts@ is an array of @infoCount@ arrays of
-                                             -- @pInfo@[i]→@geometryCount@ values indicating the maximum number of
-                                             -- primitives that will be built by this command for each geometry.
+                                          -> -- | @ppMaxPrimitiveCounts@ is a pointer to an array of @infoCount@ pointers
+                                             -- to arrays of @pInfos@[i].@geometryCount@ values indicating the maximum
+                                             -- number of primitives that will be built by this command for each
+                                             -- geometry.
                                              ("maxPrimitiveCounts" ::: Vector (Vector Word32))
                                           -> io ()
 cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddresses indirectStrides maxPrimitiveCounts = liftIO . evalContT $ do
@@ -4002,12 +3995,6 @@ foreign import ccall
 --     'GEOMETRY_TYPE_INSTANCES_KHR' in any other element of @pInfos@,
 --     which is accessed by this command
 --
--- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03666# For each
---     element of @pInfos@, if its @mode@ member is
---     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03667# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
@@ -4028,19 +4015,19 @@ foreign import ccall
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @geometryCount@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03759# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @flags@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03760# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @type@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03761# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4048,7 +4035,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @geometryType@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03762# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4056,7 +4043,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @flags@ member /must/
 --     have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03763# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4065,7 +4052,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.vertexFormat@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03764# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4074,7 +4061,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.maxVertex@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03765# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4083,7 +4070,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.indexType@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03766# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4092,7 +4079,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
 --     @geometry.triangles.transformData@ member was NULL when
---     @srcAccelerationStructure@ was last built, then it must be NULL.
+--     @srcAccelerationStructure@ was last built, then it /must/ be NULL
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03767# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4101,7 +4088,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
 --     @geometry.triangles.transformData@ member was not NULL when
---     @srcAccelerationStructure@ was last built, then it may not be NULL.
+--     @srcAccelerationStructure@ was last built, then it may not be NULL
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03768# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4110,20 +4097,20 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', and @geometry.triangles.indexType@ is
 --     not 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then the
---     value of each index referenced index must be the same as the
+--     value of each index referenced /must/ be the same as the
 --     corresponding index value when @srcAccelerationStructure@ was last
---     built.
+--     built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-primitiveCount-03769# For
 --     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built.
+--     which was specified when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-firstVertex-03770# For each
 --     'AccelerationStructureBuildRangeInfoKHR' referenced by this command,
 --     if the corresponding geometry uses indices, its @firstVertex@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03801# For each
 --     element of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@
@@ -4316,12 +4303,12 @@ buildAccelerationStructuresKHR :: forall io
                                   -- 'AccelerationStructureBuildGeometryInfoKHR' structures defining the
                                   -- geometry used to build each acceleration structure.
                                   ("infos" ::: Vector AccelerationStructureBuildGeometryInfoKHR)
-                               -> -- | @ppBuildRangeInfos@ is an array of @infoCount@ pointers to arrays of
-                                  -- 'AccelerationStructureBuildRangeInfoKHR' structures. Each
-                                  -- @ppBuildRangeInfos@[i] is an array of @pInfos@[i].@geometryCount@
-                                  -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
-                                  -- offsets to the addresses where geometry data is stored, as defined by
-                                  -- @pInfos@[i].
+                               -> -- | @ppBuildRangeInfos@ is a pointer to an array of @infoCount@ pointers to
+                                  -- arrays of 'AccelerationStructureBuildRangeInfoKHR' structures. Each
+                                  -- @ppBuildRangeInfos@[i] is a pointer to an array of
+                                  -- @pInfos@[i].@geometryCount@ 'AccelerationStructureBuildRangeInfoKHR'
+                                  -- structures defining dynamic offsets to the addresses where geometry data
+                                  -- is stored, as defined by @pInfos@[i].
                                   ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                -> io (Result)
 buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = liftIO . evalContT $ do
@@ -4362,13 +4349,13 @@ foreign import ccall
 -- structure building.
 --
 -- If the acceleration structure was created with a non-zero value of
--- 'AccelerationStructureCreateInfoKHR'::@deviceAddress@ the return value
+-- 'AccelerationStructureCreateInfoKHR'::@deviceAddress@, the return value
 -- will be the same address.
 --
 -- If the acceleration structure was created with a @type@ of
--- 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' the returned address /must/ be
--- consistent with the relative offset to other acceleration structures of
--- @type@ of 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' allocated with the
+-- 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR', the returned address /must/
+-- be consistent with the relative offset to other acceleration structures
+-- with @type@ 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' allocated with the
 -- same 'Vulkan.Core10.Handles.Buffer'. That is, the difference in returned
 -- addresses between the two /must/ be the same as the difference in
 -- offsets provided at acceleration structure creation.
@@ -4402,7 +4389,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 getAccelerationStructureDeviceAddressKHR :: forall io
                                           . (MonadIO io)
-                                         => -- | @device@ is the logical device that the accelerationStructure was
+                                         => -- | @device@ is the logical device that the acceleration structure was
                                             -- created on.
                                             Device
                                          -> -- | @pInfo@ is a pointer to a 'AccelerationStructureDeviceAddressInfoKHR'
@@ -4585,7 +4572,7 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
 
 
 -- | VkWriteDescriptorSetAccelerationStructureKHR - Structure specifying
--- acceleration structure descriptor info
+-- acceleration structure descriptor information
 --
 -- == Valid Usage
 --
@@ -4602,7 +4589,7 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
 -- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-pAccelerationStructures-03580#
 --     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
---     feature is not enabled, each member of @pAccelerationStructures@
+--     feature is not enabled, each element of @pAccelerationStructures@
 --     /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- == Valid Usage (Implicit)
@@ -4625,7 +4612,9 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetAccelerationStructureKHR = WriteDescriptorSetAccelerationStructureKHR
-  { -- | @pAccelerationStructures@ are the acceleration structures to update.
+  { -- | @pAccelerationStructures@ is a pointer to an array of
+    -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' structures
+    -- specifying the acceleration structures to update.
     accelerationStructures :: Vector AccelerationStructureKHR }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -4669,18 +4658,19 @@ instance Zero WriteDescriptorSetAccelerationStructureKHR where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceAccelerationStructureFeaturesKHR'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceAccelerationStructureFeaturesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceAccelerationStructureFeaturesKHR' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- the features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceAccelerationStructureFeaturesKHR' /can/ also
+-- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- to selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -4781,9 +4771,12 @@ instance Zero PhysicalDeviceAccelerationStructureFeaturesKHR where
 -- = Description
 --
 -- If the 'PhysicalDeviceAccelerationStructurePropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- Limits specified by this structure /must/ match those specified with the
 -- same name in
@@ -5136,23 +5129,6 @@ instance Zero AccelerationStructureGeometryInstancesDataKHR where
 -- | VkAccelerationStructureGeometryKHR - Structure specifying geometries to
 -- be built into an acceleration structure
 --
--- == Valid Usage
---
--- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03541# If
---     @geometryType@ is 'GEOMETRY_TYPE_AABBS_KHR', the @aabbs@ member of
---     @geometry@ /must/ be a valid
---     'AccelerationStructureGeometryAabbsDataKHR' structure
---
--- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03542# If
---     @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', the @triangles@
---     member of @geometry@ /must/ be a valid
---     'AccelerationStructureGeometryTrianglesDataKHR' structure
---
--- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03543# If
---     @geometryType@ is 'GEOMETRY_TYPE_INSTANCES_KHR', the @instances@
---     member of @geometry@ /must/ be a valid
---     'AccelerationStructureGeometryInstancesDataKHR' structure
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAccelerationStructureGeometryKHR-sType-sType# @sType@ /must/
@@ -5356,12 +5332,12 @@ data AccelerationStructureBuildGeometryInfoKHR = AccelerationStructureBuildGeome
   , -- | @mode@ is a 'BuildAccelerationStructureModeKHR' value specifying the
     -- type of operation to perform.
     mode :: BuildAccelerationStructureModeKHR
-  , -- | @srcAccelerationStructure@ points to an existing acceleration structure
-    -- that is to be used to update the @dst@ acceleration structure when
-    -- @mode@ is 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR'.
+  , -- | @srcAccelerationStructure@ is a pointer to an existing acceleration
+    -- structure that is to be used to update the @dst@ acceleration structure
+    -- when @mode@ is 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR'.
     srcAccelerationStructure :: AccelerationStructureKHR
-  , -- | @dstAccelerationStructure@ points to the target acceleration structure
-    -- for the build.
+  , -- | @dstAccelerationStructure@ is a pointer to the target acceleration
+    -- structure for the build.
     dstAccelerationStructure :: AccelerationStructureKHR
   , -- | @pGeometries@ is a pointer to an array of
     -- 'AccelerationStructureGeometryKHR' structures.
@@ -5470,7 +5446,7 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --
 -- -   #VUID-VkAccelerationStructureBuildRangeInfoKHR-primitiveOffset-03657#
 --     For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', if the
---     geometry doesn’t use indices, the offset @primitiveOffset@ from
+--     geometry does not use indices, the offset @primitiveOffset@ from
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexData@ /must/
 --     be a multiple of the component size of
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@
@@ -5581,7 +5557,7 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 -- flag to all buffers that use
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT',
--- and
+-- and will add
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 -- to all buffers used as storage for an acceleration structure where
 -- @deviceAddress@ is not zero. During capture the tool will save the
@@ -5921,8 +5897,8 @@ instance Zero TransformMatrixKHR where
 --
 -- = Description
 --
--- The C language spec does not define the ordering of bit-fields, but in
--- practice, this struct produces the correct layout with existing
+-- The C language specification does not define the ordering of bit-fields,
+-- but in practice, this struct produces the correct layout with existing
 -- compilers. The intended bit pattern is for the following:
 --
 -- If a compiler produces code that diverges from that pattern,
@@ -5942,7 +5918,7 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
     -- to ray shaders in the @InstanceCustomIndexKHR@ built-in.
     --
     -- @instanceCustomIndex@ and @mask@ occupy the same memory as if a single
-    -- @int32_t@ was specified in their place
+    -- @uint32_t@ was specified in their place
     --
     -- -   @instanceCustomIndex@ occupies the 24 least significant bits of that
     --     memory
@@ -5956,7 +5932,7 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
     -- calculating the hit shader binding table index.
     --
     -- @instanceShaderBindingTableRecordOffset@ and @flags@ occupy the same
-    -- memory as if a single @int32_t@ was specified in their place
+    -- memory as if a single @uint32_t@ was specified in their place
     --
     -- -   @instanceShaderBindingTableRecordOffset@ occupies the 24 least
     --     significant bits of that memory
@@ -6703,8 +6679,8 @@ pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR = BuildAccelerati
 pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000008
 -- | 'BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR' indicates that this
 -- acceleration structure /should/ minimize the size of the scratch memory
--- and the final result build, potentially at the expense of build time or
--- trace performance.
+-- and the final result acceleration structure, potentially at the expense
+-- of build time or trace performance.
 pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR        = BuildAccelerationStructureFlagBitsKHR 0x00000010
 
 conNameBuildAccelerationStructureFlagBitsKHR :: String
@@ -7043,11 +7019,12 @@ instance Read AccelerationStructureBuildTypeKHR where
 newtype AccelerationStructureCompatibilityKHR = AccelerationStructureCompatibilityKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR' when the
--- @pVersion@ version acceleration structure is compatibile with @device@.
+-- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR' if the
+-- @pVersionData@ version acceleration structure is compatible with
+-- @device@.
 pattern ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR   = AccelerationStructureCompatibilityKHR 0
--- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR' when the
--- @pVersion@ version acceleration structure is not compatibile with
+-- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR' if the
+-- @pVersionData@ version acceleration structure is not compatible with
 -- @device@.
 pattern ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR = AccelerationStructureCompatibilityKHR 1
 {-# complete ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR,

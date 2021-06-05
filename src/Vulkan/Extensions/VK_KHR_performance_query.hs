@@ -225,9 +225,9 @@
 -- 10) Should we introduce an indirect mechanism to set the counter pass
 -- index?
 --
--- __RESOLVED__ Specify the counter pass index at submit time instead to
+-- __RESOLVED__ Specify the counter pass index at submit time instead, to
 -- avoid requiring re-recording of command buffers when multiple counter
--- passes needed.
+-- passes are needed.
 --
 -- == Examples
 --
@@ -648,9 +648,10 @@ foreign import ccall
 -- of elements in the @pCounters@, @pCounterDescriptions@, or both arrays
 -- and on return the variable is overwritten with the number of structures
 -- actually written out. If @pCounterCount@ is less than the number of
--- counters available, at most @pCounterCount@ structures will be written
+-- counters available, at most @pCounterCount@ structures will be written,
 -- and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS'.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available counters were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -892,6 +893,22 @@ pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PERFORMANCE_
 -- | VkPhysicalDevicePerformanceQueryFeaturesKHR - Structure describing
 -- performance query support for an implementation
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
+-- = Description
+--
+-- If the 'PhysicalDevicePerformanceQueryFeaturesKHR' structure is included
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevicePerformanceQueryFeaturesKHR' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -954,17 +971,17 @@ instance Zero PhysicalDevicePerformanceQueryFeaturesKHR where
 -- | VkPhysicalDevicePerformanceQueryPropertiesKHR - Structure describing
 -- performance query properties for an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDevicePerformanceQueryPropertiesKHR'
--- structure describe the following implementation-dependent properties:
---
--- == Valid Usage (Implicit)
+-- = Description
 --
 -- If the 'PhysicalDevicePerformanceQueryPropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent properties.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -1206,7 +1223,7 @@ data QueryPoolPerformanceCreateInfoKHR = QueryPoolPerformanceCreateInfoKHR
   { -- | @queueFamilyIndex@ is the queue family index to create this performance
     -- query pool for.
     queueFamilyIndex :: Word32
-  , -- | @pCounterIndices@ is the array of indices into the
+  , -- | @pCounterIndices@ is a pointer to an array of indices into the
     -- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'::@pCounters@
     -- to enable in this performance query pool.
     counterIndices :: Vector Word32

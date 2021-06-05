@@ -21,6 +21,12 @@
 --
 --     -   Requires Vulkan 1.0
 --
+-- [__Special Uses__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse OpenGL \/ ES support>
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse D3D support>
+--
 -- [__Contact__]
 --
 --     -   Liam Middlebrook
@@ -132,8 +138,8 @@
 -- VkClearColorValue is used here because it provides a union of
 -- float,int,uint types.
 --
--- RESOLVED: Will re-use existing VkClearColorValue structure in order to
--- easily take advantage of float,int,uint borderColor types.
+-- __RESOLVED__: Will reuse existing VkClearColorValue structure in order
+-- to easily take advantage of float,int,uint borderColor types.
 --
 -- 2) For hardware which supports a limited number of border colors what
 -- happens if that number is exceeded? Should this be handled by the driver
@@ -141,7 +147,7 @@
 -- using a new Object type, however that may have lead to additional system
 -- resource consumption which would otherwise not be required.
 --
--- RESOLVED: Added
+-- __RESOLVED__: Added
 -- 'PhysicalDeviceCustomBorderColorPropertiesEXT'::@maxCustomBorderColorSamplers@
 -- for tracking implementation-specific limit, and Valid Usage statement
 -- handling overflow.
@@ -152,19 +158,19 @@
 -- work on them for implementations that can support it, or forbidding it
 -- entirely.
 --
--- RESOLVED: Samplers created with a custom border color are forbidden from
--- being immutable. This resolves concerns for implementations where the
--- custom border color is an index to a LUT instead of being directly
+-- __RESOLVED__: Samplers created with a custom border color are forbidden
+-- from being immutable. This resolves concerns for implementations where
+-- the custom border color is an index to a LUT instead of being directly
 -- embedded into sampler state.
 --
 -- 4) Should UINT and SINT (unsigned integer and signed integer) border
 -- color types be separated or should they be combined into one generic INT
 -- (integer) type?
 --
--- RESOLVED: Separating these doesn’t make much sense as the existing fixed
--- border color types don’t have this distinction, and there is no reason
--- in hardware to do so. This separation would also create unnecessary work
--- and considerations for the application.
+-- __RESOLVED__: Separating these doesn’t make much sense as the existing
+-- fixed border color types don’t have this distinction, and there is no
+-- reason in hardware to do so. This separation would also create
+-- unnecessary work and considerations for the application.
 --
 -- == Version History
 --
@@ -368,10 +374,15 @@ instance Zero SamplerCustomBorderColorCreateInfoEXT where
 -- | VkPhysicalDeviceCustomBorderColorPropertiesEXT - Structure describing
 -- whether custom border colors can be supported by an implementation
 --
--- = Members
+-- = Description
 --
--- The members of the 'PhysicalDeviceCustomBorderColorPropertiesEXT'
--- structure describe the following features:
+-- If the 'PhysicalDeviceCustomBorderColorPropertiesEXT' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -426,8 +437,19 @@ instance Zero PhysicalDeviceCustomBorderColorPropertiesEXT where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCustomBorderColorFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceCustomBorderColorFeaturesEXT' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCustomBorderColorFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --

@@ -61,7 +61,7 @@
 -- of @Workgroup@ storage class memory and create aliases between variables
 -- from that storage class in a compute shader.
 --
--- The aliasing feature allows different \"views\" on the same data, so the
+-- The aliasing feature allows different “views” on the same data, so the
 -- shader can bulk copy data from another storage class using one type
 -- (e.g. an array of large vectors), and then use the data with a more
 -- specific type. It also enables reducing the amount of workgroup memory
@@ -149,19 +149,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the
--- 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR'
--- structure is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the feature.
+-- structure is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --

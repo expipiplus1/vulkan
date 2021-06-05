@@ -56,6 +56,15 @@ import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..
 -- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
 -- attachment pair and an aspect mask that /can/ be read.
 --
+-- = Description
+--
+-- This structure specifies an aspect mask for a specific input attachment
+-- of a specific subpass in the render pass.
+--
+-- @subpass@ and @inputAttachmentIndex@ index into the render pass as:
+--
+-- > pname:pCreateInfo->pSubpasses[subpass].pInputAttachments[inputAttachmentIndex]
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -135,6 +144,10 @@ instance Zero InputAttachmentAspectReference where
 --
 -- = Description
 --
+-- To specify which aspects of an input attachment /can/ be read, add a
+-- 'RenderPassInputAttachmentAspectCreateInfo' structure to the @pNext@
+-- chain of the 'Vulkan.Core10.Pass.RenderPassCreateInfo' structure:
+--
 -- An application /can/ access any aspect of an input attachment that does
 -- not have a specified aspect mask in the @pAspectReferences@ array.
 -- Otherwise, an application /must/ not access aspect(s) of an input
@@ -195,17 +208,15 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 -- | VkPhysicalDevicePointClippingProperties - Structure describing the point
 -- clipping behavior supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDevicePointClippingProperties' structure
--- describe the following implementation-dependent limit:
---
 -- = Description
 --
 -- If the 'PhysicalDevicePointClippingProperties' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -273,9 +284,9 @@ instance Zero PhysicalDevicePointClippingProperties where
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
-  { -- | @usage@ is a bitmask describing the allowed usages of the image view.
-    -- See 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' for a
-    -- description of the supported bits.
+  { -- | @usage@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' specifying
+    -- allowed usages of the image view.
     --
     -- #VUID-VkImageViewUsageCreateInfo-usage-parameter# @usage@ /must/ be a
     -- valid combination of
@@ -331,7 +342,7 @@ instance Zero ImageViewUsageCreateInfo where
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo', it
 -- controls the origin of the tessellation domain. If this structure is not
--- present, it is as if @domainOrigin@ were
+-- present, it is as if @domainOrigin@ was
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
 --
 -- == Valid Usage (Implicit)

@@ -37,10 +37,14 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceVariablePointersFeatures' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #extension-features-variablePointersStorageBuffer#
 --     @variablePointersStorageBuffer@ specifies whether the implementation
@@ -55,12 +59,14 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 --     not declare the @VariablePointers@ capability.
 --
 -- If the 'PhysicalDeviceVariablePointersFeatures' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceVariablePointersFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVariablePointersFeatures' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage
 --

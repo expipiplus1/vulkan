@@ -391,7 +391,9 @@ data ImportSemaphoreZirconHandleInfoFUCHSIA = ImportSemaphoreZirconHandleInfoFUC
     -- specifying additional parameters for the semaphore payload import
     -- operation.
     flags :: SemaphoreImportFlags
-  , -- | @handleType@ specifies the type of @zirconHandle@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of @zirconHandle@.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   , -- | @zirconHandle@ is the external handle to import.
     zirconHandle :: Zx_handle_t
@@ -518,7 +520,9 @@ instance Zero ImportSemaphoreZirconHandleInfoFUCHSIA where
 data SemaphoreGetZirconHandleInfoFUCHSIA = SemaphoreGetZirconHandleInfoFUCHSIA
   { -- | @semaphore@ is the semaphore from which state will be exported.
     semaphore :: Semaphore
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable, Eq)

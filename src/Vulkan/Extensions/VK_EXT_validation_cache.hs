@@ -420,15 +420,16 @@ foreign import ccall
 -- @pDataSize@. Otherwise, @pDataSize@ /must/ point to a variable set by
 -- the user to the size of the buffer, in bytes, pointed to by @pData@, and
 -- on return the variable is overwritten with the amount of data actually
--- written to @pData@.
+-- written to @pData@. If @pDataSize@ is less than the maximum size that
+-- /can/ be retrieved by the validation cache, at most @pDataSize@ bytes
+-- will be written to @pData@, and 'getValidationCacheDataEXT' will return
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all of the
+-- validation cache was returned.
 --
--- If @pDataSize@ is less than the maximum size that /can/ be retrieved by
--- the validation cache, at most @pDataSize@ bytes will be written to
--- @pData@, and 'getValidationCacheDataEXT' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'. Any data written to @pData@ is
--- valid and /can/ be provided as the @pInitialData@ member of the
--- 'ValidationCacheCreateInfoEXT' structure passed to
--- 'createValidationCacheEXT'.
+-- Any data written to @pData@ is valid and /can/ be provided as the
+-- @pInitialData@ member of the 'ValidationCacheCreateInfoEXT' structure
+-- passed to 'createValidationCacheEXT'.
 --
 -- Two calls to 'getValidationCacheDataEXT' with the same parameters /must/
 -- retrieve the same data unless a command that modifies the contents of

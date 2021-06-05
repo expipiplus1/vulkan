@@ -238,6 +238,11 @@ foreign import ccall
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
 --
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-viewportScissor2D-04788# If this
+--     command is recorded in a secondary command buffer with
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled, then this function /must/ not be called.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-parameter#
@@ -309,17 +314,15 @@ cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles 
 -- | VkPhysicalDeviceDiscardRectanglePropertiesEXT - Structure describing
 -- discard rectangle limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceDiscardRectanglePropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceDiscardRectanglePropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

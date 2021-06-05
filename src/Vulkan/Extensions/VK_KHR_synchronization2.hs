@@ -30,12 +30,14 @@
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
---     2020-12-03 Interactions and External Dependencies:
+-- [__Last Modified Date__]
+--     2020-12-03
+--
+-- [__Interactions and External Dependencies__]
 --
 --     -   Interacts with @VK_KHR_create_renderpass2@
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Tobias Hector
 --
@@ -719,7 +721,7 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetEvent2KHR-dependencyFlags-03825# The @dependencyFlags@
---     member of @dependencyInfo@ /must/ be @0@
+--     member of @pDependencyInfo@ /must/ be @0@
 --
 -- -   #VUID-vkCmdSetEvent2KHR-commandBuffer-03826# The current device mask
 --     of @commandBuffer@ /must/ include exactly one physical device.
@@ -827,20 +829,18 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all commands that occur earlier in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
--- The synchronization scope is limited to operations by @stage@ or stages
--- that are
+-- The synchronization scope is limited to operations by @stageMask@ or
+-- stages that are
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically earlier>
--- than @stage@.
+-- than @stageMask@.
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes only the event unsignal operation.
 --
--- If @event@ is already in the unsignaled state when
--- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' is executed on the
--- device, then 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' has no
--- effect, no event unsignal operation occurs, and no execution dependency
--- is generated.
+-- If @event@ is already in the unsignaled state when 'cmdResetEvent2KHR'
+-- is executed on the device, then this command has no effect, no event
+-- unsignal operation occurs, and no execution dependency is generated.
 --
 -- == Valid Usage
 --
@@ -962,8 +962,8 @@ cmdResetEvent2KHR :: forall io
                      CommandBuffer
                   -> -- | @event@ is the event that will be unsignaled.
                      Event
-                  -> -- | @stageMask@ is a is a 'PipelineStageFlags2KHR' mask of pipeline stages
-                     -- used to determine the first
+                  -> -- | @stageMask@ is a 'PipelineStageFlags2KHR' mask of pipeline stages used
+                     -- to determine the first
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>.
                      ("stageMask" ::: PipelineStageFlags2KHR)
                   -> io ()
@@ -994,10 +994,10 @@ cmdWaitEvents2KHRSafeOrUnsafe :: forall io
                               -> -- | @commandBuffer@ is the command buffer into which the command is
                                  -- recorded.
                                  CommandBuffer
-                              -> -- | @pEvents@ is an array of events to wait on.
+                              -> -- | @pEvents@ is a pointer to an array of @eventCount@ events to wait on.
                                  ("events" ::: Vector Event)
-                              -> -- | @pDependencyInfos@ is an array of 'DependencyInfoKHR' structures,
-                                 -- defining the second
+                              -> -- | @pDependencyInfos@ is a pointer to an array of @eventCount@
+                                 -- 'DependencyInfoKHR' structures, defining the second
                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>.
                                  ("dependencyInfos" ::: Vector DependencyInfoKHR)
                               -> io ()
@@ -1032,7 +1032,7 @@ cmdWaitEvents2KHRSafeOrUnsafe mkVkCmdWaitEvents2KHR commandBuffer events depende
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- of each memory dependency defined by any element i of @pDependencyInfos@
--- are applied to operations commands that occurred earlier in
+-- are applied to operations that occurred earlier in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>
 -- than the last event signal operation on element i of @pEvents@.
 --
@@ -1056,7 +1056,7 @@ cmdWaitEvents2KHRSafeOrUnsafe mkVkCmdWaitEvents2KHR commandBuffer events depende
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- of each memory dependency defined by any element i of @pDependencyInfos@
--- are applied to operations commands that occurred later in
+-- are applied to operations that occurred later in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>
 -- than 'cmdWaitEvents2KHR'.
 --
@@ -1108,13 +1108,14 @@ cmdWaitEvents2KHRSafeOrUnsafe mkVkCmdWaitEvents2KHR commandBuffer events depende
 -- -   #VUID-vkCmdWaitEvents2KHR-pEvents-03841# For any element i of
 --     @pEvents@, if barriers in the ith element of @pDependencyInfos@ do
 --     not include host operations, the ith element of @pEvents@ /must/ be
---     by a corresponding 'cmdSetEvent2KHR' that occurred earlier in
+--     signaled by a corresponding 'cmdSetEvent2KHR' that occurred earlier
+--     in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>
 --
 -- -   #VUID-vkCmdWaitEvents2KHR-srcStageMask-03842# The @srcStageMask@
 --     member of any element of the @pMemoryBarriers@,
 --     @pBufferMemoryBarriers@, or @pImageMemoryBarriers@ members of
---     @pDependencyInfo@ /must/ either include only pipeline stages valid
+--     @pDependencyInfos@ /must/ either include only pipeline stages valid
 --     for the queue family that was used to create the command pool that
 --     @commandBuffer@ was allocated from, or include only
 --     'PIPELINE_STAGE_2_HOST_BIT_KHR'
@@ -1122,12 +1123,12 @@ cmdWaitEvents2KHRSafeOrUnsafe mkVkCmdWaitEvents2KHR commandBuffer events depende
 -- -   #VUID-vkCmdWaitEvents2KHR-dstStageMask-03843# The @dstStageMask@
 --     member of any element of the @pMemoryBarriers@,
 --     @pBufferMemoryBarriers@, or @pImageMemoryBarriers@ members of
---     @pDependencyInfo@ /must/ only include pipeline stages valid for the
+--     @pDependencyInfos@ /must/ only include pipeline stages valid for the
 --     queue family that was used to create the command pool that
 --     @commandBuffer@ was allocated from
 --
 -- -   #VUID-vkCmdWaitEvents2KHR-dependencyFlags-03844# The
---     @dependencyFlags@ member of any element of @dependencyInfo@ /must/
+--     @dependencyFlags@ member of any element of @pDependencyInfo@ /must/
 --     be @0@
 --
 -- -   #VUID-vkCmdWaitEvents2KHR-pEvents-03845# If @pEvents@ includes one
@@ -1194,10 +1195,10 @@ cmdWaitEvents2KHR :: forall io
                   => -- | @commandBuffer@ is the command buffer into which the command is
                      -- recorded.
                      CommandBuffer
-                  -> -- | @pEvents@ is an array of events to wait on.
+                  -> -- | @pEvents@ is a pointer to an array of @eventCount@ events to wait on.
                      ("events" ::: Vector Event)
-                  -> -- | @pDependencyInfos@ is an array of 'DependencyInfoKHR' structures,
-                     -- defining the second
+                  -> -- | @pDependencyInfos@ is a pointer to an array of @eventCount@
+                     -- 'DependencyInfoKHR' structures, defining the second
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>.
                      ("dependencyInfos" ::: Vector DependencyInfoKHR)
                   -> io ()
@@ -1209,10 +1210,10 @@ cmdWaitEvents2KHRSafe :: forall io
                       => -- | @commandBuffer@ is the command buffer into which the command is
                          -- recorded.
                          CommandBuffer
-                      -> -- | @pEvents@ is an array of events to wait on.
+                      -> -- | @pEvents@ is a pointer to an array of @eventCount@ events to wait on.
                          ("events" ::: Vector Event)
-                      -> -- | @pDependencyInfos@ is an array of 'DependencyInfoKHR' structures,
-                         -- defining the second
+                      -> -- | @pDependencyInfos@ is a pointer to an array of @eventCount@
+                         -- 'DependencyInfoKHR' structures, defining the second
                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>.
                          ("dependencyInfos" ::: Vector DependencyInfoKHR)
                       -> io ()
@@ -1239,7 +1240,7 @@ foreign import ccall
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- of each memory dependency defined by any element i of @pDependencyInfos@
--- are applied to operations commands that occurred earlier in
+-- are applied to operations that occurred earlier in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 --
 -- The second
@@ -1247,7 +1248,7 @@ foreign import ccall
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- of each memory dependency defined by any element i of @pDependencyInfos@
--- are applied to operations commands that occurred later in
+-- are applied to operations that occurred later in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 --
 -- If 'cmdPipelineBarrier2KHR' is recorded within a render pass instance,
@@ -1424,6 +1425,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkQueueSubmit2KHR-fence-04894# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be
+--     unsignaled
+--
+-- -   #VUID-vkQueueSubmit2KHR-fence-04895# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ not be
+--     associated with any other queue command that has not yet completed
+--     execution on that queue
+--
 -- -   #VUID-vkQueueSubmit2KHR-synchronization2-03866# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature /must/ be enabled
@@ -1436,9 +1446,9 @@ foreign import ccall
 --     is still in the /pending state/
 --
 -- -   #VUID-vkQueueSubmit2KHR-semaphore-03868# The @semaphore@ member of
---     any element of the @pSignalSemaphoreInfos@ member of any element of
---     @pSubmits@ /must/ be unsignaled when the semaphore signal operation
---     it defines is executed on the device
+--     any binary semaphore element of the @pSignalSemaphoreInfos@ member
+--     of any element of @pSubmits@ /must/ be unsignaled when the semaphore
+--     signal operation it defines is executed on the device
 --
 -- -   #VUID-vkQueueSubmit2KHR-stageMask-03869# The @stageMask@ member of
 --     any element of the @pSignalSemaphoreInfos@ member of any element of
@@ -1626,7 +1636,7 @@ foreign import ccall
 -- includes all commands that occur earlier in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 -- The synchronization scope is limited to operations on the pipeline stage
--- specified by @pipelineStage@.
+-- specified by @stage@.
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
@@ -1735,6 +1745,9 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteTimestamp2KHR-timestampValidBits-03863# The command
 --     pool’s queue family /must/ support a non-zero @timestampValidBits@
 --
+-- -   #VUID-vkCmdWriteTimestamp2KHR-query-04903# @query@ /must/ be less
+--     than the number of queries in @queryPool@
+--
 -- -   #VUID-vkCmdWriteTimestamp2KHR-None-03864# All queries used by the
 --     command /must/ be unavailable
 --
@@ -1834,16 +1847,16 @@ foreign import ccall
 -- specified pipeline stage. This includes the completion of other
 -- preceding 'cmdWriteBufferMarker2AMD' commands so long as their specified
 -- pipeline stages occur either at the same time or earlier than this
--- command’s specified @pipelineStage@.
+-- command’s specified @stage@.
 --
--- While consecutive buffer marker writes with the same @pipelineStage@
--- parameter implicitly complete in submission order, memory and execution
+-- While consecutive buffer marker writes with the same @stage@ parameter
+-- implicitly complete in submission order, memory and execution
 -- dependencies between buffer marker writes and other operations /must/
 -- still be explicitly ordered using synchronization commands. The access
 -- scope for buffer marker writes falls under the
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT', and the
 -- pipeline stages for identifying the synchronization scope /must/ include
--- both @pipelineStage@ and
+-- both @stage@ and
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'.
 --
 -- Note
@@ -2119,23 +2132,6 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- described by this structure include only operations and memory accesses
 -- specified by @dstStageMask@ and @dstAccessMask@.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkMemoryBarrier2KHR-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR'
---
--- -   #VUID-VkMemoryBarrier2KHR-srcStageMask-parameter# @srcStageMask@
---     /must/ be a valid combination of 'PipelineStageFlagBits2KHR' values
---
--- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-parameter# @srcAccessMask@
---     /must/ be a valid combination of 'AccessFlagBits2KHR' values
---
--- -   #VUID-VkMemoryBarrier2KHR-dstStageMask-parameter# @dstStageMask@
---     /must/ be a valid combination of 'PipelineStageFlagBits2KHR' values
---
--- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-parameter# @dstAccessMask@
---     /must/ be a valid combination of 'AccessFlagBits2KHR' values
 --
 -- == Valid Usage
 --
@@ -2597,6 +2593,23 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkMemoryBarrier2KHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR'
+--
+-- -   #VUID-VkMemoryBarrier2KHR-srcStageMask-parameter# @srcStageMask@
+--     /must/ be a valid combination of 'PipelineStageFlagBits2KHR' values
+--
+-- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-parameter# @srcAccessMask@
+--     /must/ be a valid combination of 'AccessFlagBits2KHR' values
+--
+-- -   #VUID-VkMemoryBarrier2KHR-dstStageMask-parameter# @dstStageMask@
+--     /must/ be a valid combination of 'PipelineStageFlagBits2KHR' values
+--
+-- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-parameter# @dstAccessMask@
+--     /must/ be a valid combination of 'AccessFlagBits2KHR' values
+--
 -- = See Also
 --
 -- 'AccessFlags2KHR', 'DependencyInfoKHR', 'PipelineStageFlags2KHR',
@@ -2612,11 +2625,9 @@ data MemoryBarrier2KHR = MemoryBarrier2KHR
   , -- | @dstStageMask@ is a 'PipelineStageFlags2KHR' mask of pipeline stages to
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes second synchronization scope>.
-    --
-    -- @dstStageMask@ is a 'AccessFlags2KHR' mask of pipeline
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstStageMask :: PipelineStageFlags2KHR
-  , -- No documentation found for Nested "VkMemoryBarrier2KHR" "dstAccessMask"
+  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstAccessMask :: AccessFlags2KHR
   }
   deriving (Typeable, Eq)
@@ -2682,14 +2693,14 @@ instance Zero MemoryBarrier2KHR where
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- described by this structure include only operations and memory accesses
--- specified by elements @srcStageMask@ and @srcAccessMask@.
+-- specified by @srcStageMask@ and @srcAccessMask@.
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- described by this structure include only operations and memory accesses
--- specified by elements @dstStageMask@ and @dstAccessMask@.
+-- specified by @dstStageMask@ and @dstAccessMask@.
 --
 -- Both
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scopes>
@@ -3446,9 +3457,9 @@ instance Zero MemoryBarrier2KHR where
 --     or @oldLayout@ and @newLayout@ define an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
 --     and @oldLayout@ or @newLayout@ is
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
 --     then @image@ /must/ have been created with
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     set
 --
 -- -   #VUID-VkImageMemoryBarrier2KHR-image-01671# If @image@ has a
@@ -3498,9 +3509,10 @@ instance Zero MemoryBarrier2KHR where
 --     with a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
---     queue family values reserved for external memory transfers, the
---     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
+--     special queue family values reserved for external memory transfers,
+--     the other /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- -   #VUID-VkImageMemoryBarrier2KHR-image-04072# If @image@ was created
 --     with a sharing mode of
@@ -3511,15 +3523,16 @@ instance Zero MemoryBarrier2KHR where
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
 --
--- -   #VUID-VkImageMemoryBarrier2KHR-srcStageMask-03854# If @srcStageMask@
---     or @dstStageMask@ include 'PIPELINE_STAGE_2_HOST_BIT_KHR',
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ be equal
+-- -   #VUID-VkImageMemoryBarrier2KHR-srcStageMask-03854# If either
+--     @srcStageMask@ or @dstStageMask@ includes
+--     'PIPELINE_STAGE_2_HOST_BIT_KHR', @srcQueueFamilyIndex@ and
+--     @dstQueueFamilyIndex@ /must/ be equal
 --
 -- -   #VUID-VkImageMemoryBarrier2KHR-srcStageMask-03855# If @srcStageMask@
 --     includes 'PIPELINE_STAGE_2_HOST_BIT_KHR', and @srcQueueFamilyIndex@
 --     and @dstQueueFamilyIndex@ define a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
---     or @oldLayout@ and @newLayout@ define a
+--     or @oldLayout@ and @newLayout@ define an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
 --     @oldLayout@ /must/ be one of
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED',
@@ -3589,11 +3602,9 @@ data ImageMemoryBarrier2KHR (es :: [Type]) = ImageMemoryBarrier2KHR
   , -- | @dstStageMask@ is a 'PipelineStageFlags2KHR' mask of pipeline stages to
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes second synchronization scope>.
-    --
-    -- @dstStageMask@ is a 'AccessFlags2KHR' mask of pipeline
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstStageMask :: PipelineStageFlags2KHR
-  , -- No documentation found for Nested "VkImageMemoryBarrier2KHR" "dstAccessMask"
+  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstAccessMask :: AccessFlags2KHR
   , -- | @oldLayout@ is the old layout in an
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
@@ -3707,14 +3718,14 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- described by this structure include only operations and memory accesses
--- specified by elements @srcStageMask@ and @srcAccessMask@.
+-- specified by @srcStageMask@ and @srcAccessMask@.
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- described by this structure include only operations and memory accesses
--- specified by elements @dstStageMask@ and @dstAccessMask@.
+-- specified by @dstStageMask@ and @dstAccessMask@.
 --
 -- Both
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scopes>
@@ -3722,7 +3733,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 -- @offset@ and @size@.
 --
 -- If @buffer@ was created with
--- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', and
+-- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
 -- @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, this memory
 -- barrier defines a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family transfer operation>.
@@ -4270,9 +4281,10 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     created with a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
---     queue family values reserved for external memory transfers, the
---     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
+--     special queue family values reserved for external memory transfers,
+--     the other /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- -   #VUID-VkBufferMemoryBarrier2KHR-buffer-04089# If @buffer@ was
 --     created with a sharing mode of
@@ -4283,8 +4295,8 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
 --
--- -   #VUID-VkBufferMemoryBarrier2KHR-srcStageMask-03851# If
---     @srcStageMask@ or @dstStageMask@ include
+-- -   #VUID-VkBufferMemoryBarrier2KHR-srcStageMask-03851# If either
+--     @srcStageMask@ or @dstStageMask@ includes
 --     'PIPELINE_STAGE_2_HOST_BIT_KHR', @srcQueueFamilyIndex@ and
 --     @dstQueueFamilyIndex@ /must/ be equal
 --
@@ -4331,11 +4343,9 @@ data BufferMemoryBarrier2KHR = BufferMemoryBarrier2KHR
   , -- | @dstStageMask@ is a 'PipelineStageFlags2KHR' mask of pipeline stages to
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes second synchronization scope>.
-    --
-    -- @dstStageMask@ is a 'AccessFlags2KHR' mask of pipeline
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstStageMask :: PipelineStageFlags2KHR
-  , -- No documentation found for Nested "VkBufferMemoryBarrier2KHR" "dstAccessMask"
+  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstAccessMask :: AccessFlags2KHR
   , -- | @srcQueueFamilyIndex@ is the source queue family for a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
@@ -4936,7 +4946,7 @@ instance es ~ '[] => Zero (SubmitInfo2KHR es) where
 
 
 -- | VkQueueFamilyCheckpointProperties2NV - return structure for queue family
--- checkpoint info query
+-- checkpoint information query
 --
 -- = Description
 --
@@ -5061,18 +5071,19 @@ instance Zero CheckpointData2NV where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceSynchronization2FeaturesKHR' structure
--- describes the following feature:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceSynchronization2FeaturesKHR' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
--- 'PhysicalDeviceSynchronization2FeaturesKHR' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- feature.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceSynchronization2FeaturesKHR' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --

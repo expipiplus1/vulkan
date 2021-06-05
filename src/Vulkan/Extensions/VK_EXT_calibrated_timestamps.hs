@@ -15,7 +15,7 @@
 --     185
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -271,11 +271,9 @@ foreign import ccall
 -- values actually written to @pTimeDomains@. If the value of
 -- @pTimeDomainCount@ is less than the number of calibrateable time domains
 -- supported, at most @pTimeDomainCount@ values will be written to
--- @pTimeDomains@. If @pTimeDomainCount@ is smaller than the number of
--- calibrateable time domains supported for the given @physicalDevice@,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- @pTimeDomains@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
+-- that not all the available time domains were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -554,11 +552,11 @@ instance Read TimeDomainEXT where
   readPrec = enumReadPrec enumPrefixTimeDomainEXT showTableTimeDomainEXT conNameTimeDomainEXT TimeDomainEXT
 
 
-type EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 1
+type EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION"
 pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 1
+pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 2
 
 
 type EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME = "VK_EXT_calibrated_timestamps"

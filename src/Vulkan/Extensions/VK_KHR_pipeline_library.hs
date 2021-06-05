@@ -144,8 +144,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineLibraryCreateInfoKHR = PipelineLibraryCreateInfoKHR
-  { -- | @pLibraries@ is an array of pipeline libraries to use when creating a
-    -- pipeline.
+  { -- | @pLibraries@ is a pointer to an array of
+    -- 'Vulkan.Core10.Handles.Pipeline' structures specifying pipeline
+    -- libraries to use when creating a pipeline.
     libraries :: Vector Pipeline }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

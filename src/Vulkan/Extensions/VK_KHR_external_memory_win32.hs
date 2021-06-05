@@ -310,7 +310,9 @@ getMemoryWin32HandlePropertiesKHR :: forall io
                                      -- #VUID-vkGetMemoryWin32HandlePropertiesKHR-device-parameter# @device@
                                      -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                      Device
-                                  -> -- | @handleType@ is the type of the handle @handle@.
+                                  -> -- | @handleType@ is a
+                                     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+                                     -- value specifying the type of the handle @handle@.
                                      --
                                      -- #VUID-vkGetMemoryWin32HandlePropertiesKHR-handleType-00666# @handleType@
                                      -- /must/ not be one of the handle types defined as opaque
@@ -424,12 +426,14 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryWin32HandleInfoKHR = ImportMemoryWin32HandleInfoKHR
-  { -- | @handleType@ specifies the type of @handle@ or @name@.
+  { -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of @handle@ or @name@.
     handleType :: ExternalMemoryHandleTypeFlagBits
-  , -- | @handle@ is the external handle to import, or @NULL@.
+  , -- | @handle@ is @NULL@ or the external handle to import.
     handle :: HANDLE
-  , -- | @name@ is a null-terminated UTF-16 string naming the payload to import,
-    -- or @NULL@.
+  , -- | @name@ is @NULL@ or a null-terminated UTF-16 string naming the payload
+    -- to import.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
@@ -498,23 +502,25 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- For handles of the following types:
 --
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT'
+-- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
+--
+-- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT'
 --
 -- The implementation /must/ ensure the access rights allow read and write
 -- access to the memory.
 --
 -- For handles of the following types:
 --
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT'
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT'
+-- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT'
+--
+-- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT'
 --
 -- The access rights /must/ be:
 --
--- @GENERIC_ALL@
+-- -   @GENERIC_ALL@
 --
--- [1]
---     <https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights>
+--     [1]
+--         <https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights>
 --
 -- == Valid Usage
 --
@@ -703,7 +709,9 @@ instance Zero MemoryWin32HandlePropertiesKHR where
 data MemoryGetWin32HandleInfoKHR = MemoryGetWin32HandleInfoKHR
   { -- | @memory@ is the memory object from which the handle will be exported.
     memory :: DeviceMemory
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
   deriving (Typeable, Eq)

@@ -250,12 +250,11 @@ foreign import ccall
 -- @pInfoSize@. Otherwise, @pInfoSize@ /must/ point to a variable set by
 -- the user to the size of the buffer, in bytes, pointed to by @pInfo@, and
 -- on return the variable is overwritten with the amount of data actually
--- written to @pInfo@.
---
--- If @pInfoSize@ is less than the maximum size that /can/ be retrieved by
--- the pipeline cache, then at most @pInfoSize@ bytes will be written to
--- @pInfo@, and 'getShaderInfoAMD' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
+-- written to @pInfo@. If @pInfoSize@ is less than the maximum size that
+-- /can/ be retrieved by the pipeline cache, then at most @pInfoSize@ bytes
+-- will be written to @pInfo@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
+-- will be returned, instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to
+-- indicate that not all required of the pipeline cache was returned.
 --
 -- Not all information is available for every shader and implementations
 -- may not support all kinds of information for any shader. When a certain
@@ -331,8 +330,10 @@ getShaderInfoAMD :: forall io
                     Device
                  -> -- | @pipeline@ is the target of the query.
                     Pipeline
-                 -> -- | @shaderStage@ identifies the particular shader within the pipeline about
-                    -- which information is being queried.
+                 -> -- | @shaderStage@ is a
+                    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' specifying
+                    -- the particular shader within the pipeline about which information is
+                    -- being queried.
                     ShaderStageFlagBits
                  -> -- | @infoType@ describes what kind of information is being queried.
                     ShaderInfoTypeAMD
@@ -544,7 +545,8 @@ instance Zero ShaderStatisticsInfoAMD where
            (zero, zero, zero)
 
 
--- | VkShaderInfoTypeAMD - Enum specifying which type of shader info to query
+-- | VkShaderInfoTypeAMD - Enum specifying which type of shader information
+-- to query
 --
 -- = See Also
 --

@@ -256,10 +256,10 @@ foreign import ccall
 --     capabilities of @queue@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
--- -   #VUID-vkQueueSubmit-pSignalSemaphores-00067# Each element of the
---     @pSignalSemaphores@ member of any element of @pSubmits@ /must/ be
---     unsignaled when the semaphore signal operation it defines is
---     executed on the device
+-- -   #VUID-vkQueueSubmit-pSignalSemaphores-00067# Each binary semaphore
+--     element of the @pSignalSemaphores@ member of any element of
+--     @pSubmits@ /must/ be unsignaled when the semaphore signal operation
+--     it defines is executed on the device
 --
 -- -   #VUID-vkQueueSubmit-pWaitSemaphores-00068# When a semaphore wait
 --     operation referring to a binary semaphore defined by any element of
@@ -644,7 +644,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value greater than the current value of the semaphore
 --     when the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
@@ -655,7 +655,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pWaitSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pWaitSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
@@ -666,7 +666,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than

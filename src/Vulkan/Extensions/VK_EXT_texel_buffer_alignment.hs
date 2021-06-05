@@ -128,18 +128,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT' /can/ also be included
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -194,17 +195,15 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 -- | VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT - Structure describing
 -- the texel buffer alignment requirements supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- If the single texel alignment property is
 -- 'Vulkan.Core10.FundamentalTypes.FALSE', then the buffer view’s offset

@@ -189,13 +189,13 @@ foreign import ccall
 --
 -- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorSetLayout-00356#
 --     If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorSetLayout@ was created, a compatible set of
---     callbacks /must/ be provided here
+--     provided when @descriptorUpdateTemplate@ was created, a compatible
+--     set of callbacks /must/ be provided here
 --
 -- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorSetLayout-00357#
 --     If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorSetLayout@ was created, @pAllocator@ /must/
---     be @NULL@
+--     provided when @descriptorUpdateTemplate@ was created, @pAllocator@
+--     /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
@@ -362,8 +362,6 @@ foreign import ccall
 -- >     &createInfo,
 -- >     NULL,
 -- >     &myDescriptorUpdateTemplate);
--- > }
--- >
 -- >
 -- > AppDataStructure appData;
 -- >
@@ -377,7 +375,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 updateDescriptorSetWithTemplate :: forall io
                                  . (MonadIO io)
-                                => -- | @device@ is the logical device that updates the descriptor sets.
+                                => -- | @device@ is the logical device that updates the descriptor set.
                                    Device
                                 -> -- | @descriptorSet@ is the descriptor set to update
                                    DescriptorSet
@@ -631,15 +629,12 @@ data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
     -- it /can/ only be used to push descriptor sets using the provided
     -- @pipelineBindPoint@, @pipelineLayout@, and @set@ number.
     templateType :: DescriptorUpdateTemplateType
-  , -- | @descriptorSetLayout@ is the descriptor set layout the parameter update
-    -- template will be used with. All descriptor sets which are going to be
+  , -- | @descriptorSetLayout@ is the descriptor set layout used to build the
+    -- descriptor update template. All descriptor sets which are going to be
     -- updated through the newly created descriptor update template /must/ be
-    -- created with this layout. @descriptorSetLayout@ is the descriptor set
-    -- layout used to build the descriptor update template. All descriptor sets
-    -- which are going to be updated through the newly created descriptor
-    -- update template /must/ be created with a layout that matches (is the
-    -- same as, or defined identically to) this layout. This parameter is
-    -- ignored if @templateType@ is not
+    -- created with a layout that matches (is the same as, or defined
+    -- identically to) this layout. This parameter is ignored if @templateType@
+    -- is not
     -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'.
     descriptorSetLayout :: DescriptorSetLayout
   , -- | @pipelineBindPoint@ is a

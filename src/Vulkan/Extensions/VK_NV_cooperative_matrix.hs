@@ -113,7 +113,7 @@
 --
 -- (1) What matrix properties will be supported in practice?
 --
--- RESOLVED: In NVIDIA’s initial implementation, we will support:
+-- __RESOLVED__: In NVIDIA’s initial implementation, we will support:
 --
 -- -   AType = BType = fp16 CType = DType = fp16 MxNxK = 16x8x16 scope =
 --     Subgroup
@@ -256,11 +256,10 @@ foreign import ccall
 -- variable is overwritten with the number of structures actually written
 -- to @pProperties@. If @pPropertyCount@ is less than the number of
 -- cooperative matrix properties available, at most @pPropertyCount@
--- structures will be written. If @pPropertyCount@ is smaller than the
--- number of cooperative matrix properties available,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available cooperative matrix properties were returned.
+-- structures will be written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
+-- will be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to
+-- indicate that not all the available cooperative matrix properties were
+-- returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -323,18 +322,19 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCooperativeMatrixFeaturesNV' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceCooperativeMatrixFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceCooperativeMatrixFeaturesNV' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCooperativeMatrixFeaturesNV' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -397,17 +397,15 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 -- | VkPhysicalDeviceCooperativeMatrixPropertiesNV - Structure describing
 -- cooperative matrix properties supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceCooperativeMatrixPropertiesNV'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceCooperativeMatrixPropertiesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

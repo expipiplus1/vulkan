@@ -307,7 +307,7 @@
 -- __RESOLVED__: Accept a semaphore to signal as an object handle. This
 -- avoids the need to specify whether the application must destroy the
 -- semaphore or whether it is owned by the swapchain, and if the latter,
--- what its lifetime is and whether it can be re-used for other operations
+-- what its lifetime is and whether it can be reused for other operations
 -- once it is received from 'acquireNextImageKHR'.
 --
 -- 11) What types of swapchain queuing behavior should be exposed? Options
@@ -329,7 +329,7 @@
 --     single-entry queue is used to hold pending presentation requests. If
 --     the queue is full when a new presentation request is received, the
 --     new request replaces the existing entry, and any images associated
---     with the prior entry become available for re-use by the application.
+--     with the prior entry become available for reuse by the application.
 --
 -- -   FIFO queue: Waits for the next vertical blanking period to update
 --     the current image. No tearing should be observed. An internal queue
@@ -340,10 +340,10 @@
 --     queue is non-empty
 --
 -- Not all surfaces will support all of these modes, so the modes supported
--- will be returned using a surface info query. All surfaces must support
--- the FIFO queue mode. Applications must choose one of these modes up
--- front when creating a swapchain. Switching modes can be accomplished by
--- recreating the swapchain.
+-- will be returned using a surface information query. All surfaces must
+-- support the FIFO queue mode. Applications must choose one of these modes
+-- up front when creating a swapchain. Switching modes can be accomplished
+-- by recreating the swapchain.
 --
 -- 12) Can 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR'
 -- provide non-blocking guarantees for 'acquireNextImageKHR'? If so, what
@@ -379,11 +379,11 @@
 -- to indicate there are no practical limits on the number of images in a
 -- swapchain?
 --
--- __RESOLVED__: Yes. There where often be cases where there is no
--- practical limit to the number of images in a swapchain other than the
--- amount of available resources (I.e., memory) in the system. Trying to
--- derive a hard limit from things like memory size is prone to failure. It
--- is better in such cases to leave it to applications to figure such soft
+-- __RESOLVED__: Yes. There will often be cases where there is no practical
+-- limit to the number of images in a swapchain other than the amount of
+-- available resources (i.e., memory) in the system. Trying to derive a
+-- hard limit from things like memory size is prone to failure. It is
+-- better in such cases to leave it to applications to figure such soft
 -- limits out via trial\/failure iterations.
 --
 -- 15) Should there be a special value for
@@ -411,7 +411,7 @@
 -- __RESOLVED__: Applications can query both the supported and current
 -- transforms of a surface. Both are specified relative to the device’s
 -- “natural” display rotation and direction. The supported transforms
--- indicates which orientations the presentation engine accepts images in.
+-- indicate which orientations the presentation engine accepts images in.
 -- For example, a presentation engine that does not support transforming
 -- surfaces as part of presentation, and which is presenting to a surface
 -- that is displayed with a 90-degree rotation, would return only one
@@ -484,7 +484,7 @@
 -- obscuring their target surface?
 --
 -- __RESOLVED__: Applications can choose which behavior they prefer.
--- Allowing the content to be clipped could enable more optimal
+-- Allowing the content to be clipped could enable more efficient
 -- presentation methods on some platforms, but some applications might rely
 -- on the content of presentable images to perform techniques such as
 -- partial updates or motion blurs.
@@ -513,9 +513,9 @@
 -- using such formats does not guarantee working in a specific color space.
 -- It merely means that the hardware can directly support applying the
 -- non-linear transfer functions defined by the sRGB standard color space
--- when reading from or writing to images of that these formats. Still, it
--- is unlikely that a swapchain will expose a @*_SRGB@ format along with
--- any color space other than
+-- when reading from or writing to images of those formats. Still, it is
+-- unlikely that a swapchain will expose a @*_SRGB@ format along with any
+-- color space other than
 -- 'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_SRGB_NONLINEAR_KHR'.
 --
 -- On the other hand, non-@*_SRGB@ formats will be very likely exposed in
@@ -525,7 +525,7 @@
 -- characteristics. In this case the application is responsible for
 -- applying the transfer function, for instance by using shader math.
 --
--- 25) How are the lifetime of surfaces and swapchains targeting them
+-- 25) How are the lifetimes of surfaces and swapchains targeting them
 -- related?
 --
 -- __RESOLVED__: A surface must outlive any swapchains targeting it. A
@@ -665,7 +665,7 @@
 --
 --     -   Renamed VkSurfaceCapabilityPropertiesKHR to
 --         VkSurfacePropertiesKHR to better convey the mutable nature of
---         the info it contains.
+--         the information it contains.
 --
 -- -   Revision 12, 2015-05-28 (James Jones)
 --
@@ -753,8 +753,8 @@
 -- -   Revision 24, 2015-06-19 (Ian Elliott)
 --
 --     -   Changed special value for VkSurfacePropertiesKHR::currentExtent
---         back to \"-1\" from \"0\". This value will never need to be
---         unsigned, and \"0\" is actually a legal value.
+--         back to “-1” from “0”. This value will never need to be
+--         unsigned, and “0” is actually a legal value.
 --
 -- -   Revision 25, 2015-06-23 (Ian Elliott)
 --
@@ -773,12 +773,12 @@
 --
 -- -   Revision 28, 2015-06-25 (James Jones)
 --
---     -   Added the \"inherit\" bits to the rotation and mirroring flags
---         and the associated issue 21.
+--     -   Added the “inherit” bits to the rotation and mirroring flags and
+--         the associated issue 21.
 --
 -- -   Revision 29, 2015-06-25 (James Jones)
 --
---     -   Added the \"clipped\" flag to VkSwapchainCreateInfoKHR, and the
+--     -   Added the “clipped” flag to VkSwapchainCreateInfoKHR, and the
 --         associated issue 22.
 --
 --     -   Specified that presenting an image does not modify it.
@@ -791,13 +791,13 @@
 --
 -- -   Revision 31, 2015-06-26 (Ian Elliott)
 --
---     -   Example of new VkSwapchainCreateInfoKHR members,
---         \"oldSwapchain\" and \"clipped\".
+--     -   Example of new VkSwapchainCreateInfoKHR members, “oldSwapchain”
+--         and “clipped”.
 --
 --     -   Example of using VkSurfacePropertiesKHR::{min|max}ImageCount to
 --         set VkSwapchainCreateInfoKHR::minImageCount.
 --
---     -   Rename vkGetSurfaceInfoKHR()\'s 4th parameter to \"pDataSize\",
+--     -   Rename vkGetSurfaceInfoKHR()\'s 4th parameter to “pDataSize”,
 --         for consistency with other functions.
 --
 --     -   Add macro with C-string name of extension (just to header file).
@@ -805,7 +805,7 @@
 -- -   Revision 32, 2015-06-26 (James Jones)
 --
 --     -   Minor adjustments to the language describing the behavior of
---         \"oldSwapchain\"
+--         “oldSwapchain”
 --
 --     -   Fixed the version date on my previous two updates.
 --
@@ -815,7 +815,7 @@
 --
 -- -   Revision 34, 2015-06-26 (Ian Elliott)
 --
---     -   Rename vkQueuePresentKHR()\'s 2nd parameter to \"pPresentInfo\",
+--     -   Rename vkQueuePresentKHR()\'s 2nd parameter to “pPresentInfo”,
 --         for consistency with other functions.
 --
 -- -   Revision 35, 2015-06-26 (Jason Ekstrand)
@@ -855,8 +855,8 @@
 --
 -- -   Revision 40, 2015-07-10 (Ian Elliott)
 --
---     -   Updated to work with version 138 of the \"vulkan.h\" header.
---         This includes declaring the VkSwapchainKHR type using the new
+--     -   Updated to work with version 138 of the @vulkan.h@ header. This
+--         includes declaring the VkSwapchainKHR type using the new
 --         VK_DEFINE_NONDISP_HANDLE macro, and no longer extending
 --         VkObjectType (which was eliminated).
 --
@@ -869,7 +869,7 @@
 --     -   Updated query mechanism to reflect the convention changes done
 --         in the core spec.
 --
---     -   Removed \"queue\" from the name of
+--     -   Removed “queue” from the name of
 --         VK_STRUCTURE_TYPE_QUEUE_PRESENT_INFO_KHR to be consistent with
 --         the established naming convention.
 --
@@ -895,7 +895,7 @@
 --         VkSwapchainCreateInfoKHR struct).
 --
 --     -   Corrected a typo in header file (last parameter in
---         PFN_vkGetSurfacePropertiesKHR was missing \"KHR\" at the end of
+--         PFN_vkGetSurfacePropertiesKHR was missing “KHR” at the end of
 --         type: VkSurfacePropertiesKHR).
 --
 -- -   Revision 46, 2015-08-20 (Ian Elliott)
@@ -904,7 +904,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 --     -   Made improvements to several descriptions.
@@ -918,7 +918,7 @@
 --     from James Jones)
 --
 --     -   Moved the surface transform enums to VK_WSI_swapchain so they
---         could be re-used by VK_WSI_display.
+--         could be reused by VK_WSI_display.
 --
 -- -   Revision 48, 2015-09-01 (James Jones)
 --
@@ -1029,22 +1029,21 @@
 --
 -- -   Revision 68, 2016-04-05 (Ian Elliott)
 --
---     -   Moved the \"validity\" include for vkAcquireNextImage to be in
---         its proper place, after the prototype and list of parameters.
+--     -   Moved the “validity” include for vkAcquireNextImage to be in its
+--         proper place, after the prototype and list of parameters.
 --
 --     -   Clarified language about presentable images, including how they
 --         are acquired, when applications can and cannot use them, etc. As
---         part of this, removed language about \"ownership\" of
---         presentable images, and replaced it with more-consistent
---         language about presentable images being \"acquired\" by the
---         application.
+--         part of this, removed language about “ownership” of presentable
+--         images, and replaced it with more-consistent language about
+--         presentable images being “acquired” by the application.
 --
 -- -   2016-08-23 (Ian Elliott)
 --
 --     -   Update the example code, to use the final API command names, to
 --         not have so many characters per line, and to split out a new
 --         example to show how to obtain function pointers. This code is
---         more similar to the LunarG \"cube\" demo program.
+--         more similar to the LunarG “cube” demo program.
 --
 -- -   2016-08-25 (Ian Elliott)
 --

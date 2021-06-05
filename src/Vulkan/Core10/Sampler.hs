@@ -108,7 +108,8 @@ foreign import ccall
 -- -   #VUID-vkCreateSampler-maxSamplerAllocationCount-04110# There /must/
 --     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerAllocationCount@
---     VkSampler objects currently created on the device.
+--     'Vulkan.Core10.Handles.Sampler' objects currently created on the
+--     device.
 --
 -- == Valid Usage (Implicit)
 --

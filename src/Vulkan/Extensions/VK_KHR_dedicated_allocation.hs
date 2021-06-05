@@ -200,7 +200,7 @@
 --
 -- -   Revision 3, 2017-07-31 (Jason Ekstrand)
 --
---     -   Clarify that memory objects created with
+--     -   Clarify that memory objects allocated with
 --         VkMemoryDedicatedAllocateInfoKHR can only have the specified
 --         resource bound and no others.
 --

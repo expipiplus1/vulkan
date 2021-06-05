@@ -180,7 +180,7 @@
 --
 -- 1.  How to name this extension?
 --
---     RESOLVED: VK_NV_mesh_shader
+--     __RESOLVED__: VK_NV_mesh_shader
 --
 --     Other options considered:
 --
@@ -194,25 +194,25 @@
 --
 -- 2.  Do we need a new VkPrimitiveTopology?
 --
---     RESOLVED: NO, we skip the InputAssembler stage
+--     __RESOLVED__: No. We skip the InputAssembler stage.
 --
 -- 3.  Should we allow Instancing?
 --
---     RESOLVED: NO, there is no fixed function input, other than the IDs.
---     However, allow offsetting with a \"first\" value.
+--     __RESOLVED__: No. There is no fixed function input, other than the
+--     IDs. However, allow offsetting with a “first” value.
 --
 -- 4.  Should we use existing vkCmdDraw or introduce new functions?
 --
---     RESOLVED: Introduce new functions.
+--     __RESOLVED__: Introduce new functions.
 --
---     New functions make it easier to separate from \"programmable
---     primitive shading\" chapter, less \"dual use\" language about
---     existing functions having alternative behavior. The text around the
---     existing \"draws\" is heavily based around emitting vertices.
+--     New functions make it easier to separate from “programmable
+--     primitive shading” chapter, less “dual use” language about existing
+--     functions having alternative behavior. The text around the existing
+--     “draws” is heavily based around emitting vertices.
 --
 -- 5.  If new functions, how to name?
 --
---     RESOLVED: CmdDrawMeshTasks*
+--     __RESOLVED__: CmdDrawMeshTasks*
 --
 --     Other options considered:
 --
@@ -225,13 +225,13 @@
 -- 6.  Should VK_SHADER_STAGE_ALL_GRAPHICS be updated to include the new
 --     stages?
 --
---     RESOLVED: No. If an application were to be recompiled with headers
---     that include additional shader stage bits in
+--     __RESOLVED__: No. If an application were to be recompiled with
+--     headers that include additional shader stage bits in
 --     VK_SHADER_STAGE_ALL_GRAPHICS, then the previously valid application
 --     would no longer be valid on implementations that don’t support mesh
 --     or task shaders. This means the change would not be backwards
 --     compatible. It’s too bad VkShaderStageFlagBits doesn’t have a
---     dedicated \"all supported graphics stages\" bit like
+--     dedicated “all supported graphics stages” bit like
 --     VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, which would have avoided this
 --     problem.
 --
@@ -428,9 +428,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-None-02859# There /must/ not have been
 --     any calls to dynamic state setting commands for any state not
@@ -597,7 +597,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -611,7 +611,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -627,7 +627,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -710,13 +710,54 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
+--     drawing command, and the @primitiveTopology@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-04875# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-04876# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-04877# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-logicOp-04878# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-04879# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -729,7 +770,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -749,6 +790,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-pStrides-04884# If the bound graphics
+--     pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-taskCount-02119# @taskCount@ /must/ be
 --     less than or equal to
@@ -933,9 +984,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -1105,7 +1156,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -1119,7 +1170,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -1135,7 +1186,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -1218,13 +1269,54 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
+--     drawing command, and the @primitiveTopology@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04875# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04876# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04877# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-logicOp-04878# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04879# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -1237,7 +1329,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -1258,6 +1350,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-pStrides-04884# If the bound
+--     graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-buffer-02708# If @buffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
@@ -1486,9 +1588,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02859# There /must/ not
 --     have been any calls to dynamic state setting commands for any state
@@ -1658,7 +1760,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -1672,7 +1774,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -1688,7 +1790,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -1771,13 +1873,54 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
+--     drawing command, and the @primitiveTopology@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04875# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04876# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04877# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-logicOp-04878# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04879# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -1790,7 +1933,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -1811,6 +1954,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-pStrides-04884# If the bound
+--     graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-buffer-02708# If @buffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
@@ -1956,14 +2109,21 @@ cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBuf
 -- | VkPhysicalDeviceMeshShaderFeaturesNV - Structure describing mesh shading
 -- features that can be supported by an implementation
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceMeshShaderFeaturesNV' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
--- 'PhysicalDeviceMeshShaderFeaturesNV' /can/ also be included in @pNext@
--- chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceMeshShaderFeaturesNV' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -2024,17 +2184,15 @@ instance Zero PhysicalDeviceMeshShaderFeaturesNV where
 -- | VkPhysicalDeviceMeshShaderPropertiesNV - Structure describing mesh
 -- shading properties
 --
--- = Members
---
--- The members of the 'PhysicalDeviceMeshShaderPropertiesNV' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceMeshShaderPropertiesNV' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

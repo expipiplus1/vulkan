@@ -15,7 +15,7 @@
 --     85
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -127,11 +127,29 @@
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' must still be
 -- honored, including waiting for semaphores to signal.
 --
+-- 5) When the swapchain is created with
+-- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@preTransform@
+-- set to a value other than
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- should the rectangular region, 'RectLayerKHR', be transformed to align
+-- with the @preTransform@?
+--
+-- __RESOLVED__: No. The rectangular region in 'RectLayerKHR' should not be
+-- tranformed. As such, it may not align with the extents of the
+-- swapchain’s image(s). It is the responsibility of the presentation
+-- engine to transform the rectangular region. This matches the behavior of
+-- the Android presentation engine, which set the precedent.
+--
 -- == Version History
 --
 -- -   Revision 1, 2016-11-02 (Ian Elliott)
 --
 --     -   Internal revisions
+--
+-- -   Revision 2, 2021-03-18 (Ian Elliott)
+--
+--     -   Clarified alignment of rectangles for presentation engines that
+--         support transformed swapchains.
 --
 -- = See Also
 --
@@ -297,7 +315,12 @@ data PresentRegionKHR = PresentRegionKHR
     -- framebuffer coordinates, plus layer, of a portion of a presentable image
     -- that has changed and /must/ be presented. If non-@NULL@, each entry in
     -- @pRectangles@ is a rectangle of the given image that has changed since
-    -- the last image was presented to the given swapchain.
+    -- the last image was presented to the given swapchain. The rectangles
+    -- /must/ be specified relative to
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR'::@currentTransform@,
+    -- regardless of the swapchain’s @preTransform@. The presentation engine
+    -- will apply the @preTransform@ transformation to the rectangles, along
+    -- with any further transformation it applies to the image content.
     rectangles :: Vector RectLayerKHR
   }
   deriving (Typeable)
@@ -347,24 +370,28 @@ instance Zero PresentRegionKHR where
 -- | VkRectLayerKHR - Structure containing a rectangle, including layer,
 -- changed by vkQueuePresentKHR for a given VkImage
 --
+-- = Description
+--
+-- Some platforms allow the size of a surface to change, and then scale the
+-- pixels of the image to fit the surface. 'RectLayerKHR' specifies pixels
+-- of the swapchain’s image(s), which will be constant for the life of the
+-- swapchain.
+--
 -- == Valid Usage
 --
--- -   #VUID-VkRectLayerKHR-offset-01261# The sum of @offset@ and @extent@
---     /must/ be no greater than the @imageExtent@ member of the
+-- -   #VUID-VkRectLayerKHR-offset-04864# The sum of @offset@ and @extent@,
+--     after being transformed according to the @preTransform@ member of
+--     the 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
+--     structure, /must/ be no greater than the @imageExtent@ member of the
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --     structure passed to
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
+--     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   #VUID-VkRectLayerKHR-layer-01262# @layer@ /must/ be less than the
 --     @imageArrayLayers@ member of the
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --     structure passed to
 --     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
---
--- Some platforms allow the size of a surface to change, and then scale the
--- pixels of the image to fit the surface. 'RectLayerKHR' specifies pixels
--- of the swapchain’s image(s), which will be constant for the life of the
--- swapchain.
 --
 -- = See Also
 --
@@ -421,11 +448,11 @@ instance Zero RectLayerKHR where
            zero
 
 
-type KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 1
+type KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION"
 pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 1
+pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 2
 
 
 type KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"

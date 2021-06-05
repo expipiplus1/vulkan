@@ -36,17 +36,15 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 -- | VkPhysicalDeviceSubgroupProperties - Structure describing subgroup
 -- support for an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceSubgroupProperties' structure describe
--- the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceSubgroupProperties' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- If @supportedOperations@ includes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroup-quad >,

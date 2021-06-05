@@ -126,10 +126,14 @@
 -- 2) What is the denorm behavior for intermediate results?
 --
 -- __RESOLVED__: When a SPIR-V instruction is implemented as a sequence of
--- other instructions: - in the @DenormFlushToZero@ execution mode the
--- intermediate instructions may flush denormals, the final result of the
--- sequence /must/ not be denormal. - in the @DenormPreserve@ execution
--- mode denormals must be preserved throughout the whole sequence.
+-- other instructions:
+--
+-- -   in the @DenormFlushToZero@ execution mode, the intermediate
+--     instructions may flush denormals, the final result of the sequence
+--     /must/ not be denormal.
+--
+-- -   in the @DenormPreserve@ execution mode, denormals must be preserved
+--     throughout the whole sequence.
 --
 -- 3) Do denorm and rounding mode controls apply to @OpSpecConstantOp@?
 --
@@ -141,12 +145,12 @@
 --
 -- __RESOLVED__: No, these instructions unconditionally round towards zero.
 --
--- 5) Do any of the \"Pack\" GLSL.std.450 instructions count as conversion
--- instructions and have the rounding mode apply?
+-- 5) Do any of the “Pack” GLSL.std.450 instructions count as conversion
+-- instructions and have the rounding mode applied?
 --
--- __RESOLVED__: No, only instructions listed in the section \"3.32.11.
--- Conversion Instructions\" of the SPIR-V specification count as
--- conversion instructions.
+-- __RESOLVED__: No, only instructions listed in “section 3.32.11.
+-- Conversion Instructions” of the SPIR-V specification count as conversion
+-- instructions.
 --
 -- 6) When using inf\/nan-ignore mode, what is expected of @OpIsNan@ and
 -- @OpIsInf@?
@@ -159,7 +163,7 @@
 -- The original versions of @VK_KHR_shader_float_controls@ shipped with
 -- booleans named “separateDenormSettings” and
 -- “separateRoundingModeSettings”, which at first glance could have
--- indicated “they can all independently set, or not”. However the spec
+-- indicated “they can all be set independently, or not”. However the spec
 -- language as written indicated that the 32-bit value could always be set
 -- independently, and only the 16- and 64-bit controls needed to be the
 -- same if these values were 'Vulkan.Core10.FundamentalTypes.FALSE'.

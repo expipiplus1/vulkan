@@ -416,7 +416,9 @@ data ImportSemaphoreFdInfoKHR = ImportSemaphoreFdInfoKHR
     -- specifying additional parameters for the semaphore payload import
     -- operation.
     flags :: SemaphoreImportFlags
-  , -- | @handleType@ specifies the type of @fd@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of @fd@.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   , -- | @fd@ is the external handle to import.
     fd :: Int32
@@ -547,7 +549,9 @@ instance Zero ImportSemaphoreFdInfoKHR where
 data SemaphoreGetFdInfoKHR = SemaphoreGetFdInfoKHR
   { -- | @semaphore@ is the semaphore from which state will be exported.
     semaphore :: Semaphore
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable, Eq)

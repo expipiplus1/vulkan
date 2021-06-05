@@ -67,7 +67,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
--- The semantics of each basic blend operations is described in the table
+-- The semantics of the basic blend operations are described in the table
 -- below:
 --
 -- +-------------------------------+--------------------+-----------------+

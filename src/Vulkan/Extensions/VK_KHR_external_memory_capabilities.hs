@@ -212,9 +212,9 @@
 -- API are added. To allow correlating with Direct3D devices, a device LUID
 -- is added that corresponds to a DXGI adapter LUID. A driver ID is not
 -- needed for Direct3D because mismatched driver component versions are not
--- a currently supported configuration on the Windows OS. Should support
--- for such configurations be introduced at the OS level, further Vulkan
--- extensions would be needed to correlate userspace component builds.
+-- currently supported on the Windows OS. Should support for such
+-- configurations be introduced at the OS level, further Vulkan extensions
+-- would be needed to correlate userspace component builds.
 --
 -- == Version History
 --

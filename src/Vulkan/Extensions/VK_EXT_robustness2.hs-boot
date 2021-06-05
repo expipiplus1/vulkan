@@ -55,7 +55,7 @@
 -- These additional requirements /may/ be expensive on some
 -- implementations, and should only be enabled when truly necessary.
 --
--- This extension also adds support for \"null descriptors\", where
+-- This extension also adds support for “null descriptors”, where
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' /can/ be used instead of a
 -- valid handle. Accesses to null descriptors have well-defined behavior,
 -- and don’t rely on robustness.
@@ -93,14 +93,14 @@
 --     'PhysicalDeviceRobustness2PropertiesEXT'::@robustStorageBufferAccessSizeAlignment@
 --     exist?
 --
--- RESOLVED: Some implementations can’t efficiently tightly bounds-check
--- all buffer accesses. Rather, the size of the bound range is padded to
--- some power of two multiple, up to 256 bytes for uniform buffers and up
--- to 4 bytes for storage buffers, and that padded size is bounds-checked.
--- This is sufficient to implement D3D-like behavior, because D3D only
--- allows binding whole uniform buffers or ranges that are a multiple of
--- 256 bytes, and D3D raw and structured buffers only support 32-bit
--- accesses.
+-- __RESOLVED__: Some implementations can’t efficiently tightly
+-- bounds-check all buffer accesses. Rather, the size of the bound range is
+-- padded to some power of two multiple, up to 256 bytes for uniform
+-- buffers and up to 4 bytes for storage buffers, and that padded size is
+-- bounds-checked. This is sufficient to implement D3D-like behavior,
+-- because D3D only allows binding whole uniform buffers or ranges that are
+-- a multiple of 256 bytes, and D3D raw and structured buffers only support
+-- 32-bit accesses.
 --
 -- == Examples
 --

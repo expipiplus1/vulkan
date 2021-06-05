@@ -34,7 +34,6 @@ module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , SystemAllocationScope(..)
                                            , PhysicalDeviceType(..)
                                            , Format(..)
-                                           , StructureType(..)
                                            , QueueFlagBits(..)
                                            , QueueFlags
                                            , MemoryPropertyFlagBits(..)
@@ -237,7 +236,6 @@ import Vulkan.Core10.Enums.QueueFlagBits (QueueFlagBits(..))
 import Vulkan.Core10.Enums.QueueFlagBits (QueueFlags)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlags)
-import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import Vulkan.Core10.Enums.SystemAllocationScope (SystemAllocationScope(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -432,9 +430,8 @@ foreign import ccall
 -- variable is overwritten with the number of handles actually written to
 -- @pPhysicalDevices@. If @pPhysicalDeviceCount@ is less than the number of
 -- physical devices available, at most @pPhysicalDeviceCount@ structures
--- will be written. If @pPhysicalDeviceCount@ is smaller than the number of
--- physical devices available, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will
--- be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
+-- will be written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
 -- that not all the available physical devices were returned.
 --
 -- == Valid Usage (Implicit)
@@ -1051,6 +1048,13 @@ getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage 
 -- associated with a 'Vulkan.Core10.Handles.PhysicalDevice' and its
 -- children.
 --
+-- Note
+--
+-- The encoding of @driverVersion@ is implementation-defined. It /may/ not
+-- use the same encoding as @apiVersion@. Applications should follow
+-- information from the /vendor/ on how to extract the version information
+-- from @driverVersion@.
+--
 -- The @vendorID@ and @deviceID@ fields are provided to allow applications
 -- to adapt to device characteristics that are not adequately exposed by
 -- other Vulkan queries.
@@ -1209,7 +1213,7 @@ instance Zero PhysicalDeviceProperties where
            zero
 
 
--- | VkApplicationInfo - Structure specifying application info
+-- | VkApplicationInfo - Structure specifying application information
 --
 -- = Description
 --
@@ -1270,12 +1274,12 @@ instance Zero PhysicalDeviceProperties where
 --
 -- Providing a @NULL@ 'InstanceCreateInfo'::@pApplicationInfo@ or providing
 -- an @apiVersion@ of 0 is equivalent to providing an @apiVersion@ of
--- @VK_MAKE_VERSION(1,0,0)@.
+-- @VK_MAKE_API_VERSION(0,1,0,0)@.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkApplicationInfo-apiVersion-04010# If @apiVersion@ is not
---     @0@, then it /must/ be greater or equal to
+--     @0@, then it /must/ be greater than or equal to
 --     'Vulkan.Core10.API_VERSION_1_0'
 --
 -- == Valid Usage (Implicit)
@@ -1524,10 +1528,10 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 --
 -- Possible values of @minImageTransferGranularity@ are:
 --
--- -   (0,0,0) which indicates that only whole mip levels /must/ be
---     transferred using the image transfer operations on the corresponding
---     queues. In this case, the following restrictions apply to all offset
---     and extent parameters of image transfer operations:
+-- -   (0,0,0) specifies that only whole mip levels /must/ be transferred
+--     using the image transfer operations on the corresponding queues. In
+--     this case, the following restrictions apply to all offset and extent
+--     parameters of image transfer operations:
 --
 --     -   The @x@, @y@, and @z@ members of a
 --         'Vulkan.Core10.FundamentalTypes.Offset3D' parameter /must/
@@ -2326,8 +2330,7 @@ instance Zero ImageFormatProperties where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceFeatures' structure describe the
--- following features:
+-- This structure describes the following features:
 --
 -- = See Also
 --
@@ -2594,7 +2597,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxDrawIndirectCount maxDrawIndirectCount>.
     multiDrawIndirect :: Bool
   , -- | #features-drawIndirectFirstInstance# @drawIndirectFirstInstance@
-    -- specifies whether indirect draw calls support the @firstInstance@
+    -- specifies whether indirect drawing calls support the @firstInstance@
     -- parameter. If this feature is not enabled, the @firstInstance@ member of
     -- all 'Vulkan.Core10.OtherTypes.DrawIndirectCommand' and
     -- 'Vulkan.Core10.OtherTypes.DrawIndexedIndirectCommand' structures that
@@ -2882,14 +2885,14 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- @vertexPipelineStoresAndAtomics@ specifies whether storage buffers and
     -- images support stores and atomic operations in the vertex, tessellation,
     -- and geometry shader stages. If this feature is not enabled, all storage
-    -- image, storage texel buffers, and storage buffer variables used by these
+    -- image, storage texel buffer, and storage buffer variables used by these
     -- stages in shader modules /must/ be decorated with the @NonWritable@
     -- decoration (or the @readonly@ memory qualifier in GLSL).
     vertexPipelineStoresAndAtomics :: Bool
   , -- | #features-fragmentStoresAndAtomics# @fragmentStoresAndAtomics@ specifies
     -- whether storage buffers and images support stores and atomic operations
     -- in the fragment shader stage. If this feature is not enabled, all
-    -- storage image, storage texel buffers, and storage buffer variables used
+    -- storage image, storage texel buffer, and storage buffer variables used
     -- by the fragment stage in shader modules /must/ be decorated with the
     -- @NonWritable@ decoration (or the @readonly@ memory qualifier in GLSL).
     fragmentStoresAndAtomics :: Bool
@@ -2913,7 +2916,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | #features-shaderImageGatherExtended# @shaderImageGatherExtended@
     -- specifies whether the extended set of image gather instructions are
     -- available in shader code. If this feature is not enabled, the
-    -- @OpImage@*@Gather@ instructions do not support the @Offset@ and
+    -- @OpImage*Gather@ instructions do not support the @Offset@ and
     -- @ConstOffsets@ operands. This also specifies whether shader modules
     -- /can/ declare the @ImageGatherExtended@ capability.
     shaderImageGatherExtended :: Bool
@@ -3103,7 +3106,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | #features-shaderResourceResidency# @shaderResourceResidency@ specifies
     -- whether image operations that return resource residency information are
     -- supported in shader code. If this feature is not enabled, the
-    -- @OpImageSparse@* instructions /must/ not be used in shader code. This
+    -- @OpImageSparse*@ instructions /must/ not be used in shader code. This
     -- also specifies whether shader modules /can/ declare the
     -- @SparseResidency@ capability. The feature requires at least one of the
     -- @sparseResidency*@ features to be supported.
@@ -3532,7 +3535,7 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
   , -- | @residencyNonResidentStrict@ specifies whether the physical device /can/
     -- consistently access non-resident regions of a resource. If this property
     -- is 'Vulkan.Core10.FundamentalTypes.TRUE', access to non-resident regions
-    -- of resources will be guaranteed to return values as if the resource were
+    -- of resources will be guaranteed to return values as if the resource was
     -- populated with 0; writes to non-resident regions will be discarded.
     residencyNonResidentStrict :: Bool
   }
@@ -3595,17 +3598,6 @@ instance Zero PhysicalDeviceSparseProperties where
 -- are available in the @limits@ member of the 'PhysicalDeviceProperties'
 -- structure which is returned from 'getPhysicalDeviceProperties'.
 --
--- = Description
---
--- [1]
---     For all bitmasks of
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits', the
---     sample count limits defined above represent the minimum supported
---     sample counts for each image type. Individual images /may/ support
---     additional sample counts, which are queried using
---     'getPhysicalDeviceImageFormatProperties' as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
---
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
@@ -3659,19 +3651,19 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- structure.
     maxTexelBufferElements :: Word32
   , -- | #limits-maxUniformBufferRange# @maxUniformBufferRange@ is the maximum
-    -- value that /can/ be specified in the @range@ member of any
-    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structures passed to
-    -- a call to 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for
-    -- descriptors of type
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER' or
+    -- value that /can/ be specified in the @range@ member of a
+    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structure passed to
+    -- 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for descriptors of
+    -- type 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+    -- or
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'.
     maxUniformBufferRange :: Word32
   , -- | #limits-maxStorageBufferRange# @maxStorageBufferRange@ is the maximum
-    -- value that /can/ be specified in the @range@ member of any
-    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structures passed to
-    -- a call to 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for
-    -- descriptors of type
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER' or
+    -- value that /can/ be specified in the @range@ member of a
+    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structure passed to
+    -- 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for descriptors of
+    -- type 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
+    -- or
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'.
     maxStorageBufferRange :: Word32
   , -- | #limits-maxPushConstantsSize# @maxPushConstantsSize@ is the maximum
@@ -3698,7 +3690,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     bufferImageGranularity :: DeviceSize
   , -- | #limits-sparseAddressSpaceSize# @sparseAddressSpaceSize@ is the total
     -- amount of address space available, in bytes, for sparse memory
-    -- resources. This is an upper bound on the sum of the size of all sparse
+    -- resources. This is an upper bound on the sum of the sizes of all sparse
     -- resources, regardless of whether any memory is bound to them.
     sparseAddressSpaceSize :: DeviceSize
   , -- | #limits-maxBoundDescriptorSets# @maxBoundDescriptorSets@ is the maximum
@@ -4036,8 +4028,8 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     maxGeometryOutputVertices :: Word32
   , -- | #limits-maxGeometryTotalOutputComponents#
     -- @maxGeometryTotalOutputComponents@ is the maximum total number of
-    -- components of output, across all emitted vertices, which /can/ be output
-    -- from the geometry shader stage.
+    -- components of output variables, across all emitted vertices, which /can/
+    -- be output from the geometry shader stage.
     maxGeometryTotalOutputComponents :: Word32
   , -- | #limits-maxFragmentInputComponents# @maxFragmentInputComponents@ is the
     -- maximum number of components of input variables which /can/ be provided
@@ -4081,10 +4073,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     maxComputeSharedMemorySize :: Word32
   , -- | #limits-maxComputeWorkGroupCount# @maxComputeWorkGroupCount@[3] is the
     -- maximum number of local workgroups that /can/ be dispatched by a single
-    -- dispatch command. These three values represent the maximum number of
+    -- dispatching command. These three values represent the maximum number of
     -- local workgroups for the X, Y, and Z dimensions, respectively. The
-    -- workgroup count parameters to the dispatch commands /must/ be less than
-    -- or equal to the corresponding limit. See
+    -- workgroup count parameters to the dispatching commands /must/ be less
+    -- than or equal to the corresponding limit. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dispatch>.
     maxComputeWorkGroupCount :: (Word32, Word32, Word32)
   , -- | #limits-maxComputeWorkGroupInvocations# @maxComputeWorkGroupInvocations@
@@ -4232,20 +4224,20 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- this limit.
     minStorageBufferOffsetAlignment :: DeviceSize
   , -- | #limits-minTexelOffset# @minTexelOffset@ is the minimum offset value for
-    -- the @ConstOffset@ image operand of any of the @OpImageSample@* or
-    -- @OpImageFetch@* image instructions.
+    -- the @ConstOffset@ image operand of any of the @OpImageSample*@ or
+    -- @OpImageFetch*@ image instructions.
     minTexelOffset :: Int32
   , -- | #limits-maxTexelOffset# @maxTexelOffset@ is the maximum offset value for
-    -- the @ConstOffset@ image operand of any of the @OpImageSample@* or
-    -- @OpImageFetch@* image instructions.
+    -- the @ConstOffset@ image operand of any of the @OpImageSample*@ or
+    -- @OpImageFetch*@ image instructions.
     maxTexelOffset :: Word32
   , -- | #limits-minTexelGatherOffset# @minTexelGatherOffset@ is the minimum
     -- offset value for the @Offset@, @ConstOffset@, or @ConstOffsets@ image
-    -- operands of any of the @OpImage@*@Gather@ image instructions.
+    -- operands of any of the @OpImage*Gather@ image instructions.
     minTexelGatherOffset :: Int32
   , -- | #limits-maxTexelGatherOffset# @maxTexelGatherOffset@ is the maximum
     -- offset value for the @Offset@, @ConstOffset@, or @ConstOffsets@ image
-    -- operands of any of the @OpImage@*@Gather@ image instructions.
+    -- operands of any of the @OpImage*Gather@ image instructions.
     maxTexelGatherOffset :: Word32
   , -- | #limits-minInterpolationOffset# @minInterpolationOffset@ is the base
     -- minimum (inclusive) negative offset value for the @Offset@ operand of
@@ -4338,7 +4330,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
   , -- | #limits-sampledImageStencilSampleCounts#
     -- @sampledImageStencilSampleCounts@ is a bitmask1 of
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' indicating
-    -- the sample supported for all 2D images created with
+    -- the sample counts supported for all 2D images created with
     -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', @usage@
     -- containing
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT', and a
@@ -4459,6 +4451,15 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
   , -- | #limits-nonCoherentAtomSize# @nonCoherentAtomSize@ is the size and
     -- alignment in bytes that bounds concurrent access to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
+    --
+    -- [1]
+    --     For all bitmasks of
+    --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits', the
+    --     sample count limits defined above represent the minimum supported
+    --     sample counts for each image type. Individual images /may/ support
+    --     additional sample counts, which are queried using
+    --     'getPhysicalDeviceImageFormatProperties' as described in
+    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
     nonCoherentAtomSize :: DeviceSize
   }
   deriving (Typeable, Eq)

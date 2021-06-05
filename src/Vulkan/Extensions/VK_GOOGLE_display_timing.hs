@@ -279,12 +279,10 @@ foreign import ccall
 -- with the number of structures actually written to
 -- @pPresentationTimings@. If the value of @pPresentationTimingCount@ is
 -- less than the number of newly-available timing records, at most
--- @pPresentationTimingCount@ structures will be written. If
--- @pPresentationTimingCount@ is smaller than the number of newly-available
--- timing records for the given @swapchain@,
+-- @pPresentationTimingCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available timing records were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -602,6 +600,10 @@ instance Zero PresentTimesInfoGOOGLE where
 
 -- | VkPresentTimeGOOGLE - The earliest time image should be presented
 --
+-- = Description
+--
+-- > but does not need a specific pname:desiredPresentTime.
+--
 -- = See Also
 --
 -- 'PresentTimesInfoGOOGLE'
@@ -618,7 +620,7 @@ data PresentTimeGOOGLE = PresentTimeGOOGLE
     -- (e.g. @CLOCK_MONOTONIC@ (see clock_gettime(2)) on Android and Linux). A
     -- value of zero specifies that the presentation engine /may/ display the
     -- image at any time. This is useful when the application desires to
-    -- provide @presentID@, but does not need a specific @desiredPresentTime@.
+    -- provide @presentID@,
     desiredPresentTime :: Word64
   }
   deriving (Typeable, Eq)

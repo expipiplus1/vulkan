@@ -53,9 +53,9 @@
 -- This extension introduces the ability to back uniform blocks directly
 -- with descriptor sets by storing inline uniform data within descriptor
 -- pool storage. Compared to push constants this new construct allows
--- uniform data to be reused across multiple disjoint sets of draw or
--- dispatch commands and /may/ enable uniform data to be accessed with less
--- indirections compared to uniforms backed by buffer memory.
+-- uniform data to be reused across multiple disjoint sets of drawing or
+-- dispatching commands and /may/ enable uniform data to be accessed with
+-- fewer indirections compared to uniforms backed by buffer memory.
 --
 -- == New Structures
 --
@@ -215,18 +215,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DES
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceInlineUniformBlockFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceInlineUniformBlockFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceInlineUniformBlockFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceInlineUniformBlockFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -296,17 +297,15 @@ instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
 -- inline uniform block properties that can be supported by an
 -- implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceInlineUniformBlockPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceInlineUniformBlockPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

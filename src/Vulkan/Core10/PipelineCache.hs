@@ -283,14 +283,15 @@ foreign import ccall
 -- Otherwise, @pDataSize@ /must/ point to a variable set by the user to the
 -- size of the buffer, in bytes, pointed to by @pData@, and on return the
 -- variable is overwritten with the amount of data actually written to
--- @pData@.
+-- @pData@. If @pDataSize@ is less than the maximum size that /can/ be
+-- retrieved by the pipeline cache, at most @pDataSize@ bytes will be
+-- written to @pData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
+-- that not all of the pipeline cache was returned.
 --
--- If @pDataSize@ is less than the maximum size that /can/ be retrieved by
--- the pipeline cache, at most @pDataSize@ bytes will be written to
--- @pData@, and 'getPipelineCacheData' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'. Any data written to @pData@ is
--- valid and /can/ be provided as the @pInitialData@ member of the
--- 'PipelineCacheCreateInfo' structure passed to 'createPipelineCache'.
+-- Any data written to @pData@ is valid and /can/ be provided as the
+-- @pInitialData@ member of the 'PipelineCacheCreateInfo' structure passed
+-- to 'createPipelineCache'.
 --
 -- Two calls to 'getPipelineCacheData' with the same parameters /must/
 -- retrieve the same data unless a command that modifies the contents of

@@ -152,22 +152,24 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceComputeShaderDerivativesFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-quad>
--- chapter for more information.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-quad Quad shader scope>
+-- for more information.
 --
--- If the 'PhysicalDeviceComputeShaderDerivativesFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceComputeShaderDerivativesFeaturesNV' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
+-- If the @VkPhysicalDeviceComputeShaderDerivativesFeaturesNVfeatures@.
+-- structure is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. @VkPhysicalDeviceComputeShaderDerivativesFeaturesNVfeatures@.
+-- /can/ also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --

@@ -1310,7 +1310,7 @@ instance Zero PerformanceStreamMarkerInfoINTEL where
            zero
 
 
--- | VkPerformanceOverrideInfoINTEL - Performance override info
+-- | VkPerformanceOverrideInfoINTEL - Performance override information
 --
 -- == Valid Usage (Implicit)
 --

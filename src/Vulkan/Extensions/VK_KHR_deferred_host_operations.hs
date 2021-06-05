@@ -137,6 +137,43 @@
 -- >     }
 -- > );
 --
+-- The following example illustrates extracting concurrency from a single
+-- deferred operation:
+--
+-- > // create a deferred operation
+-- > VkDeferredOperationKHR hOp;
+-- > VkResult result = vkCreateDeferredOperationKHR(device, pCallbacks, &hOp);
+-- > assert(result == VK_SUCCESS);
+-- >
+-- > result = vkDoSomethingExpensive(device, hOp, ...);
+-- > assert( result == VK_OPERATION_DEFERRED_KHR );
+-- >
+-- > // Query the maximum amount of concurrency and clamp to the desired maximum
+-- > uint32_t numLaunches = std::min(vkGetDeferredOperationMaxConcurrencyKHR(device, hOp), maxThreads);
+-- >
+-- > std::vector<std::future<void> > joins;
+-- >
+-- > for (uint32_t i = 0; i < numLaunches; i++) {
+-- >   joins.emplace_back(std::async::launch(
+-- >     [ hOp ] ( )
+-- >     {
+-- >         vkDeferredOperationJoinKHR(device, hOp);
+-- > 		// in a job system, a return of VK_THREAD_IDLE_KHR should queue another
+-- > 		// job, but it's not functionally required
+-- >     }
+-- >   );
+-- > }
+-- >
+-- > for (auto &f : joins) {
+-- >   f.get();
+-- > }
+-- >
+-- > result = vkGetDeferredOperationResultKHR(device, hOp);
+-- >
+-- > // deferred operation is now complete.  'result' indicates success or failure
+-- >
+-- > vkDestroyDeferredOperationKHR(device, hOp, pCallbacks);
+--
 -- The following example shows a subroutine which guarantees completion of
 -- a deferred operation, in the presence of multiple worker threads, and
 -- returns the result of the operation.
@@ -183,13 +220,13 @@
 --
 -- == Issues
 --
--- 1.  Should this entension have a VkPhysicalDevice*FeaturesKHR structure?
+-- 1.  Should this extension have a VkPhysicalDevice*FeaturesKHR structure?
 --
--- RESOLVED: No. This extension does not add any functionality on its own
--- and requires a dependent extension to actually enable functionality and
--- thus there is no value in adding a feature structure. If necessary, any
--- dependent extension could add a feature boolean if it wanted to indicate
--- that it is adding optional deferral support.
+-- __RESOLVED__: No. This extension does not add any functionality on its
+-- own and requires a dependent extension to actually enable functionality
+-- and thus there is no value in adding a feature structure. If necessary,
+-- any dependent extension could add a feature boolean if it wanted to
+-- indicate that it is adding optional deferral support.
 --
 -- == Version History
 --

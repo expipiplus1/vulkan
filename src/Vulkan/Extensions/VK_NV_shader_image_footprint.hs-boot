@@ -104,7 +104,7 @@
 --
 -- When using SPIR-V generated from the OpenGL Shading Language, the new
 -- instruction will be generated from code using the new
--- @textureFootprint@*NV built-in functions from the
+-- @textureFootprint*NV@ built-in functions from the
 -- @GL_NV_shader_texture_footprint@ shading language extension.
 --
 -- == New Structures

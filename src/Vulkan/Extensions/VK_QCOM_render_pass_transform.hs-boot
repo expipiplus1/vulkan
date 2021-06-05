@@ -15,7 +15,7 @@
 --     283
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -33,7 +33,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-10-15
+--     2021-03-09
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -41,11 +41,15 @@
 --
 --     -   This extension interacts with @VK_EXT_fragment_density_map@
 --
+--     -   This extension interacts with @VK_KHR_fragment_shading_rate@
+--
 -- [__Contributors__]
 --
 --     -   Jeff Leger, Qualcomm Technologies, Inc.
 --
 --     -   Brandon Light, Qualcomm Technologies, Inc.
+--
+--     -   Matthew Netsch, Qualcomm Technologies, Inc.
 --
 -- == Description
 --
@@ -56,13 +60,13 @@
 -- Mobile devices can be rotated and mobile applications need to render
 -- properly when a device is held in a landscape or portrait orientation.
 -- When the current orientation differs from the device’s native
--- orientation, a rotation is required so that the \"up\" direction of the
+-- orientation, a rotation is required so that the “up” direction of the
 -- rendered scene matches the current orientation.
 --
 -- If the Display Processing Unit (DPU) doesnt natively support rotation,
 -- the Vulkan presentation engine can handle this rotation in a separate
 -- composition pass. Alternatively, the application can render frames
--- \"pre-rotated\" to avoid this extra pass. The latter is preferred to
+-- “pre-rotated” to avoid this extra pass. The latter is preferred to
 -- reduce power consumption and achieve the best performance because it
 -- avoids tasking the GPU with extra work to perform the copy\/rotate
 -- operation.
@@ -70,7 +74,7 @@
 -- Unlike OpenGL ES, the burden of pre-rotation in Vulkan falls on the
 -- application. To implement pre-rotation, applications render into
 -- swapchain images matching the device native aspect ratio of the display
--- and \"pre-rotate\" the rendering content to match the device’s current
+-- and “pre-rotate” the rendering content to match the device’s current
 -- orientation. The burden is more than adjusting the Model View Projection
 -- (MVP) matrix in the vertex shader to account for rotation and aspect
 -- ratio. The coordinate systems of scissors, viewports, derivatives and
@@ -103,13 +107,15 @@
 --     'CommandBufferInheritanceRenderPassTransformInfoQCOM' specifying the
 --     render pass transform parameters.
 --
--- -   The @renderArea@, viewPorts and scissors are all provided in the
---     current (non-rotated) coordinate system. The implementation will
---     transform those into the native (rotated) coordinate system.
+-- -   The @renderArea@, viewports, scissors, and @fragmentSize@ are all
+--     provided in the current (non-rotated) coordinate system. The
+--     implementation will transform those into the native (rotated)
+--     coordinate system.
 --
 -- -   The implementation is responsible for transforming shader built-ins
---     (@FragCoord@, @PointCoord@, @SamplePosition@, interpolateAt(), dFdx,
---     dFdy, fWidth) into the rotated coordinate system.
+--     (@FragCoord@, @PointCoord@, @SamplePosition@,
+--     @PrimitiveShadingRateKHR@, interpolateAt(), dFdx, dFdy, fWidth) into
+--     the rotated coordinate system.
 --
 -- -   The implementation is responsible for transforming @position@ to the
 --     rotated coordinate system.
@@ -191,24 +197,48 @@
 -- 3) How does this extension interact with VK_EXT_fragment_density_map?
 --
 -- __RESOLVED__ Some implementations may not be able to support a render
--- pass that enables both renderpass transform and fragment density maps.
+-- pass that enables both render pass transform and fragment density maps.
 -- For simplicity, this extension disallows enabling both features within a
 -- single render pass.
 --
 -- 4) What should this extension be named?
 --
--- We considered names such as \"rotated_rendering\", \"pre_rotation\" and
+-- We considered names such as “rotated_rendering”, “pre_rotation” and
 -- others. Since the functionality is limited to a render pass, it seemed
--- the name should include \"render_pass\". While the current extension is
+-- the name should include “render_pass”. While the current extension is
 -- limited to rotations, it could be extended to other transforms (like
 -- mirror) in the future.
 --
--- __RESOLVED__ The name \"render_pass_transform\" seems like the most
+-- __RESOLVED__ The name “render_pass_transform” seems like the most
 -- accurate description of the introduced functionality.
+--
+-- 5) How does this extension interact with VK_KHR_fragment_shading_rate?
+--
+-- __RESOLVED__: For the same reasons as issue 3, this extension disallows
+-- enabling both @pFragmentShadingRateAttachment@ and render pass transform
+-- within a single render pass.
+--
+-- However, pipeline shading rate and primitive shading rate are supported,
+-- and their respective @fragmentSize@ and @PrimitiveShadingRateKHR@ are
+-- provided in the current (non-rotated) coordinate system. The
+-- implementation is responsible for transforming them to the rotated
+-- coordinate system.
+--
+-- The
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate set of supported shading rates>
+-- /may/ be different per transform. Supported rates queried from
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.getPhysicalDeviceFragmentShadingRatesKHR'
+-- are in the native (rotated) coordinate system. This means that the
+-- application /must/ swap the x\/y of the reported rates to get the set of
+-- rates supported for 90 and 270 degree rotation.
 --
 -- == Version History
 --
 -- -   Revision 1, 2020-02-05 (Jeff Leger)
+--
+-- -   Revision 2, 2021-03-09 (Matthew Netsch)
+--
+--     -   Adds interactions with VK_KHR_fragment_shading_rate
 --
 -- = See Also
 --

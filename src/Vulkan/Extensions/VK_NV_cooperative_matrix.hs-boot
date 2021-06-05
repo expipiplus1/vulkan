@@ -113,7 +113,7 @@
 --
 -- (1) What matrix properties will be supported in practice?
 --
--- RESOLVED: In NVIDIA’s initial implementation, we will support:
+-- __RESOLVED__: In NVIDIA’s initial implementation, we will support:
 --
 -- -   AType = BType = fp16 CType = DType = fp16 MxNxK = 16x8x16 scope =
 --     Subgroup

@@ -304,7 +304,7 @@
 -- the command buffer reservation process, however as the memory
 -- requirements can be substantial, we want to give developers the ability
 -- to budget the memory themselves. By lowering the @maxSequencesCount@ the
--- memory consumption can be reduced. Furthermore re-use of the memory is
+-- memory consumption can be reduced. Furthermore reuse of the memory is
 -- possible, for example for doing explicit preprocessing and execution in
 -- a ping-pong fashion.
 --
@@ -334,7 +334,7 @@
 --
 -- 8) How do we allow re-using already “generated” @indirectCommands@?
 --
--- Expose a @preprocessBuffer@ to re-use implementation-dependencyFlags
+-- Expose a @preprocessBuffer@ to reuse implementation-dependencyFlags
 -- data. Set the @isPreprocessed@ to true in
 -- 'cmdExecuteGeneratedCommandsNV'.
 --
@@ -505,6 +505,15 @@
 -- -   Revision 1, 2020-02-20 (Christoph Kubisch)
 --
 --     -   Initial version
+--
+-- -   Revision 2, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Remove VK_EXT_debug_report interactions
+--
+-- -   Revision 3, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Fix naming VkPhysicalDeviceGenerated to
+--         VkPhysicalDeviceDeviceGenerated
 --
 -- = See Also
 --

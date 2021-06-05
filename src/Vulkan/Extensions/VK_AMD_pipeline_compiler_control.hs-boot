@@ -47,8 +47,8 @@
 -- == Description
 --
 -- This extension introduces 'PipelineCompilerControlCreateInfoAMD'
--- structure that can be chained to a pipeline’s create info to specify
--- additional flags that affect pipeline compilation.
+-- structure that can be chained to a pipeline’s creation information to
+-- specify additional flags that affect pipeline compilation.
 --
 -- == New Structures
 --

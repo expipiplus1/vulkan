@@ -15,7 +15,7 @@
 --     12
 --
 -- [__Revision__]
---     9
+--     10
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -247,7 +247,7 @@
 -- 4) How do you compare handles returned by the debug_report callback to
 -- the application’s handles?
 --
--- RESOLVED: Due to the different nature of dispatchable and
+-- __RESOLVED__: Due to the different nature of dispatchable and
 -- nondispatchable handles there is no generic way (that we know of) that
 -- works for common compilers with 32bit, 64bit, C and C++. We recommend
 -- applications use the same cast that the validation layers use:
@@ -379,6 +379,8 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
                                                                         , ..
                                                                         )
@@ -1038,6 +1040,10 @@ pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT  = DebugReportObj
 pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT   = DebugReportObjectTypeEXT 1000156000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT = DebugReportObjectTypeEXT 1000150000
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT            = DebugReportObjectTypeEXT 1000029001
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT              = DebugReportObjectTypeEXT 1000029000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObjectTypeEXT 1000085000
 {-# complete DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT,
@@ -1075,6 +1081,8 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObj
              DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT,
              DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT,
              DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT,
+             DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT,
+             DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT,
              DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT :: DebugReportObjectTypeEXT #-}
 
 conNameDebugReportObjectTypeEXT :: String
@@ -1120,6 +1128,8 @@ showTableDebugReportObjectTypeEXT =
   , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT , "ACCELERATION_STRUCTURE_NV_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT  , "SAMPLER_YCBCR_CONVERSION_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT, "ACCELERATION_STRUCTURE_KHR_EXT")
+  , (DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT           , "CU_FUNCTION_NVX_EXT")
+  , (DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT             , "CU_MODULE_NVX_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT, "DESCRIPTOR_UPDATE_TEMPLATE_EXT")
   ]
 
@@ -1165,11 +1175,11 @@ type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeE
 type PFN_vkDebugReportCallbackEXT = FunPtr FN_vkDebugReportCallbackEXT
 
 
-type EXT_DEBUG_REPORT_SPEC_VERSION = 9
+type EXT_DEBUG_REPORT_SPEC_VERSION = 10
 
 -- No documentation found for TopLevel "VK_EXT_DEBUG_REPORT_SPEC_VERSION"
 pattern EXT_DEBUG_REPORT_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_DEBUG_REPORT_SPEC_VERSION = 9
+pattern EXT_DEBUG_REPORT_SPEC_VERSION = 10
 
 
 type EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report"

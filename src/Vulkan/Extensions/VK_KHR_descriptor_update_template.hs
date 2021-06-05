@@ -54,7 +54,7 @@
 -- == Description
 --
 -- Applications may wish to update a fixed set of descriptors in a large
--- number of descriptors sets very frequently, i.e. during initializaton
+-- number of descriptor sets very frequently, i.e. during initializaton
 -- phase or if it is required to rebuild descriptor sets for each frame.
 -- For those cases it is also not unlikely that all information required to
 -- update a single descriptor set is stored in a single struct. This

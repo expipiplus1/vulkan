@@ -153,7 +153,7 @@
 --
 -- 2) The internal layout and therefore size of a 'AHardwareBuffer' image
 -- may depend on native usage flags that do not have corresponding Vulkan
--- counterparts. Do we provide this info to
+-- counterparts. Do we provide this information to
 -- 'Vulkan.Core10.Image.createImage' somehow, or allow the allocation size
 -- reported by 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements'
 -- to be approximate?
@@ -183,7 +183,7 @@
 -- as possible without causing compatibility problems for existing OpenGL
 -- ES applications or violating Vulkan requirements.
 --
--- 4) Should an 'AHardwareBuffer' with @AHARDWAREBUFFER_USAGE_CPU_@* usage
+-- 4) Should an 'AHardwareBuffer' with @AHARDWAREBUFFER_USAGE_CPU_*@ usage
 -- be mappable in Vulkan? Should it be possible to export an
 -- @AHardwareBuffers@ with such usage?
 --
@@ -209,13 +209,13 @@
 -- time. Can reference to them be added to this extension, or do they need
 -- a new extension?
 --
--- RESOLVED: This extension can document the interaction between the new
--- AHB formats\/usages and existing Vulkan features. No new Vulkan features
--- or implementation requirements can be added. The extension version
--- number will be incremented when this additional documentation is added,
--- but the version number does not indicate that an implementaiton supports
--- Vulkan memory or resources that map to the new 'AHardwareBuffer'
--- features: support for that must be queried with
+-- __RESOLVED__: This extension can document the interaction between the
+-- new AHB formats\/usages and existing Vulkan features. No new Vulkan
+-- features or implementation requirements can be added. The extension
+-- version number will be incremented when this additional documentation is
+-- added, but the version number does not indicate that an implementaiton
+-- supports Vulkan memory or resources that map to the new
+-- 'AHardwareBuffer' features: support for that must be queried with
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 -- or is implied by successfully allocating a 'AHardwareBuffer' outside of
 -- Vulkan that uses the new feature and has a GPU usage flag.
@@ -378,7 +378,7 @@ getAndroidHardwareBufferPropertiesANDROID :: forall a io
                                              --
                                              -- #VUID-vkGetAndroidHardwareBufferPropertiesANDROID-buffer-01884# @buffer@
                                              -- /must/ be a valid Android hardware buffer object with at least one of
-                                             -- the @AHARDWAREBUFFER_USAGE_GPU_@* flags in its
+                                             -- the @AHARDWAREBUFFER_USAGE_GPU_*@ flags in its
                                              -- @AHardwareBuffer_Desc@::@usage@
                                              --
                                              -- #VUID-vkGetAndroidHardwareBufferPropertiesANDROID-buffer-parameter#
@@ -556,7 +556,7 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 -- are included in the @usage@ or @flags@ fields of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'.
 -- It /must/ include at least one GPU usage flag
--- (@AHARDWAREBUFFER_USAGE_GPU_@*), even if none of the corresponding
+-- (@AHARDWAREBUFFER_USAGE_GPU_*@), even if none of the corresponding
 -- Vulkan usages or flags are requested.
 --
 -- Note

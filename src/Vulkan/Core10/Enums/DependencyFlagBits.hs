@@ -37,7 +37,7 @@ pattern DEPENDENCY_BY_REGION_BIT    = DependencyFlagBits 0x00000001
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
 pattern DEPENDENCY_VIEW_LOCAL_BIT   = DependencyFlagBits 0x00000002
 -- | 'DEPENDENCY_DEVICE_GROUP_BIT' specifies that dependencies are
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local dependency>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local>.
 pattern DEPENDENCY_DEVICE_GROUP_BIT = DependencyFlagBits 0x00000004
 
 conNameDependencyFlagBits :: String

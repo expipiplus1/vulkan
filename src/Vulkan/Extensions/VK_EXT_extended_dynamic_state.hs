@@ -486,6 +486,11 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
+-- -   #VUID-vkCmdSetViewportWithCountEXT-commandBuffer-04819#
+--     @commandBuffer@ /must/ not have
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetViewportWithCountEXT-commandBuffer-parameter#
@@ -583,6 +588,11 @@ foreign import ccall
 --     (@offset.y@ + @extent.height@) /must/ not cause a signed integer
 --     addition overflow for any element of @pScissors@
 --
+-- -   #VUID-vkCmdSetScissorWithCountEXT-commandBuffer-04820#
+--     @commandBuffer@ /must/ not have
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetScissorWithCountEXT-commandBuffer-parameter#
@@ -664,7 +674,7 @@ foreign import ccall
 -- bound size of the vertex buffer starting from the corresponding elements
 -- of @pBuffers@[i] plus @pOffsets@[i]. All vertex input attributes that
 -- use each of these bindings will use these updated addresses in their
--- address calculations for subsequent draw commands.
+-- address calculations for subsequent drawing commands.
 --
 -- If the bound pipeline state object was created with the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
@@ -710,12 +720,6 @@ foreign import ccall
 --     @pBuffers@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', then the
 --     corresponding element of @pOffsets@ /must/ be zero
 --
--- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-03361# If the bound
---     pipeline state object was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
---     dynamic state enabled then @pStrides@ /must/ not be @NULL@,
---     otherwise @pStrides@ /must/ be @NULL@
---
 -- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-03362# If @pStrides@ is
 --     not @NULL@ each element of @pStrides@ /must/ be less than or equal
 --     to
@@ -723,10 +727,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-03363# If @pStrides@ is
 --     not @NULL@ each element of @pStrides@ /must/ be greater than or
---     equal to the maximum extent of of all vertex input attributes
---     fetched from the corresponding binding, where the extent is
---     calculated as the VkVertexInputAttributeDescription::offset plus
---     VkVertexInputAttributeDescription::format size
+--     equal to the maximum extent of all vertex input attributes fetched
+--     from the corresponding binding, where the extent is calculated as
+--     the
+--     'Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@offset@
+--     plus
+--     'Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@
+--     size
 --
 -- == Valid Usage (Implicit)
 --
@@ -801,11 +808,10 @@ cmdBindVertexBuffers2EXT :: forall io
                             ("buffers" ::: Vector Buffer)
                          -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
                             ("offsets" ::: Vector DeviceSize)
-                         -> -- | @pSizes@ is an optional array of the size in bytes of vertex data bound
-                            -- from @pBuffers@.
+                         -> -- | @pSizes@ is @NULL@ or a pointer to an array of the size in bytes of
+                            -- vertex data bound from @pBuffers@.
                             ("sizes" ::: Vector DeviceSize)
-                         -> -- | @pStrides@ is optional, and when not @NULL@ is a pointer to an array of
-                            -- buffer strides.
+                         -> -- | @pStrides@ is @NULL@ or a pointer to an array of buffer strides.
                             ("strides" ::: Vector DeviceSize)
                          -> io ()
 cmdBindVertexBuffers2EXT commandBuffer firstBinding buffers offsets sizes strides = liftIO . evalContT $ do
@@ -1314,8 +1320,9 @@ cmdSetStencilOpEXT :: forall io
                    => -- | @commandBuffer@ is the command buffer into which the command will be
                       -- recorded.
                       CommandBuffer
-                   -> -- | @faceMask@ is a bitmask of VkStencilFaceFlagBits specifying the set of
-                      -- stencil state for which to update the stencil operation.
+                   -> -- | @faceMask@ is a bitmask of
+                      -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' specifying
+                      -- the set of stencil state for which to update the stencil operation.
                       ("faceMask" ::: StencilFaceFlags)
                    -> -- | @failOp@ is a 'Vulkan.Core10.Enums.StencilOp.StencilOp' value specifying
                       -- the action performed on samples that fail the stencil test.
@@ -1346,18 +1353,19 @@ cmdSetStencilOpEXT commandBuffer faceMask failOp passOp depthFailOp compareOp = 
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceExtendedDynamicStateFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceExtendedDynamicStateFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceExtendedDynamicStateFeaturesEXT' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceExtendedDynamicStateFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --

@@ -103,14 +103,14 @@
 --
 -- 1.  What should we call this extension?
 --
---     RESOLVED: Using NV_shader_sm_builtins. Other options considered
+--     __RESOLVED__: @NV_shader_sm_builtins@. Other options considered
 --     included:
 --
---     -   NV_shader_smid - but SMID is really easy to typo\/confuse as
+--     -   @NV_shader_smid@ - but SMID is really easy to typo\/confuse as
 --         SIMD.
 --
---     -   NV_shader_sm_info - but __Info__ is typically reserved for input
---         structures
+--     -   @NV_shader_sm_info@ - but __Info__ is typically reserved for
+--         input structures
 --
 -- == Version History
 --
@@ -165,17 +165,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderSMBuiltinsPropertiesNV - Structure describing
 -- shader SM Builtins properties supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceShaderSMBuiltinsPropertiesNV'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderSMBuiltinsPropertiesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -237,18 +235,19 @@ instance Zero PhysicalDeviceShaderSMBuiltinsPropertiesNV where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- feature.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --

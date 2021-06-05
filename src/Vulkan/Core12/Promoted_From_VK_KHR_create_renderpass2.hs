@@ -316,8 +316,8 @@ foreign import ccall
 --     have been created with a @usage@ value including
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
--- -   #VUID-vkCmdBeginRenderPass2-initialLayout-03100# If any of the
---     @initialLayout@ members of the
+-- -   #VUID-vkCmdBeginRenderPass2-initialLayout-03100# If the
+--     @initialLayout@ member of any of the
 --     'Vulkan.Core10.Pass.AttachmentDescription' structures specified when
 --     creating the render pass specified in the @renderPass@ member of
 --     @pRenderPassBegin@ is not
@@ -620,21 +620,25 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- @initialLayout@ and @finalLayout@ /can/ be set to a layout that only
 -- specifies the layout of the depth aspect.
 --
--- If @format@ is a depth\/stencil format, and @initialLayout@ only
--- specifies the initial layout of the depth aspect of the attachment, the
--- initial layout of the stencil aspect is specified by the
--- @stencilInitialLayout@ member of a
+-- If the @pNext@ chain includes a
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
--- structure included in the @pNext@ chain. Otherwise, @initialLayout@
--- describes the initial layout for all relevant image aspects.
+-- structure, then the @stencilInitialLayout@ and @stencilFinalLayout@
+-- members specify the initial and final layouts of the stencil aspect of a
+-- depth\/stencil format, and @initialLayout@ and @finalLayout@ only apply
+-- to the depth aspect. For depth-only formats, the
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+-- structure is ignored. For stencil-only formats, the initial and final
+-- layouts of the stencil aspect are taken from the
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+-- structure if present, or @initialLayout@ and @finalLayout@ if not
+-- present.
 --
--- If @format@ is a depth\/stencil format, and @finalLayout@ only specifies
--- the final layout of the depth aspect of the attachment, the final layout
--- of the stencil aspect is specified by the @stencilFinalLayout@ member of
--- a
+-- If @format@ is a depth\/stencil format, and either @initialLayout@ or
+-- @finalLayout@ does not specify a layout for the stencil aspect, then the
+-- application /must/ specify the initial and final layouts of the stencil
+-- aspect by including a
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
--- structure included in the @pNext@ chain. Otherwise, @finalLayout@
--- describes the final layout for all relevant image aspects.
+-- structure in the @pNext@ chain.
 --
 -- == Valid Usage
 --
@@ -818,8 +822,9 @@ data AttachmentDescription2 (es :: [Type]) = AttachmentDescription2
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' value specifying the
     -- format of the image that will be used for the attachment.
     format :: Format
-  , -- | @samples@ is the number of samples of the image as defined in
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+  , -- | @samples@ is a
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+    -- specifying the number of samples of the image.
     samples :: SampleCountFlagBits
   , -- | @loadOp@ is a 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp'
     -- value specifying how the contents of color and depth components of the
@@ -1032,8 +1037,7 @@ data AttachmentReference2 (es :: [Type]) = AttachmentReference2
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @attachment@ is either an integer value identifying an attachment at the
-    -- corresponding index in
-    -- 'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pAttachments@, or
+    -- corresponding index in 'RenderPassCreateInfo2'::@pAttachments@, or
     -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' to signify that this
     -- attachment is not used.
     attachment :: Word32
@@ -1213,8 +1217,8 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', they /must/ have the
 --     same sample count
 --
--- -   #VUID-VkSubpassDescription2-attachment-03073# The @attachment@
---     member of any element of @pPreserveAttachments@ /must/ not be
+-- -   #VUID-VkSubpassDescription2-attachment-03073# Each element of
+--     @pPreserveAttachments@ /must/ not be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkSubpassDescription2-pPreserveAttachments-03074# Any given
@@ -1222,8 +1226,8 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     any other member of the subpass description
 --
 -- -   #VUID-VkSubpassDescription2-layout-02528# If any attachment is used
---     by more than one 'Vulkan.Core10.Pass.AttachmentReference' member,
---     then each use /must/ use the same @layout@
+--     by more than one 'AttachmentReference2' member, then each use /must/
+--     use the same @layout@
 --
 -- -   #VUID-VkSubpassDescription2-None-04439# Attachments /must/ follow
 --     the
@@ -1336,13 +1340,13 @@ data SubpassDescription2 (es :: [Type]) = SubpassDescription2
     -- structures defining the input attachments for this subpass and their
     -- layouts.
     inputAttachments :: Vector (SomeStruct AttachmentReference2)
-  , -- | @pColorAttachments@ is a pointer to an array of 'AttachmentReference2'
-    -- structures defining the color attachments for this subpass and their
-    -- layouts.
-    colorAttachments :: Vector (SomeStruct AttachmentReference2)
-  , -- | @pResolveAttachments@ is an optional array of @colorAttachmentCount@
-    -- 'AttachmentReference2' structures defining the resolve attachments for
+  , -- | @pColorAttachments@ is a pointer to an array of @colorAttachmentCount@
+    -- 'AttachmentReference2' structures defining the color attachments for
     -- this subpass and their layouts.
+    colorAttachments :: Vector (SomeStruct AttachmentReference2)
+  , -- | @pResolveAttachments@ is @NULL@ or a pointer to an array of
+    -- @colorAttachmentCount@ 'AttachmentReference2' structures defining the
+    -- resolve attachments for this subpass and their layouts.
     resolveAttachments :: Vector (SomeStruct AttachmentReference2)
   , -- | @pDepthStencilAttachment@ is a pointer to a 'AttachmentReference2'
     -- structure specifying the depth\/stencil attachment for this subpass and
@@ -1867,6 +1871,38 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
+-- -   #VUID-VkRenderPassCreateInfo2-rasterizationSamples-04905# If the
+--     pipeline is being created with fragment shader state, and the
+--     VK_QCOM_render_pass_shader_resolve extension is enabled, and if
+--     subpass has any input attachments, and if the subpass description
+--     contains
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
+--     then the sample count of the input attachments /must/ equal
+--     @rasterizationSamples@
+--
+-- -   #VUID-VkRenderPassCreateInfo2-sampleShadingEnable-04906# If the
+--     pipeline is being created with fragment shader state, and the
+--     VK_QCOM_render_pass_shader_resolve extension is enabled, and if the
+--     subpass description contains
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
+--     then @sampleShadingEnable@ /must/ be false
+--
+-- -   #VUID-VkRenderPassCreateInfo2-flags-04907# If @flags@ includes
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     and if @pResolveAttachments@ is not @NULL@, then each resolve
+--     attachment /must/ be 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkRenderPassCreateInfo2-flags-04908# If @flags@ includes
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     and if @pDepthStencilResolveAttachmentKHR@ is not @NULL@, then the
+--     depth\/stencil resolve attachment /must/ be
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkRenderPassCreateInfo2-flags-04909# If @flags@ includes
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     then the subpass /must/ be the last subpass in a subpass dependency
+--     chain
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderPassCreateInfo2-sType-sType# @sType@ /must/ be
@@ -2010,7 +2046,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo2 es) where
            mempty
 
 
--- | VkSubpassBeginInfo - Structure specifying subpass begin info
+-- | VkSubpassBeginInfo - Structure specifying subpass begin information
 --
 -- == Valid Usage (Implicit)
 --
@@ -2067,7 +2103,7 @@ instance Zero SubpassBeginInfo where
            zero
 
 
--- | VkSubpassEndInfo - Structure specifying subpass end info
+-- | VkSubpassEndInfo - Structure specifying subpass end information
 --
 -- == Valid Usage (Implicit)
 --

@@ -356,17 +356,15 @@ instance Zero PipelineVertexInputDivisorStateCreateInfoEXT where
 -- describing max value of vertex attribute divisor that can be supported
 -- by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -419,15 +417,21 @@ instance Zero PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
 -- | VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT - Structure describing
 -- if fetching of vertex attribute may be repeated for instanced rendering
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating the implementation-dependent
--- behavior. 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT' /can/ also
--- be included in @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT' /can/ also
+-- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- to selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --

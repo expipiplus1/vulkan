@@ -19,7 +19,8 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'
+-- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription',
+-- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputBindingDescription2EXT'
 newtype VertexInputRate = VertexInputRate Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

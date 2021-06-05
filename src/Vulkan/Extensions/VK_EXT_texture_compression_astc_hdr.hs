@@ -174,18 +174,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.createDevice' to
--- enable features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
