@@ -31,6 +31,7 @@ import           VK.Bracket
 import           Khronos.AssignModules
 import           Khronos.Render
 import           Render.State                   ( initialRenderState )
+import           System.Environment
 
 main :: IO ()
 main =
@@ -43,6 +44,10 @@ main =
  where
   go :: Sem '[Err , Fixpoint , Embed IO , Final IO] ()
   go = do
+    doLoadDocs <- liftIO getArgs >>= \case
+      []           -> pure True
+      "nodocs" : _ -> pure False
+      _            -> pure True
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
@@ -55,7 +60,6 @@ main =
                | Feature {..}      <- toList specFeatures
                , major : minor : _ <- pure $ versionBranch fVersion
                ]
-        doLoadDocs = True
     getDocumentation <- if doLoadDocs
       then liftIO $ loadAllDocumentation SpecVk
                                          allExtensionNames
