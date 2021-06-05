@@ -56,7 +56,7 @@ import           VMA.RenderParams
 
 vmaDir, vmaDocbookDir, vmaHeader :: FilePath
 vmaDir = "../VulkanMemoryAllocator/VulkanMemoryAllocator"
-vmaHeader = vmaDir <> "/src/vk_mem_alloc.h"
+vmaHeader = vmaDir <> "/include/vk_mem_alloc.h"
 vmaDocbookDir = vmaDir <> "/docs/docbook"
 
 main :: IO ()

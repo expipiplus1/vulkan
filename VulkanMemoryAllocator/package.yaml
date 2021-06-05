@@ -8,12 +8,12 @@ extra-source-files:
   - readme.md
   - changelog.md
   - package.yaml
-  - VulkanMemoryAllocator/src/vk_mem_alloc.h
+  - VulkanMemoryAllocator/include/vk_mem_alloc.h
 
 library:
   source-dirs: src
   include-dirs:
-    VulkanMemoryAllocator/src
+    VulkanMemoryAllocator/include
   extra-libraries:
     stdc++
   cxx-sources:

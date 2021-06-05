@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump VMA, documentation changes
 
 ## [0.5] - 2021-03-31
 - Bump VMA, deprecates resizeAllocation

@@ -18,7 +18,7 @@ extra-source-files:
     readme.md
     changelog.md
     package.yaml
-    VulkanMemoryAllocator/src/vk_mem_alloc.h
+    VulkanMemoryAllocator/include/vk_mem_alloc.h
 
 source-repository head
   type: git
@@ -86,7 +86,7 @@ library
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   cxx-options: -std=c++11
   include-dirs:
-      VulkanMemoryAllocator/src
+      VulkanMemoryAllocator/include
   cxx-sources:
       src/lib.cpp
   extra-libraries:
