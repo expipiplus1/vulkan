@@ -70,7 +70,16 @@ forbiddenConstants :: [CName]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
 
 forceDisabledExtensions :: [ByteString]
-forceDisabledExtensions = ["XR_EXT_conformance_automation"]
+forceDisabledExtensions =
+  [ "XR_EXT_conformance_automation"
+  , "VK_EXT_video_decode_h264"
+  , "VK_EXT_video_encode_h264"
+  , "VK_EXT_video_decode_h265"
+  , "VK_EXT_video_encode_h265"
+  , "VK_KHR_video_decode_queue"
+  , "VK_KHR_video_encode_queue"
+  , "VK_KHR_video_queue"
+  ]
 
 ----------------------------------------------------------------
 -- Module assignments

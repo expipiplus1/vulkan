@@ -72,17 +72,41 @@ parseSpec bs = do
         specAtoms         <- case sSpecFlavor @t of
           SSpecVk -> pure mempty
           SSpecXr -> parseAtoms types
-        specHandles      <- parseHandles @t types
+        specFeatures   <- parseFeatures (contents n)
+        specExtensions <-
+          parseExtensions NotDisabled . contents =<< oneChild "extensions" n
+        specDisabledExtensions <-
+          parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
+        let disabledTypeNames = V.fromList
+              [ n
+              | Extension {..} <- toList specDisabledExtensions
+              , Require {..}   <- toList exRequires
+              , n              <- toList rTypeNames
+              ]
+            disabledCommandNames = V.fromList
+              [ n
+              | Extension {..} <- toList specDisabledExtensions
+              , Require {..}   <- toList exRequires
+              , n              <- toList rCommandNames
+              ]
+        specHandles <- V.filter ((`V.notElem` disabledTypeNames) . hName)
+          <$> parseHandles @t types
         specFuncPointers <- parseFuncPointers types
-        unsizedStructs   <- parseStructs types
-        unsizedUnions    <- parseUnions types
-        specCommands     <- parseCommands . contents =<< oneChild "commands" n
-        emptyBitmasks    <- parseEmptyBitmasks types
-        nonEmptyEnums    <- parseEnums types . contents $ n
-        requires         <- allRequires NotDisabled . contents $ n
-        enumExtensions   <- parseEnumExtensions requires
-        constantAliases  <- parseConstantAliases (contents n)
-        typeAliases      <- parseTypeAliases
+        unsizedStructs   <- V.filter ((`V.notElem` disabledTypeNames) . sName)
+          <$> parseStructs types
+        unsizedUnions <- V.filter ((`V.notElem` disabledTypeNames) . sName)
+          <$> parseUnions types
+        specCommands <-
+          fmap (V.filter ((`V.notElem` disabledCommandNames) . cName))
+          .   parseCommands
+          .   contents
+          =<< oneChild "commands" n
+        emptyBitmasks   <- parseEmptyBitmasks types
+        nonEmptyEnums   <- parseEnums types . contents $ n
+        requires        <- allRequires NotDisabled . contents $ n
+        enumExtensions  <- parseEnumExtensions requires
+        constantAliases <- parseConstantAliases (contents n)
+        typeAliases     <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
         enumAliases <-
@@ -90,9 +114,11 @@ parseSpec bs = do
             (V.fromList $ [ c | Element c <- contents n, "enums" == name c ])
         commandAliases <-
           parseCommandAliases . contents =<< oneChild "commands" n
-        let specEnums = appendEnumExtensions
-              enumExtensions
-              (extraEnums @t <> emptyBitmasks <> nonEmptyEnums)
+        let specEnums =
+              V.filter ((`V.notElem` disabledTypeNames) . eName)
+                $ appendEnumExtensions
+                    enumExtensions
+                    (extraEnums @t <> emptyBitmasks <> nonEmptyEnums)
             -- The spec can contain duplicate aliases (duplicated in different
             -- extensions), remove them here.
             specAliases =
@@ -101,11 +127,6 @@ parseSpec bs = do
                 <> enumAliases
                 <> commandAliases
                 <> constantAliases
-        specFeatures   <- parseFeatures (contents n)
-        specExtensions <-
-          parseExtensions NotDisabled . contents =<< oneChild "extensions" n
-        specDisabledExtensions <-
-          parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
         specAPIConstants <- case specFlavor @t of
           SpecVk -> parseAPIConstants (contents n)
           SpecXr -> liftA2 (<>)
