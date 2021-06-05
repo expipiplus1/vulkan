@@ -151,6 +151,7 @@ bespokeSchemes spec =
     <> [accelerationStructureGeometry]
     <> [buildingAccelerationStructures]
     <> openXRSchemes
+    <> [cuLaunchSchemes]
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -1159,6 +1160,19 @@ openXRSchemes =
 
       _ -> const Nothing
   ]
+
+----------------------------------------------------------------
+-- Culaunch
+----------------------------------------------------------------
+
+cuLaunchSchemes :: BespokeScheme
+cuLaunchSchemes =
+   BespokeScheme $ \case
+      "VkCuLaunchInfoNVX" -> \case
+        a | "pParams" <- name a -> Just (Preserve (type' a))
+        a | "pExtras" <- name a -> Just (Preserve (type' a))
+        _                       -> Nothing
+      _ -> const Nothing
 
 ----------------------------------------------------------------
 -- Helpers
