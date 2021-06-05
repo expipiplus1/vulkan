@@ -103,8 +103,8 @@ dependencies:
 - ascii-progress
 - async-pool
 - base
-- bytestring
 - brittany
+- bytestring
 - casing
 - containers
 - data-default
