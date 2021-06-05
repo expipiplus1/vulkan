@@ -1065,6 +1065,7 @@ isForbidden n =
     , "VK_DEFINE_HANDLE"
     , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
     , "VK_MAKE_VERSION"
+    , "VK_MAKE_API_VERSION"
     , "VK_USE_64_BIT_PTR_DEFINES"
     ]
   xrForbidden =
