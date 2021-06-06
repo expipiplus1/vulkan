@@ -68,9 +68,9 @@
 --
 -- == New Enum Constants
 --
--- -   'QCOM_render_pass_store_ops_EXTENSION_NAME'
+-- -   'QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME'
 --
--- -   'QCOM_render_pass_store_ops_SPEC_VERSION'
+-- -   'QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION'
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
@@ -97,24 +97,24 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( QCOM_render_pass_store_ops_SPEC_VERSION
-                                                        , pattern QCOM_render_pass_store_ops_SPEC_VERSION
-                                                        , QCOM_render_pass_store_ops_EXTENSION_NAME
-                                                        , pattern QCOM_render_pass_store_ops_EXTENSION_NAME
+module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION
+                                                        , pattern QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION
+                                                        , QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
+                                                        , pattern QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
                                                         ) where
 
 import Data.String (IsString)
 
-type QCOM_render_pass_store_ops_SPEC_VERSION = 2
+type QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION = 2
 
--- No documentation found for TopLevel "VK_QCOM_render_pass_store_ops_SPEC_VERSION"
-pattern QCOM_render_pass_store_ops_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_render_pass_store_ops_SPEC_VERSION = 2
+-- No documentation found for TopLevel "VK_QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION"
+pattern QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION :: forall a . Integral a => a
+pattern QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION = 2
 
 
-type QCOM_render_pass_store_ops_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
+type QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
 
--- No documentation found for TopLevel "VK_QCOM_render_pass_store_ops_EXTENSION_NAME"
-pattern QCOM_render_pass_store_ops_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern QCOM_render_pass_store_ops_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
+-- No documentation found for TopLevel "VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME"
+pattern QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
 

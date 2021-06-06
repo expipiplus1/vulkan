@@ -130,7 +130,7 @@
 -- Most of the functionality in this extension is superseded by the core
 -- Vulkan 1.1
 -- <VkPhysicalDeviceSubgroupProperties.html subgroup operations>. However,
--- Vulkan 1.1 required the @OpGroupNonUniformBroadcast@ \"Id\" to be
+-- Vulkan 1.1 required the @OpGroupNonUniformBroadcast@ “Id” to be
 -- constant. This restriction was removed in Vulkan 1.2 with the addition
 -- of the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroupBroadcastDynamicId subgroupBroadcastDynamicId>

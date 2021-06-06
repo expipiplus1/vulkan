@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.10.1
+version:        3.10.2
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -282,6 +282,7 @@ library
       Vulkan.Extensions.VK_EXT_blend_operation_advanced
       Vulkan.Extensions.VK_EXT_buffer_device_address
       Vulkan.Extensions.VK_EXT_calibrated_timestamps
+      Vulkan.Extensions.VK_EXT_color_write_enable
       Vulkan.Extensions.VK_EXT_conditional_rendering
       Vulkan.Extensions.VK_EXT_conservative_rasterization
       Vulkan.Extensions.VK_EXT_custom_border_color
@@ -298,6 +299,7 @@ library
       Vulkan.Extensions.VK_EXT_display_control
       Vulkan.Extensions.VK_EXT_display_surface_counter
       Vulkan.Extensions.VK_EXT_extended_dynamic_state
+      Vulkan.Extensions.VK_EXT_extended_dynamic_state2
       Vulkan.Extensions.VK_EXT_external_memory_dma_buf
       Vulkan.Extensions.VK_EXT_external_memory_host
       Vulkan.Extensions.VK_EXT_filter_cubic
@@ -322,6 +324,7 @@ library
       Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
       Vulkan.Extensions.VK_EXT_post_depth_coverage
       Vulkan.Extensions.VK_EXT_private_data
+      Vulkan.Extensions.VK_EXT_provoking_vertex
       Vulkan.Extensions.VK_EXT_queue_family_foreign
       Vulkan.Extensions.VK_EXT_robustness2
       Vulkan.Extensions.VK_EXT_sample_locations
@@ -345,6 +348,8 @@ library
       Vulkan.Extensions.VK_EXT_validation_features
       Vulkan.Extensions.VK_EXT_validation_flags
       Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+      Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
+      Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
       Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
       Vulkan.Extensions.VK_FUCHSIA_external_memory
       Vulkan.Extensions.VK_FUCHSIA_external_semaphore
@@ -463,6 +468,7 @@ library
       Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
       Vulkan.Extensions.VK_NV_geometry_shader_passthrough
       Vulkan.Extensions.VK_NV_glsl_shader
+      Vulkan.Extensions.VK_NV_inherited_viewport_scissor
       Vulkan.Extensions.VK_NV_mesh_shader
       Vulkan.Extensions.VK_NV_ray_tracing
       Vulkan.Extensions.VK_NV_representative_fragment_test
@@ -475,6 +481,7 @@ library
       Vulkan.Extensions.VK_NV_viewport_array2
       Vulkan.Extensions.VK_NV_viewport_swizzle
       Vulkan.Extensions.VK_NV_win32_keyed_mutex
+      Vulkan.Extensions.VK_NVX_binary_import
       Vulkan.Extensions.VK_NVX_image_view_handle
       Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve

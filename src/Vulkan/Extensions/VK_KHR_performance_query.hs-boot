@@ -225,9 +225,9 @@
 -- 10) Should we introduce an indirect mechanism to set the counter pass
 -- index?
 --
--- __RESOLVED__ Specify the counter pass index at submit time instead to
+-- __RESOLVED__ Specify the counter pass index at submit time instead, to
 -- avoid requiring re-recording of command buffers when multiple counter
--- passes needed.
+-- passes are needed.
 --
 -- == Examples
 --

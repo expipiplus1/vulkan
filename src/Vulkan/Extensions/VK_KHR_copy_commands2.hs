@@ -28,14 +28,14 @@
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
+-- [__Last Modified Date__]
 --     2020-07-06
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   None
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Jeff Leger, Qualcomm
 --
@@ -56,10 +56,10 @@
 -- The following extensible copy commands are introduced with this
 -- extension: 'cmdCopyBuffer2KHR', 'cmdCopyImage2KHR',
 -- 'cmdCopyBufferToImage2KHR', 'cmdCopyImageToBuffer2KHR',
--- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command
--- contain@*Info2KHR@ structure parameter that includes @sType@\/@pNext@
--- members. Lower level structures that describe each region to be copied
--- are also extended with @sType@\/@pNext@ members.
+-- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command contains an
+-- @*Info2KHR@ structure parameter that includes @sType@\/@pNext@ members.
+-- Lower level structures that describe each region to be copied are also
+-- extended with @sType@\/@pNext@ members.
 --
 -- == New Commands
 --
@@ -701,7 +701,7 @@ cmdCopyImageToBuffer2KHR :: forall io
                          => -- | @commandBuffer@ is the command buffer into which the command will be
                             -- recorded.
                             CommandBuffer
-                         -> -- | @pCopyImageToBufferInfo@ is a pointer to a 'cmdCopyImageToBuffer2KHR'
+                         -> -- | @pCopyImageToBufferInfo@ is a pointer to a 'CopyImageToBufferInfo2KHR'
                             -- structure describing the copy parameters.
                             CopyImageToBufferInfo2KHR
                          -> io ()
@@ -1672,12 +1672,12 @@ instance Zero CopyBufferInfo2KHR where
 --
 -- -   #VUID-VkCopyImageInfo2KHR-srcImage-04443# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @srcSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageInfo2KHR-dstImage-04444# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @dstSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageInfo2KHR-aspectMask-00142# For each element of
@@ -2080,55 +2080,55 @@ instance Zero CopyImageInfo2KHR where
 --     present in @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00243# For each element of
---     @pRegions@, @srcOffset@[0].x and @srcOffset@[1].x /must/ both be
+--     @pRegions@, @srcOffsets@[0].x and @srcOffsets@[1].x /must/ both be
 --     greater than or equal to @0@ and less than or equal to the width of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00244# For each element of
---     @pRegions@, @srcOffset@[0].y and @srcOffset@[1].y /must/ both be
+--     @pRegions@, @srcOffsets@[0].y and @srcOffsets@[1].y /must/ both be
 --     greater than or equal to @0@ and less than or equal to the height of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcImage-00245# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y
+--     of @pRegions@, @srcOffsets@[0].y /must/ be @0@ and @srcOffsets@[1].y
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00246# For each element of
---     @pRegions@, @srcOffset@[0].z and @srcOffset@[1].z /must/ both be
+--     @pRegions@, @srcOffsets@[0].z and @srcOffsets@[1].z /must/ both be
 --     greater than or equal to @0@ and less than or equal to the depth of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcImage-00247# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
---     of @pRegions@, @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z
+--     of @pRegions@, @srcOffsets@[0].z /must/ be @0@ and @srcOffsets@[1].z
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00248# For each element of
---     @pRegions@, @dstOffset@[0].x and @dstOffset@[1].x /must/ both be
+--     @pRegions@, @dstOffsets@[0].x and @dstOffsets@[1].x /must/ both be
 --     greater than or equal to @0@ and less than or equal to the width of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00249# For each element of
---     @pRegions@, @dstOffset@[0].y and @dstOffset@[1].y /must/ both be
+--     @pRegions@, @dstOffsets@[0].y and @dstOffsets@[1].y /must/ both be
 --     greater than or equal to @0@ and less than or equal to the height of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstImage-00250# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y
+--     of @pRegions@, @dstOffsets@[0].y /must/ be @0@ and @dstOffsets@[1].y
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00251# For each element of
---     @pRegions@, @dstOffset@[0].z and @dstOffset@[1].z /must/ both be
+--     @pRegions@, @dstOffsets@[0].z and @dstOffsets@[1].z /must/ both be
 --     greater than or equal to @0@ and less than or equal to the depth of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstImage-00252# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
---     of @pRegions@, @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z
+--     of @pRegions@, @dstOffsets@[0].z /must/ be @0@ and @dstOffsets@[1].z
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-pRegions-04561# If any element of
@@ -2376,7 +2376,7 @@ instance Zero BlitImageInfo2KHR where
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00197# For each
 --     element of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.x@ and (@imageExtent.width@ +
+--     in its @pNext@ chain, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
 --     of @dstImage@ where this refers to the width of the /plane/ of the
@@ -2386,7 +2386,7 @@ instance Zero BlitImageInfo2KHR where
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00198# For each
 --     element of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.y@ and (imageExtent.height +
+--     in its @pNext@ chain, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
 --     of @dstImage@ where this refers to the height of the /plane/ of the
@@ -2413,7 +2413,7 @@ instance Zero BlitImageInfo2KHR where
 --     @imageExtent.height@ /must/ be @1@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00200# For each
---     element of @pRegions@, @imageOffset.z@ and (imageExtent.depth +
+--     element of @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of @dstImage@
@@ -2734,7 +2734,7 @@ instance Zero CopyBufferToImageInfo2KHR where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00198# For each
 --     element of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.y@ and (imageExtent.height +
+--     in its @pNext@ chain, , @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
 --     of @srcImage@ where this refers to the height of the /plane/ of the
@@ -2761,7 +2761,7 @@ instance Zero CopyBufferToImageInfo2KHR where
 --     @imageExtent.height@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00200# For each
---     element of @pRegions@, @imageOffset.z@ and (imageExtent.depth +
+--     element of @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of {imageparam}

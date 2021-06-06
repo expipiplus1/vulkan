@@ -27,7 +27,7 @@ import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 type SubgroupFeatureFlags = SubgroupFeatureFlagBits
 
--- | VkSubgroupFeatureFlagBits - Enum describing what group operations are
+-- | VkSubgroupFeatureFlagBits - Bitmask describing what group operations are
 -- supported with subgroup scope
 --
 -- = See Also

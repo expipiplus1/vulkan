@@ -85,7 +85,7 @@
 -- already complex enough.
 --
 -- 2) Should the @srcRect@ and @dstRect@ parameters be specified as part of
--- the present command, or at swapchain creation time?
+-- the presentation command, or at swapchain creation time?
 --
 -- __RESOLVED__: As part of the presentation command. This allows moving
 -- and scaling the image on the screen without the need to respecify the
@@ -149,7 +149,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 -- -   Revision 3, 2015-09-01 (James Jones)
@@ -434,8 +434,9 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_display.getPhysicalDeviceDisplayPropertiesKHR'
---     for the display the present operation targets then @persistent@
---     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     for the display the present operation targets is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then @persistent@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -456,13 +457,13 @@ data DisplayPresentInfoKHR = DisplayPresentInfoKHR
   , -- | @dstRect@ is a rectangular region within the visible region of the
     -- swapchain’s display mode. If 'DisplayPresentInfoKHR' is not specified,
     -- this region will be assumed to be the entire visible region of the
-    -- visible region of the swapchain’s mode. If the specified rectangle is a
-    -- subset of the display mode’s visible region, content from display planes
-    -- below the swapchain’s plane will be visible outside the rectangle. If
-    -- there are no planes below the swapchain’s, the area outside the
-    -- specified rectangle will be black. If portions of the specified
-    -- rectangle are outside of the display’s visible region, pixels mapping
-    -- only to those portions of the rectangle will be discarded.
+    -- swapchain’s mode. If the specified rectangle is a subset of the display
+    -- mode’s visible region, content from display planes below the swapchain’s
+    -- plane will be visible outside the rectangle. If there are no planes
+    -- below the swapchain’s, the area outside the specified rectangle will be
+    -- black. If portions of the specified rectangle are outside of the
+    -- display’s visible region, pixels mapping only to those portions of the
+    -- rectangle will be discarded.
     dstRect :: Rect2D
   , -- | @persistent@: If this is 'Vulkan.Core10.FundamentalTypes.TRUE', the
     -- display engine will enable buffered mode on displays that support it.

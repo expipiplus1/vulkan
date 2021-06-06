@@ -347,11 +347,9 @@ foreign import ccall
 -- return the variable is overwritten with the number of structures
 -- actually written to @pSurfaceFormats@. If the value of
 -- @pSurfaceFormatCount@ is less than the number of format tuples
--- supported, at most @pSurfaceFormatCount@ structures will be written. If
--- @pSurfaceFormatCount@ is smaller than the number of format tuples
--- supported for the surface parameters described in @pSurfaceInfo@,
+-- supported, at most @pSurfaceFormatCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
 -- available values were returned.
 --
 -- == Valid Usage

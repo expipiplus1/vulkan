@@ -466,7 +466,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'
 --         → 'AccelerationStructureCreateInfoKHR' (reshuffle geometry
---         layout\/info)
+--         layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV'
 --         → 'PhysicalDeviceAccelerationStructurePropertiesKHR' (for
@@ -486,7 +486,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV'
 --         → 'createAccelerationStructureKHR' (device address, different
---         geometry layout\/info)
+--         geometry layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureMemoryRequirementsNV'
 --         (deleted - replaced by allocating on top of
@@ -755,7 +755,7 @@
 --
 --     -   add a new
 --         'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
---         buffer usage such buffers
+--         buffer usage for such buffers
 --
 --     -   add a new 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' acceleration
 --         structure type for layering
@@ -786,12 +786,12 @@
 --
 -- (5) What is 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' for?
 --
--- RESOLVED: It is primarily intended for API layering. In DXR, the
+-- __RESOLVED__: It is primarily intended for API layering. In DXR, the
 -- acceleration structure is basically just a buffer in a special layout,
 -- and you don’t know at creation time whether it will be used as a top or
 -- bottom level acceleration structure. We thus added a generic
 -- acceleration structure type whose type is unknown at creation time, but
--- is specified at build type instead. Applications which are written
+-- is specified at build time instead. Applications which are written
 -- directly for Vulkan should not use it.
 --
 -- == Version History
@@ -815,7 +815,7 @@
 --         better match its type (!3523)
 --
 --     -   Allow VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS for pipeline
---         creation if shader group handles cannot be re-used. (!3523)
+--         creation if shader group handles cannot be reused (!3523)
 --
 --     -   update documentation for the
 --         VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS error code and add

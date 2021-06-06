@@ -147,7 +147,7 @@
 --
 --     -   Adjusted wording of issue #1 to match the agreed-upon solution.
 --
---     -   Renamed \"window\" parameters to \"surface\" to match Wayland
+--     -   Renamed “window” parameters to “surface” to match Wayland
 --         conventions.
 --
 -- -   Revision 3, 2015-10-26 (Ian Elliott)

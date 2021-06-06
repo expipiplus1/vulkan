@@ -103,14 +103,14 @@
 --
 -- 1.  What should we call this extension?
 --
---     RESOLVED: Using NV_shader_sm_builtins. Other options considered
+--     __RESOLVED__: @NV_shader_sm_builtins@. Other options considered
 --     included:
 --
---     -   NV_shader_smid - but SMID is really easy to typo\/confuse as
+--     -   @NV_shader_smid@ - but SMID is really easy to typo\/confuse as
 --         SIMD.
 --
---     -   NV_shader_sm_info - but __Info__ is typically reserved for input
---         structures
+--     -   @NV_shader_sm_info@ - but __Info__ is typically reserved for
+--         input structures
 --
 -- == Version History
 --

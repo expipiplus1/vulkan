@@ -68,9 +68,9 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     on each shader in the pipeline before using the pipeline.
 --
 -- -   'PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR' specifies that the
---     shader compiler should capture statistics for the executables
---     produced by the compile process which /can/ later be retrieved by
---     calling
+--     shader compiler should capture statistics for the pipeline
+--     executables produced by the compile process which /can/ later be
+--     retrieved by calling
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableStatisticsKHR'.
 --     Enabling this flag /must/ not affect the final compiled pipeline but
 --     /may/ disable pipeline caching or otherwise affect pipeline creation
@@ -78,8 +78,8 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR' specifies
 --     that the shader compiler should capture the internal representations
---     of executables produced by the compile process which /can/ later be
---     retrieved by calling
+--     of pipeline executables produced by the compile process which /can/
+--     later be retrieved by calling
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableInternalRepresentationsKHR'.
 --     Enabling this flag /must/ not affect the final compiled pipeline but
 --     /may/ disable pipeline caching or otherwise affect pipeline creation
@@ -109,10 +109,10 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR' specifies that
 --     triangle primitives will be skipped during traversal using
---     @OpTraceKHR@.
+--     @OpTraceRayKHR@.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR' specifies that AABB
---     primitives will be skipped during traversal using @OpTraceKHR@.
+--     primitives will be skipped during traversal using @OpTraceRayKHR@.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --     specifies that the shader group handles /can/ be saved and reused on

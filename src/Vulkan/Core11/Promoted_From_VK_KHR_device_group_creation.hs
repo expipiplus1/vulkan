@@ -93,10 +93,9 @@ foreign import ccall
 -- actually written to @pPhysicalDeviceGroupProperties@. If
 -- @pPhysicalDeviceGroupCount@ is less than the number of device groups
 -- available, at most @pPhysicalDeviceGroupCount@ structures will be
--- written. If @pPhysicalDeviceGroupCount@ is smaller than the number of
--- device groups available, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
--- that not all the available device groups were returned.
+-- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
+-- all the available device groups were returned.
 --
 -- Every physical device /must/ be in exactly one device group.
 --

@@ -242,7 +242,8 @@ foreign import ccall
   "dynamic" mkVkCmdDispatchBase
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()
 
--- | vkCmdDispatchBase - Dispatch compute work items
+-- | vkCmdDispatchBase - Dispatch compute work items with non-zero base
+-- values for the workgroup IDs
 --
 -- = Description
 --
@@ -354,9 +355,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdDispatchBase-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -473,11 +474,29 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-02712# If @commandBuffer@ is a
+--     protected command buffer, any resource written to by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be an unprotected resource
+--
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-02713# If @commandBuffer@ is a
+--     protected command buffer, pipeline stages other than the
+--     framebuffer-space and compute stages in the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not write to any resource
+--
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-04617# If any of the shader
+--     stages of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
+--     bind point used by this command uses the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryKHR RayQueryKHR>
+--     capability, then @commandBuffer@ /must/ not be a protected command
+--     buffer
+--
 -- -   #VUID-vkCmdDispatchBase-baseGroupX-00421# @baseGroupX@ /must/ be
 --     less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
 --
--- -   #VUID-vkCmdDispatchBase-baseGroupX-00422# @baseGroupX@ /must/ be
+-- -   #VUID-vkCmdDispatchBase-baseGroupX-00422# @baseGroupY@ /must/ be
 --     less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
 --

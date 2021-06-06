@@ -128,14 +128,6 @@ let
       pandoc = appendPatch super.pandoc
         ../generate-new/patches/pandoc-haddock-tables.patch;
       language-c = self.language-c_0_9_0_1;
-      unification-fd = overrideSrc super.unification-fd {
-        src = pkgs.fetchFromGitHub {
-          owner = "Bodigrim";
-          repo = "unification-fd";
-          rev = "daf74abc85ce0b86d7688d92402ac446f1496cdf";
-          sha256 = "1k6kx4s3za6p837sb1qhva9axn1j49r0fng9c5c7pfsg28brdpgy";
-        };
-      };
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = self.ghc.withPackages;

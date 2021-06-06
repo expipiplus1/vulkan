@@ -38,7 +38,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
 -- created as if the 'ImageFormatListCreateInfo' structure were not
--- included in the @pNext@ list of 'Vulkan.Core10.Image.ImageCreateInfo'.
+-- included in the @pNext@ chain of 'Vulkan.Core10.Image.ImageCreateInfo'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -55,8 +55,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageFormatListCreateInfo = ImageFormatListCreateInfo
-  { -- | @pViewFormats@ is an array which lists of all formats which /can/ be
-    -- used when creating views of this image.
+  { -- | @pViewFormats@ is a pointer to an array of
+    -- 'Vulkan.Core10.Enums.Format.Format' values specifying all formats which
+    -- /can/ be used when creating views of this image.
     viewFormats :: Vector Format }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

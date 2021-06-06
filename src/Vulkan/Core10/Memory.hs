@@ -125,9 +125,9 @@ foreign import ccall
 -- When memory is allocated, its contents are undefined with the following
 -- constraint:
 --
--- -   The contents of unprotected memory /must/ not be a function of data
---     protected memory objects, even if those memory objects were
---     previously freed.
+-- -   The contents of unprotected memory /must/ not be a function of the
+--     contents of data protected memory objects, even if those memory
+--     objects were previously freed.
 --
 -- Note
 --
@@ -169,13 +169,13 @@ foreign import ccall
 --
 -- -   #VUID-vkAllocateMemory-pAllocateInfo-01713#
 --     @pAllocateInfo->allocationSize@ /must/ be less than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[memindex].size
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[@memindex@].@size@
 --     where @memindex@ =
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypes@[pAllocateInfo->memoryTypeIndex].heapIndex
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypes@[@pAllocateInfo->memoryTypeIndex@].@heapIndex@
 --     as returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Vulkan.Core10.Handles.PhysicalDevice' that @device@ was
---     created from
+--     created from.
 --
 -- -   #VUID-vkAllocateMemory-pAllocateInfo-01714#
 --     @pAllocateInfo->memoryTypeIndex@ /must/ be less than
@@ -183,13 +183,13 @@ foreign import ccall
 --     as returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Vulkan.Core10.Handles.PhysicalDevice' that @device@ was
---     created from
+--     created from.
 --
 -- -   #VUID-vkAllocateMemory-deviceCoherentMemory-02790# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
 --     feature is not enabled, @pAllocateInfo->memoryTypeIndex@ /must/ not
 --     identify a memory type supporting
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'.
 --
 -- -   #VUID-vkAllocateMemory-maxMemoryAllocationCount-04101# There /must/
 --     be less than
@@ -237,7 +237,7 @@ allocateMemory :: forall a io
                => -- | @device@ is the logical device that owns the memory.
                   Device
                -> -- | @pAllocateInfo@ is a pointer to a 'MemoryAllocateInfo' structure
-                  -- describing parameters of the allocation. A successful returned
+                  -- describing parameters of the allocation. A successfully returned
                   -- allocation /must/ use the requested parameters — no substitution is
                   -- permitted by the implementation.
                   (MemoryAllocateInfo a)
@@ -841,10 +841,11 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- possible.
 --
 -- Importing memory /must/ not increase overall heap usage within a system.
--- However, they /must/ affect the following per-process values: *
--- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationCount@
--- *
--- 'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'::@heapUsage@
+-- However, it /must/ affect the following per-process values:
+--
+-- -   'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationCount@
+--
+-- -   'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'::@heapUsage@
 --
 -- When performing a memory import operation, it is the responsibility of
 -- the application to ensure the external handles and their associated
@@ -1165,12 +1166,12 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 data MemoryAllocateInfo (es :: [Type]) = MemoryAllocateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
-  , -- | @allocationSize@ is the size of the allocation in bytes
+  , -- | @allocationSize@ is the size of the allocation in bytes.
     allocationSize :: DeviceSize
   , -- | @memoryTypeIndex@ is an index identifying a memory type from the
     -- @memoryTypes@ array of the
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'
-    -- structure
+    -- structure.
     memoryTypeIndex :: Word32
   }
   deriving (Typeable)

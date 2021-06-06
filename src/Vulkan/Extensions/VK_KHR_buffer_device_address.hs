@@ -79,8 +79,8 @@
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_physical_storage_buffer.html SPV_KHR_physical_storage_buffer>
 -- SPIR-V extension.
 --
--- Another way to describe this extension is that it adds \"pointers to
--- buffer memory in shaders\". By calling
+-- Another way to describe this extension is that it adds “pointers to
+-- buffer memory in shaders”. By calling
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress'
 -- with a 'Vulkan.Core10.Handles.Buffer', it will return a
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress' value which represents

@@ -63,18 +63,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceDescriptorIndexingFeatures' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceDescriptorIndexingFeatures' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceDescriptorIndexingFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceDescriptorIndexingFeatures' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -384,17 +385,15 @@ instance Zero PhysicalDeviceDescriptorIndexingFeatures where
 -- descriptor indexing properties that can be supported by an
 -- implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceDescriptorIndexingProperties'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceDescriptorIndexingProperties' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1004,12 +1003,16 @@ instance Zero DescriptorSetVariableDescriptorCountAllocateInfo where
 --
 -- = Description
 --
--- If the create info includes a variable-sized descriptor, then
--- @supported@ is determined assuming the requested size of the
--- variable-sized descriptor, and @maxVariableDescriptorCount@ is set to
--- the maximum size of that descriptor that /can/ be successfully created
--- (which is greater than or equal to the requested size passed in). If the
--- create info does not include a variable-sized descriptor or if the
+-- If the 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'
+-- structure specified in
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'::@pCreateInfo@
+-- includes a variable-sized descriptor, then @supported@ is determined
+-- assuming the requested size of the variable-sized descriptor, and
+-- @maxVariableDescriptorCount@ is set to the maximum size of that
+-- descriptor that /can/ be successfully created (which is greater than or
+-- equal to the requested size passed in). If the
+-- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
+-- does not include a variable-sized descriptor, or if the
 -- 'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingVariableDescriptorCount@
 -- feature is not enabled, then @maxVariableDescriptorCount@ is set to
 -- zero. For the purposes of this command, a variable-sized descriptor

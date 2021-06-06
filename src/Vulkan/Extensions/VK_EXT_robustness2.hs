@@ -55,7 +55,7 @@
 -- These additional requirements /may/ be expensive on some
 -- implementations, and should only be enabled when truly necessary.
 --
--- This extension also adds support for \"null descriptors\", where
+-- This extension also adds support for “null descriptors”, where
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' /can/ be used instead of a
 -- valid handle. Accesses to null descriptors have well-defined behavior,
 -- and don’t rely on robustness.
@@ -93,14 +93,14 @@
 --     'PhysicalDeviceRobustness2PropertiesEXT'::@robustStorageBufferAccessSizeAlignment@
 --     exist?
 --
--- RESOLVED: Some implementations can’t efficiently tightly bounds-check
--- all buffer accesses. Rather, the size of the bound range is padded to
--- some power of two multiple, up to 256 bytes for uniform buffers and up
--- to 4 bytes for storage buffers, and that padded size is bounds-checked.
--- This is sufficient to implement D3D-like behavior, because D3D only
--- allows binding whole uniform buffers or ranges that are a multiple of
--- 256 bytes, and D3D raw and structured buffers only support 32-bit
--- accesses.
+-- __RESOLVED__: Some implementations can’t efficiently tightly
+-- bounds-check all buffer accesses. Rather, the size of the bound range is
+-- padded to some power of two multiple, up to 256 bytes for uniform
+-- buffers and up to 4 bytes for storage buffers, and that padded size is
+-- bounds-checked. This is sufficient to implement D3D-like behavior,
+-- because D3D only allows binding whole uniform buffers or ranges that are
+-- a multiple of 256 bytes, and D3D raw and structured buffers only support
+-- 32-bit accesses.
 --
 -- == Examples
 --
@@ -161,10 +161,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceRobustness2FeaturesEXT' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #features-robustBufferAccess2# @robustBufferAccess2@ indicates
 --     whether buffer accesses are tightly bounds-checked against the range
@@ -193,9 +197,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --     to nothing.
 --
 -- If the 'PhysicalDeviceRobustness2FeaturesEXT' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceRobustness2FeaturesEXT' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage
 --
@@ -271,17 +280,15 @@ instance Zero PhysicalDeviceRobustness2FeaturesEXT where
 -- | VkPhysicalDeviceRobustness2PropertiesEXT - Structure describing robust
 -- buffer access properties supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceRobustness2PropertiesEXT' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceRobustness2PropertiesEXT' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

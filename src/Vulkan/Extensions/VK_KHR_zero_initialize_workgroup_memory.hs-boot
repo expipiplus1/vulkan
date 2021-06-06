@@ -28,6 +28,8 @@
 --     -   Alan Baker
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_zero_initialize_workgroup_memory:%20&body=@alan-baker%20 >
 --
+-- == Other Extension Metadata
+--
 -- [__Last Modified Date__]
 --     2020-11-18
 --
@@ -44,6 +46,8 @@
 --     -   Jeff Bolz, Nvidia
 --
 --     -   Jason Ekstrand, Intel
+--
+-- == Description
 --
 -- This extension allows the use of a null constant initializer on shader
 -- Workgroup memory variables, allowing implementations to expose any

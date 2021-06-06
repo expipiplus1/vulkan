@@ -278,8 +278,7 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceBufferDeviceAddressFeatures' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
@@ -292,12 +291,14 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 -- See 'getBufferDeviceAddress' for more information.
 --
 -- If the 'PhysicalDeviceBufferDeviceAddressFeatures' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceBufferDeviceAddressFeatures' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceBufferDeviceAddressFeatures' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -547,7 +548,7 @@ instance Zero BufferOpaqueCaptureAddressCreateInfo where
 --
 -- In most cases, it is expected that a non-zero @opaqueAddress@ is an
 -- address retrieved from 'getDeviceMemoryOpaqueCaptureAddress' on an
--- identically created memory allocation. If this is not the case, it
+-- identically created memory allocation. If this is not the case, it is
 -- likely that
 -- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS' errors
 -- will occur.

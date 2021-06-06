@@ -40,30 +40,17 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkBindBufferMemoryDeviceGroupInfo - Structure specifying device within a
 -- group to bind to
 --
--- = Members
+-- = Description
 --
--- If the @pNext@ list of
+-- If the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo'
 -- includes a 'BindBufferMemoryDeviceGroupInfo' structure, then that
 -- structure determines how memory is bound to buffers across multiple
 -- devices in a device group.
 --
--- = Description
---
--- The 'BindBufferMemoryDeviceGroupInfo' structure is defined as:
---
--- -   @sType@ is the type of this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to a structure extending this
---     structure.
---
--- -   @deviceIndexCount@ is the number of elements in @pDeviceIndices@.
---
--- -   @pDeviceIndices@ is a pointer to an array of device indices.
---
 -- If @deviceIndexCount@ is greater than zero, then on device index i the
 -- buffer is attached to the instance of @memory@ on the physical device
--- with device index pDeviceIndices[i].
+-- with device index @pDeviceIndices@[i].
 --
 -- If @deviceIndexCount@ is zero and @memory@ comes from a memory heap with
 -- the
@@ -103,7 +90,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BindBufferMemoryDeviceGroupInfo = BindBufferMemoryDeviceGroupInfo
-  { -- No documentation found for Nested "VkBindBufferMemoryDeviceGroupInfo" "pDeviceIndices"
+  { -- | @pDeviceIndices@ is a pointer to an array of device indices.
     deviceIndices :: Vector Word32 }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -144,33 +131,13 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 -- | VkBindImageMemoryDeviceGroupInfo - Structure specifying device within a
 -- group to bind to
 --
--- = Members
+-- = Description
 --
--- If the @pNext@ list of
+-- If the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo'
 -- includes a 'BindImageMemoryDeviceGroupInfo' structure, then that
 -- structure determines how memory is bound to images across multiple
 -- devices in a device group.
---
--- = Description
---
--- The 'BindImageMemoryDeviceGroupInfo' structure is defined as:
---
--- -   @sType@ is the type of this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to a structure extending this
---     structure.
---
--- -   @deviceIndexCount@ is the number of elements in @pDeviceIndices@.
---
--- -   @pDeviceIndices@ is a pointer to an array of device indices.
---
--- -   @splitInstanceBindRegionCount@ is the number of elements in
---     @pSplitInstanceBindRegions@.
---
--- -   @pSplitInstanceBindRegions@ is a pointer to an array of
---     'Vulkan.Core10.FundamentalTypes.Rect2D' structures describing which
---     regions of the image are attached to each instance of memory.
 --
 -- If @deviceIndexCount@ is greater than zero, then on device index i
 -- @image@ is attached to the instance of the memory on the physical device
@@ -178,11 +145,11 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --
 -- Let N be the number of physical devices in the logical device. If
 -- @splitInstanceBindRegionCount@ is greater than zero, then
--- @pSplitInstanceBindRegions@ is an array of N2 rectangles, where the
--- image region specified by the rectangle at element i*N+j in resource
--- instance i is bound to the memory instance j. The blocks of the memory
--- that are bound to each sparse image block region use an offset in
--- memory, relative to @memoryOffset@, computed as if the whole image were
+-- @pSplitInstanceBindRegions@ is a pointer to an array of N2 rectangles,
+-- where the image region specified by the rectangle at element i*N+j in
+-- resource instance i is bound to the memory instance j. The blocks of the
+-- memory that are bound to each sparse image block region use an offset in
+-- memory, relative to @memoryOffset@, computed as if the whole image was
 -- being bound to a contiguous range of memory. In other words,
 -- horizontally adjacent image blocks use consecutive blocks of memory,
 -- vertically adjacent image blocks are separated by the number of bytes
@@ -247,7 +214,7 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --     @extent.height@ member of any element of @pSplitInstanceBindRegions@
 --     /must/ either be a multiple of the sparse image block height of all
 --     non-metadata aspects of the image, or else @extent.height@ +
---     @offset.y@ /must/ equal the width of the image subresource
+--     @offset.y@ /must/ equal the height of the image subresource
 --
 -- == Valid Usage (Implicit)
 --
@@ -270,9 +237,11 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BindImageMemoryDeviceGroupInfo = BindImageMemoryDeviceGroupInfo
-  { -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "pDeviceIndices"
+  { -- | @pDeviceIndices@ is a pointer to an array of device indices.
     deviceIndices :: Vector Word32
-  , -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "pSplitInstanceBindRegions"
+  , -- | @pSplitInstanceBindRegions@ is a pointer to an array of
+    -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures describing which
+    -- regions of the image are attached to each instance of memory.
     splitInstanceBindRegions :: Vector Rect2D
   }
   deriving (Typeable)

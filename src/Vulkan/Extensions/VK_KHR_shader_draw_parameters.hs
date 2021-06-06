@@ -74,10 +74,10 @@
 -- variables in Vulkan:
 --
 -- -   @BaseInstance@, which contains the @firstInstance@ parameter passed
---     to draw commands,
+--     to drawing commands,
 --
 -- -   @BaseVertex@, which contains the @firstVertex@ or @vertexOffset@
---     parameter passed to draw commands, and
+--     parameter passed to drawing commands, and
 --
 -- -   @DrawIndex@, which contains the index of the draw call currently
 --     being processed from an indirect draw call.

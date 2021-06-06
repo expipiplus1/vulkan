@@ -289,7 +289,9 @@ getMemoryFdPropertiesKHR :: forall io
                             -- #VUID-vkGetMemoryFdPropertiesKHR-device-parameter# @device@ /must/ be a
                             -- valid 'Vulkan.Core10.Handles.Device' handle
                             Device
-                         -> -- | @handleType@ is the type of the handle @fd@.
+                         -> -- | @handleType@ is a
+                            -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+                            -- value specifying the type of the handle @fd@.
                             --
                             -- #VUID-vkGetMemoryFdPropertiesKHR-handleType-00674# @handleType@ /must/
                             -- not be
@@ -348,10 +350,13 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00669# If @handleType@ is
 --     not @0@, it /must/ be
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'.
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'
+--     or
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT'
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00670# If @handleType@ is
---     not @0@, @fd@ /must/ be a valid POSIX file descriptor handle.
+--     not @0@, @fd@ /must/ be a valid handle of the type specified by
+--     @handleType@
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-fd-01746# The memory represented by
 --     @fd@ /must/ have been created from a physical device and driver that
@@ -377,7 +382,9 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryFdInfoKHR = ImportMemoryFdInfoKHR
-  { -- | @handleType@ specifies the handle type of @fd@.
+  { -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the handle type of @fd@.
     handleType :: ExternalMemoryHandleTypeFlagBits
   , -- | @fd@ is the external handle to import.
     fd :: Int32
@@ -487,7 +494,7 @@ instance Zero MemoryFdPropertiesKHR where
 -- Note
 --
 -- The size of the exported file /may/ be larger than the size requested by
--- 'Vulkan.Core10.Memory.MemoryAllocateInfo'::allocationSize. If
+-- 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@. If
 -- @handleType@ is
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT',
 -- then the application /can/ query the file’s actual size with
@@ -506,7 +513,9 @@ data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
     -- #VUID-VkMemoryGetFdInfoKHR-memory-parameter# @memory@ /must/ be a valid
     -- 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     --
     -- #VUID-VkMemoryGetFdInfoKHR-handleType-00671# @handleType@ /must/ have
     -- been included in
@@ -514,7 +523,9 @@ data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
     -- when @memory@ was created
     --
     -- #VUID-VkMemoryGetFdInfoKHR-handleType-00672# @handleType@ /must/ be
-    -- defined as a POSIX file descriptor handle
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'
+    -- or
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT'
     --
     -- #VUID-VkMemoryGetFdInfoKHR-handleType-parameter# @handleType@ /must/ be
     -- a valid

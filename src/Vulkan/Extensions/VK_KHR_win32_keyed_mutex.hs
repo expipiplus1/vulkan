@@ -187,7 +187,8 @@ data Win32KeyedMutexAcquireReleaseInfoKHR = Win32KeyedMutexAcquireReleaseInfoKHR
     -- prior to beginning the submitted work. Entries refer to the keyed mutex
     -- associated with the corresponding entries in @pAcquireSyncs@.
     acquireKeys :: Vector Word64
-  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pAcquireTimeouts"
+  , -- | @pAcquireTimeouts@ is a pointer to an array of timeout values, in
+    -- millisecond units, for each acquire specified in @pAcquireKeys@.
     acquireTimeouts :: Vector Word32
   , -- | @pReleaseSyncs@ is a pointer to an array of
     -- 'Vulkan.Core10.Handles.DeviceMemory' objects which were imported from

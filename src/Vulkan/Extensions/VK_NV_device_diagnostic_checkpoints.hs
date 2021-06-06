@@ -295,7 +295,7 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
 
 
 -- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
--- checkpoint info query
+-- checkpoint information query
 --
 -- = Description
 --
@@ -367,8 +367,9 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getQueueCheckpointDataNV'
 data CheckpointDataNV = CheckpointDataNV
-  { -- | @stage@ indicates which pipeline stage the checkpoint marker data refers
-    -- to.
+  { -- | @stage@ is a
+    -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits' value
+    -- specifying which pipeline stage the checkpoint marker data refers to.
     stage :: PipelineStageFlagBits
   , -- | @pCheckpointMarker@ contains the value of the last checkpoint marker
     -- executed in the stage that @stage@ refers to.

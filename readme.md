@@ -462,7 +462,7 @@ There exists a package to build some example programs in the
 ## Current Status
 
 All the core Vulkan 1.0, 1.1, and 1.2 functionality is here as well as all the
-extensions.
+extensions (except the video ones).
 
 This is currently a 64 bit only library.
 

@@ -15,6 +15,7 @@ import           System.Environment
 import           System.Exit
 import           System.FilePath
 import           System.Process.Typed
+import qualified Data.Text.Lazy as TL
 
 -- | Convert a man page from the Vulkan-Docs repo into docbook format using
 -- 'asciidoctor'
@@ -32,7 +33,8 @@ manTxtToDocbook
   -> IO (Either Text Text)
   -- ^ Either an error if something went wrong, or the docbook xml
 manTxtToDocbook specFlavor extensions vkPath manTxt =
-  fmap fixupDocbookOutput <$> asciidoctor specFlavor extensions vkPath manTxt
+  fmap (T.toStrict . asciidoctor4076 . asciidoctor4075 . fixupDocbookOutput)
+    <$> asciidoctor specFlavor extensions vkPath manTxt
 
 asciidoctor
   :: SpecFlavor
@@ -42,7 +44,7 @@ asciidoctor
   -- ^ The 'Vulkan-Docs' directory, necessary to find plugins
   -> FilePath
   -- ^ The path to the man page to translate
-  -> IO (Either Text Text)
+  -> IO (Either Text TL.Text)
 asciidoctor specFlavor extensions vkPathRelative manTxt = do
   vkPath <- makeAbsolute vkPathRelative
   let
@@ -63,6 +65,8 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
       , "generated=" <> vkPath <> "/gen"
       , "-a"
       , "config=" <> vkPath <> "/config"
+      , "-a"
+      , "appendices=" <> vkPath <> "/appendices"
       , "-a"
       , "refprefix="
       , "-a"
@@ -111,28 +115,47 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
         <> T.concat ((" " <>) . T.pack <$> args)
         <> "\noutput:"
         <> T.toStrict (decodeUtf8 err)
-    ExitSuccess -> pure . Right $ T.toStrict (decodeUtf8 out)
+    ExitSuccess -> do
+      pure
+        . Right
+        . decodeUtf8
+        $ out
 
 -- | Some hacky replaces in the docbook XML to make pandoc cope better
 -- TODO: Write an asciidoctor plugin to do these
-fixupDocbookOutput :: Text -> Text
-fixupDocbookOutput = replaceTag "sidebar" Nothing "section"
-  . replaceTag "strong" (Just "class=\"purple\"") "emphasis"
+-- TODO: remove the xml:id hack
+fixupDocbookOutput :: TL.Text -> TL.Text
+fixupDocbookOutput =
+  replaceTag "sidebar" Nothing "section"
+    . replaceTag "strong" (Just "class=\"purple\"") "emphasis"
+    . TL.replace "<sidebar xml:id=\"resources-image-creation-limits\">"
+                 "<sidebar>"
+
+
+-- | Work around https://github.com/asciidoctor/asciidoctor/issues/4075
+asciidoctor4075 :: TL.Text -> TL.Text
+asciidoctor4075 = TL.replace
+  "base64<"
+  "base64\"></imagedata></imageobject></inlinemediaobject><"
+
+-- | Work around https://github.com/asciidoctor/asciidoctor/issues/4076
+asciidoctor4076 :: TL.Text -> TL.Text
+asciidoctor4076 = TL.replace "</superscript></link>" "</link></superscript>"
 
 replaceTag
-  :: Text
+  :: TL.Text
   -- ^ Tag name
-  -> Maybe Text
+  -> Maybe TL.Text
   -- ^ Optional attribute to search for
-  -> Text
+  -> TL.Text
   -- ^ Replacement
-  -> Text
+  -> TL.Text
   -- ^ Haystack
-  -> Text
+  -> TL.Text
 replaceTag needle maybeAttr replacement =
   let attr = maybe "" (" " <>) maybeAttr
-  in  T.replace ("<" <> needle <> attr <> ">") ("<" <> replacement <> ">")
-        . T.replace ("</" <> needle <> ">") ("</" <> replacement <> ">")
+  in  TL.replace ("<" <> needle <> attr <> ">") ("<" <> replacement <> ">")
+        . TL.replace ("</" <> needle <> ">") ("</" <> replacement <> ">")
 
 main :: IO ()
 main = do

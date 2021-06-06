@@ -296,8 +296,8 @@ displayPowerControlEXT :: forall io
                           Device
                        -> -- | @display@ is the display whose power state is modified.
                           DisplayKHR
-                       -> -- | @pDisplayPowerInfo@ is a 'DisplayPowerInfoEXT' structure specifying the
-                          -- new power state of @display@.
+                       -> -- | @pDisplayPowerInfo@ is a pointer to a 'DisplayPowerInfoEXT' structure
+                          -- specifying the new power state of @display@.
                           DisplayPowerInfoEXT
                        -> io ()
 displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
@@ -523,7 +523,9 @@ getSwapchainCounterEXT :: forall io
                           Device
                        -> -- | @swapchain@ is the swapchain from which to query the counter value.
                           SwapchainKHR
-                       -> -- | @counter@ is the counter to query.
+                       -> -- | @counter@ is a
+                          -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT'
+                          -- value specifying the counter to query.
                           SurfaceCounterFlagBitsEXT
                        -> io (("counterValue" ::: Word64))
 getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do

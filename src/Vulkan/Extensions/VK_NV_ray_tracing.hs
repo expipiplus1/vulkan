@@ -857,10 +857,10 @@ foreign import ccall
 --
 -- = Description
 --
--- Similar to other objects in Vulkan, the acceleration structure creation
--- merely creates an object with a specific “shape” as specified by the
--- information in 'AccelerationStructureInfoNV' and @compactedSize@ in
--- @pCreateInfo@. Populating the data in the object after allocating and
+-- Similarly to other objects in Vulkan, the acceleration structure
+-- creation merely creates an object with a specific “shape” as specified
+-- by the information in 'AccelerationStructureInfoNV' and @compactedSize@
+-- in @pCreateInfo@. Populating the data in the object after allocating and
 -- binding memory is done with 'cmdBuildAccelerationStructureNV' and
 -- 'cmdCopyAccelerationStructureNV'.
 --
@@ -1047,8 +1047,9 @@ getAccelerationStructureMemoryRequirementsNV :: forall a io
                                                 -- #VUID-vkGetAccelerationStructureMemoryRequirementsNV-device-parameter#
                                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                                 Device
-                                             -> -- | @pInfo@ specifies the acceleration structure to get memory requirements
-                                                -- for.
+                                             -> -- | @pInfo@ is a pointer to a
+                                                -- 'AccelerationStructureMemoryRequirementsInfoNV' structure specifying the
+                                                -- acceleration structure to get memory requirements for.
                                                 --
                                                 -- #VUID-vkGetAccelerationStructureMemoryRequirementsNV-pInfo-parameter#
                                                 -- @pInfo@ /must/ be a valid pointer to a valid
@@ -1706,9 +1707,9 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -1827,7 +1828,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
---     bound ray tracing shader pipeline
+--     bound ray tracing pipeline
 --
 -- -   #VUID-vkCmdTraceRaysNV-commandBuffer-04624# @commandBuffer@ /must/
 --     not be a protected command buffer
@@ -2713,13 +2714,15 @@ data RayTracingPipelineCreateInfoNV (es :: [Type]) = RayTracingPipelineCreateInf
     -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
     -- specifying how the pipeline will be generated.
     flags :: PipelineCreateFlags
-  , -- | @pStages@ is an array of size @stageCount@ structures of type
-    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' describing the
-    -- set of the shader stages to be included in the ray tracing pipeline.
+  , -- | @pStages@ is a pointer to an array of
+    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' structures
+    -- specifying the set of the shader stages to be included in the ray
+    -- tracing pipeline.
     stages :: Vector (SomeStruct PipelineShaderStageCreateInfo)
-  , -- | @pGroups@ is an array of size @groupCount@ structures of type
-    -- 'RayTracingShaderGroupCreateInfoNV' describing the set of the shader
-    -- stages to be included in each shader group in the ray tracing pipeline.
+  , -- | @pGroups@ is a pointer to an array of
+    -- 'RayTracingShaderGroupCreateInfoNV' structures describing the set of the
+    -- shader stages to be included in each shader group in the ray tracing
+    -- pipeline.
     groups :: Vector RayTracingShaderGroupCreateInfoNV
   , -- | @maxRecursionDepth@ is the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth maximum recursion depth>
@@ -3592,7 +3595,7 @@ instance Zero BindAccelerationStructureMemoryInfoNV where
 
 
 -- | VkWriteDescriptorSetAccelerationStructureNV - Structure specifying
--- acceleration structure descriptor info
+-- acceleration structure descriptor information
 --
 -- == Valid Usage
 --
@@ -3631,7 +3634,9 @@ instance Zero BindAccelerationStructureMemoryInfoNV where
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetAccelerationStructureNV = WriteDescriptorSetAccelerationStructureNV
-  { -- | @pAccelerationStructures@ are the acceleration structures to update.
+  { -- | @pAccelerationStructures@ is a pointer to an array of
+    -- 'Vulkan.Extensions.Handles.AccelerationStructureNV' structures
+    -- specifying the acceleration structures to update.
     accelerationStructures :: Vector AccelerationStructureNV }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -3751,9 +3756,12 @@ instance Zero AccelerationStructureMemoryRequirementsInfoNV where
 -- = Description
 --
 -- If the 'PhysicalDeviceRayTracingPropertiesNV' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- Limits specified by this structure /must/ match those specified with the
 -- same name in
@@ -3767,7 +3775,7 @@ instance Zero AccelerationStructureMemoryRequirementsInfoNV where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingPropertiesNV = PhysicalDeviceRayTracingPropertiesNV
-  { -- | @shaderGroupHandleSize@ size in bytes of the shader header.
+  { -- | @shaderGroupHandleSize@ is the size in bytes of the shader header.
     shaderGroupHandleSize :: Word32
   , -- | #limits-maxRecursionDepth# @maxRecursionDepth@ is the maximum number of
     -- levels of recursion allowed in a trace command.

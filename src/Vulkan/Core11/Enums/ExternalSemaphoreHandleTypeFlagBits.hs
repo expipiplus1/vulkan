@@ -98,15 +98,15 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT         = ExternalSemaph
 -- share handle that has only limited valid usage outside of Vulkan and
 -- other compatible APIs. It is not compatible with any native APIs. It
 -- does not own a reference to the underlying synchronization primitive
--- represented its Vulkan semaphore object, and will therefore become
+-- represented by its Vulkan semaphore object, and will therefore become
 -- invalid when all Vulkan semaphore objects associated with it are
 -- destroyed.
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     = ExternalSemaphoreHandleTypeFlagBits 0x00000004
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT' specifies an NT handle
 -- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D
--- 12 fence, or @ID3D11Device5@::'Vulkan.Core10.Fence.createFence' by a
--- Direct3D 11 fence. It owns a reference to the underlying synchronization
--- primitive associated with the Direct3D fence.
+-- 12 fence, or @ID3D11Device5@::'Vulkan.Core10.Fence.createFence'
+-- referring to a Direct3D 11 fence. It owns a reference to the underlying
+-- synchronization primitive associated with the Direct3D fence.
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT          = ExternalSemaphoreHandleTypeFlagBits 0x00000008
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT' specifies a POSIX file
 -- descriptor handle to a Linux Sync File or Android Fence object. It can

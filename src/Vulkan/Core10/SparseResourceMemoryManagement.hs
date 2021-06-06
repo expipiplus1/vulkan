@@ -307,14 +307,15 @@ foreign import ccall
 getPhysicalDeviceSparseImageFormatProperties :: forall io
                                               . (MonadIO io)
                                              => -- | @physicalDevice@ is the physical device from which to query the sparse
-                                                -- image capabilities.
+                                                -- image format properties.
                                                 PhysicalDevice
                                              -> -- | @format@ is the image format.
                                                 Format
                                              -> -- | @type@ is the dimensionality of image.
                                                 ImageType
-                                             -> -- | @samples@ is the number of samples per texel as defined in
-                                                -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+                                             -> -- | @samples@ is a
+                                                -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+                                                -- specifying the number of samples per texel.
                                                 ("samples" ::: SampleCountFlagBits)
                                              -> -- | @usage@ is a bitmask describing the intended usage of the image.
                                                 ImageUsageFlags
@@ -393,9 +394,9 @@ foreign import ccall
 --     semaphore
 --
 -- -   #VUID-vkQueueBindSparse-pWaitSemaphores-01117# All elements of the
---     @pWaitSemaphores@ member of all elements of @pBindInfo@ member
---     referring to a binary semaphore /must/ be semaphores that are
---     signaled, or have
+--     @pWaitSemaphores@ member of all elements of the @pBindInfo@
+--     parameter referring to a binary semaphore /must/ be semaphores that
+--     are signaled, or have
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     previously submitted for execution
 --
@@ -650,8 +651,8 @@ instance Zero SparseImageMemoryRequirements where
 -- 'SparseImageMemoryBind', 'Vulkan.Core10.Image.getImageSubresourceLayout'
 data ImageSubresource = ImageSubresource
   { -- | @aspectMask@ is a
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' selecting the
-    -- image /aspect/.
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' value
+    -- selecting the image /aspect/.
     --
     -- #VUID-VkImageSubresource-aspectMask-parameter# @aspectMask@ /must/ be a
     -- valid combination of
@@ -1040,7 +1041,7 @@ data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
     -- #VUID-VkSparseBufferMemoryBindInfo-buffer-parameter# @buffer@ /must/ be
     -- a valid 'Vulkan.Core10.Handles.Buffer' handle
     buffer :: Buffer
-  , -- | @pBinds@ is a pointer to array of 'SparseMemoryBind' structures.
+  , -- | @pBinds@ is a pointer to an array of 'SparseMemoryBind' structures.
     --
     -- #VUID-VkSparseBufferMemoryBindInfo-pBinds-parameter# @pBinds@ /must/ be
     -- a valid pointer to an array of @bindCount@ valid 'SparseMemoryBind'
@@ -1084,7 +1085,7 @@ instance Zero SparseBufferMemoryBindInfo where
 
 
 -- | VkSparseImageOpaqueMemoryBindInfo - Structure specifying sparse image
--- opaque memory bind info
+-- opaque memory bind information
 --
 -- == Valid Usage
 --
@@ -1152,7 +1153,7 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 
 
 -- | VkSparseImageMemoryBindInfo - Structure specifying sparse image memory
--- bind info
+-- bind information
 --
 -- == Valid Usage
 --
@@ -1262,7 +1263,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value greater than the current value of the semaphore
 --     when the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
@@ -1273,7 +1274,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pWaitSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pWaitSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
@@ -1284,7 +1285,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than

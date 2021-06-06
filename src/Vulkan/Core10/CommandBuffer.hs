@@ -75,6 +75,7 @@ import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (CommandBufferInheritanceConditionalRenderingInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (CommandBufferInheritanceRenderPassTransformInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (CommandBufferInheritanceViewportScissorInfoNV)
 import Vulkan.Core10.Enums.CommandBufferLevel (CommandBufferLevel)
 import Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlagBits(..))
 import Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
@@ -131,11 +132,17 @@ foreign import ccall
 --
 -- = Description
 --
--- 'allocateCommandBuffers' /can/ be used to create multiple command
--- buffers. If the creation of any of those command buffers fails, the
--- implementation /must/ destroy all successfully created command buffer
+-- 'allocateCommandBuffers' /can/ be used to allocate multiple command
+-- buffers. If the allocation of any of those command buffers fails, the
+-- implementation /must/ free all successfully allocated command buffer
 -- objects from this command, set all entries of the @pCommandBuffers@
 -- array to @NULL@ and return the error.
+--
+-- Note
+--
+-- Filling @pCommandBuffers@ with @NULL@ values on failure is an exception
+-- to the default error behavior that output parameters will have undefined
+-- contents.
 --
 -- When command buffers are first allocated, they are in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
@@ -324,8 +331,8 @@ foreign import ccall
 --     is a secondary command buffer and either the @occlusionQueryEnable@
 --     member of the @pInheritanceInfo@ member of @pBeginInfo@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', or the precise occlusion
---     queries feature is not enabled, the @queryFlags@ member of the
---     @pInheritanceInfo@ member @pBeginInfo@ /must/ not contain
+--     queries feature is not enabled, then
+--     @pBeginInfo->pInheritanceInfo->queryFlags@ /must/ not contain
 --     'Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
 --
 -- -   #VUID-vkBeginCommandBuffer-commandBuffer-02840# If @commandBuffer@
@@ -371,8 +378,9 @@ beginCommandBuffer :: forall a io
                    => -- | @commandBuffer@ is the handle of the command buffer which is to be put
                       -- in the recording state.
                       CommandBuffer
-                   -> -- | @pBeginInfo@ points to a 'CommandBufferBeginInfo' structure defining
-                      -- additional information about how the command buffer begins recording.
+                   -> -- | @pBeginInfo@ is a pointer to a 'CommandBufferBeginInfo' structure
+                      -- defining additional information about how the command buffer begins
+                      -- recording.
                       (CommandBufferBeginInfo a)
                    -> io ()
 beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
@@ -408,7 +416,9 @@ foreign import ccall
 -- If there was an error during recording, the application will be notified
 -- by an unsuccessful return code returned by 'endCommandBuffer'. If the
 -- application wishes to further use the command buffer, the command buffer
--- /must/ be reset. The command buffer /must/ have been in the
+-- /must/ be reset.
+--
+-- The command buffer /must/ have been in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>,
 -- and is moved to the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>.
@@ -638,7 +648,7 @@ instance Zero CommandBufferAllocateInfo where
 
 
 -- | VkCommandBufferInheritanceInfo - Structure specifying command buffer
--- inheritance info
+-- inheritance information
 --
 -- == Valid Usage
 --
@@ -679,9 +689,10 @@ instance Zero CommandBufferAllocateInfo where
 -- -   #VUID-VkCommandBufferInheritanceInfo-pNext-pNext# Each @pNext@
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
+--     'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
 --     or
---     'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM'
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-sType-unique# The @sType@ value
 --     of each struct in the @pNext@ chain /must/ be unique
@@ -768,6 +779,7 @@ instance Extensible CommandBufferInheritanceInfo where
   getNext CommandBufferInheritanceInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferInheritanceInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @CommandBufferInheritanceViewportScissorInfoNV = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceRenderPassTransformInfoQCOM = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceConditionalRenderingInfoEXT = Just f
     | otherwise = Nothing

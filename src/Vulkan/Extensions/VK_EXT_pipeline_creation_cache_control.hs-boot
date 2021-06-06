@@ -102,7 +102,7 @@
 -- The job or task based game engines that are being developed to take
 -- advantage of explicit graphics APIs like Vulkan may behave exceptionally
 -- poorly if any of the above scenarios occur. However, most game engines
--- are already built to \"stream\" in assets dynamically as the user plays
+-- are already built to “stream” in assets dynamically as the user plays
 -- the game. By adding control by way of
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlags', we can
 -- require an ICD to report back a failure in critical execution paths

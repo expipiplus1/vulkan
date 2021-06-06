@@ -342,8 +342,8 @@
 --
 -- -   Revision 4, 2017-10-10 (Jeff Bolz)
 --
---     -   Rename \"SFR\" bits and structure members to use the phrase
---         \"split instance bind regions\".
+--     -   Rename “SFR” bits and structure members to use the phrase “split
+--         instance bind regions”.
 --
 -- = See Also
 --

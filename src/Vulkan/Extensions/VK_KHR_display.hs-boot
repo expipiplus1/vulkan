@@ -126,9 +126,9 @@
 --
 -- == Issues
 --
--- 1) Which properties of a mode should be fixed in the mode info vs.
--- settable in some other function when setting the mode? E.g., do we need
--- to double the size of the mode pool to include both stereo and
+-- 1) Which properties of a mode should be fixed in the mode information
+-- vs. settable in some other function when setting the mode? E.g., do we
+-- need to double the size of the mode pool to include both stereo and
 -- non-stereo modes? YUV and RGB scanout even if they both take RGB input
 -- images? BGR vs. RGB input? etc.
 --
@@ -181,9 +181,9 @@
 -- monitor side or in the GPU display engine, making “modes” something of a
 -- relic\/compatibility construct).
 --
--- __PROPOSED RESOLUTION__: Expose both. Display info structures will
--- expose a set of predefined modes, as well as any attributes necessary to
--- construct a customized mode.
+-- __PROPOSED RESOLUTION__: Expose both. Display information structures
+-- will expose a set of predefined modes, as well as any attributes
+-- necessary to construct a customized mode.
 --
 -- 6) Is it fine if we return the display and display mode handles in the
 -- structure used to query their properties?
@@ -204,12 +204,11 @@
 -- __PROPOSED RESOLUTION__: Require specifying a plane explicitly.
 --
 -- 9) Should displays have an associated window system display, such as an
--- @HDC@ or 'Vulkan.Extensions.VK_KHR_xlib_surface.Display'*?
+-- @HDC@ or @Display*@?
 --
 -- __PROPOSED RESOLUTION__: No. Displays are independent of any windowing
--- system in use on the system. Further, neither @HDC@ nor
--- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display'* refer to a physical
--- display object.
+-- system in use on the system. Further, neither @HDC@ nor @Display*@ refer
+-- to a physical display object.
 --
 -- 10) Are displays queried from a physical GPU or from a device instance?
 --
@@ -312,7 +311,7 @@
 --
 --     -   Added functions to query count of display, mode and overlay.
 --
---     -   Added native display handle, which is maybe needed on some
+--     -   Added native display handle, which may be needed on some
 --         platforms to create a native Window.
 --
 -- -   Revision 4, 2015-03-18 (Norbert Nopper)
@@ -320,7 +319,7 @@
 --     -   Removed primary and virtualPostion members (see comment of James
 --         Jones in Bugzilla).
 --
---     -   Added native overlay handle to info structure.
+--     -   Added native overlay handle to information structure.
 --
 --     -   Replaced , with ; in struct.
 --
@@ -328,7 +327,7 @@
 --
 --     -   Added WSI extension suffix to all items.
 --
---     -   Made the whole API more \"Vulkanish\".
+--     -   Made the whole API more “Vulkanish”.
 --
 --     -   Replaced all functions with a single vkGetDisplayInfoKHR
 --         function to better match the rest of the API.
@@ -340,8 +339,8 @@
 --     -   Renamed *Info structures to *Properties.
 --
 --     -   Removed overlayIndex field from VkOverlayProperties as there is
---         an implicit index already as a result of moving to a
---         \"Vulkanish\" API.
+--         an implicit index already as a result of moving to a “Vulkanish”
+--         API.
 --
 --     -   Displays are not get through device, but through physical GPU to
 --         match the rest of the Vulkan API. Also this is something ISVs
@@ -392,14 +391,14 @@
 --         swapchain specifications and the latest Vulkan API.
 --
 --     -   Address overlay planes by their index rather than an object
---         handle and refer to them as \"planes\" rather than \"overlays\"
---         to make it slightly clearer that even a display with no
---         \"overlays\" still has at least one base \"plane\" that images
---         can be displayed on.
+--         handle and refer to them as “planes” rather than “overlays” to
+--         make it slightly clearer that even a display with no “overlays”
+--         still has at least one base “plane” that images can be displayed
+--         on.
 --
 --     -   Updated most of the issues.
 --
---     -   Added an \"extension type\" section to the specification header.
+--     -   Added an “extension type” section to the specification header.
 --
 --     -   Re-used the VK_EXT_KHR_surface surface transform enumerations
 --         rather than redefining them here.
@@ -412,7 +411,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 -- -   Revision 14, 2015-09-01 (James Jones)
@@ -443,7 +442,7 @@
 --
 --     -   Removed detailed mode timing data. It was agreed that the mode
 --         extents and refresh rate are sufficient for current use cases.
---         Other information could be added back2 in as an extension if it
+--         Other information could be added back in as an extension if it
 --         is needed in the future.
 --
 --     -   Added support for smart\/persistent\/buffered display devices.
@@ -477,7 +476,7 @@
 --
 -- -   Revision 22, 2015-12-18 (James Jones)
 --
---     -   Added missing \"planeIndex\" parameter to
+--     -   Added missing “planeIndex” parameter to
 --         vkGetDisplayPlaneSupportedDisplaysKHR()
 --
 -- -   Revision 23, 2017-03-13 (James Jones)

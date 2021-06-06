@@ -401,12 +401,14 @@ data ImportFenceWin32HandleInfoKHR = ImportFenceWin32HandleInfoKHR
     -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits' specifying
     -- additional parameters for the fence payload import operation.
     flags :: FenceImportFlags
-  , -- | @handleType@ specifies the type of @handle@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of @handle@.
     handleType :: ExternalFenceHandleTypeFlagBits
-  , -- | @handle@ is the external handle to import, or @NULL@.
+  , -- | @handle@ is @NULL@ or the external handle to import.
     handle :: HANDLE
-  , -- | @name@ is a null-terminated UTF-16 string naming the underlying
-    -- synchronization primitive to import, or @NULL@.
+  , -- | @name@ is @NULL@ or a null-terminated UTF-16 string naming the
+    -- underlying synchronization primitive to import.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
@@ -635,7 +637,9 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 data FenceGetWin32HandleInfoKHR = FenceGetWin32HandleInfoKHR
   { -- | @fence@ is the fence from which state will be exported.
     fence :: Fence
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalFenceHandleTypeFlagBits
   }
   deriving (Typeable, Eq)

@@ -35,7 +35,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
--- The semantics of each enum value is described in the table below:
+-- The semantics of the enum values are described in the table below:
 --
 -- +-----------------------------------------+---------------------+--------+
 -- | 'BlendFactor'                           | RGB Blend Factors   | Alpha  |

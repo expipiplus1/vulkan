@@ -207,7 +207,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetZirconHandleInfoFUCHSIA'
 getMemoryZirconHandleFUCHSIA :: forall io
                               . (MonadIO io)
-                             => -- | @device@ is the VkDevice.
+                             => -- | @device@ is the 'Vulkan.Core10.Handles.Device'.
                                 --
                                 -- #VUID-vkGetMemoryZirconHandleFUCHSIA-device-parameter# @device@ /must/
                                 -- be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -260,12 +260,14 @@ foreign import ccall
 -- 'MemoryZirconHandlePropertiesFUCHSIA'
 getMemoryZirconHandlePropertiesFUCHSIA :: forall io
                                         . (MonadIO io)
-                                       => -- | @device@ is the VkDevice.
+                                       => -- | @device@ is the 'Vulkan.Core10.Handles.Device'.
                                           --
                                           -- #VUID-vkGetMemoryZirconHandlePropertiesFUCHSIA-device-parameter#
                                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                           Device
-                                       -> -- | @handleType@ is the type of @zirconHandle@
+                                       -> -- | @handleType@ is a
+                                          -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+                                          -- value specifying the type of @zirconHandle@
                                           --
                                           -- #VUID-vkGetMemoryZirconHandlePropertiesFUCHSIA-handleType-04773#
                                           -- @handleType@ /must/ be
@@ -323,7 +325,9 @@ getMemoryZirconHandlePropertiesFUCHSIA device handleType zirconHandle = liftIO .
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryZirconHandleInfoFUCHSIA = ImportMemoryZirconHandleInfoFUCHSIA
-  { -- | @handleType@ is the type of @handle@.
+  { -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of @handle@.
     handleType :: ExternalMemoryHandleTypeFlagBits
   , -- | @handle@ is a @zx_handle_t@ (Zircon) handle to the external memory.
     handle :: Zx_handle_t
@@ -436,8 +440,10 @@ data MemoryGetZirconHandleInfoFUCHSIA = MemoryGetZirconHandleInfoFUCHSIA
     -- #VUID-VkMemoryGetZirconHandleInfoFUCHSIA-memory-parameter# @memory@
     -- /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory
-  , -- | @handleType@ is the type of the handle pointed to by @pZirconHandle@ as
-    -- retrieved by the call to 'getMemoryZirconHandleFUCHSIA'.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of the handle pointed to by
+    -- 'getMemoryZirconHandleFUCHSIA'::@pZirconHandle@.
     --
     -- #VUID-VkMemoryGetZirconHandleInfoFUCHSIA-handleType-04775# @handleType@
     -- /must/ be

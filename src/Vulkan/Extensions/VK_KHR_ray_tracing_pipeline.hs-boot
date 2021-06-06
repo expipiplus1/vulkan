@@ -602,14 +602,15 @@
 -- with gl_InstanceIndex. Which should be used for Vulkan in this
 -- extension?
 --
--- RESOLVED: This extension uses gl_InstanceID and maps it to @InstanceId@
--- in SPIR-V. It is acknowledged that this is different than other shader
--- stages in Vulkan. There are two main reasons for the difference here:
+-- __RESOLVED__: This extension uses gl_InstanceID and maps it to
+-- @InstanceId@ in SPIR-V. It is acknowledged that this is different than
+-- other shader stages in Vulkan. There are two main reasons for the
+-- difference here:
 --
 -- -   symmetry with gl_PrimitiveID which is also available in these
 --     shaders
 --
--- -   there is no \"baseInstance\" relevant for these shaders, and so ID
+-- -   there is no “baseInstance” relevant for these shaders, and so ID
 --     makes it more obvious that this is zero-based.
 --
 -- == Sample Code

@@ -142,7 +142,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
 --
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
+--     -   'ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
@@ -152,17 +152,17 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
 --
---     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
+--     -   'IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -201,8 +201,7 @@
 -- perform such a query, it could instead just set its own order, also
 -- using custom per-pixel sample locations if required.
 --
--- (2) For the pipeline stage
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
+-- (2) For the pipeline stage 'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
 -- should we specify a precise location in the pipeline the shading rate
 -- image is accessed (after geometry shading, but before the early fragment
 -- tests) or leave it under-specified in case there are other
@@ -277,6 +276,10 @@
 module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
                                                    , cmdSetViewportShadingRatePaletteNV
                                                    , cmdSetCoarseSampleOrderNV
+                                                   , pattern IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV
+                                                   , pattern ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV
+                                                   , pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV
+                                                   , pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV
                                                    , ShadingRatePaletteNV(..)
                                                    , PipelineViewportShadingRateImageStateCreateInfoNV(..)
                                                    , PhysicalDeviceShadingRateImageFeaturesNV(..)
@@ -368,6 +371,13 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
 import Vulkan.Core10.Handles (ImageView)
 import Vulkan.Core10.Handles (ImageView(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
+import Vulkan.Core10.Enums.AccessFlagBits (AccessFlagBits(ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR))
+import Vulkan.Core10.Enums.ImageLayout (ImageLayout(IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR))
+import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
+import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
+import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
+import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV))
@@ -401,7 +411,7 @@ foreign import ccall
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02061# If @imageView@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
 --     created with a @usage@ value including
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02062# If @imageView@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@ /must/
@@ -411,9 +421,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageLayout-02063# If @imageView@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
---     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
+--     /must/ be 'IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -682,6 +691,22 @@ cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = lif
   pure $ ()
 
 
+-- No documentation found for TopLevel "VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV"
+pattern IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV = IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV"
+pattern ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV = ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
+pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
+pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV = PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+
+
 -- | VkShadingRatePaletteNV - Structure specifying a single shading rate
 -- palette
 --
@@ -822,8 +847,7 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShadingRateImageFeaturesNV' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
@@ -832,12 +856,14 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 -- for more information.
 --
 -- If the 'PhysicalDeviceShadingRateImageFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceShadingRateImageFeaturesNV' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShadingRateImageFeaturesNV' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -901,20 +927,19 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 -- | VkPhysicalDeviceShadingRateImagePropertiesNV - Structure describing
 -- shading rate image limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceShadingRateImagePropertiesNV'
--- structure describe the following implementation-dependent properties
--- related to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
--- feature:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceShadingRateImagePropertiesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These properties are related to the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
+-- feature.
 --
 -- == Valid Usage (Implicit)
 --

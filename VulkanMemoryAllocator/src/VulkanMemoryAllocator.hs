@@ -1358,7 +1358,7 @@ foreign import ccall
 -- Maps memory represented by given allocation to make it accessible to CPU
 -- code. When succeeded, @*ppData@ contains pointer to first byte of this
 -- memory. If the allocation is part of bigger @VkDeviceMemory@ block, the
--- pointer is correctly offseted to the beginning of region assigned to
+-- pointer is correctly offsetted to the beginning of region assigned to
 -- this particular allocation.
 --
 -- Mapping is internally reference-counted and synchronized, so despite raw
@@ -2061,7 +2061,7 @@ foreign import ccall
 --
 -- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
--- |                       | to the beginnig of the @allocation@. Normally it       |
+-- |                       | to the beginning of the @allocation@. Normally it      |
 -- |                       | should be 0.                                           |
 -- +-----------------------+--------------------------------------------------------+
 -- | pNext                 | A chain of structures to be attached to                |
@@ -2141,7 +2141,7 @@ foreign import ccall
 --
 -- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
--- |                       | to the beginnig of the @allocation@. Normally it       |
+-- |                       | to the beginning of the @allocation@. Normally it      |
 -- |                       | should be 0.                                           |
 -- +-----------------------+--------------------------------------------------------+
 -- | pNext                 | A chain of structures to be attached to                |
@@ -2574,7 +2574,7 @@ pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT    = AllocatorCreateFlagBit
 -- @== VK_API_VERSION_1_0@. When it\'s @VK_API_VERSION_1_1@, the flag is
 -- ignored because the extension has been promoted to Vulkan 1.1.
 --
--- Using this extenion will automatically allocate dedicated blocks of
+-- Using this extension will automatically allocate dedicated blocks of
 -- memory for some buffers and images instead of suballocating place for
 -- them out of bigger memory blocks (as if you explicitly used
 -- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' flag) when it is recommended by

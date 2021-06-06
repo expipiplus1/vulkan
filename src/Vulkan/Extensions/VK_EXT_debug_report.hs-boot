@@ -15,7 +15,7 @@
 --     12
 --
 -- [__Revision__]
---     9
+--     10
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -247,7 +247,7 @@
 -- 4) How do you compare handles returned by the debug_report callback to
 -- the application’s handles?
 --
--- RESOLVED: Due to the different nature of dispatchable and
+-- __RESOLVED__: Due to the different nature of dispatchable and
 -- nondispatchable handles there is no generic way (that we know of) that
 -- works for common compilers with 32bit, 64bit, C and C++. We recommend
 -- applications use the same cast that the validation layers use:

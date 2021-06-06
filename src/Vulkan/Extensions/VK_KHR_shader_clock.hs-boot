@@ -61,9 +61,9 @@
 -- 'Vulkan.Core10.Handles.Device'.
 --
 -- When using GLSL source-based shading languages, the
--- @clockRealtime@*@EXT@() timing functions map to the @OpReadClockKHR@
+-- @clockRealtime*EXT@() timing functions map to the @OpReadClockKHR@
 -- instruction with a scope of 'Vulkan.Core10.Handles.Device', and the
--- @clock@*@ARB@() timing functions map to the @OpReadClockKHR@ instruction
+-- @clock*ARB@() timing functions map to the @OpReadClockKHR@ instruction
 -- with a scope of @Subgroup@.
 --
 -- == New Structures

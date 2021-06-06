@@ -215,6 +215,10 @@ foreign import ccall
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @image@ was created, @pAllocator@ /must/ be @NULL@
 --
+-- -   #VUID-vkDestroyImage-image-04882# @image@ /must/ not have been
+--     acquired from
+--     'Vulkan.Extensions.VK_KHR_swapchain.getSwapchainImagesKHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkDestroyImage-device-parameter# @device@ /must/ be a valid
@@ -498,6 +502,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>
 -- for more detail).
 --
+-- == Image Creation Limits
+--
 -- Valid values for some image creation parameters are limited by a
 -- numerical upper bound or by inclusion in a bitset. For example,
 -- 'ImageCreateInfo'::@arrayLayers@ is limited by
@@ -562,7 +568,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --         the @pNext@ chain includes no
 --         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --         structure with non-zero @externalFormat@, then
---         @imageCreateFormatFeatures@ is value of
+--         @imageCreateFormatFeatures@ is the value of
 --         'Vulkan.Core10.DeviceInitialization.FormatProperties'::@optimalTilingFeatures@
 --         found by calling
 --         'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
@@ -689,12 +695,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 --         -   'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@maxArrayLayers@
 --             is
---             'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::maxImageArrayLayers.
+--             'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxImageArrayLayers@.
 --
 --         -   Each component of
 --             'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@maxExtent@
 --             is
---             'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::maxImageDimension2D.
+--             'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxImageDimension2D@.
 --
 --         -   'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
 --             contains exactly
@@ -722,12 +728,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     in @imageCreateImageFormatPropertiesList@. The value is undefined if
 --     @imageCreateImageFormatPropertiesList@ is empty.
 --
--- = Valid Usage
+-- == Valid Usage
 --
 -- -   #VUID-VkImageCreateInfo-imageCreateMaxMipLevels-02251# Each of the
 --     following values (as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
---     /must/ not be undefined @imageCreateMaxMipLevels@,
+--     /must/ not be undefined : @imageCreateMaxMipLevels@,
 --     @imageCreateMaxArrayLayers@, @imageCreateMaxExtent@, and
 --     @imageCreateSampleCounts@
 --
@@ -1257,16 +1263,16 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     greater than @1@
 --
 -- -   #VUID-VkImageCreateInfo-imageType-02082# If @usage@ includes
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
 -- -   #VUID-VkImageCreateInfo-samples-02083# If @usage@ includes
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-tiling-02084# If @usage@ includes
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
 --     @tiling@ /must/ be
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
 --
@@ -1306,20 +1312,20 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure was included in the @pNext@ chain and
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
---     is not zero then all of the formats in
+--     is not zero, then all of the formats in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
 --     /must/ be compatible with the @format@ as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
 --
 -- -   #VUID-VkImageCreateInfo-flags-04738# If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
---     and the @pNext@ chain include a
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---     structure then
+--     structure, then
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     /must/ be @0@ or @1@
 --
--- = Valid Usage (Implicit)
+-- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_CREATE_INFO'
@@ -1335,7 +1341,10 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo',
---     or 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>,
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfilesKHR VkVideoProfilesKHR>
 --
 -- -   #VUID-VkImageCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -1371,7 +1380,6 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     /must/ be a valid 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 --     value
 --
--- \<\/section>
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
@@ -1407,8 +1415,8 @@ data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
   , -- | @arrayLayers@ is the number of layers in the image.
     arrayLayers :: Word32
   , -- | @samples@ is a
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' specifying
-    -- the number of
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+    -- specifying the number of
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling samples per texel>.
     samples :: SampleCountFlagBits
   , -- | @tiling@ is a 'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
@@ -1422,9 +1430,9 @@ data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
     -- specifying the sharing mode of the image when it will be accessed by
     -- multiple queue families.
     sharingMode :: SharingMode
-  , -- | @pQueueFamilyIndices@ is a list of queue families that will access this
-    -- image (ignored if @sharingMode@ is not
-    -- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT').
+  , -- | @pQueueFamilyIndices@ is a pointer to an array of queue families that
+    -- will access this image. It is ignored if @sharingMode@ is not
+    -- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
     queueFamilyIndices :: Vector Word32
   , -- | @initialLayout@ is a 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     -- specifying the initial 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of

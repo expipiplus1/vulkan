@@ -56,7 +56,7 @@ headerVersionComplete lastFeatureVersion (VkVersion headerVersion) =
     tellExplicitModule =<< mkModuleName ["Version"]
     let pat               = mkPatternName "VK_HEADER_VERSION_COMPLETE"
         major : minor : _ = versionBranch lastFeatureVersion
-        makeVersion       = mkPatternName "VK_MAKE_VERSION"
+        makeVersion       = mkPatternName "VK_MAKE_API_VERSION"
     tellExport (EPat pat)
     tellImport ''Word32
     tellDoc [qqi|
@@ -71,7 +71,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
   let major : minor : _ = versionBranch fVersion
       pat               = mkPatternName
         (CName $ "VK_API_VERSION_" <> show major <> "_" <> show minor)
-      make = mkPatternName "VK_MAKE_VERSION"
+      make = mkPatternName "VK_MAKE_API_VERSION"
   tellExport (EPat pat)
   tellImport ''Word32
   tellImport make
@@ -90,27 +90,54 @@ versionConstruction = genRe "version construction" $ do
   tellImport '(.|.)
   tellImport 'shiftL
   tellImport 'shiftR
-  tellExport (EPat (mkPatternName "VK_MAKE_VERSION"))
   let patMajor = TermName ("_" <> unName (mkPatternName "VK_VERSION_MAJOR"))
       patMinor = TermName ("_" <> unName (mkPatternName "VK_VERSION_MINOR"))
       patPatch = TermName ("_" <> unName (mkPatternName "VK_VERSION_PATCH"))
+      patApiMajor = TermName ("_" <> unName (mkPatternName "VK_API_VERSION_MAJOR"))
+      patApiMinor = TermName ("_" <> unName (mkPatternName "VK_API_VERSION_MINOR"))
+      patApiPatch = TermName ("_" <> unName (mkPatternName "VK_API_VERSION_PATCH"))
+      makeApiVersion = mkPatternName "VK_MAKE_API_VERSION"
+      makeVersion = mkPatternName "VK_MAKE_VERSION"
+  tellExport (EPat makeApiVersion)
+  tellExport (EPat makeVersion)
   tellExport (ETerm patMajor)
   tellExport (ETerm patMinor)
   tellExport (ETerm patPatch)
+  tellExport (ETerm patApiMajor)
+  tellExport (ETerm patApiMinor)
+  tellExport (ETerm patApiPatch)
   tellDoc [qqi|
-    pattern {mkPatternName "VK_MAKE_VERSION"} :: Word32 -> Word32 -> Word32 -> Word32
-    pattern {mkPatternName "VK_MAKE_VERSION"} major minor patch <-
+    pattern {makeApiVersion} :: Word32 -> Word32 -> Word32 -> Word32
+    pattern {makeApiVersion} major minor patch <-
       (\\v -> ({patMajor} v, {patMinor} v, {patPatch} v) -> (major, minor, patch))
-      where {mkPatternName "VK_MAKE_VERSION"} major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
+      where {makeApiVersion} major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
 
-    \{-# complete {mkPatternName "VK_MAKE_VERSION"} #-}
+    \{-# complete {makeApiVersion} #-}
 
+    \{-# deprecated {makeVersion} "This pattern is deprecated. {makeApiVersion} should be used instead." #-}
+    pattern {makeVersion} :: Word32 -> Word32 -> Word32 -> Word32
+    pattern {makeVersion} major minor patch = {makeApiVersion} major minor patch
+
+    \{-# complete {makeVersion} #-}
+
+    \{-# deprecated {patMajor} "This function is deprecated. {patApiMajor} should be used instead." #-}
     {patMajor} :: Word32 -> Word32
-    {patMajor} v = v `shiftR` 22
+    {patMajor} = {patApiMajor}
 
+    \{-# deprecated {patMinor} "This function is deprecated. {patApiMinor} should be used instead." #-}
     {patMinor} :: Word32 -> Word32
-    {patMinor} v = v `shiftR` 12 .&. 0x3ff
+    {patMinor} = {patApiMinor}
 
+    \{-# deprecated {patPatch} "This function is deprecated. {patApiPatch} should be used instead." #-}
     {patPatch} :: Word32 -> Word32
-    {patPatch} v = v .&. 0xfff
+    {patPatch} = {patApiPatch}
+
+    {patApiMajor} :: Word32 -> Word32
+    {patApiMajor} v = v `shiftR` 22
+
+    {patApiMinor} :: Word32 -> Word32
+    {patApiMinor} v = v `shiftR` 12 .&. 0x3ff
+
+    {patApiPatch} :: Word32 -> Word32
+    {patApiPatch} v = v .&. 0xfff
   |]

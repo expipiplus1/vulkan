@@ -87,6 +87,17 @@ The docbook documentation will be in `docs/docbook`.
 
 - Elide union tag
 
+## Video:
+
+- Parse header files (this is already done for VMA, so the code is more or less
+  written)
+- Integrate these definitions in `parseSpec`
+
+The complication is that lots of the structs there use bitfields, so proper
+support for them needs to be done...
+
+At the moment the extensions are disabled in Bespoke.hs
+
 ## To check
 
 During development unfinished bits not to forget are listed here.

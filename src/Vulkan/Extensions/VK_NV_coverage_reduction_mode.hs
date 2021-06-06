@@ -231,9 +231,9 @@ foreign import ccall
 -- return the variable is overwritten with the number of values actually
 -- written to @pCombinations@. If the value of @pCombinationCount@ is less
 -- than the number of combinations supported for the given
--- @physicalDevice@, at most @pCombinationCount@ values will be written
--- @pCombinations@ and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate
+-- @physicalDevice@, at most @pCombinationCount@ values will be written to
+-- @pCombinations@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
 -- that not all the supported values were returned.
 --
 -- == Valid Usage (Implicit)
@@ -300,18 +300,19 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCoverageReductionModeFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceCoverageReductionModeFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceCoverageReductionModeFeaturesNV' /can/ also be included
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCoverageReductionModeFeaturesNV' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -464,8 +465,9 @@ data FramebufferMixedSamplesCombinationNV = FramebufferMixedSamplesCombinationNV
   { -- | @coverageReductionMode@ is a 'CoverageReductionModeNV' value specifying
     -- the coverage reduction mode.
     coverageReductionMode :: CoverageReductionModeNV
-  , -- | @rasterizationSamples@ specifies the number of rasterization samples in
-    -- the supported combination.
+  , -- | @rasterizationSamples@ is a
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' specifying
+    -- the number of rasterization samples in the supported combination.
     rasterizationSamples :: SampleCountFlagBits
   , -- | @depthStencilSamples@ specifies the number of samples in the depth
     -- stencil attachment in the supported combination. A value of 0 indicates

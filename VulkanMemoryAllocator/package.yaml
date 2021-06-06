@@ -1,5 +1,5 @@
 name: VulkanMemoryAllocator
-version: "0.5"
+version: "0.5.1"
 synopsis: Bindings to the VulkanMemoryAllocator library
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -8,12 +8,12 @@ extra-source-files:
   - readme.md
   - changelog.md
   - package.yaml
-  - VulkanMemoryAllocator/src/vk_mem_alloc.h
+  - VulkanMemoryAllocator/include/vk_mem_alloc.h
 
 library:
   source-dirs: src
   include-dirs:
-    VulkanMemoryAllocator/src
+    VulkanMemoryAllocator/include
   extra-libraries:
     stdc++
   cxx-sources:

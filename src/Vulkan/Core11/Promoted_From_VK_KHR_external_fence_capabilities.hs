@@ -126,7 +126,7 @@ getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = lift
 data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
   { -- | @handleType@ is a
     -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
-    -- value indicating an external fence handle type for which capabilities
+    -- value specifying an external fence handle type for which capabilities
     -- will be returned.
     --
     -- #VUID-VkPhysicalDeviceExternalFenceInfo-handleType-parameter#

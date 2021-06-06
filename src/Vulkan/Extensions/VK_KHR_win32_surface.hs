@@ -167,9 +167,9 @@
 --     object’s pixel format can be set only one time.
 --
 -- -   Creating a 'Vulkan.Extensions.Handles.SwapchainKHR' over a window
---     object can alter the object for the remaining life of its lifetime.
---     Either of the above alterations may occur as a side-effect of
---     'Vulkan.Extensions.Handles.SwapchainKHR'.
+--     object can alter the object for its remaining lifetime. Either of
+--     the above alterations may occur as a side effect of
+--     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- == Version History
 --

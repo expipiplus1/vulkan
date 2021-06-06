@@ -207,9 +207,10 @@ instance Zero MemoryBarrier where
 --     with a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
---     queue family values reserved for external memory transfers, the
---     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
+--     special queue family values reserved for external memory transfers,
+--     the other /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- -   #VUID-VkBufferMemoryBarrier-buffer-04089# If @buffer@ was created
 --     with a sharing mode of
@@ -603,9 +604,9 @@ instance Zero BufferMemoryBarrier where
 --     or @oldLayout@ and @newLayout@ define an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
 --     and @oldLayout@ or @newLayout@ is
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
 --     then @image@ /must/ have been created with
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     set
 --
 -- -   #VUID-VkImageMemoryBarrier-image-01671# If @image@ has a
@@ -655,9 +656,10 @@ instance Zero BufferMemoryBarrier where
 --     a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
---     queue family values reserved for external memory transfers, the
---     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
+--     special queue family values reserved for external memory transfers,
+--     the other /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- -   #VUID-VkImageMemoryBarrier-image-04072# If @image@ was created with
 --     a sharing mode of
@@ -813,7 +815,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier es) where
            zero
 
 
--- | VkDrawIndirectCommand - Structure specifying a draw indirect command
+-- | VkDrawIndirectCommand - Structure specifying a indirect drawing command
 --
 -- = Description
 --
@@ -891,8 +893,8 @@ instance Zero DrawIndirectCommand where
            zero
 
 
--- | VkDrawIndexedIndirectCommand - Structure specifying a draw indexed
--- indirect command
+-- | VkDrawIndexedIndirectCommand - Structure specifying a indexed indirect
+-- drawing command
 --
 -- = Description
 --
@@ -985,7 +987,7 @@ instance Zero DrawIndexedIndirectCommand where
            zero
 
 
--- | VkDispatchIndirectCommand - Structure specifying a dispatch indirect
+-- | VkDispatchIndirectCommand - Structure specifying a indirect dispatching
 -- command
 --
 -- = Description

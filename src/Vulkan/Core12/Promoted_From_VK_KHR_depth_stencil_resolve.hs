@@ -48,10 +48,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- depth\/stencil resolve properties that can be supported by an
 -- implementation
 --
--- = Members
+-- = Description
 --
--- The members of the 'PhysicalDeviceDepthStencilResolveProperties'
--- structure describe the following implementation-dependent limits:
+-- If the 'PhysicalDeviceDepthStencilResolveProperties' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -256,17 +261,18 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SubpassDescriptionDepthStencilResolve = SubpassDescriptionDepthStencilResolve
-  { -- | @depthResolveMode@ is a bitmask of
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' describing
-    -- the depth resolve mode.
+  { -- | @depthResolveMode@ is a
+    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
+    -- describing the depth resolve mode.
     depthResolveMode :: ResolveModeFlagBits
-  , -- | @stencilResolveMode@ is a bitmask of
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' describing
-    -- the stencil resolve mode.
+  , -- | @stencilResolveMode@ is a
+    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
+    -- describing the stencil resolve mode.
     stencilResolveMode :: ResolveModeFlagBits
-  , -- | @pDepthStencilResolveAttachment@ is an optional
-    -- 'Vulkan.Core10.Pass.AttachmentReference' structure defining the
-    -- depth\/stencil resolve attachment for this subpass and its layout.
+  , -- | @pDepthStencilResolveAttachment@ is @NULL@ or a pointer to a
+    -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2'
+    -- structure defining the depth\/stencil resolve attachment for this
+    -- subpass and its layout.
     depthStencilResolveAttachment :: Maybe (SomeStruct AttachmentReference2)
   }
   deriving (Typeable)

@@ -84,13 +84,13 @@
 --
 -- 2) 'ViSurfaceCreateInfoNN'::@pWindow@ is intended to store an
 -- @nn@::@vi@::@NativeWindowHandle@, but its declared type is a bare
--- @void@* to store the window handle. Why the discrepancy?
+-- @void*@ to store the window handle. Why the discrepancy?
 --
 -- __RESOLVED__: It is for C compatibility. The definition for the VI
 -- native window handle type is defined inside the @nn@::@vi@ C++
 -- namespace. This prevents its use in C source files.
--- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void@*, so
--- this extension uses @void@* to match.
+-- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void*@, so
+-- this extension uses @void*@ to match.
 --
 -- == Version History
 --

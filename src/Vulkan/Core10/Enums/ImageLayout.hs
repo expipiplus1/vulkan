@@ -11,8 +11,8 @@ module Vulkan.Core10.Enums.ImageLayout  (ImageLayout( IMAGE_LAYOUT_UNDEFINED
                                                     , IMAGE_LAYOUT_PREINITIALIZED
                                                     , IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR
                                                     , IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR
+                                                    , IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR
                                                     , IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
-                                                    , IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV
                                                     , IMAGE_LAYOUT_SHARED_PRESENT_KHR
                                                     , IMAGE_LAYOUT_PRESENT_SRC_KHR
                                                     , IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL
@@ -118,7 +118,7 @@ pattern IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL  = ImageLayout 4
 -- subresources of images created with the
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' or
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
--- usage bit enabled.
+-- usage bits enabled.
 pattern IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL         = ImageLayout 5
 -- | 'IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL' /must/ only be used as a source
 -- image of a transfer command (see the definition of
@@ -154,6 +154,16 @@ pattern IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR           = ImageLayout 1000314001
 -- only access as an attachment, or in shaders as a sampled image, combined
 -- image\/sampler, or input attachment.
 pattern IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR            = ImageLayout 1000314000
+-- | 'IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR' /must/ only
+-- be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>.
+-- This layout is valid only for image subresources of images created with
+-- the
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+-- usage bit enabled.
+pattern IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR = ImageLayout 1000164003
 -- | 'IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT' /must/ only be used as a
 -- fragment density map attachment in a 'Vulkan.Core10.Handles.RenderPass'.
 -- This layout is valid only for image subresources of images created with
@@ -161,8 +171,6 @@ pattern IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR            = ImageLayout 1000314000
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
 -- usage bit enabled.
 pattern IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT = ImageLayout 1000218000
--- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV"
-pattern IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV          = ImageLayout 1000164003
 -- | 'IMAGE_LAYOUT_SHARED_PRESENT_KHR' is valid only for shared presentable
 -- images, and /must/ be used for any usage the image supports.
 pattern IMAGE_LAYOUT_SHARED_PRESENT_KHR               = ImageLayout 1000111000
@@ -218,8 +226,8 @@ pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 10
              IMAGE_LAYOUT_PREINITIALIZED,
              IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR,
              IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR,
+             IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR,
              IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT,
-             IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV,
              IMAGE_LAYOUT_SHARED_PRESENT_KHR,
              IMAGE_LAYOUT_PRESENT_SRC_KHR,
              IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL,
@@ -248,8 +256,8 @@ showTableImageLayout =
   , (IMAGE_LAYOUT_PREINITIALIZED                  , "PREINITIALIZED")
   , (IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR          , "ATTACHMENT_OPTIMAL_KHR")
   , (IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR           , "READ_ONLY_OPTIMAL_KHR")
+  , (IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR, "FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR")
   , (IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT, "FRAGMENT_DENSITY_MAP_OPTIMAL_EXT")
-  , (IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV         , "SHADING_RATE_OPTIMAL_NV")
   , (IMAGE_LAYOUT_SHARED_PRESENT_KHR              , "SHARED_PRESENT_KHR")
   , (IMAGE_LAYOUT_PRESENT_SRC_KHR                 , "PRESENT_SRC_KHR")
   , (IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL       , "STENCIL_READ_ONLY_OPTIMAL")

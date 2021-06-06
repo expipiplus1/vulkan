@@ -216,8 +216,8 @@ foreign import ccall
 --
 -- Push descriptors that are
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-staticuse statically used>
--- by a pipeline /must/ not be undefined at the time that a draw or
--- dispatch command is recorded to execute using that pipeline. This
+-- by a pipeline /must/ not be undefined at the time that a drawing or
+-- dispatching command is recorded to execute using that pipeline. This
 -- includes immutable sampler descriptors, which /must/ be pushed before
 -- they are accessed by a pipeline (the immutable samplers are pushed,
 -- rather than the samplers in @pDescriptorWrites@). Push descriptors that
@@ -441,7 +441,7 @@ foreign import ccall
 -- >     }
 -- > };
 -- >
--- > // create a descriptor update template for descriptor set updates
+-- > // create a descriptor update template for push descriptor set updates
 -- > const VkDescriptorUpdateTemplateCreateInfo createInfo =
 -- > {
 -- >     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
@@ -462,7 +462,6 @@ foreign import ccall
 -- >     &createInfo,
 -- >     NULL,
 -- >     &myDescriptorUpdateTemplate);
--- > }
 -- >
 -- > AppDataStructure appData;
 -- > // fill appData here or cache it in your engine
@@ -505,17 +504,15 @@ cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layou
 -- | VkPhysicalDevicePushDescriptorPropertiesKHR - Structure describing push
 -- descriptor limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDevicePushDescriptorPropertiesKHR' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDevicePushDescriptorPropertiesKHR' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

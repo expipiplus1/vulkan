@@ -118,12 +118,12 @@
 --
 -- 1) Should conditional rendering affect copy and blit commands?
 --
--- RESOLVED: Conditional rendering should not affect copies and blits.
+-- __RESOLVED__: Conditional rendering should not affect copies and blits.
 --
 -- 2) Should secondary command buffers be allowed to execute while
 -- conditional rendering is active in the primary command buffer?
 --
--- RESOLVED: The rendering commands in secondary command buffer will be
+-- __RESOLVED__: The rendering commands in secondary command buffer will be
 -- affected by an active conditional rendering in primary command buffer if
 -- the @conditionalRenderingEnable@ is set to
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'. Conditional rendering /must/ not

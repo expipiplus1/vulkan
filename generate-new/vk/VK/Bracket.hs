@@ -90,6 +90,10 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "DebugUtilsMessengerEXT"
     , cdBracket "DeferredOperationKHR"
     , cdBracket "PrivateDataSlotEXT"
+    -- , cdBracket "VideoSessionKHR"
+    -- , cdBracket "VideoSessionParametersKHR"
+    , cdBracket "CuModuleNVX"
+    , cdBracket "CuFunctionNVX"
     , pure withCommmandBuffers
     , afBracket "Memory"
     , pure withDescriptorSets

@@ -14,6 +14,8 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_BROADCOM_PROPRIETARY
                                               , DRIVER_ID_MESA_LLVMPIPE
                                               , DRIVER_ID_MOLTENVK
+                                              , DRIVER_ID_COREAVI_PROPRIETARY
+                                              , DRIVER_ID_JUICE_PROPRIETARY
                                               , ..
                                               )) where
 
@@ -79,6 +81,10 @@ pattern DRIVER_ID_BROADCOM_PROPRIETARY      = DriverId 12
 pattern DRIVER_ID_MESA_LLVMPIPE             = DriverId 13
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MOLTENVK"
 pattern DRIVER_ID_MOLTENVK                  = DriverId 14
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_COREAVI_PROPRIETARY"
+pattern DRIVER_ID_COREAVI_PROPRIETARY       = DriverId 15
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_JUICE_PROPRIETARY"
+pattern DRIVER_ID_JUICE_PROPRIETARY         = DriverId 16
 {-# complete DRIVER_ID_AMD_PROPRIETARY,
              DRIVER_ID_AMD_OPEN_SOURCE,
              DRIVER_ID_MESA_RADV,
@@ -92,7 +98,9 @@ pattern DRIVER_ID_MOLTENVK                  = DriverId 14
              DRIVER_ID_GGP_PROPRIETARY,
              DRIVER_ID_BROADCOM_PROPRIETARY,
              DRIVER_ID_MESA_LLVMPIPE,
-             DRIVER_ID_MOLTENVK :: DriverId #-}
+             DRIVER_ID_MOLTENVK,
+             DRIVER_ID_COREAVI_PROPRIETARY,
+             DRIVER_ID_JUICE_PROPRIETARY :: DriverId #-}
 
 conNameDriverId :: String
 conNameDriverId = "DriverId"
@@ -116,6 +124,8 @@ showTableDriverId =
   , (DRIVER_ID_BROADCOM_PROPRIETARY     , "BROADCOM_PROPRIETARY")
   , (DRIVER_ID_MESA_LLVMPIPE            , "MESA_LLVMPIPE")
   , (DRIVER_ID_MOLTENVK                 , "MOLTENVK")
+  , (DRIVER_ID_COREAVI_PROPRIETARY      , "COREAVI_PROPRIETARY")
+  , (DRIVER_ID_JUICE_PROPRIETARY        , "JUICE_PROPRIETARY")
   ]
 
 instance Show DriverId where

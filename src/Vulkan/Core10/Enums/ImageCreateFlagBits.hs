@@ -62,7 +62,7 @@ pattern IMAGE_CREATE_SPARSE_RESIDENCY_BIT            = ImageCreateFlagBits 0x000
 -- backed using sparse memory binding with memory ranges that might also
 -- simultaneously be backing another image (or another portion of the same
 -- image). Images created with this flag /must/ also be created with the
--- 'IMAGE_CREATE_SPARSE_BINDING_BIT' flag
+-- 'IMAGE_CREATE_SPARSE_BINDING_BIT' flag.
 pattern IMAGE_CREATE_SPARSE_ALIASED_BIT              = ImageCreateFlagBits 0x00000004
 -- | 'IMAGE_CREATE_MUTABLE_FORMAT_BIT' specifies that the image /can/ be used
 -- to create a 'Vulkan.Core10.Handles.ImageView' with a different format

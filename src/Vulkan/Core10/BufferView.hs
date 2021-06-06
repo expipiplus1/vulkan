@@ -107,7 +107,7 @@ createBufferView :: forall io
                  => -- | @device@ is the logical device that creates the buffer view.
                     Device
                  -> -- | @pCreateInfo@ is a pointer to a 'BufferViewCreateInfo' structure
-                    -- containing parameters to be used to create the buffer.
+                    -- containing parameters to be used to create the buffer view.
                     BufferViewCreateInfo
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>

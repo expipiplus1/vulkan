@@ -602,14 +602,15 @@
 -- with gl_InstanceIndex. Which should be used for Vulkan in this
 -- extension?
 --
--- RESOLVED: This extension uses gl_InstanceID and maps it to @InstanceId@
--- in SPIR-V. It is acknowledged that this is different than other shader
--- stages in Vulkan. There are two main reasons for the difference here:
+-- __RESOLVED__: This extension uses gl_InstanceID and maps it to
+-- @InstanceId@ in SPIR-V. It is acknowledged that this is different than
+-- other shader stages in Vulkan. There are two main reasons for the
+-- difference here:
 --
 -- -   symmetry with gl_PrimitiveID which is also available in these
 --     shaders
 --
--- -   there is no \"baseInstance\" relevant for these shaders, and so ID
+-- -   there is no “baseInstance” relevant for these shaders, and so ID
 --     makes it more obvious that this is zero-based.
 --
 -- == Sample Code
@@ -984,9 +985,9 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -1105,7 +1106,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
---     bound ray tracing shader pipeline
+--     bound ray tracing pipeline
 --
 -- -   #VUID-vkCmdTraceRaysKHR-maxPipelineRayRecursionDepth-03679# This
 --     command /must/ not cause a shader call instruction to be executed
@@ -1691,10 +1692,10 @@ createRayTracingPipelinesKHR :: forall io
                               . (MonadIO io)
                              => -- | @device@ is the logical device that creates the ray tracing pipelines.
                                 Device
-                             -> -- | @deferredOperation@ is an optional
-                                -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
+                             -> -- | @deferredOperation@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or the
+                                -- handle of a valid 'Vulkan.Extensions.Handles.DeferredOperationKHR'
                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
-                                -- for this command.
+                                -- object for this command.
                                 DeferredOperationKHR
                              -> -- | @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
                                 -- indicating that pipeline caching is disabled, or the handle of a valid
@@ -1857,9 +1858,9 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -1981,7 +1982,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
---     bound ray tracing shader pipeline
+--     bound ray tracing pipeline
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-maxPipelineRayRecursionDepth-03679#
 --     This command /must/ not cause a shader call instruction to be
@@ -2155,7 +2156,7 @@ foreign import ccall
 --     1 /must/ be in the buffer device address range of the same buffer
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingPipelineTraceRaysIndirect-03637#
---     the
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect ::rayTracingPipelineTraceRaysIndirect>
 --     feature /must/ be enabled
 --
@@ -2232,8 +2233,8 @@ cmdTraceRaysIndirectKHR :: forall io
                         -> -- | @pCallableShaderBindingTable@ is a 'StridedDeviceAddressRegionKHR' that
                            -- holds the shader binding table data for the callable shader stage.
                            ("callableShaderBindingTable" ::: StridedDeviceAddressRegionKHR)
-                        -> -- | @indirectDeviceAddress@ is a buffer device address which points to a
-                           -- 'TraceRaysIndirectCommandKHR' structure which contains the trace ray
+                        -> -- | @indirectDeviceAddress@ is a buffer device address which is a pointer to
+                           -- a 'TraceRaysIndirectCommandKHR' structure containing the trace ray
                            -- parameters.
                            ("indirectDeviceAddress" ::: DeviceAddress)
                         -> io ()
@@ -2682,9 +2683,9 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     @NULL@
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraries-03591# Each
---     element of the @pLibraries@ member of @pLibraryInfo@ /must/ have
---     been created with the value of @maxPipelineRayRecursionDepth@ equal
---     to that in this pipeline
+--     element of @pLibraryInfo->pLibraries@ /must/ have been created with
+--     the value of @maxPipelineRayRecursionDepth@ equal to that in this
+--     pipeline
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraryInfo-03592# If
 --     @pLibraryInfo@ is not @NULL@, each element of its @pLibraries@
@@ -2700,56 +2701,56 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03594# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04718# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04719# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04720# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04721# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04722# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04723# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
 --     bit set
 --
@@ -3025,10 +3026,14 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceRayTracingPipelineFeaturesKHR'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #features-rayTracingPipeline# @rayTracingPipeline@ indicates whether
 --     the implementation supports the ray tracing pipeline functionality.
@@ -3059,12 +3064,14 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-traversal-culling-primitive primitive culling during ray traversal>.
 --
 -- If the 'PhysicalDeviceRayTracingPipelineFeaturesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceRayTracingPipelineFeaturesKHR' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceRayTracingPipelineFeaturesKHR' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage
 --
@@ -3156,9 +3163,12 @@ instance Zero PhysicalDeviceRayTracingPipelineFeaturesKHR where
 -- = Description
 --
 -- If the 'PhysicalDeviceRayTracingPipelinePropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- Limits specified by this structure /must/ match those specified with the
 -- same name in
@@ -3170,7 +3180,7 @@ instance Zero PhysicalDeviceRayTracingPipelineFeaturesKHR where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingPipelinePropertiesKHR = PhysicalDeviceRayTracingPipelinePropertiesKHR
-  { -- | @shaderGroupHandleSize@ size in bytes of the shader header.
+  { -- | @shaderGroupHandleSize@ is the size in bytes of the shader header.
     shaderGroupHandleSize :: Word32
   , -- | #limits-maxRayRecursionDepth# @maxRayRecursionDepth@ is the maximum
     -- number of levels of ray recursion allowed in a trace command.
@@ -3272,8 +3282,8 @@ instance Zero PhysicalDeviceRayTracingPipelinePropertiesKHR where
 --     buffer
 --
 -- -   #VUID-VkStridedDeviceAddressRegionKHR-size-04632# If @size@ is not
---     zero, @stride@ /must/ be less than the size of the buffer from which
---     @deviceAddress@ was queried
+--     zero, @stride@ /must/ be less than or equal to the size of the
+--     buffer from which @deviceAddress@ was queried
 --
 -- = See Also
 --

@@ -118,12 +118,12 @@
 --
 -- 1) Should conditional rendering affect copy and blit commands?
 --
--- RESOLVED: Conditional rendering should not affect copies and blits.
+-- __RESOLVED__: Conditional rendering should not affect copies and blits.
 --
 -- 2) Should secondary command buffers be allowed to execute while
 -- conditional rendering is active in the primary command buffer?
 --
--- RESOLVED: The rendering commands in secondary command buffer will be
+-- __RESOLVED__: The rendering commands in secondary command buffer will be
 -- affected by an active conditional rendering in primary command buffer if
 -- the @conditionalRenderingEnable@ is set to
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'. Conditional rendering /must/ not
@@ -396,7 +396,7 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
 
 
 -- | VkConditionalRenderingBeginInfoEXT - Structure specifying conditional
--- rendering begin info
+-- rendering begin information
 --
 -- = Description
 --
@@ -503,7 +503,7 @@ instance Zero ConditionalRenderingBeginInfoEXT where
 
 
 -- | VkCommandBufferInheritanceConditionalRenderingInfoEXT - Structure
--- specifying command buffer inheritance info
+-- specifying command buffer inheritance information
 --
 -- = Description
 --
@@ -579,15 +579,21 @@ instance Zero CommandBufferInheritanceConditionalRenderingInfoEXT where
 -- if a secondary command buffer can be executed if conditional rendering
 -- is active in the primary command buffer
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceConditionalRenderingFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating the implementation-dependent
--- behavior. 'PhysicalDeviceConditionalRenderingFeaturesEXT' /can/ also be
--- included in @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable the features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceConditionalRenderingFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --

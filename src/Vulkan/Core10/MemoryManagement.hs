@@ -142,11 +142,11 @@ foreign import ccall
 --     equal to the size of @memory@ minus @memoryOffset@
 --
 -- -   #VUID-vkBindBufferMemory-buffer-01444# If @buffer@ requires a
---     dedicated allocation(as reported by
+--     dedicated allocation (as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @buffer@), @memory@ /must/ have been created with
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::@requiresDedicatedAllocation@
+--     for @buffer@), @memory@ /must/ have been allocated with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     equal to @buffer@
 --
@@ -161,22 +161,24 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
 --     and @memoryOffset@ /must/ be zero
 --
--- -   #VUID-vkBindBufferMemory-None-01898# If buffer was created with the
+-- -   #VUID-vkBindBufferMemory-None-01898# If @buffer@ was created with
+--     the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit set, the buffer /must/ be bound to a memory object allocated
 --     with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
--- -   #VUID-vkBindBufferMemory-None-01899# If buffer was created with the
+-- -   #VUID-vkBindBufferMemory-None-01899# If @buffer@ was created with
+--     the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit not set, the buffer /must/ not be bound to a memory object
---     created with a memory type that reports
+--     allocated with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
 -- -   #VUID-vkBindBufferMemory-buffer-01038# If @buffer@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
---     been created with
+--     been allocated with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to a buffer handle created with identical creation parameters
 --     to @buffer@ and @memoryOffset@ /must/ be zero
@@ -188,16 +190,16 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   #VUID-vkBindBufferMemory-memory-02985# If @memory@ was created by a
---     memory import operation, that is not
+-- -   #VUID-vkBindBufferMemory-memory-02985# If @memory@ was allocated by
+--     a memory import operation, that is not
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     with a non-@NULL@ @buffer@ value, the external handle type of the
 --     imported memory /must/ also have been set in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   #VUID-vkBindBufferMemory-memory-02986# If @memory@ was created with
---     the
+-- -   #VUID-vkBindBufferMemory-memory-02986# If @memory@ was allocated
+--     with the
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     memory import operation with a non-@NULL@ @buffer@ value,
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
@@ -366,7 +368,7 @@ foreign import ccall
 --     allocation (as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::@requiresDedicatedAllocation@
 --     for @image@), @memory@ /must/ have been created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     equal to @image@

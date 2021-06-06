@@ -15,7 +15,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 
--- | VkShaderFloatControlsIndependence - Enum specifying whether, and how,
+-- | VkShaderFloatControlsIndependence - Bitmask specifying whether, and how,
 -- shader float controls can be set separately
 --
 -- = See Also

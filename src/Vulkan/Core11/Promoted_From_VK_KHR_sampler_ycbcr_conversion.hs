@@ -670,7 +670,9 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BindImagePlaneMemoryInfo = BindImagePlaneMemoryInfo
-  { -- | @planeAspect@ is the aspect of the disjoint image plane to bind.
+  { -- | @planeAspect@ is a
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
+    -- specifying the aspect of the disjoint image plane to bind.
     planeAspect :: ImageAspectFlagBits }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -755,7 +757,9 @@ instance Zero BindImagePlaneMemoryInfo where
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImagePlaneMemoryRequirementsInfo = ImagePlaneMemoryRequirementsInfo
-  { -- | @planeAspect@ is the aspect corresponding to the image plane to query.
+  { -- | @planeAspect@ is a
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
+    -- specifying the aspect corresponding to the image plane to query.
     planeAspect :: ImageAspectFlagBits }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -796,12 +800,23 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 
 
 -- | VkPhysicalDeviceSamplerYcbcrConversionFeatures - Structure describing
--- Y’CbCr conversion features that can be supported by an implementation
+-- Y′CBCR conversion features that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceSamplerYcbcrConversionFeatures'
--- structure describe the following feature:
+-- This structure describes the following feature:
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceSamplerYcbcrConversionFeatures' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceSamplerYcbcrConversionFeatures' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --

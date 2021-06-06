@@ -97,7 +97,7 @@
 -- version-generic query for SPIR-V version? SPIR-V 1.4 doesn’t need any
 -- other API changes.
 --
--- RESOLVED: Just expose SPIR-V 1.4.
+-- __RESOLVED__: Just expose SPIR-V 1.4.
 --
 -- Most new SPIR-V versions introduce optionally-required capabilities or
 -- have implementation-defined limits, and would need more API and
@@ -118,7 +118,7 @@
 -- 2. Can different stages of the same pipeline use shaders with different
 -- SPIR-V versions?
 --
--- RESOLVED: Yes.
+-- __RESOLVED__: Yes.
 --
 -- Mixing SPIR-V versions 1.0-1.3 in the same pipeline has not been
 -- disallowed, so it would be inconsistent to disallow mixing 1.4 with
@@ -129,7 +129,7 @@
 -- promoted to core in 1.4 be enabled in order to use that functionality in
 -- a SPIR-V 1.4 module?
 --
--- RESOLVED: No, with caveats.
+-- __RESOLVED__: No, with caveats.
 --
 -- The SPIR-V 1.4 module does not need to declare the SPIR-V extensions,
 -- since the functionality is now part of core, so there is no need to

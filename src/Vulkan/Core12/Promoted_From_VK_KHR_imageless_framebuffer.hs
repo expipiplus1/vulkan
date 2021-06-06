@@ -54,18 +54,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceImagelessFramebufferFeatures'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceImagelessFramebufferFeatures' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceImagelessFramebufferFeatures' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- this feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceImagelessFramebufferFeatures' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -234,9 +235,11 @@ data FramebufferAttachmentImageInfo = FramebufferAttachmentImageInfo
     height :: Word32
   , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "layerCount"
     layerCount :: Word32
-  , -- | @pViewFormats@ is an array which lists of all formats which /can/ be
-    -- used when creating views of the image, matching the value of
-    -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::pViewFormats
+  , -- | @pViewFormats@ is a pointer to an array of
+    -- 'Vulkan.Core10.Enums.Format.Format' values specifying all of the formats
+    -- which /can/ be used when creating views of the image, matching the value
+    -- of
+    -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
     -- used to create an image used with this framebuffer.
     viewFormats :: Vector Format
   }

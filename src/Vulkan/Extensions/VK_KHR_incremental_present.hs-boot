@@ -15,7 +15,7 @@
 --     85
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -127,11 +127,29 @@
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' must still be
 -- honored, including waiting for semaphores to signal.
 --
+-- 5) When the swapchain is created with
+-- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@preTransform@
+-- set to a value other than
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- should the rectangular region, 'RectLayerKHR', be transformed to align
+-- with the @preTransform@?
+--
+-- __RESOLVED__: No. The rectangular region in 'RectLayerKHR' should not be
+-- tranformed. As such, it may not align with the extents of the
+-- swapchain’s image(s). It is the responsibility of the presentation
+-- engine to transform the rectangular region. This matches the behavior of
+-- the Android presentation engine, which set the precedent.
+--
 -- == Version History
 --
 -- -   Revision 1, 2016-11-02 (Ian Elliott)
 --
 --     -   Internal revisions
+--
+-- -   Revision 2, 2021-03-18 (Ian Elliott)
+--
+--     -   Clarified alignment of rectangles for presentation engines that
+--         support transformed swapchains.
 --
 -- = See Also
 --

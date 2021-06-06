@@ -133,15 +133,15 @@
 --     -   Added presentation support query for an (xcb_connection_t*,
 --         xcb_visualid_t) pair.
 --
---     -   Removed \"root\" parameter from CreateXcbSurfaceKHR(), as it is
+--     -   Removed “root” parameter from CreateXcbSurfaceKHR(), as it is
 --         redundant when a window on the same screen is specified as well.
 --
 --     -   Adjusted wording of issue #1 and added agreed upon resolution.
 --
 -- -   Revision 3, 2015-10-14 (Ian Elliott)
 --
---     -   Removed \"root\" parameter from CreateXcbSurfaceKHR() in one
---         more place.
+--     -   Removed “root” parameter from CreateXcbSurfaceKHR() in one more
+--         place.
 --
 -- -   Revision 4, 2015-10-26 (Ian Elliott)
 --

@@ -56,10 +56,12 @@
 --
 --     -   Neil Trevett, NVIDIA
 --
--- This extension allows a non-conformant Vulkan implementation to be built
--- on top of another non-Vulkan graphics API, and identifies differences
--- between that implementation and a fully-conformant native Vulkan
--- implementation.
+-- == Description
+--
+-- The \`VK_KHR_portability_subset extension allows a non-conformant Vulkan
+-- implementation to be built on top of another non-Vulkan graphics API,
+-- and identifies differences between that implementation and a
+-- fully-conformant native Vulkan implementation.
 --
 -- This extension provides Vulkan implementations with the ability to mark
 -- otherwise-required capabilities as unsupported, or to establish
@@ -172,18 +174,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDevicePortabilitySubsetFeaturesKHR'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDevicePortabilitySubsetFeaturesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the features are supported.
--- 'PhysicalDevicePortabilitySubsetFeaturesKHR' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevicePortabilitySubsetFeaturesKHR' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -383,17 +386,15 @@ instance Zero PhysicalDevicePortabilitySubsetFeaturesKHR where
 -- | VkPhysicalDevicePortabilitySubsetPropertiesKHR - Structure describing
 -- additional properties supported by a portable implementation
 --
--- = Members
---
--- The members of the 'PhysicalDevicePortabilitySubsetPropertiesKHR'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDevicePortabilitySubsetPropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

@@ -214,18 +214,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PA
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceFragmentDensityMapFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceFragmentDensityMapFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceFragmentDensityMapFeaturesEXT' /can/ also be included in
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceFragmentDensityMapFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -310,17 +311,17 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 -- fragment density map properties that can be supported by an
 -- implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceFragmentDensityMapPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
--- == Valid Usage (Implicit)
+-- = Description
 --
 -- If the 'PhysicalDeviceFragmentDensityMapPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits and properties.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

@@ -33,11 +33,11 @@ extensionPatterns p = do
 versionDoc
   :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc ())
 versionDoc v = do
-  tellImport (ConName "MAKE_VERSION")
+  tellImport (ConName "MAKE_API_VERSION")
   (ma, mi, pa) <- case versionBranch v of
     [ma]         -> pure (ma, 0, 0)
     [ma, mi]     -> pure (ma, mi, 0)
     [ma, mi, pa] -> pure (ma, mi, pa)
     []           -> throw "Version branch has no components"
     _            -> throw "Version branch has more than three components"
-  pure $ "MAKE_VERSION" <+> hsep (viaShow <$> [ma, mi, pa])
+  pure $ "MAKE_API_VERSION" <+> hsep (viaShow <$> [ma, mi, pa])

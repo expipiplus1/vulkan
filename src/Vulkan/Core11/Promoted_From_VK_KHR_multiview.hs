@@ -49,10 +49,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceMultiviewFeatures' structure describe
--- the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #extension-features-multiview# @multiview@ specifies whether the
 --     implementation supports multiview rendering within a render pass. If
@@ -76,11 +80,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     tessellation shaders.
 --
 -- If the 'PhysicalDeviceMultiviewFeatures' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceMultiviewFeatures' /can/ also be included in the @pNext@
--- chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceMultiviewFeatures' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
 --
 -- == Valid Usage
 --
@@ -159,17 +166,15 @@ instance Zero PhysicalDeviceMultiviewFeatures where
 -- | VkPhysicalDeviceMultiviewProperties - Structure describing multiview
 -- limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceMultiviewProperties' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceMultiviewProperties' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
@@ -228,8 +233,8 @@ instance Zero PhysicalDeviceMultiviewProperties where
            zero
 
 
--- | VkRenderPassMultiviewCreateInfo - Structure containing multiview info
--- for all subpasses
+-- | VkRenderPassMultiviewCreateInfo - Structure containing multiview
+-- information for all subpasses
 --
 -- = Description
 --

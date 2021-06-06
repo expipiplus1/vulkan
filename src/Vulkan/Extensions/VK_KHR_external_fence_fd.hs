@@ -389,7 +389,9 @@ data ImportFenceFdInfoKHR = ImportFenceFdInfoKHR
     -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits' specifying
     -- additional parameters for the fence payload import operation.
     flags :: FenceImportFlags
-  , -- | @handleType@ specifies the type of @fd@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of @fd@.
     handleType :: ExternalFenceHandleTypeFlagBits
   , -- | @fd@ is the external handle to import.
     fd :: Int32
@@ -501,7 +503,9 @@ instance Zero ImportFenceFdInfoKHR where
 data FenceGetFdInfoKHR = FenceGetFdInfoKHR
   { -- | @fence@ is the fence from which state will be exported.
     fence :: Fence
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalFenceHandleTypeFlagBits
   }
   deriving (Typeable, Eq)

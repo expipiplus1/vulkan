@@ -102,7 +102,7 @@
 -- The job or task based game engines that are being developed to take
 -- advantage of explicit graphics APIs like Vulkan may behave exceptionally
 -- poorly if any of the above scenarios occur. However, most game engines
--- are already built to \"stream\" in assets dynamically as the user plays
+-- are already built to “stream” in assets dynamically as the user plays
 -- the game. By adding control by way of
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlags', we can
 -- require an ICD to report back a failure in critical execution paths
@@ -241,19 +241,20 @@ pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED_EXT
 --
 -- = Members
 --
--- The members of the
--- 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT' structure
--- is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable features.
+-- is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --

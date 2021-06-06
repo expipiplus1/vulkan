@@ -452,12 +452,13 @@ cmdBindTransformFeedbackBuffersEXT :: forall io
                                       ("buffers" ::: Vector Buffer)
                                    -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
                                       ("offsets" ::: Vector DeviceSize)
-                                   -> -- | @pSizes@ is an optional array of buffer sizes, specifying the maximum
-                                      -- number of bytes to capture to the corresponding transform feedback
-                                      -- buffer. If @pSizes@ is @NULL@, or the value of the @pSizes@ array
-                                      -- element is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', then the maximum
-                                      -- bytes captured will be the size of the corresponding buffer minus the
-                                      -- buffer offset.
+                                   -> -- | @pSizes@ is @NULL@ or a pointer to an array of
+                                      -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' buffer sizes, specifying the
+                                      -- maximum number of bytes to capture to the corresponding transform
+                                      -- feedback buffer. If @pSizes@ is @NULL@, or the value of the @pSizes@
+                                      -- array element is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', then the
+                                      -- maximum number of bytes captured will be the size of the corresponding
+                                      -- buffer minus the buffer offset.
                                       ("sizes" ::: Vector DeviceSize)
                                    -> io ()
 cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
@@ -608,26 +609,28 @@ cmdBeginTransformFeedbackEXT :: forall io
                              -> -- | @firstCounterBuffer@ is the index of the first transform feedback buffer
                                 -- corresponding to @pCounterBuffers@[0] and @pCounterBufferOffsets@[0].
                                 ("firstCounterBuffer" ::: Word32)
-                             -> -- | @pCounterBuffers@ is an optional array of buffer handles to the counter
-                                -- buffers which contain a 4 byte integer value representing the byte
-                                -- offset from the start of the corresponding transform feedback buffer
-                                -- from where to start capturing vertex data. If the byte offset stored to
-                                -- the counter buffer location was done using 'cmdEndTransformFeedbackEXT'
-                                -- it can be used to resume transform feedback from the previous location.
-                                -- If @pCounterBuffers@ is @NULL@, then transform feedback will start
+                             -> -- | @pCounterBuffers@ is @NULL@ or a pointer to an array of
+                                -- 'Vulkan.Core10.Handles.Buffer' handles to counter buffers. Each buffer
+                                -- contains a 4 byte integer value representing the byte offset from the
+                                -- start of the corresponding transform feedback buffer from where to start
+                                -- capturing vertex data. If the byte offset stored to the counter buffer
+                                -- location was done using 'cmdEndTransformFeedbackEXT' it can be used to
+                                -- resume transform feedback from the previous location. If
+                                -- @pCounterBuffers@ is @NULL@, then transform feedback will start
                                 -- capturing vertex data to byte offset zero in all bound transform
                                 -- feedback buffers. For each element of @pCounterBuffers@ that is
                                 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', transform feedback will start
                                 -- capturing vertex data to byte zero in the corresponding bound transform
                                 -- feedback buffer.
                                 ("counterBuffers" ::: Vector Buffer)
-                             -> -- | @pCounterBufferOffsets@ is an optional array of offsets within each of
-                                -- the @pCounterBuffers@ where the counter values were previously written.
-                                -- The location in each counter buffer at these offsets /must/ be large
-                                -- enough to contain 4 bytes of data. This data is the number of bytes
-                                -- captured by the previous transform feedback to this buffer. If
-                                -- @pCounterBufferOffsets@ is @NULL@, then it is assumed the offsets are
-                                -- zero.
+                             -> -- | @pCounterBufferOffsets@ is @NULL@ or a pointer to an array of
+                                -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values specifying offsets
+                                -- within each of the @pCounterBuffers@ where the counter values were
+                                -- previously written. The location in each counter buffer at these offsets
+                                -- /must/ be large enough to contain 4 bytes of data. This data is the
+                                -- number of bytes captured by the previous transform feedback to this
+                                -- buffer. If @pCounterBufferOffsets@ is @NULL@, then it is assumed the
+                                -- offsets are zero.
                                 ("counterBufferOffsets" ::: Vector DeviceSize)
                              -> io ()
 cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
@@ -768,21 +771,24 @@ cmdEndTransformFeedbackEXT :: forall io
                            -> -- | @firstCounterBuffer@ is the index of the first transform feedback buffer
                               -- corresponding to @pCounterBuffers@[0] and @pCounterBufferOffsets@[0].
                               ("firstCounterBuffer" ::: Word32)
-                           -> -- | @pCounterBuffers@ is an optional array of buffer handles to the counter
-                              -- buffers used to record the current byte positions of each transform
+                           -> -- | @pCounterBuffers@ is @NULL@ or a pointer to an array of
+                              -- 'Vulkan.Core10.Handles.Buffer' handles to counter buffers. The counter
+                              -- buffers are used to record the current byte positions of each transform
                               -- feedback buffer where the next vertex output data would be captured.
                               -- This /can/ be used by a subsequent 'cmdBeginTransformFeedbackEXT' call
                               -- to resume transform feedback capture from this position. It can also be
                               -- used by 'cmdDrawIndirectByteCountEXT' to determine the vertex count of
                               -- the draw call.
                               ("counterBuffers" ::: Vector Buffer)
-                           -> -- | @pCounterBufferOffsets@ is an optional array of offsets within each of
-                              -- the @pCounterBuffers@ where the counter values can be written. The
-                              -- location in each counter buffer at these offsets /must/ be large enough
-                              -- to contain 4 bytes of data. The data stored at this location is the byte
-                              -- offset from the start of the transform feedback buffer binding where the
-                              -- next vertex data would be written. If @pCounterBufferOffsets@ is @NULL@,
-                              -- then it is assumed the offsets are zero.
+                           -> -- | @pCounterBufferOffsets@ is @NULL@ or a pointer to an array of
+                              -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values specifying offsets
+                              -- within each of the @pCounterBuffers@ where the counter values can be
+                              -- written. The location in each counter buffer at these offsets /must/ be
+                              -- large enough to contain 4 bytes of data. The data stored at this
+                              -- location is the byte offset from the start of the transform feedback
+                              -- buffer binding where the next vertex data would be written. If
+                              -- @pCounterBufferOffsets@ is @NULL@, then it is assumed the offsets are
+                              -- zero.
                               ("counterBufferOffsets" ::: Vector DeviceSize)
                            -> io ()
 cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
@@ -1159,8 +1165,9 @@ foreign import ccall
   "dynamic" mkVkCmdDrawIndirectByteCountEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
--- | vkCmdDrawIndirectByteCountEXT - Draw primitives where the vertex count
--- is derived from the counter byte value in the counter buffer
+-- | vkCmdDrawIndirectByteCountEXT - Draw primitives with indirect parameters
+-- where the vertex count is derived from the counter byte value in the
+-- counter buffer
 --
 -- = Description
 --
@@ -1279,9 +1286,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
+--     specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02859# There /must/ not
 --     have been any calls to dynamic state setting commands for any state
@@ -1451,7 +1458,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -1465,7 +1472,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -1481,7 +1488,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -1564,13 +1571,54 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
+--     drawing command, and the @primitiveTopology@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04875# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04876# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04877# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-logicOp-04878# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04879# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -1583,7 +1631,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -1604,6 +1652,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pStrides-04884# If the bound
+--     graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
@@ -1735,18 +1793,19 @@ cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuf
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTransformFeedbackFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTransformFeedbackFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceTransformFeedbackFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTransformFeedbackFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1808,17 +1867,15 @@ instance Zero PhysicalDeviceTransformFeedbackFeaturesEXT where
 -- | VkPhysicalDeviceTransformFeedbackPropertiesEXT - Structure describing
 -- transform feedback properties that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceTransformFeedbackPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceTransformFeedbackPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits and properties.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

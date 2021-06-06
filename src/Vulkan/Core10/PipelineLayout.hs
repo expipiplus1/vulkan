@@ -629,8 +629,8 @@ instance Zero PushConstantRange where
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03572# The total
 --     number of bindings with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
---     to any given shader stage across all elements of @pSetLayouts@
---     /must/ be less than or equal to
+--     accessible to any given shader stage across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR'::@maxPerStageDescriptorUpdateAfterBindAccelerationStructures@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03573# The total

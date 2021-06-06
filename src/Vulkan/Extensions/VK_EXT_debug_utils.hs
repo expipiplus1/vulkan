@@ -1341,8 +1341,8 @@ submitDebugUtilsMessageEXT :: forall io
                             . (MonadIO io)
                            => -- | @instance@ is the debug stream’s 'Vulkan.Core10.Handles.Instance'.
                               Instance
-                           -> -- | @messageSeverity@ is the 'DebugUtilsMessageSeverityFlagBitsEXT' severity
-                              -- of this event\/message.
+                           -> -- | @messageSeverity@ is a 'DebugUtilsMessageSeverityFlagBitsEXT' value
+                              -- specifying the severity of this event\/message.
                               DebugUtilsMessageSeverityFlagBitsEXT
                            -> -- | @messageTypes@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
                               -- specifying which type of event(s) to identify with this message.
@@ -2043,6 +2043,24 @@ type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 
 -- | VkDebugUtilsMessageSeverityFlagBitsEXT - Bitmask specifying which
 -- severities of events cause a debug messenger callback
+--
+-- = Description
+--
+-- Note
+--
+-- The values of 'DebugUtilsMessageSeverityFlagBitsEXT' are sorted based on
+-- severity. The higher the flag value, the more severe the message. This
+-- allows for simple boolean operation comparisons when looking at
+-- 'DebugUtilsMessageSeverityFlagBitsEXT' values.
+--
+-- For example:
+--
+-- >     if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+-- >         // Do something for warnings and errors
+-- >     }
+--
+-- In addition, space has been left between the enums to allow for later
+-- addition of new severities in between the existing values.
 --
 -- = See Also
 --

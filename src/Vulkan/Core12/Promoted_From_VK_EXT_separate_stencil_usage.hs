@@ -40,7 +40,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- stencil aspect of the image /must/ only be used as specified by
 -- @stencilUsage@. When this structure is not included in the @pNext@ chain
 -- of 'Vulkan.Core10.Image.ImageCreateInfo', the stencil aspect of an image
--- /must/ only be used as specified
+-- /must/ only be used as specified by
 -- 'Vulkan.Core10.Image.ImageCreateInfo'::@usage@. Use of other aspects of
 -- an image are unaffected by this structure.
 --

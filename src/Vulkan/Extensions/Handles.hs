@@ -7,6 +7,8 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , PerformanceConfigurationINTEL(..)
                                   , DeferredOperationKHR(..)
                                   , PrivateDataSlotEXT(..)
+                                  , CuModuleNVX(..)
+                                  , CuFunctionNVX(..)
                                   , DisplayKHR(..)
                                   , DisplayModeKHR(..)
                                   , SurfaceKHR(..)
@@ -50,6 +52,8 @@ import Vulkan.Core10.APIConstants (HasObjectType(..))
 import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_FUNCTION_NVX))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_MODULE_NVX))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION_KHR))
@@ -230,6 +234,26 @@ instance HasObjectType PrivateDataSlotEXT where
   objectTypeAndHandle (PrivateDataSlotEXT h) = (OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT, h)
 instance Show PrivateDataSlotEXT where
   showsPrec p (PrivateDataSlotEXT x) = showParen (p >= 11) (showString "PrivateDataSlotEXT 0x" . showHex x)
+
+
+-- No documentation found for TopLevel "VkCuModuleNVX"
+newtype CuModuleNVX = CuModuleNVX Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType CuModuleNVX where
+  objectTypeAndHandle (CuModuleNVX h) = (OBJECT_TYPE_CU_MODULE_NVX, h)
+instance Show CuModuleNVX where
+  showsPrec p (CuModuleNVX x) = showParen (p >= 11) (showString "CuModuleNVX 0x" . showHex x)
+
+
+-- No documentation found for TopLevel "VkCuFunctionNVX"
+newtype CuFunctionNVX = CuFunctionNVX Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType CuFunctionNVX where
+  objectTypeAndHandle (CuFunctionNVX h) = (OBJECT_TYPE_CU_FUNCTION_NVX, h)
+instance Show CuFunctionNVX where
+  showsPrec p (CuFunctionNVX x) = showParen (p >= 11) (showString "CuFunctionNVX 0x" . showHex x)
 
 
 -- | VkDisplayKHR - Opaque handle to a display object

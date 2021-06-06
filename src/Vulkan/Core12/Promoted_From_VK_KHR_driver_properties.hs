@@ -112,6 +112,16 @@ instance Zero ConformanceVersion where
 --
 -- = Description
 --
+-- If the 'PhysicalDeviceDriverProperties' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These are properties of the driver corresponding to a physical device.
+--
 -- @driverID@ /must/ be immutable for a given driver across instances,
 -- processes, driver versions, and system reboots.
 --

@@ -479,8 +479,8 @@ foreign import ccall
 --     (the horizontal granularity).
 --
 -- -   the @offset.y@ member in @renderArea@ is a multiple of the @height@
---     of the returned 'Vulkan.Core10.FundamentalTypes.Extent2D' (the
---     vertical granularity).
+--     member of the returned 'Vulkan.Core10.FundamentalTypes.Extent2D'
+--     (the vertical granularity).
 --
 -- -   either the @offset.width@ member in @renderArea@ is a multiple of
 --     the horizontal granularity or @offset.x@+@offset.width@ is equal to
@@ -831,8 +831,9 @@ data AttachmentDescription = AttachmentDescription
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' value specifying the
     -- format of the image view that will be used for the attachment.
     format :: Format
-  , -- | @samples@ is the number of samples of the image as defined in
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+  , -- | @samples@ is a
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+    -- specifying the number of samples of the image.
     samples :: SampleCountFlagBits
   , -- | @loadOp@ is a 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp'
     -- value specifying how the contents of color and depth components of the
@@ -1021,8 +1022,10 @@ instance Zero AttachmentReference where
 -- decorated with a @Location@ value of __X__, then it uses the attachment
 -- provided in @pColorAttachments@[__X__]. If the @attachment@ member of
 -- any element of @pColorAttachments@ is
--- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', writes to the
--- corresponding location by a fragment are discarded.
+-- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', or if
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-color-write-enable Color Write Enable>
+-- has been disabled for the corresponding attachment index, then writes to
+-- the corresponding location by a fragment shader are discarded.
 --
 -- If @flags@ does not include
 -- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
@@ -1201,8 +1204,8 @@ instance Zero AttachmentReference where
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', they /must/ have the
 --     same sample count
 --
--- -   #VUID-VkSubpassDescription-attachment-00853# The @attachment@ member
---     of each element of @pPreserveAttachments@ /must/ not be
+-- -   #VUID-VkSubpassDescription-attachment-00853# Each element of
+--     @pPreserveAttachments@ /must/ not be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkSubpassDescription-pPreserveAttachments-00854# Each element
@@ -1238,16 +1241,6 @@ instance Zero AttachmentReference where
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
 --     then the subpass /must/ be the last subpass in a subpass dependency
 --     chain
---
--- -   #VUID-VkSubpassDescription-flags-03344# If @flags@ includes
---     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
---     then the sample count of the input attachments /must/ equal
---     @rasterizationSamples@
---
--- -   #VUID-VkSubpassDescription-flags-03345# If @flags@ includes
---     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
---     and if @sampleShadingEnable@ is enabled (explicitly or implicitly)
---     then @minSampleShading@ /must/ equal 0.0
 --
 -- -   #VUID-VkSubpassDescription-pInputAttachments-02868# If the render
 --     pass is created with
@@ -1313,17 +1306,17 @@ data SubpassDescription = SubpassDescription
     -- structures defining the input attachments for this subpass and their
     -- layouts.
     inputAttachments :: Vector AttachmentReference
-  , -- | @pColorAttachments@ is a pointer to an array of 'AttachmentReference'
-    -- structures defining the color attachments for this subpass and their
-    -- layouts.
+  , -- | @pColorAttachments@ is a pointer to an array of @colorAttachmentCount@
+    -- 'AttachmentReference' structures defining the color attachments for this
+    -- subpass and their layouts.
     colorAttachments :: Vector AttachmentReference
-  , -- | @pResolveAttachments@ is an optional array of @colorAttachmentCount@
-    -- 'AttachmentReference' structures defining the resolve attachments for
-    -- this subpass and their layouts.
+  , -- | @pResolveAttachments@ is @NULL@ or a pointer to an array of
+    -- @colorAttachmentCount@ 'AttachmentReference' structures defining the
+    -- resolve attachments for this subpass and their layouts.
     resolveAttachments :: Vector AttachmentReference
-  , -- | @pDepthStencilAttachment@ is a pointer to a 'AttachmentReference'
-    -- structure specifying the depth\/stencil attachment for this subpass and
-    -- its layout.
+  , -- | @pDepthStencilAttachment@ is a pointer to an array of
+    -- 'AttachmentReference' structures specifying the depth\/stencil
+    -- attachment for this subpass and its layout.
     depthStencilAttachment :: Maybe AttachmentReference
   , -- | @pPreserveAttachments@ is a pointer to an array of
     -- @preserveAttachmentCount@ render pass attachment indices identifying
@@ -1453,7 +1446,7 @@ instance Zero SubpassDescription where
 --
 -- The first
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- is limited to access in the pipeline stages determined by the
+-- is limited to accesses in the pipeline stages determined by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @srcStageMask@. It is also limited to access types in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-masks source access mask>
@@ -1461,7 +1454,7 @@ instance Zero SubpassDescription where
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- is limited to access in the pipeline stages determined by the
+-- is limited to accesses in the pipeline stages determined by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
 -- specified by @dstStageMask@. It is also limited to access types in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
@@ -1767,7 +1760,7 @@ instance Zero SubpassDependency where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.RenderPassInputAttachmentAspectCreateInfo'
 --     structure, the @inputAttachmentIndex@ member of each element of its
 --     @pAspectReferences@ member /must/ be less than the value of
---     @inputAttachmentCount@ in the member of @pSubpasses@ identified by
+--     @inputAttachmentCount@ in the element of @pSubpasses@ identified by
 --     its @subpass@ member
 --
 -- -   #VUID-VkRenderPassCreateInfo-pNext-01963# If the @pNext@ chain
@@ -2007,7 +2000,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     as attachment and non-attachment if both accesses are read-only.
 --
 -- -   For depth\/stencil attachments, each aspect /can/ be used separately
---     as attachments and non-attachments as long as the non-attachment
+--     as attachment and non-attachment as long as the non-attachment
 --     accesses are also via an image subresource in either the
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
 --     layout or the
@@ -2122,16 +2115,16 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     each element of @pAttachments@ that is used as an input, color,
 --     resolve, or depth\/stencil attachment by @renderPass@ /must/ have
---     been created with a VkImageCreateInfo::@width@ greater than or equal
---     to @width@
+--     been created with a 'Vulkan.Core10.Image.ImageCreateInfo'::@width@
+--     greater than or equal to @width@
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-04534# If @flags@ does not
 --     include
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     each element of @pAttachments@ that is used as an input, color,
 --     resolve, or depth\/stencil attachment by @renderPass@ /must/ have
---     been created with a VkImageCreateInfo::@height@ greater than or
---     equal to @height@
+--     been created with a 'Vulkan.Core10.Image.ImageCreateInfo'::@height@
+--     greater than or equal to @height@
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-04535# If @flags@ does not
 --     include
@@ -2139,8 +2132,8 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     each element of @pAttachments@ that is used as an input, color,
 --     resolve, or depth\/stencil attachment by @renderPass@ /must/ have
 --     been created with a
---     VkImageViewCreateInfo::@subresourceRange.layerCount@ greater than or
---     equal to @layers@
+--     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@subresourceRange.layerCount@
+--     greater than or equal to @layers@
 --
 -- -   #VUID-VkFramebufferCreateInfo-renderPass-04536# If @renderPass@ was
 --     specified with non-zero view masks, each element of @pAttachments@
@@ -2199,7 +2192,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     an element of @pAttachments@ that is used as a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
---     /must/ have a width at least as large as ⌈@width@ \\ @texelWidth@⌉,
+--     /must/ have a width at least as large as ⌈@width@ \/ @texelWidth@⌉,
 --     where @texelWidth@ is the largest value of
 --     @shadingRateAttachmentTexelSize.width@ in a
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
@@ -2210,7 +2203,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     an element of @pAttachments@ that is used as a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
---     /must/ have a height at least as large as ⌈@height@ \\
+--     /must/ have a height at least as large as ⌈@height@ \/
 --     @texelHeight@⌉, where @texelHeight@ is the largest value of
 --     @shadingRateAttachmentTexelSize.height@ in a
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
@@ -2281,7 +2274,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     member of an instance of
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain that is used as an input, color, resolve or
---     depth\/stencil attachment in @pRenderPass@ /must/ be greater than or
+--     depth\/stencil attachment in @renderPass@ /must/ be greater than or
 --     equal to @width@
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-04542# If @flags@ includes
@@ -2290,7 +2283,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     member of an instance of
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain that is used as an input, color, resolve or
---     depth\/stencil attachment in @pRenderPass@ /must/ be greater than or
+--     depth\/stencil attachment in @renderPass@ /must/ be greater than or
 --     equal to @height@
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-03196# If @flags@ includes
@@ -2320,7 +2313,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain that is used as a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
---     /must/ be greater than or equal to ⌈@width@ \\ @texelWidth@⌉, where
+--     /must/ be greater than or equal to ⌈@width@ \/ @texelWidth@⌉, where
 --     @texelWidth@ is the largest value of
 --     @shadingRateAttachmentTexelSize.width@ in a
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
@@ -2333,7 +2326,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     in the @pNext@ chain that is used as a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
---     /must/ be greater than or equal to ⌈@height@ \\ @texelHeight@⌉,
+--     /must/ be greater than or equal to ⌈@height@ \/ @texelHeight@⌉,
 --     where @texelHeight@ is the largest value of
 --     @shadingRateAttachmentTexelSize.height@ in a
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
@@ -2364,7 +2357,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     @pAttachmentImageInfos@ member of a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     structure included in the @pNext@ chain used as an input, color,
---     resolve, or depth\/stencil attachment in @pRenderPass@ /must/ be
+--     resolve, or depth\/stencil attachment in @renderPass@ /must/ be
 --     greater than the maximum bit index set in the view mask in the
 --     subpasses in which it is used in @renderPass@
 --
@@ -2375,7 +2368,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     @pAttachmentImageInfos@ member of a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
 --     structure included in the @pNext@ chain used as an input, color,
---     resolve, or depth\/stencil attachment in @pRenderPass@ /must/ be
+--     resolve, or depth\/stencil attachment in @renderPass@ /must/ be
 --     greater than or equal to @layers@
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-03201# If @flags@ includes
@@ -2438,7 +2431,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     each element of @pAttachments@ that is used as a fragment shading
 --     rate attachment by @renderPass@ /must/ have been created with a
 --     @usage@ value including
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-04549# If @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
@@ -2448,7 +2441,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     structure included in the @pNext@ chain that refers to an attachment
 --     used as a fragment shading rate attachment by @renderPass@ /must/
 --     include
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --

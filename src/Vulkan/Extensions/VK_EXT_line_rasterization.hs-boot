@@ -103,9 +103,8 @@
 -- == Issues
 --
 -- > (1) Do we need to support Bresenham-style and smooth lines with more than
--- >     one rasterization sample? i.e. the equivalent of
--- >     glDisable(GL_MULTISAMPLE) in OpenGL when the framebuffer has more than
--- >     one sample?
+-- > one rasterization sample? i.e. the equivalent of glDisable(GL_MULTISAMPLE)
+-- > in OpenGL when the framebuffer has more than one sample?
 --
 -- > RESOLVED: Yes.
 -- > For simplicity, Bresenham line rasterization carries forward a few

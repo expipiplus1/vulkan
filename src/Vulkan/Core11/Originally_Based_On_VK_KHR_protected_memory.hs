@@ -104,7 +104,7 @@ getDeviceQueue2 :: forall io
                    -- 'Vulkan.Core10.Handles.Device' handle
                    Device
                 -> -- | @pQueueInfo@ is a pointer to a 'DeviceQueueInfo2' structure, describing
-                   -- the parameters used to create the device queue.
+                   -- parameters of the device queue to be retrieved.
                    --
                    -- #VUID-vkGetDeviceQueue2-pQueueInfo-parameter# @pQueueInfo@ /must/ be a
                    -- valid pointer to a valid 'DeviceQueueInfo2' structure
@@ -190,12 +190,21 @@ instance Zero ProtectedSubmitInfo where
 -- | VkPhysicalDeviceProtectedMemoryFeatures - Structure describing protected
 -- memory features that can be supported by an implementation
 --
+-- = Members
+--
+-- This structure describes the following feature:
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceProtectedMemoryFeatures' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceProtectedMemoryFeatures' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -251,10 +260,12 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 -- = Description
 --
 -- If the 'PhysicalDeviceProtectedMemoryProperties' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with a value indicating the implementation-dependent
--- behavior.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --

@@ -197,7 +197,7 @@
 --
 -- 4) Does the new synchronization primitive allow resetting its payload?
 --
--- __RESOLVED__: No, allowing the payload value to \"go backwards\" is
+-- __RESOLVED__: No, allowing the payload value to “go backwards” is
 -- problematic. Applications looking for reset behavior should create a new
 -- instance of the sychronization primitive instead.
 --

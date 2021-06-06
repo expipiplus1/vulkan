@@ -348,7 +348,10 @@ instance ToCStruct SurfaceCapabilities2EXT where
     poke ((p `plusPtr` 32 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 40 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr SurfaceTransformFlagsKHR)) (zero)
     poke ((p `plusPtr` 56 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr CompositeAlphaFlagsKHR)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr ImageUsageFlags)) (zero)
     f
 
 instance FromCStruct SurfaceCapabilities2EXT where

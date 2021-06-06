@@ -497,6 +497,14 @@ instance Zero ExternalBufferProperties where
 --     valid LUID and @deviceNodeMask@ contains a valid node mask, and
 --     'Vulkan.Core10.FundamentalTypes.FALSE' if they do not.
 --
+-- If the 'PhysicalDeviceIDProperties' structure is included in the @pNext@
+-- chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
 -- @deviceUUID@ /must/ be immutable for a given device across instances,
 -- processes, driver APIs, driver versions, and system reboots.
 --
