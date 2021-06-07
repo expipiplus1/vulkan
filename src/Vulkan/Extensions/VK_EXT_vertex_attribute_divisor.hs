@@ -212,8 +212,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
--- If this structure is not used to define a divisor value for an attribute
--- then the divisor has a logical default value of 1.
+-- If this structure is not used to define a divisor value for an
+-- attribute, then the divisor has a logical default value of 1.
 --
 -- == Valid Usage
 --
@@ -250,7 +250,7 @@ data VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescript
     -- value of the vertex attribute when instanced rendering is enabled. For
     -- example, if the divisor is N, the same vertex attribute will be applied
     -- to N successive instances before moving on to the next vertex attribute.
-    -- The maximum value of divisor is implementation dependent and can be
+    -- The maximum value of @divisor@ is implementation-dependent and can be
     -- queried using
     -- 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT'::@maxVertexAttribDivisor@.
     -- A value of @0@ /can/ be used for the divisor if the

@@ -93,19 +93,30 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
 --     specifies that an any-hit shader will always be present when an
---     any-hit shader would be executed.
+--     any-hit shader would be executed. A NULL any-hit shader is an
+--     any-hit shader which is effectively
+--     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as from a
+--     shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
 --     specifies that a closest hit shader will always be present when a
---     closest hit shader would be executed.
+--     closest hit shader would be executed. A NULL closest hit shader is a
+--     closest hit shader which is effectively
+--     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as from a
+--     shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR' specifies
 --     that a miss shader will always be present when a miss shader would
---     be executed.
+--     be executed. A NULL miss shader is a miss shader which is
+--     effectively 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as
+--     from a shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
 --     specifies that an intersection shader will always be present when an
---     intersection shader would be executed.
+--     intersection shader would be executed. A NULL intersection shader is
+--     an intersection shader which is effectively
+--     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as from a
+--     shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR' specifies that
 --     triangle primitives will be skipped during traversal using

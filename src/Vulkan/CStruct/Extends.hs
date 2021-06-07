@@ -389,6 +389,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (Physi
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRatePropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_global_priority_query (PhysicalDeviceGlobalPriorityQueryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (PhysicalDeviceGroupProperties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceIDProperties)
@@ -457,6 +458,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (Phys
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsPropertiesNV)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types (PhysicalDeviceShaderSubgroupExtendedTypesFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_terminate_invocation (PhysicalDeviceShaderTerminateInvocationFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImageFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImagePropertiesNV)
@@ -549,6 +551,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (QueryPoolPerfo
 import {-# SOURCE #-} Vulkan.Extensions.VK_INTEL_performance_query (QueryPoolPerformanceQueryCreateInfoINTEL)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (QueueFamilyCheckpointProperties2NV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (QueueFamilyCheckpointPropertiesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_global_priority_query (QueueFamilyGlobalPriorityPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (QueueFamilyProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (QueueFamilyProperties2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (RayTracingPipelineCreateInfoKHR)
@@ -870,6 +873,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceDiagnosticsConfigFeaturesNV = ()
   Extends DeviceCreateInfo DeviceDiagnosticsConfigCreateInfoNV = ()
   Extends DeviceCreateInfo PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRobustness2FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceImageRobustnessFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR = ()
@@ -953,6 +957,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderDrawParametersFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderFloat16Int8Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceHostQueryResetFeatures = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceGlobalPriorityQueryFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDeviceMemoryReportFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDescriptorIndexingFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceTimelineSemaphoreFeatures = ()
@@ -1010,6 +1015,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExtendedDynamicState2FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDiagnosticsConfigFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRobustness2FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageRobustnessFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR = ()
@@ -1108,6 +1114,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PresentInfoKHR PresentFrameTokenGGP = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceCreateInfoKHR = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceQueryCreateInfoINTEL = ()
+  Extends QueueFamilyProperties2 QueueFamilyGlobalPriorityPropertiesEXT = ()
   Extends QueueFamilyProperties2 QueueFamilyCheckpointPropertiesNV = ()
   Extends QueueFamilyProperties2 QueueFamilyCheckpointProperties2NV = ()
   Extends RayTracingPipelineCreateInfoKHR PipelineCreationFeedbackCreateInfoEXT = ()
@@ -1361,6 +1368,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES -> go @PhysicalDeviceFloatControlsProperties
   STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES -> go @PhysicalDeviceHostQueryResetFeatures
   STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT -> go @DeviceQueueGlobalPriorityCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT -> go @PhysicalDeviceGlobalPriorityQueryFeaturesEXT
+  STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT -> go @QueueFamilyGlobalPriorityPropertiesEXT
   STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT -> go @DebugUtilsMessengerCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT -> go @PhysicalDeviceDeviceMemoryReportFeaturesEXT
   STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT -> go @DeviceDeviceMemoryReportCreateInfoEXT
@@ -1506,6 +1515,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV -> go @PhysicalDeviceDiagnosticsConfigFeaturesNV
   STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV -> go @DeviceDiagnosticsConfigCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR -> go @PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_FEATURES_KHR -> go @PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT -> go @PhysicalDeviceRobustness2FeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT -> go @PhysicalDeviceRobustness2PropertiesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT -> go @PhysicalDeviceImageRobustnessFeaturesEXT
@@ -1694,6 +1704,8 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceFloatControlsProperties #-}
 {-# complete (::&) :: PhysicalDeviceHostQueryResetFeatures #-}
 {-# complete (::&) :: DeviceQueueGlobalPriorityCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceGlobalPriorityQueryFeaturesEXT #-}
+{-# complete (::&) :: QueueFamilyGlobalPriorityPropertiesEXT #-}
 {-# complete (::&) :: DebugUtilsMessengerCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceDeviceMemoryReportFeaturesEXT #-}
 {-# complete (::&) :: DeviceDeviceMemoryReportCreateInfoEXT #-}
@@ -1839,6 +1851,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceDiagnosticsConfigFeaturesNV #-}
 {-# complete (::&) :: DeviceDiagnosticsConfigCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR #-}
 {-# complete (::&) :: PhysicalDeviceRobustness2FeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceRobustness2PropertiesEXT #-}
 {-# complete (::&) :: PhysicalDeviceImageRobustnessFeaturesEXT #-}

@@ -228,7 +228,8 @@ instance Zero DeviceQueueGlobalPriorityCreateInfoEXT where
 --
 -- = See Also
 --
--- 'DeviceQueueGlobalPriorityCreateInfoEXT'
+-- 'DeviceQueueGlobalPriorityCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_global_priority_query.QueueFamilyGlobalPriorityPropertiesEXT'
 newtype QueueGlobalPriorityEXT = QueueGlobalPriorityEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error

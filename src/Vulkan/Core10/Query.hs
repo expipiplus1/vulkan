@@ -295,6 +295,11 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
 -- is set.
 --
+-- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
+-- not set, 'getQueryPoolResults' /may/ return
+-- 'Vulkan.Core10.Enums.Result.NOT_READY' if there are queries in the
+-- unavailable state.
+--
 -- Note
 --
 -- Applications /must/ take care to ensure that use of the

@@ -174,7 +174,7 @@ pattern DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT       = DynamicState 1000377
 -- before any drawing commands.
 pattern DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT            = DynamicState 1000377000
 -- | 'DYNAMIC_STATE_VERTEX_INPUT_EXT' specifies that the @pVertexInputState@
--- states will be ignored and /must/ be set dynamically with
+-- state will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 -- before any drawing commands
 pattern DYNAMIC_STATE_VERTEX_INPUT_EXT                    = DynamicState 1000352000

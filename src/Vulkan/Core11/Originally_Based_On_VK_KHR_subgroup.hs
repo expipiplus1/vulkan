@@ -47,8 +47,10 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 -- property.
 --
 -- If @supportedOperations@ includes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroup-quad >,
--- @subgroupSize@ /must/ be greater than or equal to 4.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroup-quad ,>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderSubgroupUniformControlFlow shaderSubgroupUniformControlFlow>
+-- is enabled, @subgroupSize@ /must/ be greater than or equal to 4.
 --
 -- == Valid Usage (Implicit)
 --

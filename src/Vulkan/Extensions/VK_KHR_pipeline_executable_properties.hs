@@ -508,8 +508,8 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
 -- available representations were returned.
 --
--- While the details of the internal representations remain implementation
--- dependent, the implementation /should/ order the internal
+-- While the details of the internal representations remain
+-- implementation-dependent, the implementation /should/ order the internal
 -- representations in the order in which they occur in the compiled
 -- pipeline with the final shader assembly (if any) last.
 --

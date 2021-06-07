@@ -555,7 +555,7 @@ foreign import ccall
 --
 -- Note
 --
--- The details of the merge operation are implementation dependent, but
+-- The details of the merge operation are implementation-dependent, but
 -- implementations /should/ merge the contents of the specified validation
 -- caches and prune duplicate entries.
 --

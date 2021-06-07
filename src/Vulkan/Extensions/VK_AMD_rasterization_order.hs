@@ -129,7 +129,7 @@
 -- using the new relaxed mode?
 --
 -- __RESOLVED__: No. In this case the rasterization order is completely
--- implementation dependent, but in practice it is expected to partially
+-- implementation-dependent, but in practice it is expected to partially
 -- still follow the order of incoming primitives.
 --
 -- 4) Does the new relaxed rasterization order have any adverse effect on

@@ -47,7 +47,7 @@
 -- control how this reduction is performed.
 --
 -- -   Merge: When there are more samples in the pixel coverage than color
---     samples, there is an implementation dependent association of each
+--     samples, there is an implementation-dependent association of each
 --     pixel coverage sample to a color sample. In the merge mode, the
 --     color sample coverage is computed such that only if any associated
 --     sample in the pixel coverage is covered, the color sample is
