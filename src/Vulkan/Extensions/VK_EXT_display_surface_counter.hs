@@ -265,13 +265,6 @@ pattern SURFACE_COUNTER_VBLANK_EXT = SURFACE_COUNTER_VBLANK_BIT_EXT
 -- | VkSurfaceCapabilities2EXT - Structure describing capabilities of a
 -- surface
 --
--- = Members
---
--- All members of 'SurfaceCapabilities2EXT' are identical to the
--- corresponding members of
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' where one
--- exists. The remaining members are:
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -285,25 +278,69 @@ pattern SURFACE_COUNTER_VBLANK_EXT = SURFACE_COUNTER_VBLANK_BIT_EXT
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagsKHR',
 -- 'getPhysicalDeviceSurfaceCapabilities2EXT'
 data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
-  { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
+  { -- | @minImageCount@ is the minimum number of images the specified device
+    -- supports for a swapchain created for the surface, and will be at least
+    -- one.
     minImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageCount"
+  , -- | @maxImageCount@ is the maximum number of images the specified device
+    -- supports for a swapchain created for the surface, and will be either 0,
+    -- or greater than or equal to @minImageCount@. A value of 0 means that
+    -- there is no limit on the number of images, though there /may/ be limits
+    -- related to the total amount of memory used by presentable images.
     maxImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "currentExtent"
+  , -- | @currentExtent@ is the current width and height of the surface, or the
+    -- special value (0xFFFFFFFF, 0xFFFFFFFF) indicating that the surface size
+    -- will be determined by the extent of a swapchain targeting the surface.
     currentExtent :: Extent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageExtent"
+  , -- | @minImageExtent@ contains the smallest valid swapchain extent for the
+    -- surface on the specified device. The @width@ and @height@ of the extent
+    -- will each be less than or equal to the corresponding @width@ and
+    -- @height@ of @currentExtent@, unless @currentExtent@ has the special
+    -- value described above.
     minImageExtent :: Extent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageExtent"
+  , -- | @maxImageExtent@ contains the largest valid swapchain extent for the
+    -- surface on the specified device. The @width@ and @height@ of the extent
+    -- will each be greater than or equal to the corresponding @width@ and
+    -- @height@ of @minImageExtent@. The @width@ and @height@ of the extent
+    -- will each be greater than or equal to the corresponding @width@ and
+    -- @height@ of @currentExtent@, unless @currentExtent@ has the special
+    -- value described above.
     maxImageExtent :: Extent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageArrayLayers"
+  , -- | @maxImageArrayLayers@ is the maximum number of layers presentable images
+    -- /can/ have for a swapchain created for this device and surface, and will
+    -- be at least one.
     maxImageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedTransforms"
+  , -- | @supportedTransforms@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
+    -- indicating the presentation transforms supported for the surface on the
+    -- specified device. At least one bit will be set.
     supportedTransforms :: SurfaceTransformFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "currentTransform"
+  , -- | @currentTransform@ is
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
+    -- indicating the surface’s current transform relative to the presentation
+    -- engine’s natural orientation.
     currentTransform :: SurfaceTransformFlagBitsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedCompositeAlpha"
+  , -- | @supportedCompositeAlpha@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR',
+    -- representing the alpha compositing modes supported by the presentation
+    -- engine for the surface on the specified device, and at least one bit
+    -- will be set. Opaque composition /can/ be achieved in any alpha
+    -- compositing mode by either using an image format that has no alpha
+    -- component, or by ensuring that all pixels in the presentable images have
+    -- an alpha value of 1.0.
     supportedCompositeAlpha :: CompositeAlphaFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
+  , -- | @supportedUsageFlags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' representing
+    -- the ways the application /can/ use the presentable images of a swapchain
+    -- created with 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' set to
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR' for the
+    -- surface on the specified device.
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+    -- /must/ be included in the set. Implementations /may/ support additional
+    -- usages.
     supportedUsageFlags :: ImageUsageFlags
   , -- | @supportedSurfaceCounters@ is a bitmask of 'SurfaceCounterFlagBitsEXT'
     -- indicating the supported surface counter types.

@@ -308,7 +308,7 @@
 -- possible, for example for doing explicit preprocessing and execution in
 -- a ping-pong fashion.
 --
--- The actual buffer size is implementation dependent and may be zero, i.e.
+-- The actual buffer size is implementation-dependent and may be zero, i.e.
 -- not always required.
 --
 -- When making use of Graphics Shader Groups, the programs should behave

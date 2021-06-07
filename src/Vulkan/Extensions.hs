@@ -56,6 +56,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_fragment_shader_interlock
                           , module Vulkan.Extensions.VK_EXT_full_screen_exclusive
                           , module Vulkan.Extensions.VK_EXT_global_priority
+                          , module Vulkan.Extensions.VK_EXT_global_priority_query
                           , module Vulkan.Extensions.VK_EXT_hdr_metadata
                           , module Vulkan.Extensions.VK_EXT_headless_surface
                           , module Vulkan.Extensions.VK_EXT_host_query_reset
@@ -172,6 +173,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_shader_float_controls
                           , module Vulkan.Extensions.VK_KHR_shader_non_semantic_info
                           , module Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
+                          , module Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
                           , module Vulkan.Extensions.VK_KHR_shader_terminate_invocation
                           , module Vulkan.Extensions.VK_KHR_shared_presentable_image
                           , module Vulkan.Extensions.VK_KHR_spirv_1_4
@@ -295,6 +297,7 @@ import Vulkan.Extensions.VK_EXT_fragment_density_map2
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock
 import Vulkan.Extensions.VK_EXT_full_screen_exclusive
 import Vulkan.Extensions.VK_EXT_global_priority
+import Vulkan.Extensions.VK_EXT_global_priority_query
 import Vulkan.Extensions.VK_EXT_hdr_metadata
 import Vulkan.Extensions.VK_EXT_headless_surface
 import Vulkan.Extensions.VK_EXT_host_query_reset
@@ -411,6 +414,7 @@ import Vulkan.Extensions.VK_KHR_shader_float16_int8
 import Vulkan.Extensions.VK_KHR_shader_float_controls
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info
 import Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
+import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation
 import Vulkan.Extensions.VK_KHR_shared_presentable_image
 import Vulkan.Extensions.VK_KHR_spirv_1_4

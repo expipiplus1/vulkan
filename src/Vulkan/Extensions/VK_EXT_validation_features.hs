@@ -15,7 +15,7 @@
 --     248
 --
 -- [__Revision__]
---     4
+--     5
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -110,6 +110,10 @@
 --
 --     -   Add Synchronization Validation enable
 --
+-- -   Revision 5, 2021-05-18 (Tony Barbour)
+--
+--     -   Add Shader Validation Cache disable
+--
 -- = See Also
 --
 -- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT',
@@ -137,6 +141,7 @@ module Vulkan.Extensions.VK_EXT_validation_features  ( ValidationFeaturesEXT(..)
                                                                                   , VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT
                                                                                   , VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT
                                                                                   , VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT
+                                                                                  , VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT
                                                                                   , ..
                                                                                   )
                                                      , EXT_VALIDATION_FEATURES_SPEC_VERSION
@@ -354,35 +359,41 @@ newtype ValidationFeatureDisableEXT = ValidationFeatureDisableEXT Int32
 
 -- | 'VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
 -- checks are disabled.
-pattern VALIDATION_FEATURE_DISABLE_ALL_EXT              = ValidationFeatureDisableEXT 0
+pattern VALIDATION_FEATURE_DISABLE_ALL_EXT                     = ValidationFeatureDisableEXT 0
 -- | 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
 -- validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT          = ValidationFeatureDisableEXT 1
+pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT                 = ValidationFeatureDisableEXT 1
 -- | 'VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
 -- safety validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT    = ValidationFeatureDisableEXT 2
+pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT           = ValidationFeatureDisableEXT 2
 -- | 'VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that stateless
 -- parameter validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT   = ValidationFeatureDisableEXT 3
+pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT          = ValidationFeatureDisableEXT 3
 -- | 'VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that object
 -- lifetime validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = ValidationFeatureDisableEXT 4
+pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT        = ValidationFeatureDisableEXT 4
 -- | 'VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
 -- validation checks are disabled. This feature is enabled by default. If
 -- this feature is disabled, the shader validation and GPU-assisted
 -- validation features are also disabled.
-pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT      = ValidationFeatureDisableEXT 5
+pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT             = ValidationFeatureDisableEXT 5
 -- | 'VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
 -- protection against duplicate non-dispatchable object handles is
 -- disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT   = ValidationFeatureDisableEXT 6
+pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT          = ValidationFeatureDisableEXT 6
+-- | 'VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT' specifies that
+-- there will be no caching of shader validation results and every shader
+-- will be validated on every application execution. Shader validation
+-- caching is enabled by default.
+pattern VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT = ValidationFeatureDisableEXT 7
 {-# complete VALIDATION_FEATURE_DISABLE_ALL_EXT,
              VALIDATION_FEATURE_DISABLE_SHADERS_EXT,
              VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT,
              VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT,
              VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT,
              VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT,
-             VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT :: ValidationFeatureDisableEXT #-}
+             VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT,
+             VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT :: ValidationFeatureDisableEXT #-}
 
 conNameValidationFeatureDisableEXT :: String
 conNameValidationFeatureDisableEXT = "ValidationFeatureDisableEXT"
@@ -392,13 +403,14 @@ enumPrefixValidationFeatureDisableEXT = "VALIDATION_FEATURE_DISABLE_"
 
 showTableValidationFeatureDisableEXT :: [(ValidationFeatureDisableEXT, String)]
 showTableValidationFeatureDisableEXT =
-  [ (VALIDATION_FEATURE_DISABLE_ALL_EXT             , "ALL_EXT")
-  , (VALIDATION_FEATURE_DISABLE_SHADERS_EXT         , "SHADERS_EXT")
-  , (VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT   , "THREAD_SAFETY_EXT")
-  , (VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT  , "API_PARAMETERS_EXT")
-  , (VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT, "OBJECT_LIFETIMES_EXT")
-  , (VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT     , "CORE_CHECKS_EXT")
-  , (VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT  , "UNIQUE_HANDLES_EXT")
+  [ (VALIDATION_FEATURE_DISABLE_ALL_EXT                    , "ALL_EXT")
+  , (VALIDATION_FEATURE_DISABLE_SHADERS_EXT                , "SHADERS_EXT")
+  , (VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT          , "THREAD_SAFETY_EXT")
+  , (VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT         , "API_PARAMETERS_EXT")
+  , (VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT       , "OBJECT_LIFETIMES_EXT")
+  , (VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT            , "CORE_CHECKS_EXT")
+  , (VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT         , "UNIQUE_HANDLES_EXT")
+  , (VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT, "SHADER_VALIDATION_CACHE_EXT")
   ]
 
 instance Show ValidationFeatureDisableEXT where
@@ -415,11 +427,11 @@ instance Read ValidationFeatureDisableEXT where
                           ValidationFeatureDisableEXT
 
 
-type EXT_VALIDATION_FEATURES_SPEC_VERSION = 4
+type EXT_VALIDATION_FEATURES_SPEC_VERSION = 5
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_SPEC_VERSION"
 pattern EXT_VALIDATION_FEATURES_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_VALIDATION_FEATURES_SPEC_VERSION = 4
+pattern EXT_VALIDATION_FEATURES_SPEC_VERSION = 5
 
 
 type EXT_VALIDATION_FEATURES_EXTENSION_NAME = "VK_EXT_validation_features"

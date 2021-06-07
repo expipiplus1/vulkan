@@ -62,11 +62,11 @@
 --
 -- 1) What is an appropriate name for the added extension structure? The
 -- style guide says “Structures which extend other structures through the
--- pNext chain should reflect the name of the base structure they extend.”,
--- but in this case a single extension structure is used to extend three
--- base structures (vkCmdBlitImage2KHR, vkCmdCopyImageToBuffer2KHR and
--- vkCmdCopyBufferToImage2KHR). Creating three identical structures with
--- unique names seemed undesirable.
+-- @pNext@ chain should reflect the name of the base structure they
+-- extend.”, but in this case a single extension structure is used to
+-- extend three base structures (vkCmdBlitImage2KHR,
+-- vkCmdCopyImageToBuffer2KHR and vkCmdCopyBufferToImage2KHR). Creating
+-- three identical structures with unique names seemed undesirable.
 --
 -- __RESOLVED__: Deviate from the style guide for extension structure
 -- naming.

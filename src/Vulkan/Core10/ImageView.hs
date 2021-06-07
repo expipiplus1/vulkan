@@ -951,7 +951,7 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-format-04724# If @format@ is one of
 --     those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
---     then the pNext chain /must/ include a
+--     then the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a conversion value other than VK_NULL_HANDLE
 --

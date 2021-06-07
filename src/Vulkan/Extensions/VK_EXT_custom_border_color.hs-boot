@@ -91,7 +91,7 @@
 -- When 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
 -- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT' is used,
 -- applications must provide a 'SamplerCustomBorderColorCreateInfoEXT' in
--- the pNext chain for 'Vulkan.Core10.Sampler.SamplerCreateInfo'.
+-- the @pNext@ chain for 'Vulkan.Core10.Sampler.SamplerCreateInfo'.
 --
 -- == New Structures
 --
@@ -207,7 +207,7 @@
 --
 --     -   Type-ize VK_BORDER_COLOR_CUSTOM
 --
---     -   Fix const-ness on pNext of
+--     -   Fix const-ness on @pNext@ of
 --         VkSamplerCustomBorderColorCreateInfoEXT
 --
 -- -   Revision 7, 2019-11-26 (Liam Middlebrook)

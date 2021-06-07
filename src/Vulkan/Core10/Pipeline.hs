@@ -848,6 +848,10 @@ instance Zero SpecializationMapEntry where
 --     each element of @pMapEntries@ /must/ be less than or equal to
 --     @dataSize@ minus @offset@
 --
+-- -   #VUID-VkSpecializationInfo-constantID-04911# The @constantID@ value
+--     of each element of @pMapEntries@ /must/ be unique within
+--     @pMapEntries@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSpecializationInfo-pMapEntries-parameter# If @mapEntryCount@
@@ -3993,12 +3997,6 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     array of @discardRectangleCount@
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-02097# If the pipeline is
---     being created with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>,
---     @pVertexInputState@ /must/ be a valid pointer to a valid
---     'PipelineVertexInputStateCreateInfo' structure
---
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-02098# If the pipeline is
 --     being created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>,
@@ -4591,7 +4589,10 @@ data GraphicsPipelineCreateInfo (es :: [Type]) = GraphicsPipelineCreateInfo
     stages :: Vector (SomeStruct PipelineShaderStageCreateInfo)
   , -- | @pVertexInputState@ is a pointer to a
     -- 'PipelineVertexInputStateCreateInfo' structure. It is ignored if the
-    -- pipeline includes a mesh shader stage.
+    -- pipeline includes a mesh shader stage. It is ignored if the pipeline is
+    -- created with the
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+    -- dynamic state set.
     vertexInputState :: Maybe (SomeStruct PipelineVertexInputStateCreateInfo)
   , -- | @pInputAssemblyState@ is a pointer to a
     -- 'PipelineInputAssemblyStateCreateInfo' structure which determines input

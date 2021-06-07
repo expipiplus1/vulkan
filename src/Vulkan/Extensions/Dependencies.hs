@@ -36,6 +36,8 @@ import Vulkan.Extensions.VK_EXT_fragment_density_map2 (pattern EXT_FRAGMENT_DENS
 import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_full_screen_exclusive (pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_global_priority (pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_global_priority_query (pattern EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_hdr_metadata (pattern EXT_HDR_METADATA_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_headless_surface (pattern EXT_HEADLESS_SURFACE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_host_query_reset (pattern EXT_HOST_QUERY_RESET_EXTENSION_NAME)
@@ -124,6 +126,7 @@ import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION
 import Vulkan.Extensions.VK_KHR_shader_float16_int8 (pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_float_controls (pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types (pattern KHR_SHADER_SUBGROUP_EXTENDED_TYPES_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (pattern KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shared_presentable_image (pattern KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_spirv_1_4 (pattern KHR_SPIRV_1_4_EXTENSION_NAME)
@@ -504,8 +507,10 @@ extensionDependencies = \case
     , KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
     ]
   EXT_EXTENDED_DYNAMIC_STATE_2_EXTENSION_NAME -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
-  QNX_SCREEN_SURFACE_EXTENSION_NAME -> [KHR_SURFACE_EXTENSION_NAME]
-  EXT_COLOR_WRITE_ENABLE_EXTENSION_NAME -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+  QNX_SCREEN_SURFACE_EXTENSION_NAME           -> [KHR_SURFACE_EXTENSION_NAME]
+  EXT_COLOR_WRITE_ENABLE_EXTENSION_NAME       -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+  EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME ->
+    [EXT_GLOBAL_PRIORITY_EXTENSION_NAME, KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
   _ -> []
 
 -- | The minimum required API version to use this extension
@@ -521,5 +526,6 @@ extensionCoreRequirement = \case
   KHR_SPIRV_1_4_EXTENSION_NAME -> MAKE_API_VERSION 1 1 0
   KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME -> MAKE_API_VERSION 1 1 0
   NV_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME -> MAKE_API_VERSION 1 1 0
+  KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME -> MAKE_API_VERSION 1 1 0
   _                            -> API_VERSION_1_0
 

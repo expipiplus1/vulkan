@@ -101,7 +101,7 @@
 -- == Issues
 --
 -- 1) Should this be better expressed as an extension to VK_EXT_debug_utils
--- and its general purpose messenger construct?
+-- and its general-purpose messenger construct?
 --
 -- __RESOLVED__: No. The intended lifecycle is quite different. We want to
 -- make this extension tied to the device’s lifecycle. Each ICD just

@@ -15,7 +15,7 @@
 --     248
 --
 -- [__Revision__]
---     4
+--     5
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -109,6 +109,10 @@
 -- -   Revision 4, 2020-07-29 (John Zulauf)
 --
 --     -   Add Synchronization Validation enable
+--
+-- -   Revision 5, 2021-05-18 (Tony Barbour)
+--
+--     -   Add Shader Validation Cache disable
 --
 -- = See Also
 --

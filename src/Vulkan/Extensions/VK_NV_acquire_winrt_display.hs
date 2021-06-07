@@ -107,7 +107,7 @@
 -- The X11 acquire command does need to accept a platform-specific
 -- parameter. This could be handled by adding to a platform-independent
 -- acquire command a params struct to which platform-dependent types can be
--- chained by pNext pointer.
+-- chained by @pNext@ pointer.
 --
 -- The prevailing opinion is that it would be odd to create a second
 -- platform-independent function that is used on the Windows 10 platform,
