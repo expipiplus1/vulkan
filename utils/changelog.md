@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Squash warning
 
 ## [0.5.0] - 2021-02-24
 - Refactor module `Vulkan.Utils.ShaderQQ`

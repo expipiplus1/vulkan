@@ -29,7 +29,7 @@ import           Text.Read                      ( readMaybe )
 import           Vulkan.Requirement
 import           Vulkan.Utils.Internal
 import           Vulkan.Utils.Misc
-import           Vulkan.Version                 ( pattern MAKE_VERSION )
+import           Vulkan.Version                 ( pattern MAKE_API_VERSION )
 
 -- $setup
 -- >>> import           Vulkan.Core11.Promoted_From_VK_KHR_multiview
@@ -234,7 +234,7 @@ parse =
       separator
       mi <- word
       pa <- fromMaybe 0 <$> (separator *> optional word)
-      pure $ Version (MAKE_VERSION ma mi pa)
+      pure $ Version (MAKE_API_VERSION ma mi pa)
 
     feature = do
       s <- qual con
