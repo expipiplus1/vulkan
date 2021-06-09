@@ -1,92 +1,99 @@
 name: vulkan-utils
-version: "0.5.0"
+version: 0.5.0.1
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
-  - readme.md
-  - changelog.md
-  - package.yaml
-  - src/Vulkan/Utils/gl_enums.h
+- readme.md
+- changelog.md
+- package.yaml
+- src/Vulkan/Utils/gl_enums.h
 
 library:
   source-dirs: src
   c-sources: cbits/DebugCallback.c
   other-modules:
-    - Vulkan.Utils.Internal
+  - Vulkan.Utils.Internal
+  - Vulkan.Utils.ShaderQQ.ShaderType
+  - Vulkan.Utils.ShaderQQ.Backend.Internal
+  - Vulkan.Utils.ShaderQQ.Backend.Glslang.Internal
+  - Vulkan.Utils.ShaderQQ.Backend.Shaderc.Internal
+  - Vulkan.Utils.ShaderQQ.GLSL
+  - Vulkan.Utils.ShaderQQ.HLSL
+
   dependencies:
-    - base <5
-    - bytestring
-    - containers
-    - dependent-map
-    - dependent-sum
-    - extra
-    - file-embed
-    - filepath
-    - resourcet >= 1.2.4
-    - template-haskell
-    - temporary
-    - text
-    - transformers
-    - typed-process
-    - unordered-containers
-    - vector
-    - vulkan >= 3.6.14 && < 3.11
+  - base <5
+  - bytestring
+  - containers
+  - dependent-map
+  - dependent-sum
+  - extra
+  - file-embed
+  - filepath
+  - resourcet >= 1.2.4
+  - template-haskell
+  - temporary
+  - text
+  - transformers
+  - typed-process
+  - unordered-containers
+  - vector
+  - vulkan >= 3.6.14 && < 3.11
 
 tests:
   doctests:
     main: Doctests.hs
-    other-modules: ""
+    other-modules: ''
     source-dirs:
-      - test/doctest
+    - test/doctest
     dependencies:
-      - base
-      - doctest
-      - vulkan-utils
+    - base
+    - doctest
+    - vulkan-utils
 
 custom-setup:
   dependencies:
-    - base
-    - Cabal
-    - cabal-doctest >= 1 && <1.1
+  - base
+  - Cabal
+  - cabal-doctest >= 1 && <1.1
 
 ghc-options:
-  - -Wall
+- -Wall
 
 default-extensions:
-  - ConstraintKinds
-  - DataKinds
-  - DefaultSignatures
-  - DeriveAnyClass
-  - DeriveFoldable
-  - DeriveFunctor
-  - DeriveTraversable
-  - DerivingStrategies
-  - DuplicateRecordFields
-  - FlexibleContexts
-  - FlexibleInstances
-  - GADTs
-  - GeneralizedNewtypeDeriving
-  - InstanceSigs
-  - LambdaCase
-  - MagicHash
-  - NamedFieldPuns
-  - NoMonomorphismRestriction
-  - OverloadedStrings
-  - PartialTypeSignatures
-  - PatternSynonyms
-  - PolyKinds
-  - QuantifiedConstraints
-  - RankNTypes
-  - RecordWildCards
-  - RoleAnnotations
-  - ScopedTypeVariables
-  - StandaloneDeriving
-  - Strict
-  - TupleSections
-  - TypeApplications
-  - TypeFamilyDependencies
-  - TypeOperators
-  - TypeSynonymInstances
-  - ViewPatterns
+- ConstraintKinds
+- DataKinds
+- DefaultSignatures
+- DeriveAnyClass
+- DeriveFoldable
+- DeriveFunctor
+- DeriveTraversable
+- DerivingStrategies
+- DuplicateRecordFields
+- FlexibleContexts
+- FlexibleInstances
+- GADTs
+- GeneralizedNewtypeDeriving
+- InstanceSigs
+- LambdaCase
+- MagicHash
+- NamedFieldPuns
+- NoMonomorphismRestriction
+- OverloadedStrings
+- PartialTypeSignatures
+- PatternSynonyms
+- PolyKinds
+- QuantifiedConstraints
+- RankNTypes
+- RecordWildCards
+- RoleAnnotations
+- ScopedTypeVariables
+- StandaloneDeriving
+- Strict
+- TupleSections
+- TypeApplications
+- TypeFamilyDependencies
+- TypeOperators
+- TypeSynonymInstances
+- ViewPatterns
