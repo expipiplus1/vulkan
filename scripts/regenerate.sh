@@ -38,8 +38,7 @@ git -C VulkanMemoryAllocator/VulkanMemoryAllocator clean -dxf
 # link the header to src to work around
 # https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/165#issuecomment-855259149
 echo "Generating VMA documentation"
-(cd VulkanMemoryAllocator/VulkanMemoryAllocator/src &&
-  ln -s ../include/vk_mem_alloc.h . &&
+(cd VulkanMemoryAllocator/VulkanMemoryAllocator &&
   sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' Doxyfile &&
   nix-shell -p doxygen --run "doxygen Doxyfile")
 
