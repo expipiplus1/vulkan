@@ -91,7 +91,8 @@ docBookStructToDocumentation isValid db = mdo
 -- original documentation and return them separately.
 --
 -- Return the original documentation with the new document sections removed
-splitStructDocumentation :: CName -> Pandoc -> Either Text (Pandoc, [Documentation])
+splitStructDocumentation
+  :: CName -> Pandoc -> Either Text (Pandoc, [Documentation])
 splitStructDocumentation parent (Pandoc meta bs) =
   let
     replaceHeader = \case
@@ -103,13 +104,16 @@ splitStructDocumentation parent (Pandoc meta bs) =
     -- Doxygen+Pandoc results in some uninteresting type+member name garbage
     removeUninteresting = bottomUp $ \case
       -- documentation provenance
-      Para [Str "The", Space, Str "documentation", Space, Str "for", Space, Str "this", Space, Str "struct", Space, Str "was", Space, Str "generated", Space, Str "from", Space, Str "the", Space, Str "following", Space, Str "file:"] : Plain [Str "vk_mem_alloc.h"] : xs
-        -> xs
+      Para [Str "The", Space, Str "documentation", Space, Str "for", Space, Str "this", Space, Str "struct", Space, Str "was", Space, Str "generated", Space, Str "from", Space, Str "the", Space, Str "following", Space, Str "file:"] : xs
+        -> case xs of
+          Plain [Str "include/"] : Plain [Str "vk_mem_alloc.h"] : ys -> ys
+          Plain [Str "vk_mem_alloc.h"] : ys -> ys
+          _ -> xs
       -- C stugg
       Para [Code _ "#include <vk_mem_alloc.h>"]             : t  -> t
       -- Boring headers
       Header 2 _ [Str "Detailed", Space, Str "Description"] : xs -> xs
-      Header 2 _ [Str "Public", Space, Str "Attributes"] : xs -> xs
+      Header 2 _ [Str "Public"  , Space, Str "Attributes" ] : xs -> xs
       Header 2 _ [Str "Member", Space, Str "Data", Space, Str "Documentation"] : xs
         -> xs
       -- member list
