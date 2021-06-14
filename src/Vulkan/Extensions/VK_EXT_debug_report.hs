@@ -135,11 +135,7 @@
 -- application /can/ link a 'DebugReportCallbackCreateInfoEXT' structure to
 -- the @pNext@ element of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
--- to 'Vulkan.Core10.DeviceInitialization.createInstance'. This callback is
--- only valid for the duration of the
--- 'Vulkan.Core10.DeviceInitialization.createInstance' and the
--- 'Vulkan.Core10.DeviceInitialization.destroyInstance' call. Use
--- 'createDebugReportCallbackEXT' to create persistent callback objects.
+-- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
 -- warnings to the debug console using Windows @OutputDebugString@. The

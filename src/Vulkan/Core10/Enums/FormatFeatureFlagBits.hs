@@ -179,8 +179,10 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     using this format as a source.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
---     specifies that the format can do linear sampler filtering
---     (min\/magFilter) whilst sampler Y′CBCR conversion is enabled.
+--     specifies that an application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source with @chromaFilter@ set to
+--     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT'
 --     specifies that the format can have different chroma, min, and mag
@@ -403,8 +405,10 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPL
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT =
   FormatFeatureFlagBits 0x00080000
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
--- specifies that the format can do linear sampler filtering
--- (min\/magFilter) whilst sampler Y′CBCR conversion is enabled.
+-- specifies that an application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source with @chromaFilter@ set to
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = FormatFeatureFlagBits 0x00040000
 -- | 'FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT' specifies that an
 -- application /can/ define a

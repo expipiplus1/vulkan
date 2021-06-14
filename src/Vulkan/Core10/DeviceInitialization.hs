@@ -1379,6 +1379,34 @@ instance Zero ApplicationInfo where
 -- | VkInstanceCreateInfo - Structure specifying parameters of a newly
 -- created instance
 --
+-- = Description
+--
+-- To capture events that occur while creating or destroying an instance,
+-- an application can link a
+-- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT'
+-- structure or a
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
+-- structure to the @pNext@ element of the 'InstanceCreateInfo' structure
+-- given to 'createInstance'. This callback is only valid for the duration
+-- of the 'createInstance' and the 'destroyInstance' call. Use
+-- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT' or
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT' to
+-- create persistent callback objects.
+--
+-- == Valid Usage
+--
+-- -   #VUID-VkInstanceCreateInfo-pNext-04925# If the @pNext@ chain of
+--     'InstanceCreateInfo' includes a
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT'
+--     structure, the list of enabled extensions in
+--     @ppEnabledExtensionNames@ /must/ contain VK_EXT_debug_report.
+--
+-- -   #VUID-VkInstanceCreateInfo-pNext-04926# If the @pNext@ chain of
+--     'InstanceCreateInfo' includes a
+--     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
+--     structure, the list of enabled extensions in
+--     @ppEnabledExtensionNames@ /must/ contain VK_EXT_debug_utils.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkInstanceCreateInfo-sType-sType# @sType@ /must/ be
