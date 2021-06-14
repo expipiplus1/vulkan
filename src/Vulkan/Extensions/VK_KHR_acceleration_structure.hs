@@ -1461,6 +1461,10 @@ foreign import ccall
 --
 -- = Description
 --
+-- This command copies the @pInfo->src@ acceleration structure to the
+-- @pInfo->dst@ acceleration structure in the manner specified by
+-- @pInfo->mode@.
+--
 -- Accesses to @pInfo->src@ and @pInfo->dst@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
@@ -6771,14 +6775,18 @@ newtype CopyAccelerationStructureModeKHR = CopyAccelerationStructureModeKHR Int3
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR' creates a direct copy of
 -- the acceleration structure specified in @src@ into the one specified by
 -- @dst@. The @dst@ acceleration structure /must/ have been created with
--- the same parameters as @src@.
+-- the same parameters as @src@. If @src@ contains references to other
+-- acceleration structures, @dst@ will reference the same acceleration
+-- structures.
 pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR       = CopyAccelerationStructureModeKHR 0
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' creates a more compact
 -- version of an acceleration structure @src@ into @dst@. The acceleration
 -- structure @dst@ /must/ have been created with a size at least as large
 -- as that returned by 'cmdWriteAccelerationStructuresPropertiesKHR' or
 -- 'writeAccelerationStructuresPropertiesKHR' after the build of the
--- acceleration structure specified by @src@.
+-- acceleration structure specified by @src@. If @src@ contains references
+-- to other acceleration structures, @dst@ will reference the same
+-- acceleration structures.
 pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR     = CopyAccelerationStructureModeKHR 1
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR' serializes the
 -- acceleration structure to a semi-opaque format which can be reloaded on
