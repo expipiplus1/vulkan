@@ -112,7 +112,7 @@ library
       Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags
       Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
       Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
-      Vulkan.Core10.Enums.PipelineLayoutCreateFlags
+      Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
       Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
       Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
       Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits

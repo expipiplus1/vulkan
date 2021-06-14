@@ -59,7 +59,7 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
-                            , module Vulkan.Core10.Enums.PipelineLayoutCreateFlags
+                            , module Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits
@@ -155,7 +155,7 @@ import Vulkan.Core10.Enums.PipelineCreateFlagBits
 import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
 import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
-import Vulkan.Core10.Enums.PipelineLayoutCreateFlags
+import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
 import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
 import Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
 import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits

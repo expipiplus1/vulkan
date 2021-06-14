@@ -25,7 +25,6 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , PipelineDepthStencilStateCreateInfo(..)
                                , GraphicsPipelineCreateInfo(..)
                                , Pipeline(..)
-                               , PipelineLayoutCreateFlags(..)
                                , PipelineDepthStencilStateCreateFlags(..)
                                , PipelineDynamicStateCreateFlags(..)
                                , PipelineColorBlendStateCreateFlags(..)
@@ -55,6 +54,8 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , PipelineShaderStageCreateFlags
                                , ColorComponentFlagBits(..)
                                , ColorComponentFlags
+                               , PipelineLayoutCreateFlagBits(..)
+                               , PipelineLayoutCreateFlags
                                , SampleMask
                                ) where
 
@@ -240,7 +241,8 @@ import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
 import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags (PipelineDepthStencilStateCreateFlags(..))
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags (PipelineDynamicStateCreateFlags(..))
 import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags (PipelineInputAssemblyStateCreateFlags(..))
-import Vulkan.Core10.Enums.PipelineLayoutCreateFlags (PipelineLayoutCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits (PipelineLayoutCreateFlagBits(..))
+import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits (PipelineLayoutCreateFlags)
 import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags (PipelineMultisampleStateCreateFlags(..))
 import Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags (PipelineRasterizationStateCreateFlags(..))
 import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits (PipelineShaderStageCreateFlagBits(..))

@@ -56,7 +56,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipelineLayout))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.Core10.Handles (PipelineLayout(..))
-import Vulkan.Core10.Enums.PipelineLayoutCreateFlags (PipelineLayoutCreateFlags)
+import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits (PipelineLayoutCreateFlags)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
@@ -694,7 +694,7 @@ instance Zero PushConstantRange where
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
--- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlags.PipelineLayoutCreateFlags',
+-- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PipelineLayoutCreateFlags',
 -- 'PushConstantRange', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPipelineLayout'
 data PipelineLayoutCreateInfo = PipelineLayoutCreateInfo
