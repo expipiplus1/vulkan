@@ -689,7 +689,6 @@ parseEmptyBitmasks es = fromList <$> traverseV
   , "type" == name n
   , not (isAlias n)
   , Nothing        <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
-  , Just "VkPipelineLayoutCreateFlags" /= elemText "name" n
   , Just "bitmask" <- pure $ getAttr "category" n
   ]
  where
@@ -701,7 +700,7 @@ parseEmptyBitmasks es = fromList <$> traverseV
 
 parseEnums :: [Content] -> [Content] -> P (Vector Enum')
 parseEnums types es = do
-  flagNameMap <- Map.fromList . (("VkPipelineLayoutCreateFlagBits",("VkPipelineLayoutCreateFlags",Bitmask32)):) <$> sequence
+  flagNameMap <- Map.fromList <$> sequence
     [ do
         f        <- decodeName bits
         b        <- nameElem "bitmask" n
@@ -1002,7 +1001,7 @@ allTypeNames es = do
     , Just c <- pure (getAttr "category" n)
     , c `notElem` ["include", "define"]
     ]
-  requiresTypeNames <- ("VkPipelineLayoutCreateFlags":) <$> traverseV
+  requiresTypeNames <- traverseV
     nameText
     [ n
     | Element n <- es
