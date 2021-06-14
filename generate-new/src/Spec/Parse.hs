@@ -689,7 +689,6 @@ parseEmptyBitmasks es = fromList <$> traverseV
   , "type" == name n
   , not (isAlias n)
   , Nothing        <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
-  , Just "VkPipelineLayoutCreateFlags" /= elemText "name" n
   , Just "bitmask" <- pure $ getAttr "category" n
   ]
  where
@@ -701,7 +700,7 @@ parseEmptyBitmasks es = fromList <$> traverseV
 
 parseEnums :: [Content] -> [Content] -> P (Vector Enum')
 parseEnums types es = do
-  flagNameMap <- Map.fromList . (("VkPipelineLayoutCreateFlagBits",("VkPipelineLayoutCreateFlags",Bitmask32)):) <$> sequence
+  flagNameMap <- Map.fromList <$> sequence
     [ do
         f        <- decodeName bits
         b        <- nameElem "bitmask" n
@@ -720,7 +719,7 @@ parseEnums types es = do
     , Just bits      <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
     , Just "bitmask" <- pure $ getAttr "category" n
     ]
-  fromList <$> traverseV
+  fromList . catMaybes <$> traverseV
     (uncurry
       (parseEnum (fmap snd . (`Map.lookup` flagNameMap))
                  (fmap fst . (`Map.lookup` flagNameMap))
@@ -743,20 +742,23 @@ parseEnums types es = do
     -> Bool
     -> Bool
     -> Node
-    -> P Enum'
+    -> P (Maybe Enum')
   parseEnum getBitmaskWidth getFlagsName evIsExtension isBitmask n = do
-    eName   <- nameAttr "enum" n
-    eValues <- fromList <$> traverseV
-      (context (unCName eName) . parseValue)
-      [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
-    eType <- if isBitmask
-      -- If we can't find the flags name, use the bits name
-      then do
-        width <- note ("No width found for bitmask: " <> unCName eName)
-                      (getBitmaskWidth eName)
-        pure $ ABitmask (fromMaybe eName (getFlagsName eName)) width
-      else pure AnEnum
-    pure Enum { .. }
+    eName <- nameAttr "enum" n
+    if isForbidden eName
+      then pure Nothing
+      else Just <$> do
+        eValues <- fromList <$> traverseV
+          (context (unCName eName) . parseValue)
+          [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
+        eType <- if isBitmask
+          -- If we can't find the flags name, use the bits name
+          then do
+            width <- note ("No width found for bitmask: " <> unCName eName)
+                          (getBitmaskWidth eName)
+            pure $ ABitmask (fromMaybe eName (getFlagsName eName)) width
+          else pure AnEnum
+        pure Enum { .. }
    where
     parseValue :: Node -> P EnumValue
     parseValue v = do
@@ -1002,7 +1004,7 @@ allTypeNames es = do
     , Just c <- pure (getAttr "category" n)
     , c `notElem` ["include", "define"]
     ]
-  requiresTypeNames <- ("VkPipelineLayoutCreateFlags":) <$> traverseV
+  requiresTypeNames <- traverseV
     nameText
     [ n
     | Element n <- es
@@ -1089,6 +1091,7 @@ isForbidden n =
     , "VK_MAKE_VERSION"
     , "VK_MAKE_API_VERSION"
     , "VK_USE_64_BIT_PTR_DEFINES"
+    , "VkPipelineLayoutCreateFlagBits" -- https://github.com/KhronosGroup/Vulkan-Docs/pull/1556
     ]
   xrForbidden =
     [ "openxr_platform_defines"
