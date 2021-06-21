@@ -880,7 +880,7 @@ foreign import ccall
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-vkCmdResetEvent2KHR-stageMask-03936# If the
+-- -   #VUID-vkCmdResetEvent2KHR-stageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -1651,13 +1651,13 @@ foreign import ccall
 -- at any specific stage of the pipeline, it /may/ instead do so at any
 -- logically later stage.
 --
--- Timestamps /may/ only be meaningfully compared if they are written by
--- commands submitted to the same queue.
+-- Comparisons between timestamps are not meaningful if the timestamps are
+-- written by commands submitted to different queues.
 --
 -- Note
 --
--- An example of such a comparison is determining the execution time of a
--- sequence of commands.
+-- An example of such a comparison is subtracting an older timestamp from a
+-- newer one to determine the execution time of a sequence of commands.
 --
 -- If 'cmdWriteTimestamp2KHR' is called while executing a render pass
 -- instance that has multiview enabled, the timestamp uses N consecutive
@@ -1719,7 +1719,7 @@ foreign import ccall
 --     feature is not enabled, @stage@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-vkCmdWriteTimestamp2KHR-stage-03936# If the
+-- -   #VUID-vkCmdWriteTimestamp2KHR-stage-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -1909,7 +1909,7 @@ foreign import ccall
 --     feature is not enabled, @stage@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03936# If the
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -2171,7 +2171,7 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-VkMemoryBarrier2KHR-srcStageMask-03936# If the
+-- -   #VUID-VkMemoryBarrier2KHR-srcStageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -2400,7 +2400,7 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-VkMemoryBarrier2KHR-dstStageMask-03936# If the
+-- -   #VUID-VkMemoryBarrier2KHR-dstStageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -2796,7 +2796,7 @@ instance Zero MemoryBarrier2KHR where
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-VkImageMemoryBarrier2KHR-srcStageMask-03936# If the
+-- -   #VUID-VkImageMemoryBarrier2KHR-srcStageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -3043,7 +3043,7 @@ instance Zero MemoryBarrier2KHR where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-VkImageMemoryBarrier2KHR-dstStageMask-03936# If the
+-- -   #VUID-VkImageMemoryBarrier2KHR-dstStageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -3798,7 +3798,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-VkBufferMemoryBarrier2KHR-srcStageMask-03936# If the
+-- -   #VUID-VkBufferMemoryBarrier2KHR-srcStageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -4045,7 +4045,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-VkBufferMemoryBarrier2KHR-dstStageMask-03936# If the
+-- -   #VUID-VkBufferMemoryBarrier2KHR-dstStageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
@@ -4598,7 +4598,7 @@ instance Zero DependencyInfoKHR where
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
--- -   #VUID-VkSemaphoreSubmitInfoKHR-stageMask-03936# If the
+-- -   #VUID-VkSemaphoreSubmitInfoKHR-stageMask-04956# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'

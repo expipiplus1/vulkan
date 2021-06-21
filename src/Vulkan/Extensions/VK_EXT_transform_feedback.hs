@@ -1934,15 +1934,16 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     -- @maxTransformFeedbackBufferDataStride@ is the maximum stride between
     -- each capture of vertex data to the buffer.
     maxTransformFeedbackBufferDataStride :: Word32
-  , -- | #limits-transformFeedbackQueries# @transformFeedbackQueries@ is true if
-    -- the implementation supports the
+  , -- | #limits-transformFeedbackQueries# @transformFeedbackQueries@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
     -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
     -- query type. @transformFeedbackQueries@ is false if queries of this type
     -- /cannot/ be created.
     transformFeedbackQueries :: Bool
   , -- | #limits-transformFeedbackStreamsLinesTriangles#
-    -- @transformFeedbackStreamsLinesTriangles@ is true if the implementation
-    -- supports the geometry shader @OpExecutionMode@ of @OutputLineStrip@ and
+    -- @transformFeedbackStreamsLinesTriangles@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- geometry shader @OpExecutionMode@ of @OutputLineStrip@ and
     -- @OutputTriangleStrip@ in addition to @OutputPoints@ when more than one
     -- vertex stream is output. If @transformFeedbackStreamsLinesTriangles@ is
     -- false the implementation only supports an @OpExecutionMode@ of
@@ -1950,15 +1951,17 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     -- geometry shader.
     transformFeedbackStreamsLinesTriangles :: Bool
   , -- | #limits-transformFeedbackRasterizationStreamSelect#
-    -- @transformFeedbackRasterizationStreamSelect@ is true if the
-    -- implementation supports the @GeometryStreams@ SPIR-V capability and the
-    -- application can use 'PipelineRasterizationStateStreamCreateInfoEXT' to
-    -- modify which vertex stream output is used for rasterization. Otherwise
-    -- vertex stream @0@ /must/ always be used for rasterization.
+    -- @transformFeedbackRasterizationStreamSelect@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- @GeometryStreams@ SPIR-V capability and the application can use
+    -- 'PipelineRasterizationStateStreamCreateInfoEXT' to modify which vertex
+    -- stream output is used for rasterization. Otherwise vertex stream @0@
+    -- /must/ always be used for rasterization.
     transformFeedbackRasterizationStreamSelect :: Bool
-  , -- | #limits-transformFeedbackDraw# @transformFeedbackDraw@ is true if the
-    -- implementation supports the 'cmdDrawIndirectByteCountEXT' function
-    -- otherwise the function /must/ not be called.
+  , -- | #limits-transformFeedbackDraw# @transformFeedbackDraw@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- 'cmdDrawIndirectByteCountEXT' function otherwise the function /must/ not
+    -- be called.
     transformFeedbackDraw :: Bool
   }
   deriving (Typeable, Eq)

@@ -1338,6 +1338,10 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --
+-- -   #VUID-VkComputePipelineCreateInfo-flags-04945# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
+--
 -- -   #VUID-VkComputePipelineCreateInfo-flags-02874# @flags@ /must/ not
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
@@ -1358,9 +1362,10 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- -   #VUID-VkComputePipelineCreateInfo-pNext-pNext# Each @pNext@ member
 --     of any structure (including this one) in the @pNext@ chain /must/ be
 --     either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD'
+--     'Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
+--     'Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT',
 --     or
---     'Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkSubpassShadingPipelineCreateInfoHUAWEI VkSubpassShadingPipelineCreateInfoHUAWEI>
 --
 -- -   #VUID-VkComputePipelineCreateInfo-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -1862,7 +1867,8 @@ data PipelineInputAssemblyStateCreateInfo = PipelineInputAssemblyStateCreateInfo
   , -- | @primitiveRestartEnable@ controls whether a special vertex index value
     -- is treated as restarting the assembly of primitives. This enable only
     -- applies to indexed draws
-    -- ('Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexed' and
+    -- ('Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexed',
+    -- 'Vulkan.Extensions.VK_EXT_multi_draw.cmdDrawMultiIndexedEXT', and
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect'), and the
     -- special index value is either 0xFFFFFFFF when the @indexType@ parameter
     -- of 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer' is equal to
@@ -4111,6 +4117,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-03577# @flags@ /must/ not
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-04947# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03378# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>

@@ -277,6 +277,7 @@ library
       Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
       Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
       Vulkan.Extensions.VK_EXT_4444_formats
+      Vulkan.Extensions.VK_EXT_acquire_drm_display
       Vulkan.Extensions.VK_EXT_acquire_xlib_display
       Vulkan.Extensions.VK_EXT_astc_decode_mode
       Vulkan.Extensions.VK_EXT_blend_operation_advanced
@@ -320,7 +321,9 @@ library
       Vulkan.Extensions.VK_EXT_memory_budget
       Vulkan.Extensions.VK_EXT_memory_priority
       Vulkan.Extensions.VK_EXT_metal_surface
+      Vulkan.Extensions.VK_EXT_multi_draw
       Vulkan.Extensions.VK_EXT_pci_bus_info
+      Vulkan.Extensions.VK_EXT_physical_device_drm
       Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
       Vulkan.Extensions.VK_EXT_post_depth_coverage
@@ -473,6 +476,7 @@ library
       Vulkan.Extensions.VK_NV_inherited_viewport_scissor
       Vulkan.Extensions.VK_NV_mesh_shader
       Vulkan.Extensions.VK_NV_ray_tracing
+      Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
       Vulkan.Extensions.VK_NV_representative_fragment_test
       Vulkan.Extensions.VK_NV_sample_mask_override_coverage
       Vulkan.Extensions.VK_NV_scissor_exclusive
