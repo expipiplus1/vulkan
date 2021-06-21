@@ -67,7 +67,7 @@ jobs:
 
         echo '<details> <summary>no-documentation diff</summary> <p>' >> "$issue_body"
         echo '' >> "$issue_body"
-        echo '```diff` >> "$issue_body"
+        echo '```diff' >> "$issue_body"
         cat ~/no-doc-diff.patch >> "$issue_body"
         echo '```' >> "$issue_body"
         echo '' >> "$issue_body"
