@@ -63,15 +63,19 @@ jobs:
         echo '' >> "$issue_body"
         echo '</p></details>' >> "$issue_body"
 
-        echo "" >> "$issue_body"
+        echo "pr_message<<EOF_HS_VK" >> "$GITHUB_ENV"
+        printf "%s\n" "$pr_message" >> "$GITHUB_ENV"
+        echo '' >> "$GITHUB_ENV"
+        echo '<details> <summary>no-documentation diff</summary> <p>' >> "$GITHUB_ENV"
+        echo '' >> "$GITHUB_ENV"
+        echo '```diff' >> "$GITHUB_ENV"
+        cat ~/no-doc-diff.patch >> "$GITHUB_ENV"
+        echo '```' >> "$GITHUB_ENV"
+        echo '' >> "$GITHUB_ENV"
+        echo '</p></details>' >> "$GITHUB_ENV"
+        echo "EOF_HS_VK" >> $GITHUB_ENV
 
-        echo '<details> <summary>no-documentation diff</summary> <p>' >> "$issue_body"
-        echo '' >> "$issue_body"
-        echo '```diff' >> "$issue_body"
-        cat ~/no-doc-diff.patch >> "$issue_body"
-        echo '```' >> "$issue_body"
-        echo '' >> "$issue_body"
-        echo '</p></details>' >> "$issue_body"
+        cat "$issue_body"
 
         (exit $code)
 
