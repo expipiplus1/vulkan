@@ -145,11 +145,13 @@ toCStructInstance MarshaledStruct {..} = do
         addrRef <- stmt Nothing Nothing $ do
           tellImport 'castPtr
           pTyDoc <- renderTypeHighPrec
-            =<< cToHsType DoPreserve (smType msmStructMember)
+            =<< cToHsTypeWithHoles DoPreserve (smType msmStructMember)
           pure
-            . Pure AlwaysInline
-            . AddrDoc
-            $ ("castPtr @_ @" <> pTyDoc <+> addrVar)
+            .   Pure AlwaysInline
+            .   AddrDoc
+            $   "castPtr @_ @"
+            <>  pTyDoc
+            <+> addrVar
         ty       <- schemeTypeNegative msmScheme
         valueRef <-
           stmt ty Nothing . pure . Pure AlwaysInline . ValueDoc . pretty $ mVar
@@ -232,8 +234,9 @@ zeroInstance MarshaledStruct {..} = do
           Just z  -> pure z
         let con = pretty (mkConName msName (smName msmStructMember))
         size <- case msmScheme of
-          Normal   t          -> fst <$> getTypeSize t
-          Preserve t          -> fst <$> getTypeSize t
+          Normal        t     -> fst <$> getTypeSize t
+          Preserve      t     -> fst <$> getTypeSize t
+          WrappedStruct t     -> fst <$> getTypeSize (TypeName t)
           Tupled n (Normal e) -> do
             (tSize, _) <- getTypeSize e
             pure $ tSize * fromIntegral n
@@ -280,7 +283,8 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
         $ find ((== smName msmStructMember) . snd) udValueConstructorMap
     let pat' = mkPatternName pat
         con' = mkConName msName con
-    ty    <- cToHsType DoPreserve (smType msmStructMember)
+    -- Should this be wrapped, or withHoles?
+    ty    <- cToHsTypeWrapped DoPreserve (smType msmStructMember)
     tyDoc <- renderTypeHighPrec ty
     tellImport 'castPtr
     let addr = AddrDoc ("castPtr @_ @" <> tyDoc <+> ptrName)
