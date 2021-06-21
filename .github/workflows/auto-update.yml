@@ -36,7 +36,11 @@ jobs:
         echo "::set-output name=issue_body::$issue_body"
         echo "$message" > "$issue_body"
         echo >> "$issue_body"
-        printf "%s\n" "pr_message=$message" >> "$GITHUB_ENV"
+
+        pr_body=~/pr_body
+        echo "::set-output name=pr_body::$pr_body"
+        echo "$message" > "$pr_body"
+        echo >> "$pr_body"
 
     - name: Build dependencies
       run: |
@@ -49,6 +53,8 @@ jobs:
       id: update
       env:
         issue_body: ${{ steps.init.outputs.issue_body }}
+        pr_body: ${{ steps.init.outputs.pr_body }}
+        tok: ${{ secrets.TUVOK_TOKEN }}
       run: |
         set +e
         ./scripts/update.sh --no-doc-diff ~/no-doc-diff.patch 2>&1 | tee --append ~/update_output
@@ -63,19 +69,22 @@ jobs:
         echo '' >> "$issue_body"
         echo '</p></details>' >> "$issue_body"
 
-        echo "pr_message<<EOF_HS_VK" >> "$GITHUB_ENV"
-        printf "%s\n" "$pr_message" >> "$GITHUB_ENV"
-        echo '' >> "$GITHUB_ENV"
-        echo '<details> <summary>no-documentation diff</summary> <p>' >> "$GITHUB_ENV"
-        echo '' >> "$GITHUB_ENV"
-        echo '```diff' >> "$GITHUB_ENV"
-        cat ~/no-doc-diff.patch >> "$GITHUB_ENV"
-        echo '```' >> "$GITHUB_ENV"
-        echo '' >> "$GITHUB_ENV"
-        echo '</p></details>' >> "$GITHUB_ENV"
-        echo "EOF_HS_VK" >> $GITHUB_ENV
+        jq -R -s '{"description": "Vulkan update diff", "public": false, "files": {"vulkan.diff": {"content": .}}}' < ~/no-doc-diff.patch > ~/vulkan.diff.json
+        gist_url=$((curl \
+          --header "Content-Type: application/json" \
+          --data @~/vulkan.diff.json \
+          --user "$tok:" \
+          https://api.github.com/gists |
+          jq --raw-output .html_url |
+          sed 's/.*/[Diff without documentation changes](\0)/') ||
+          echo "Failed to create gist for diff"
+         )
 
-        cat "$issue_body"
+        echo "pr_message<<EOF_HS_VK" >> "$GITHUB_ENV"
+        cat $pr_body >> "$GITHUB_ENV"
+        echo >> "$GITHUB_ENV"
+        echo "$gist_url" >> "$GITHUB_ENV"
+        echo "EOF_HS_VK" >> $GITHUB_ENV
 
         (exit $code)
 
