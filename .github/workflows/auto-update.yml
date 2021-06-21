@@ -55,15 +55,23 @@ jobs:
         code=${PIPESTATUS[0]}
         set -e
 
-        echo 'log of `generate-new/bin/vk`' >> "$issue_body"
+        echo '<details> <summary>log of `generate-new/bin/vk`</summary> <p>' >> "$issue_body"
+        echo '' >> "$issue_body"
         echo '```' >> "$issue_body"
         cat ~/update_output >> "$issue_body"
         echo '```' >> "$issue_body"
+        echo '' >> "$issue_body"
+        echo '</p></details>' >> "$issue_body"
+
         echo "" >> "$issue_body"
-        echo 'no-documentation diff' >> "$issue_body"
+
+        echo '<details> <summary>no-documentation diff</summary> <p>' >> "$issue_body"
+        echo '' >> "$issue_body"
         echo '```diff` >> "$issue_body"
         cat ~/no-doc-diff.patch >> "$issue_body"
         echo '```' >> "$issue_body"
+        echo '' >> "$issue_body"
+        echo '</p></details>' >> "$issue_body"
 
         (exit $code)
 
