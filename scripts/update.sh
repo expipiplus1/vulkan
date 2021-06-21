@@ -62,7 +62,8 @@ fi
 
 echo "Updating Vulkan-Docs"
 git -C generate-new/Vulkan-Docs fetch
-git -C generate-new/Vulkan-Docs checkout "$version"
+git -C generate-new/Vulkan-Docs fetch --tags
+git -C generate-new/Vulkan-Docs checkout "tags/$version"
 
 after=
 if [ "$no_doc_diff" ]; then
