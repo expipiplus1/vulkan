@@ -72,6 +72,8 @@ forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
 forceDisabledExtensions :: [ByteString]
 forceDisabledExtensions =
   [ "XR_EXT_conformance_automation"
+    -- Video extensions will make it into the xml registry it seems, disable
+    -- them until then.
   , "VK_EXT_video_decode_h264"
   , "VK_EXT_video_encode_h264"
   , "VK_EXT_video_decode_h265"
@@ -79,6 +81,8 @@ forceDisabledExtensions =
   , "VK_KHR_video_decode_queue"
   , "VK_KHR_video_encode_queue"
   , "VK_KHR_video_queue"
+    -- Unresolved queries in Vulkan-Docs
+  , "VK_HUAWEI_subpass_shading" -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1564
   ]
 
 ----------------------------------------------------------------
@@ -543,7 +547,13 @@ difficultLengths =
 -- (lower bits) one is written and not doing anything for the second one.
 bitfields :: BespokeScheme
 bitfields = BespokeScheme $ \case
-  "VkAccelerationStructureInstanceKHR" -> \case
+  "VkAccelerationStructureInstanceKHR" -> rtFields
+  "VkAccelerationStructureSRTMotionInstanceNV" -> rtFields
+  "VkAccelerationStructureMatrixMotionInstanceNV" -> rtFields
+  _ -> const Nothing
+ where
+  rtFields :: Marshalable a => a -> Maybe (MarshalScheme a)
+  rtFields = \case
     p
       | "instanceCustomIndex" <- name p -> Just $ bitfieldMaster p ("mask", 8)
       | "mask" <- name p -> Just $ bitfieldSlave 24 p
@@ -551,8 +561,6 @@ bitfields = BespokeScheme $ \case
       $ bitfieldMaster p ("flags", 8)
       | "flags" <- name p -> Just $ bitfieldSlave 24 p
     _ -> Nothing
-  _ -> const Nothing
- where
   peekBitfield
     :: (HasRenderElem r, HasErr r, HasSpecInfo r, HasRenderParams r)
     => CName

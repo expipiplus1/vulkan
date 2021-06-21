@@ -310,6 +310,110 @@ structSizeOverrides = \case
                                (V.fromList [0, 48, 48, 52, 52, 56])
                                ms
       }
+  s@(Struct "VkAccelerationStructureSRTMotionInstanceNV" ms () () _ _ _ _)
+    | ms == V.fromList
+      [ StructMember "transformT0"
+                     (TypeName "VkSRTDataNV")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "transformT1"
+                     (TypeName "VkSRTDataNV")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceCustomIndex"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "mask"
+                     (Bitfield (TypeName "uint32_t") 8)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceShaderBindingTableRecordOffset"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "flags"
+                     (Bitfield (TypeName "VkGeometryInstanceFlagsKHR") 8)
+                     mempty
+                     mempty
+                     (V.singleton True)
+                     ()
+      , StructMember "accelerationStructureReference"
+                     (TypeName "uint64_t")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      ]
+    -> Just s
+      { sSize      = 144
+      , sAlignment = 8
+      , sMembers   = V.zipWith (\o m -> m { smOffset = o })
+                               (V.fromList [0, 64, 128, 128, 132, 132, 136])
+                               ms
+      }
+  s@(Struct "VkAccelerationStructureMatrixMotionInstanceNV" ms () () _ _ _ _)
+    | ms == V.fromList
+      [ StructMember "transformT0"
+                     (TypeName "VkTransformMatrixKHR")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "transformT1"
+                     (TypeName "VkTransformMatrixKHR")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceCustomIndex"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "mask"
+                     (Bitfield (TypeName "uint32_t") 8)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceShaderBindingTableRecordOffset"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "flags"
+                     (Bitfield (TypeName "VkGeometryInstanceFlagsKHR") 8)
+                     mempty
+                     mempty
+                     (V.singleton True)
+                     ()
+      , StructMember "accelerationStructureReference"
+                     (TypeName "uint64_t")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      ]
+    -> Just s
+      { sSize      = 112
+      , sAlignment = 8
+      , sMembers   = V.zipWith (\o m -> m { smOffset = o })
+                               (V.fromList [0, 48, 96, 96, 100, 100, 104])
+                               ms
+      }
   _ -> Nothing
 
 sizeStruct
@@ -948,8 +1052,13 @@ parseSPIRVThings
   -> (Text -> Vector SPIRVRequirement -> a)
   -> [Content]
   -> P (Vector a)
-parseSPIRVThings thingType mkThing es = V.fromList
-  <$> sequenceV [ parseExtension e | Element e <- es, thingType == name e ]
+parseSPIRVThings thingType mkThing es = V.fromList <$> sequenceV
+  [ parseExtension e
+  | Element e <- es
+  , thingType == name e
+    -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1565
+  , getAttr "name" e /= Just "RayTracingMotionBlurNV"
+  ]
  where
   parseExtension n = do
     name <- decode =<< note ("spirv " <> show thingType <> " has no name")
