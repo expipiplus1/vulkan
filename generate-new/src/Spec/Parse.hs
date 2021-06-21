@@ -1052,8 +1052,13 @@ parseSPIRVThings
   -> (Text -> Vector SPIRVRequirement -> a)
   -> [Content]
   -> P (Vector a)
-parseSPIRVThings thingType mkThing es = V.fromList
-  <$> sequenceV [ parseExtension e | Element e <- es, thingType == name e ]
+parseSPIRVThings thingType mkThing es = V.fromList <$> sequenceV
+  [ parseExtension e
+  | Element e <- es
+  , thingType == name e
+    -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1565
+  , getAttr "name" e /= Just "RayTracingMotionBlurNV"
+  ]
  where
   parseExtension n = do
     name <- decode =<< note ("spirv " <> show thingType <> " has no name")
