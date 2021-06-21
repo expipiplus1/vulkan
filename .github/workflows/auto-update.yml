@@ -56,8 +56,9 @@ jobs:
         pr_body: ${{ steps.init.outputs.pr_body }}
         tok: ${{ secrets.TUVOK_TOKEN }}
       run: |
+        ndd="$HOME/no-doc-diff.patch"
         set +e
-        ./scripts/update.sh --no-doc-diff ~/no-doc-diff.patch 2>&1 | tee --append ~/update_output
+        ./scripts/update.sh --no-doc-diff "$ndd" 2>&1 | tee --append ~/update_output
         code=${PIPESTATUS[0]}
         set -e
 
@@ -69,16 +70,19 @@ jobs:
         echo '' >> "$issue_body"
         echo '</p></details>' >> "$issue_body"
 
-        jq -R -s '{"description": "Vulkan update diff", "public": false, "files": {"vulkan.diff": {"content": .}}}' < ~/no-doc-diff.patch > ~/vulkan.diff.json
-        gist_url=$((curl \
+        gist="$HOME/gist-post.json"
+        jq -R -s '{"description": "Vulkan update diff", "public": false, "files": {"vulkan.diff": {"content": .}}}' < "$ndd" > "$gist"
+        cat "$gist"
+        gist_url=$( (curl \
           --header "Content-Type: application/json" \
-          --data @~/vulkan.diff.json \
+          --data @"$gist" \
           --user "$tok:" \
           https://api.github.com/gists |
           jq --raw-output .html_url |
           sed 's/.*/[Diff without documentation changes](\0)/') ||
           echo "Failed to create gist for diff"
          )
+        echo gist_url = "$gist_url"
 
         echo "pr_message<<EOF_HS_VK" >> "$GITHUB_ENV"
         cat $pr_body >> "$GITHUB_ENV"
