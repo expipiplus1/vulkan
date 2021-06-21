@@ -67,7 +67,7 @@ git -C generate-new/Vulkan-Docs checkout "$version"
 after=
 if [ "$no_doc_diff" ]; then
   after=$(nix-build --no-out-link nix/generate.nix --arg withDocs false)
-  git diff --no-index "$before"/ "$after"/ > "$no_doc_diff"
+  git diff --no-index "$before"/ "$after"/ > "$no_doc_diff" || true
 fi
 
 
