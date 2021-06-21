@@ -51,7 +51,7 @@ jobs:
         issue_body: ${{ steps.init.outputs.issue_body }}
       run: |
         set +e
-        ./scripts/update.sh 2>&1 | tee --append ~/update_output
+        ./scripts/update.sh --no-doc-diff ~/no-doc-diff.patch 2>&1 | tee --append ~/update_output
         code=${PIPESTATUS[0]}
         set -e
 
@@ -59,7 +59,11 @@ jobs:
         echo '```' >> "$issue_body"
         cat ~/update_output >> "$issue_body"
         echo '```' >> "$issue_body"
-
+        echo "" >> "$issue_body"
+        echo 'no-documentation diff' >> "$issue_body"
+        echo '```diff` >> "$issue_body"
+        cat ~/no-doc-diff.patch >> "$issue_body"
+        echo '```' >> "$issue_body"
 
         (exit $code)
 
