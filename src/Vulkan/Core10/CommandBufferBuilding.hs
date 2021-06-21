@@ -2894,11 +2894,11 @@ foreign import ccall
 --     within the corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
--- -   #VUID-vkCmdDrawIndexed-indexSize-00463# (@indexSize@ × (@firstIndex@
---     + @indexCount@) + @offset@) /must/ be less than or equal to the size
---     of the bound index buffer, with @indexSize@ being based on the type
---     specified by @indexType@, where the index buffer, @indexType@, and
---     @offset@ are specified via 'cmdBindIndexBuffer'
+-- -   #VUID-vkCmdDrawIndexed-firstIndex-04932# (@indexSize@ ×
+--     (@firstIndex@ + @indexCount@) + @offset@) /must/ be less than or
+--     equal to the size of the bound index buffer, with @indexSize@ being
+--     based on the type specified by @indexType@, where the index buffer,
+--     @indexType@, and @offset@ are specified via 'cmdBindIndexBuffer'
 --
 -- == Valid Usage (Implicit)
 --
@@ -9535,13 +9535,13 @@ foreign import ccall
 -- at any specific stage of the pipeline, it /may/ instead do so at any
 -- logically later stage.
 --
--- Timestamps /may/ only be meaningfully compared if they are written by
--- commands submitted to the same queue.
+-- Comparisons between timestamps are not meaningful if the timestamps are
+-- written by commands submitted to different queues.
 --
 -- Note
 --
--- An example of such a comparison is determining the execution time of a
--- sequence of commands.
+-- An example of such a comparison is subtracting an older timestamp from a
+-- newer one to determine the execution time of a sequence of commands.
 --
 -- If 'cmdWriteTimestamp' is called while executing a render pass instance
 -- that has multiview enabled, the timestamp uses N consecutive query

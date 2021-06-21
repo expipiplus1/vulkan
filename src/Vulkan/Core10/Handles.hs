@@ -124,6 +124,7 @@ data PhysicalDevice_T
 --
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.PhysicalDeviceGroupProperties',
+-- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.acquireDrmDisplayEXT',
 -- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.acquireWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.acquireXlibDisplayEXT',
 -- 'Vulkan.Core10.Device.createDevice',
@@ -137,6 +138,7 @@ data PhysicalDevice_T
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.getDisplayPlaneCapabilities2KHR',
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayPlaneCapabilitiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayPlaneSupportedDisplaysKHR',
+-- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.getDrmDisplayEXT',
 -- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.getPhysicalDeviceCalibrateableTimeDomainsEXT',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix.getPhysicalDeviceCooperativeMatrixPropertiesNV',
 -- 'Vulkan.Extensions.VK_EXT_directfb_surface.getPhysicalDeviceDirectFBPresentationSupportEXT',
@@ -550,6 +552,8 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksNV',
+-- 'Vulkan.Extensions.VK_EXT_multi_draw.cmdDrawMultiEXT',
+-- 'Vulkan.Extensions.VK_EXT_multi_draw.cmdDrawMultiIndexedEXT',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdEncodeVideoKHR vkCmdEncodeVideoKHR>,
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.cmdEndConditionalRenderingEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.cmdEndDebugUtilsLabelEXT',
@@ -623,6 +627,7 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV',
 -- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdSubpassShadingHUAWEI vkCmdSubpassShadingHUAWEI>,
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
@@ -1134,11 +1139,13 @@ instance Show Framebuffer where
 -- 'Vulkan.Core10.Pass.FramebufferCreateInfo',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkSubpassShadingPipelineCreateInfoHUAWEI VkSubpassShadingPipelineCreateInfoHUAWEI>,
 -- 'Vulkan.Core10.Pass.createRenderPass',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.createRenderPass2KHR',
 -- 'Vulkan.Core10.Pass.destroyRenderPass',
--- 'Vulkan.Core10.Pass.getRenderAreaGranularity'
+-- 'Vulkan.Core10.Pass.getRenderAreaGranularity',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetSubpassShadingMaxWorkgroupSizeHUAWEI vkGetSubpassShadingMaxWorkgroupSizeHUAWEI>
 newtype RenderPass = RenderPass Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

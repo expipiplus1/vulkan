@@ -234,6 +234,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryR
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryZirconHandlePropertiesFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawIndexedInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ObjectType (ObjectType)
 import {-# SOURCE #-} Vulkan.Core10.FuncPointers (PFN_vkVoidFunction)
@@ -454,6 +456,8 @@ data InstanceCmds = InstanceCmds
   , pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: FunPtr (Ptr PhysicalDevice_T -> ("pCombinationCount" ::: Ptr Word32) -> ("pCombinations" ::: Ptr FramebufferMixedSamplesCombinationNV) -> IO Result)
   , pVkGetPhysicalDeviceToolPropertiesEXT :: FunPtr (Ptr PhysicalDevice_T -> ("pToolCount" ::: Ptr Word32) -> ("pToolProperties" ::: Ptr PhysicalDeviceToolPropertiesEXT) -> IO Result)
   , pVkGetPhysicalDeviceFragmentShadingRatesKHR :: FunPtr (Ptr PhysicalDevice_T -> ("pFragmentShadingRateCount" ::: Ptr Word32) -> ("pFragmentShadingRates" ::: Ptr PhysicalDeviceFragmentShadingRateKHR) -> IO Result)
+  , pVkAcquireDrmDisplayEXT :: FunPtr (Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> DisplayKHR -> IO Result)
+  , pVkGetDrmDisplayEXT :: FunPtr (Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> ("connectorId" ::: Word32) -> Ptr DisplayKHR -> IO Result)
   }
 
 deriving instance Eq InstanceCmds
@@ -470,7 +474,7 @@ instance Zero InstanceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 -- | A version of 'getInstanceProcAddr' which can be called
 -- with a null pointer for the instance.
@@ -574,6 +578,8 @@ initInstanceCmds handle = do
   vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV"#)
   vkGetPhysicalDeviceToolPropertiesEXT <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceToolPropertiesEXT"#)
   vkGetPhysicalDeviceFragmentShadingRatesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceFragmentShadingRatesKHR"#)
+  vkAcquireDrmDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkAcquireDrmDisplayEXT"#)
+  vkGetDrmDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkGetDrmDisplayEXT"#)
   pure $ InstanceCmds handle
     (castFunPtr @_ @(Ptr Instance_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyInstance)
     (castFunPtr @_ @(Ptr Instance_T -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr (Ptr PhysicalDevice_T)) -> IO Result) vkEnumeratePhysicalDevices)
@@ -660,6 +666,8 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pCombinationCount" ::: Ptr Word32) -> ("pCombinations" ::: Ptr FramebufferMixedSamplesCombinationNV) -> IO Result) vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pToolCount" ::: Ptr Word32) -> ("pToolProperties" ::: Ptr PhysicalDeviceToolPropertiesEXT) -> IO Result) vkGetPhysicalDeviceToolPropertiesEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pFragmentShadingRateCount" ::: Ptr Word32) -> ("pFragmentShadingRates" ::: Ptr PhysicalDeviceFragmentShadingRateKHR) -> IO Result) vkGetPhysicalDeviceFragmentShadingRatesKHR)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> DisplayKHR -> IO Result) vkAcquireDrmDisplayEXT)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> ("connectorId" ::: Word32) -> Ptr DisplayKHR -> IO Result) vkGetDrmDisplayEXT)
 
 data DeviceCmds = DeviceCmds
   { deviceCmdsHandle :: Ptr Device_T
@@ -756,6 +764,8 @@ data DeviceCmds = DeviceCmds
   , pVkCmdBindVertexBuffers :: FunPtr (Ptr CommandBuffer_T -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr Buffer) -> ("pOffsets" ::: Ptr DeviceSize) -> IO ())
   , pVkCmdDraw :: FunPtr (Ptr CommandBuffer_T -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ())
   , pVkCmdDrawIndexed :: FunPtr (Ptr CommandBuffer_T -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ())
+  , pVkCmdDrawMultiEXT :: FunPtr (Ptr CommandBuffer_T -> ("drawCount" ::: Word32) -> ("pVertexInfo" ::: Ptr MultiDrawInfoEXT) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCmdDrawMultiIndexedEXT :: FunPtr (Ptr CommandBuffer_T -> ("drawCount" ::: Word32) -> ("pIndexInfo" ::: Ptr MultiDrawIndexedInfoEXT) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("stride" ::: Word32) -> ("pVertexOffset" ::: Ptr Int32) -> IO ())
   , pVkCmdDrawIndirect :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
   , pVkCmdDrawIndexedIndirect :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
   , pVkCmdDispatch :: FunPtr (Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ())
@@ -948,7 +958,7 @@ data DeviceCmds = DeviceCmds
   , pVkGetPipelineExecutableStatisticsKHR :: FunPtr (Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pStatisticCount" ::: Ptr Word32) -> ("pStatistics" ::: Ptr PipelineExecutableStatisticKHR) -> IO Result)
   , pVkGetPipelineExecutableInternalRepresentationsKHR :: FunPtr (Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pInternalRepresentationCount" ::: Ptr Word32) -> ("pInternalRepresentations" ::: Ptr PipelineExecutableInternalRepresentationKHR) -> IO Result)
   , pVkCmdSetLineStippleEXT :: FunPtr (Ptr CommandBuffer_T -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ())
-  , pVkCreateAccelerationStructureKHR :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr AccelerationStructureCreateInfoKHR) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureKHR) -> IO Result)
+  , pVkCreateAccelerationStructureKHR :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct AccelerationStructureCreateInfoKHR)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureKHR) -> IO Result)
   , pVkCmdBuildAccelerationStructuresKHR :: FunPtr (Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("ppBuildRangeInfos" ::: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) -> IO ())
   , pVkCmdBuildAccelerationStructuresIndirectKHR :: FunPtr (Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("pIndirectDeviceAddresses" ::: Ptr DeviceAddress) -> ("pIndirectStrides" ::: Ptr Word32) -> ("ppMaxPrimitiveCounts" ::: Ptr (Ptr Word32)) -> IO ())
   , pVkBuildAccelerationStructuresKHR :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("ppBuildRangeInfos" ::: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) -> IO Result)
@@ -1051,7 +1061,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1165,6 +1175,8 @@ initDeviceCmds instanceCmds handle = do
   vkCmdBindVertexBuffers <- getDeviceProcAddr' handle (Ptr "vkCmdBindVertexBuffers"#)
   vkCmdDraw <- getDeviceProcAddr' handle (Ptr "vkCmdDraw"#)
   vkCmdDrawIndexed <- getDeviceProcAddr' handle (Ptr "vkCmdDrawIndexed"#)
+  vkCmdDrawMultiEXT <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMultiEXT"#)
+  vkCmdDrawMultiIndexedEXT <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMultiIndexedEXT"#)
   vkCmdDrawIndirect <- getDeviceProcAddr' handle (Ptr "vkCmdDrawIndirect"#)
   vkCmdDrawIndexedIndirect <- getDeviceProcAddr' handle (Ptr "vkCmdDrawIndexedIndirect"#)
   vkCmdDispatch <- getDeviceProcAddr' handle (Ptr "vkCmdDispatch"#)
@@ -1506,6 +1518,8 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr Buffer) -> ("pOffsets" ::: Ptr DeviceSize) -> IO ()) vkCmdBindVertexBuffers)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()) vkCmdDraw)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()) vkCmdDrawIndexed)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("drawCount" ::: Word32) -> ("pVertexInfo" ::: Ptr MultiDrawInfoEXT) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawMultiEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("drawCount" ::: Word32) -> ("pIndexInfo" ::: Ptr MultiDrawIndexedInfoEXT) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("stride" ::: Word32) -> ("pVertexOffset" ::: Ptr Int32) -> IO ()) vkCmdDrawMultiIndexedEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawIndirect)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawIndexedIndirect)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()) vkCmdDispatch)
@@ -1698,7 +1712,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pStatisticCount" ::: Ptr Word32) -> ("pStatistics" ::: Ptr PipelineExecutableStatisticKHR) -> IO Result) vkGetPipelineExecutableStatisticsKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pInternalRepresentationCount" ::: Ptr Word32) -> ("pInternalRepresentations" ::: Ptr PipelineExecutableInternalRepresentationKHR) -> IO Result) vkGetPipelineExecutableInternalRepresentationsKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ()) vkCmdSetLineStippleEXT)
-    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr AccelerationStructureCreateInfoKHR) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureKHR) -> IO Result) vkCreateAccelerationStructureKHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct AccelerationStructureCreateInfoKHR)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureKHR) -> IO Result) vkCreateAccelerationStructureKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("ppBuildRangeInfos" ::: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) -> IO ()) vkCmdBuildAccelerationStructuresKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("pIndirectDeviceAddresses" ::: Ptr DeviceAddress) -> ("pIndirectStrides" ::: Ptr Word32) -> ("ppMaxPrimitiveCounts" ::: Ptr (Ptr Word32)) -> IO ()) vkCmdBuildAccelerationStructuresIndirectKHR)
     (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("ppBuildRangeInfos" ::: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) -> IO Result) vkBuildAccelerationStructuresKHR)

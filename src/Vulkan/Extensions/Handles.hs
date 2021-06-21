@@ -262,6 +262,7 @@ instance Show CuFunctionNVX where
 --
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
+-- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.acquireDrmDisplayEXT',
 -- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.acquireWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.acquireXlibDisplayEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayModeKHR',
@@ -269,6 +270,7 @@ instance Show CuFunctionNVX where
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.getDisplayModeProperties2KHR',
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayModePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayPlaneSupportedDisplaysKHR',
+-- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.getDrmDisplayEXT',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.getRandROutputDisplayEXT',
 -- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.getWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT',

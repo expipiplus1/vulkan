@@ -2651,6 +2651,10 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --     not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-04948# @flags@ /must/
+--     not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
+--
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-02957# @flags@ /must/
 --     not include both
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEFER_COMPILE_BIT_NV'
