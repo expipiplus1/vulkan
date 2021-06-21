@@ -547,7 +547,13 @@ difficultLengths =
 -- (lower bits) one is written and not doing anything for the second one.
 bitfields :: BespokeScheme
 bitfields = BespokeScheme $ \case
-  "VkAccelerationStructureInstanceKHR" -> \case
+  "VkAccelerationStructureInstanceKHR" -> rtFields
+  "VkAccelerationStructureSRTMotionInstanceNV" -> rtFields
+  "VkAccelerationStructureMatrixMotionInstanceNV" -> rtFields
+  _ -> const Nothing
+ where
+  rtFields :: Marshalable a => a -> Maybe (MarshalScheme a)
+  rtFields = \case
     p
       | "instanceCustomIndex" <- name p -> Just $ bitfieldMaster p ("mask", 8)
       | "mask" <- name p -> Just $ bitfieldSlave 24 p
@@ -555,8 +561,6 @@ bitfields = BespokeScheme $ \case
       $ bitfieldMaster p ("flags", 8)
       | "flags" <- name p -> Just $ bitfieldSlave 24 p
     _ -> Nothing
-  _ -> const Nothing
- where
   peekBitfield
     :: (HasRenderElem r, HasErr r, HasSpecInfo r, HasRenderParams r)
     => CName
