@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump VMA, adding alignment info to PoolCreateInfo
 
 ## [0.5.1] - 2021-06-05
 - Bump VMA, documentation changes
