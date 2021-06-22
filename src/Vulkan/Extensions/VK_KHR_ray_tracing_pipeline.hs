@@ -2160,6 +2160,12 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect ::rayTracingPipelineTraceRaysIndirect>
 --     feature /must/ be enabled
 --
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingMotionBlurPipelineTraceRaysIndirect-04951#
+--     If the bound ray tracing pipeline was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.PhysicalDeviceRayTracingMotionBlurFeaturesNV'::@rayTracingMotionBlurPipelineTraceRaysIndirect@
+--     feature /must/ be enabled
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-parameter#

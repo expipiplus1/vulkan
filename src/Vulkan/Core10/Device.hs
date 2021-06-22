@@ -129,6 +129,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (PhysicalDeviceMemoryPriorityFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_mesh_shader (PhysicalDeviceMeshShaderFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (PhysicalDeviceMultiDrawFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (PhysicalDeviceMutableDescriptorTypeFeaturesVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
@@ -139,6 +140,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (PhysicalDevicePriva
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
@@ -752,6 +754,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.PhysicalDeviceLineRasterizationFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_memory_priority.PhysicalDeviceMemoryPriorityFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderFeaturesNV',
+--     'Vulkan.Extensions.VK_EXT_multi_draw.PhysicalDeviceMultiDrawFeaturesEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
 --     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
@@ -762,6 +765,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
 --     'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexFeaturesEXT',
 --     'Vulkan.Extensions.VK_KHR_ray_query.PhysicalDeviceRayQueryFeaturesKHR',
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.PhysicalDeviceRayTracingMotionBlurFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelineFeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
@@ -783,6 +787,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_shader_terminate_invocation.PhysicalDeviceShaderTerminateInvocationFeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PhysicalDeviceShadingRateImageFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeaturesEXT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceSubpassShadingFeaturesHUAWEI VkPhysicalDeviceSubpassShadingFeaturesHUAWEI>,
 --     'Vulkan.Extensions.VK_KHR_synchronization2.PhysicalDeviceSynchronization2FeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr.PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT',
@@ -879,6 +884,7 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRayTracingMotionBlurFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceProvokingVertexFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceInheritedViewportScissorFeaturesNV = Just f
@@ -960,6 +966,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceShaderFloat16Int8Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderDrawParametersFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceInlineUniformBlockFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMultiDrawFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceBlendOperationAdvancedFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceProtectedMemoryFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSamplerYcbcrConversionFeatures = Just f

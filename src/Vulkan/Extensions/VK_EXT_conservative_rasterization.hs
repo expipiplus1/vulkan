@@ -250,8 +250,8 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     -- means the implementation can use the smallest representable non-zero
     -- value in the screen space pixel fixed-point grid.
     extraPrimitiveOverestimationSizeGranularity :: Float
-  , -- | #limits-primitiveUnderestimation# @primitiveUnderestimation@ is true if
-    -- the implementation supports the
+  , -- | #limits-primitiveUnderestimation# @primitiveUnderestimation@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
     -- 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' conservative
     -- rasterization mode in addition to
     -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'. Otherwise the
@@ -259,38 +259,41 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'.
     primitiveUnderestimation :: Bool
   , -- | #limits-conservativePointAndLineRasterization#
-    -- @conservativePointAndLineRasterization@ is true if the implementation
-    -- supports conservative rasterization of point and line primitives as well
-    -- as triangle primitives. Otherwise the implementation only supports
-    -- triangle primitives.
+    -- @conservativePointAndLineRasterization@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
+    -- conservative rasterization of point and line primitives as well as
+    -- triangle primitives. Otherwise the implementation only supports triangle
+    -- primitives.
     conservativePointAndLineRasterization :: Bool
   , -- | #limits-degenerateTrianglesRasterized# @degenerateTrianglesRasterized@
     -- is false if the implementation culls primitives generated from triangles
     -- that become zero area after they are quantized to the fixed-point
-    -- rasterization pixel grid. @degenerateTrianglesRasterized@ is true if
-    -- these primitives are not culled and the provoking vertex attributes and
-    -- depth value are used for the fragments. The primitive area calculation
-    -- is done on the primitive generated from the clipped triangle if
-    -- applicable. Zero area primitives are backfacing and the application
-    -- /can/ enable backface culling if desired.
+    -- rasterization pixel grid. @degenerateTrianglesRasterized@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if these primitives are not culled
+    -- and the provoking vertex attributes and depth value are used for the
+    -- fragments. The primitive area calculation is done on the primitive
+    -- generated from the clipped triangle if applicable. Zero area primitives
+    -- are backfacing and the application /can/ enable backface culling if
+    -- desired.
     degenerateTrianglesRasterized :: Bool
   , -- | #limits-degenerateLinesRasterized# @degenerateLinesRasterized@ is false
     -- if the implementation culls lines that become zero length after they are
     -- quantized to the fixed-point rasterization pixel grid.
-    -- @degenerateLinesRasterized@ is true if zero length lines are not culled
-    -- and the provoking vertex attributes and depth value are used for the
-    -- fragments.
+    -- @degenerateLinesRasterized@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if
+    -- zero length lines are not culled and the provoking vertex attributes and
+    -- depth value are used for the fragments.
     degenerateLinesRasterized :: Bool
   , -- | #limits-fullyCoveredFragmentShaderInputVariable#
-    -- @fullyCoveredFragmentShaderInputVariable@ is true if the implementation
-    -- supports the SPIR-V builtin fragment shader input variable
-    -- @FullyCoveredEXT@ which specifies that conservative rasterization is
-    -- enabled and the fragment area is fully covered by the generating
-    -- primitive.
+    -- @fullyCoveredFragmentShaderInputVariable@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- SPIR-V builtin fragment shader input variable @FullyCoveredEXT@ which
+    -- specifies that conservative rasterization is enabled and the fragment
+    -- area is fully covered by the generating primitive.
     fullyCoveredFragmentShaderInputVariable :: Bool
   , -- | #limits-conservativeRasterizationPostDepthCoverage#
-    -- @conservativeRasterizationPostDepthCoverage@ is true if the
-    -- implementation supports conservative rasterization with the
+    -- @conservativeRasterizationPostDepthCoverage@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
+    -- conservative rasterization with the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
     -- execution mode enabled. When supported the
     -- 'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable will

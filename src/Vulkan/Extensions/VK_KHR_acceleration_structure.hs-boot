@@ -1167,7 +1167,10 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( AabbPositionsKHR
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data AabbPositionsKHR
 
 instance ToCStruct AabbPositionsKHR
@@ -1198,12 +1201,13 @@ instance Show AccelerationStructureBuildSizesInfoKHR
 instance FromCStruct AccelerationStructureBuildSizesInfoKHR
 
 
-data AccelerationStructureCreateInfoKHR
+type role AccelerationStructureCreateInfoKHR nominal
+data AccelerationStructureCreateInfoKHR (es :: [Type])
 
-instance ToCStruct AccelerationStructureCreateInfoKHR
-instance Show AccelerationStructureCreateInfoKHR
+instance (Extendss AccelerationStructureCreateInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureCreateInfoKHR es)
+instance Show (Chain es) => Show (AccelerationStructureCreateInfoKHR es)
 
-instance FromCStruct AccelerationStructureCreateInfoKHR
+instance (Extendss AccelerationStructureCreateInfoKHR es, PeekChain es) => FromCStruct (AccelerationStructureCreateInfoKHR es)
 
 
 data AccelerationStructureDeviceAddressInfoKHR
@@ -1232,10 +1236,11 @@ instance ToCStruct AccelerationStructureGeometryKHR
 instance Show AccelerationStructureGeometryKHR
 
 
-data AccelerationStructureGeometryTrianglesDataKHR
+type role AccelerationStructureGeometryTrianglesDataKHR nominal
+data AccelerationStructureGeometryTrianglesDataKHR (es :: [Type])
 
-instance ToCStruct AccelerationStructureGeometryTrianglesDataKHR
-instance Show AccelerationStructureGeometryTrianglesDataKHR
+instance (Extendss AccelerationStructureGeometryTrianglesDataKHR es, PokeChain es) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es)
+instance Show (Chain es) => Show (AccelerationStructureGeometryTrianglesDataKHR es)
 
 
 data AccelerationStructureInstanceKHR

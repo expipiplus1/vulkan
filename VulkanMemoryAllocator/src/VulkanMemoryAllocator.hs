@@ -3987,15 +3987,37 @@ data PoolCreateInfo = PoolCreateInfo
     -- used during creation of the 'Allocator' object. Otherwise, this variable
     -- is ignored.
     priority :: Float
+  , -- | Additional minimum alignment to be used for all allocations created from
+    -- this pool. Can be 0.
+    --
+    -- Leave 0 (default) not to impose any additional alignment. If not 0, it
+    -- must be a power of two. It can be useful in cases where alignment
+    -- returned by Vulkan by functions like @vkGetBufferMemoryRequirements@ is
+    -- not enough, e.g. when doing interop with OpenGL.
+    minAllocationAlignment :: DeviceSize
+  , -- | Additional @pNext@ chain to be attached to @VkMemoryAllocateInfo@ used
+    -- for every allocation made by this pool. Optional.
+    --
+    -- Optional, can be null. If not null, it must point to a @pNext@ chain of
+    -- structures that can be attached to @VkMemoryAllocateInfo@. It can be
+    -- useful for special needs such as adding @VkExportMemoryAllocateInfoKHR@.
+    -- Structures pointed by this member must remain alive and unchanged for
+    -- the whole lifetime of the custom pool.
+    --
+    -- Please note that some structures, e.g.
+    -- @VkMemoryPriorityAllocateInfoEXT@, @VkMemoryDedicatedAllocateInfoKHR@,
+    -- can be attached automatically by this library when using other, more
+    -- convenient of its features.
+    memoryAllocateNext :: Ptr ()
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (PoolCreateInfo)
 #endif
 deriving instance Show PoolCreateInfo
 
 instance ToCStruct PoolCreateInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PoolCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeIndex)
     poke ((p `plusPtr` 4 :: Ptr PoolCreateFlags)) (flags)
@@ -4004,8 +4026,10 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (maxBlockCount))
     poke ((p `plusPtr` 32 :: Ptr Word32)) (frameInUseCount)
     poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (priority))
+    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (minAllocationAlignment)
+    poke ((p `plusPtr` 48 :: Ptr (Ptr ()))) (memoryAllocateNext)
     f
-  cStructSize = 40
+  cStructSize = 56
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
@@ -4015,6 +4039,7 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (zero))
     poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
     f
 
 instance FromCStruct PoolCreateInfo where
@@ -4026,17 +4051,21 @@ instance FromCStruct PoolCreateInfo where
     maxBlockCount <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     frameInUseCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     priority <- peek @CFloat ((p `plusPtr` 36 :: Ptr CFloat))
+    minAllocationAlignment <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
+    pMemoryAllocateNext <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ PoolCreateInfo
-             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount (coerce @CFloat @Float priority)
+             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount (coerce @CFloat @Float priority) minAllocationAlignment pMemoryAllocateNext
 
 instance Storable PoolCreateInfo where
-  sizeOf ~_ = 40
+  sizeOf ~_ = 56
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PoolCreateInfo where
   zero = PoolCreateInfo
+           zero
+           zero
            zero
            zero
            zero

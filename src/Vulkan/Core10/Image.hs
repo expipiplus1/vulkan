@@ -540,15 +540,18 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 --     -   If @tiling@ is
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', then
---         @imageCreateMaybeLinear@ is @true@.
+--         @imageCreateMaybeLinear@ is
+--         'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 --     -   If @tiling@ is
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
---         @imageCreateMaybeLinear@ is @false@.
+--         @imageCreateMaybeLinear@ is
+--         'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 --     -   If @tiling@ is
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---         then @imageCreateMaybeLinear_@ is @true@ if and only if
+--         then @imageCreateMaybeLinear@ is
+--         'Vulkan.Core10.FundamentalTypes.TRUE' if and only if
 --         @imageCreateDrmFormatModifiers@ contains
 --         @DRM_FORMAT_MOD_LINEAR@.
 --
@@ -843,7 +846,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @mipLevels@ /must/ be equal to @1@, and @imageCreateMaybeLinear@ (as
 --     defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
---     /must/ be @false@,
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE',
 --
 -- -   #VUID-VkImageCreateInfo-samples-02558# If @samples@ is not
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT',
@@ -1045,7 +1048,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'.
 --     and @imageCreateMaybeLinear@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
---     /must/ be @false@
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkImageCreateInfo-flags-01572# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',

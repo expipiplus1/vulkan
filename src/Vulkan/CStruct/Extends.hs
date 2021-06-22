@@ -59,10 +59,15 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (Accelerat
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureGeometryAabbsDataKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureGeometryInstancesDataKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureGeometryKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureGeometryMotionTrianglesDataNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureGeometryTrianglesDataKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (AccelerationStructureInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureInstanceKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureMatrixMotionInstanceNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (AccelerationStructureMemoryRequirementsInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureMotionInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureMotionInstanceNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureSRTMotionInstanceNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureVersionInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (AcquireNextImageInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (AcquireProfilingLockInfoKHR)
@@ -321,6 +326,8 @@ import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (MemoryType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryZirconHandlePropertiesFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawIndexedInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeCreateInfoVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeListVALVE)
@@ -367,6 +374,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (PhysicalDeviceDiagnosticsConfigFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PhysicalDeviceDiscardRectanglePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_physical_device_drm (PhysicalDeviceDrmPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state2 (PhysicalDeviceExtendedDynamicState2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state (PhysicalDeviceExtendedDynamicStateFeaturesEXT)
@@ -412,6 +420,8 @@ import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceMemoryPr
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceMemoryProperties2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_mesh_shader (PhysicalDeviceMeshShaderFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_mesh_shader (PhysicalDeviceMeshShaderPropertiesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (PhysicalDeviceMultiDrawFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (PhysicalDeviceMultiDrawPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewProperties)
@@ -433,6 +443,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceP
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_push_descriptor (PhysicalDevicePushDescriptorPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelinePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (PhysicalDeviceRayTracingPropertiesNV)
@@ -572,6 +583,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (RenderPassMu
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ResolveImageInfo2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (SRTDataNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Sampler (SamplerCreateInfo)
@@ -771,6 +783,8 @@ instance Zero BaseInStructure where
 
 
 type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
+  Extends AccelerationStructureCreateInfoKHR AccelerationStructureMotionInfoNV = ()
+  Extends AccelerationStructureGeometryTrianglesDataKHR AccelerationStructureGeometryMotionTrianglesDataNV = ()
   Extends AndroidHardwareBufferPropertiesANDROID AndroidHardwareBufferFormatPropertiesANDROID = ()
   Extends AttachmentDescription2 AttachmentDescriptionStencilLayout = ()
   Extends AttachmentReference2 AttachmentReferenceStencilLayout = ()
@@ -809,6 +823,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceSamplerYcbcrConversionFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceProtectedMemoryFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceBlendOperationAdvancedFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceMultiDrawFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceInlineUniformBlockFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderDrawParametersFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderFloat16Int8Features = ()
@@ -890,6 +905,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceInheritedViewportScissorFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceProvokingVertexFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -953,6 +969,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSamplerYcbcrConversionFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceProtectedMemoryFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceBlendOperationAdvancedFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceMultiDrawFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceInlineUniformBlockFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderDrawParametersFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderFloat16Int8Features = ()
@@ -1039,6 +1056,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageViewImageFormatInfoEXT = ()
   Extends PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryBudgetPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceMultiDrawPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDevicePushDescriptorPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceDriverProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceIDProperties = ()
@@ -1085,6 +1103,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShadingRatePropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceProvokingVertexPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceDrmPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends PipelineColorBlendStateCreateInfo PipelineColorBlendAdvancedStateCreateInfoEXT = ()
@@ -1280,6 +1300,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO_EXT -> go @DevicePrivateDataCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT -> go @PhysicalDevicePrivateDataFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV -> go @PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_PROPERTIES_EXT -> go @PhysicalDeviceMultiDrawPropertiesEXT
   STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV -> go @GraphicsPipelineShaderGroupsCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 -> go @(PhysicalDeviceFeatures2 '[])
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR -> go @PhysicalDevicePushDescriptorPropertiesKHR
@@ -1353,6 +1374,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT -> go @PhysicalDeviceSampleLocationsPropertiesEXT
   STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO -> go @SamplerReductionModeCreateInfo
   STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT -> go @PhysicalDeviceBlendOperationAdvancedFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_FEATURES_EXT -> go @PhysicalDeviceMultiDrawFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT -> go @PhysicalDeviceBlendOperationAdvancedPropertiesEXT
   STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT -> go @PipelineColorBlendAdvancedStateCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT -> go @PhysicalDeviceInlineUniformBlockFeaturesEXT
@@ -1546,6 +1568,10 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT -> go @PhysicalDeviceProvokingVertexFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_PROPERTIES_EXT -> go @PhysicalDeviceProvokingVertexPropertiesEXT
   STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT -> go @PipelineRasterizationProvokingVertexStateCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT -> go @PhysicalDeviceDrmPropertiesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MOTION_BLUR_FEATURES_NV -> go @PhysicalDeviceRayTracingMotionBlurFeaturesNV
+  STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("struct type STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV contains an undiscriminated union (DeviceOrHostAddressConstKHR) and can't be safely peeked") Nothing Nothing
+  STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MOTION_INFO_NV -> go @AccelerationStructureMotionInfoNV
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -1616,6 +1642,7 @@ infix 6 ::&
 {-# complete (::&) :: DevicePrivateDataCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDevicePrivateDataFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceDeviceGeneratedCommandsPropertiesNV #-}
+{-# complete (::&) :: PhysicalDeviceMultiDrawPropertiesEXT #-}
 {-# complete (::&) :: GraphicsPipelineShaderGroupsCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceFeatures2 #-}
 {-# complete (::&) :: PhysicalDevicePushDescriptorPropertiesKHR #-}
@@ -1689,6 +1716,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceSampleLocationsPropertiesEXT #-}
 {-# complete (::&) :: SamplerReductionModeCreateInfo #-}
 {-# complete (::&) :: PhysicalDeviceBlendOperationAdvancedFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceMultiDrawFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceBlendOperationAdvancedPropertiesEXT #-}
 {-# complete (::&) :: PipelineColorBlendAdvancedStateCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceInlineUniformBlockFeaturesEXT #-}
@@ -1882,6 +1910,10 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceProvokingVertexFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceProvokingVertexPropertiesEXT #-}
 {-# complete (::&) :: PipelineRasterizationProvokingVertexStateCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceDrmPropertiesEXT #-}
+{-# complete (::&) :: PhysicalDeviceRayTracingMotionBlurFeaturesNV #-}
+{-# complete (::&) :: AccelerationStructureGeometryMotionTrianglesDataNV #-}
+{-# complete (::&) :: AccelerationStructureMotionInfoNV #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

@@ -25,6 +25,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
                           , module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
                           , module Vulkan.Extensions.VK_EXT_4444_formats
+                          , module Vulkan.Extensions.VK_EXT_acquire_drm_display
                           , module Vulkan.Extensions.VK_EXT_acquire_xlib_display
                           , module Vulkan.Extensions.VK_EXT_astc_decode_mode
                           , module Vulkan.Extensions.VK_EXT_blend_operation_advanced
@@ -68,7 +69,9 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_memory_budget
                           , module Vulkan.Extensions.VK_EXT_memory_priority
                           , module Vulkan.Extensions.VK_EXT_metal_surface
+                          , module Vulkan.Extensions.VK_EXT_multi_draw
                           , module Vulkan.Extensions.VK_EXT_pci_bus_info
+                          , module Vulkan.Extensions.VK_EXT_physical_device_drm
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
@@ -224,6 +227,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_inherited_viewport_scissor
                           , module Vulkan.Extensions.VK_NV_mesh_shader
                           , module Vulkan.Extensions.VK_NV_ray_tracing
+                          , module Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
                           , module Vulkan.Extensions.VK_NV_representative_fragment_test
                           , module Vulkan.Extensions.VK_NV_sample_mask_override_coverage
                           , module Vulkan.Extensions.VK_NV_scissor_exclusive
@@ -266,6 +270,7 @@ import Vulkan.Extensions.VK_AMD_shader_trinary_minmax
 import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
 import Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
 import Vulkan.Extensions.VK_EXT_4444_formats
+import Vulkan.Extensions.VK_EXT_acquire_drm_display
 import Vulkan.Extensions.VK_EXT_acquire_xlib_display
 import Vulkan.Extensions.VK_EXT_astc_decode_mode
 import Vulkan.Extensions.VK_EXT_blend_operation_advanced
@@ -309,7 +314,9 @@ import Vulkan.Extensions.VK_EXT_line_rasterization
 import Vulkan.Extensions.VK_EXT_memory_budget
 import Vulkan.Extensions.VK_EXT_memory_priority
 import Vulkan.Extensions.VK_EXT_metal_surface
+import Vulkan.Extensions.VK_EXT_multi_draw
 import Vulkan.Extensions.VK_EXT_pci_bus_info
+import Vulkan.Extensions.VK_EXT_physical_device_drm
 import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
@@ -465,6 +472,7 @@ import Vulkan.Extensions.VK_NV_glsl_shader
 import Vulkan.Extensions.VK_NV_inherited_viewport_scissor
 import Vulkan.Extensions.VK_NV_mesh_shader
 import Vulkan.Extensions.VK_NV_ray_tracing
+import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
 import Vulkan.Extensions.VK_NV_representative_fragment_test
 import Vulkan.Extensions.VK_NV_sample_mask_override_coverage
 import Vulkan.Extensions.VK_NV_scissor_exclusive

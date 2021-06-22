@@ -4,6 +4,7 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                    , PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
+                                                                           , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
                                                                            , PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT
                                                                            , PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT
                                                                            , PIPELINE_CREATE_LIBRARY_BIT_KHR
@@ -147,6 +148,9 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     corresponding pipeline rather than continuing to create additional
 --     pipelines.
 --
+-- -   'PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV' specifies that the
+--     pipeline is allowed to use OpTraceRaysMotionNV.
+--
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a
 -- parent and possibly a child in a pipeline hierarchy. See
@@ -165,6 +169,8 @@ pattern PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                    = PipelineCr
 pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                       = PipelineCreateFlagBits 0x00000002
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
 pattern PIPELINE_CREATE_DERIVATIVE_BIT                              = PipelineCreateFlagBits 0x00000004
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV"
+pattern PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV             = PipelineCreateFlagBits 0x00100000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT"
 pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT             = PipelineCreateFlagBits 0x00000200
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT"
@@ -209,6 +215,7 @@ showTablePipelineCreateFlagBits =
   [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                 , "DISABLE_OPTIMIZATION_BIT")
   , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                    , "ALLOW_DERIVATIVES_BIT")
   , (PIPELINE_CREATE_DERIVATIVE_BIT                           , "DERIVATIVE_BIT")
+  , (PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV          , "RAY_TRACING_ALLOW_MOTION_BIT_NV")
   , (PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT          , "EARLY_RETURN_ON_FAILURE_BIT_EXT")
   , (PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT, "FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT")
   , (PIPELINE_CREATE_LIBRARY_BIT_KHR                          , "LIBRARY_BIT_KHR")
