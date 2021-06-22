@@ -72,7 +72,6 @@ jobs:
 
         gist="$HOME/gist-post.json"
         jq -R -s '{"description": "Vulkan update diff", "public": false, "files": {"vulkan.diff": {"content": .}}}' < "$ndd" > "$gist"
-        cat "$gist"
         gist_url=$( (curl \
           --header "Content-Type: application/json" \
           --data @"$gist" \
