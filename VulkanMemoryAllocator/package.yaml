@@ -1,5 +1,5 @@
 name: VulkanMemoryAllocator
-version: "0.5.1"
+version: "0.6"
 synopsis: Bindings to the VulkanMemoryAllocator library
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
