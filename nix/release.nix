@@ -1,6 +1,4 @@
-{ pkgs ? import ./nixpkgs.nix, compiler ? "ghc884" }:
-# Use old GHC until
-# https://github.com/haskell-infra/hackage-trustees/issues/276 is fixed
+{ pkgs ? import ./nixpkgs.nix, compiler ? null }:
 
 with pkgs.haskell.lib;
 with pkgs.lib;

@@ -267,7 +267,6 @@ jobs:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
-    - run: nix-build -A generate-new
     - run: nix-build -A vulkan
     - run: nix-build -A VulkanMemoryAllocator
     - run: nix-build -A vulkan-utils
@@ -279,6 +278,37 @@ jobs:
     - run: nix-build nix/release.nix -A sdistTest
     - run: nix-build nix/release.nix -A docs-combined
     - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell examples --run 'ghc-pkg list'
+
+  nix-generator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v7
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+    - run: nix-build -A generate-new
+
+  nix-shell-profiling:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v7
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
     - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell examples --arg buildProfiling true --run 'ghc-pkg list'
 
   shellcheck:
