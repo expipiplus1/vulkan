@@ -75,8 +75,8 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
         <> ["data" <+> pretty n <> childVar]
         )
     tellImport ''Typeable
-    simple <- isSimpleStruct s
-    let derivedInstances = ["Typeable"] <> [ "Eq" | simple ]
+    eqable <- isEqableStruct s
+    let derivedInstances = ["Typeable"] <> [ "Eq" | eqable ]
     tellDocWithHaddock $ \getDoc -> [qqi|
         {getDoc (TopLevel msName)}
         data {n}{childVar} = {mkConName msName msName}
@@ -736,8 +736,8 @@ showInstanceStub tellSourceImport s = do
 -- Utils
 ----------------------------------------------------------------
 
-isSimpleStruct :: HasSpecInfo r => MarshaledStruct a -> Sem r Bool
-isSimpleStruct = allM (isSimple . msmScheme) . msMembers
+isEqableStruct :: HasSpecInfo r => MarshaledStruct a -> Sem r Bool
+isEqableStruct = allM (isEqable . msmScheme) . msMembers
 
 hasChildren :: Struct -> Bool
 hasChildren = not . V.null . sExtendedBy

@@ -668,9 +668,8 @@ isNegative = \case
   Custom             _ -> True
   ElidedCustom       _ -> False
 
--- | A bit of an ad-hoc test
-isSimple :: HasSpecInfo r => MarshalScheme a -> Sem r Bool
-isSimple = \case
+isEqable :: HasSpecInfo r => MarshalScheme a -> Sem r Bool
+isEqable = \case
   Unit       -> pure True
   Preserve _ -> pure True
   Normal (TypeName n) ->
@@ -680,19 +679,19 @@ isSimple = \case
   ElidedLength{}       -> pure True
   ElidedUnivalued _    -> pure True
   ElidedVoid           -> pure True
-  VoidPtr              -> pure False
-  ByteString           -> pure False
-  Maybe s              -> isSimple s
-  Vector _ _           -> pure False
-  EitherWord32 _       -> pure False
-  Tupled _ s           -> isSimple s
-  Returned           _ -> pure False
-  InOutCount         _ -> pure False
-  OutCount           _ -> pure False
+  VoidPtr              -> pure True
+  ByteString           -> pure True
+  Maybe s              -> isEqable s
+  Vector _ s           -> isEqable s
+  EitherWord32 _       -> pure True
+  Tupled _ s           -> isEqable s
+  Returned           _ -> pure True
+  InOutCount         _ -> pure True
+  OutCount           _ -> pure True
   WrappedStruct      _ -> pure False
   WrappedChildStruct _ -> pure False
   Custom             _ -> pure False
-  ElidedCustom       _ -> pure False
+  ElidedCustom       _ -> pure True
 
 (<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<&&>) = liftA2 (&&)
