@@ -15,6 +15,7 @@ let
     ]) || pkgs.lib.any (i: pkgs.lib.hasInfix i path) [
       "/src"
       "/src-manual"
+      "/test"
       "/vk"
       "/xr"
       "/khronos-spec"
