@@ -50,6 +50,10 @@ version=${requested_version:-$latest_version}
 # For GitHub actions
 echo "::set-output name=vulkan_version::$version"
 
+echo "Fetching Vulkan-Docs"
+git -C generate-new/Vulkan-Docs fetch
+git -C generate-new/Vulkan-Docs fetch --tags
+
 if git -C generate-new/Vulkan-Docs describe --tags | grep "$version"; then
   echo "Vulkan-Docs is already at $version"
   exit 0
@@ -61,8 +65,6 @@ if [ "$no_doc_diff" ]; then
 fi
 
 echo "Updating Vulkan-Docs"
-git -C generate-new/Vulkan-Docs fetch
-git -C generate-new/Vulkan-Docs fetch --tags
 git -C generate-new/Vulkan-Docs checkout "tags/$version"
 
 after=

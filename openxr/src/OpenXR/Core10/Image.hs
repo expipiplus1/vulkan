@@ -23,7 +23,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -872,7 +872,7 @@ instance Extensible SwapchainCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss SwapchainCreateInfo es, PokeChain es) => ToCStruct (SwapchainCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_CREATE_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -990,7 +990,7 @@ instance Inheritable SwapchainImageBaseHeader where
           Nothing
 
 instance ToCStruct SwapchainImageBaseHeader where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageBaseHeader{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1045,7 +1045,7 @@ deriving instance Generic (SwapchainImageAcquireInfo)
 deriving instance Show SwapchainImageAcquireInfo
 
 instance ToCStruct SwapchainImageAcquireInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageAcquireInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1091,7 +1091,7 @@ deriving instance Generic (SwapchainImageWaitInfo)
 deriving instance Show SwapchainImageWaitInfo
 
 instance ToCStruct SwapchainImageWaitInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageWaitInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_WAIT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1148,7 +1148,7 @@ deriving instance Generic (SwapchainImageReleaseInfo)
 deriving instance Show SwapchainImageReleaseInfo
 
 instance ToCStruct SwapchainImageReleaseInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageReleaseInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

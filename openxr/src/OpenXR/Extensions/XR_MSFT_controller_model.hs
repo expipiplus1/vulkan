@@ -64,7 +64,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -550,7 +550,7 @@ deriving instance Generic (ControllerModelKeyStateMSFT)
 deriving instance Show ControllerModelKeyStateMSFT
 
 instance ToCStruct ControllerModelKeyStateMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelKeyStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_KEY_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -643,7 +643,7 @@ deriving instance Generic (ControllerModelNodePropertiesMSFT)
 deriving instance Show ControllerModelNodePropertiesMSFT
 
 instance ToCStruct ControllerModelNodePropertiesMSFT where
-  withCStruct x f = allocaBytesAligned 144 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 144 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelNodePropertiesMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_NODE_PROPERTIES_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -743,7 +743,7 @@ deriving instance Generic (ControllerModelPropertiesMSFT)
 deriving instance Show ControllerModelPropertiesMSFT
 
 instance ToCStruct ControllerModelPropertiesMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelPropertiesMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_PROPERTIES_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -823,7 +823,7 @@ deriving instance Generic (ControllerModelNodeStateMSFT)
 deriving instance Show ControllerModelNodeStateMSFT
 
 instance ToCStruct ControllerModelNodeStateMSFT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelNodeStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_NODE_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -918,7 +918,7 @@ deriving instance Generic (ControllerModelStateMSFT)
 deriving instance Show ControllerModelStateMSFT
 
 instance ToCStruct ControllerModelStateMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

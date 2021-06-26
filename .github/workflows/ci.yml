@@ -149,6 +149,8 @@ jobs:
       run: cabal build --enable-tests --enable-benchmarks vulkan-examples
       if: matrix.ghc != '8.6.5'
 
+    - run: cabal check
+
     - name: Build documentation
       run: |
         cabal haddock

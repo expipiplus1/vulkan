@@ -5,8 +5,9 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.11.0.1
+version:        3.11.0.2
 synopsis:       Bindings to the Vulkan graphics API.
+description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
 bug-reports:    https://github.com/expipiplus1/vulkan/issues
@@ -569,7 +570,6 @@ test-suite test
   other-modules:
       Structs
       VkCtx
-      Paths_vulkan
   hs-source-dirs:
       test
   default-extensions:

@@ -51,7 +51,7 @@ module OpenXR.Extensions.XR_EXTX_overlay  ( SessionCreateInfoOverlayEXTX(..)
 
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -127,7 +127,7 @@ deriving instance Generic (SessionCreateInfoOverlayEXTX)
 deriving instance Show SessionCreateInfoOverlayEXTX
 
 instance ToCStruct SessionCreateInfoOverlayEXTX where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionCreateInfoOverlayEXTX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -238,7 +238,7 @@ instance IsEventData EventDataMainSessionVisibilityChangedEXTX where
   toEventDataBaseHeader EventDataMainSessionVisibilityChangedEXTX{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX}
 
 instance ToCStruct EventDataMainSessionVisibilityChangedEXTX where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataMainSessionVisibilityChangedEXTX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

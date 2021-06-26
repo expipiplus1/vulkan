@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.6.0.1] - 2021-06-26
+- Bump VMA, no functional change
+- Use allocaBytes over allocaBytesAligned where possible
+
 ## [0.6] - 2021-06-22
 - Bump VMA, adding alignment info to PoolCreateInfo
 

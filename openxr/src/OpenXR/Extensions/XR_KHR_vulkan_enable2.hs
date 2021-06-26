@@ -78,7 +78,7 @@ import qualified OpenXR.VulkanTypes (SomeStruct)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -508,7 +508,7 @@ deriving instance Generic (VulkanInstanceCreateInfoKHR)
 deriving instance Show VulkanInstanceCreateInfoKHR
 
 instance ToCStruct VulkanInstanceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanInstanceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -620,7 +620,7 @@ deriving instance Generic (VulkanDeviceCreateInfoKHR)
 deriving instance Show VulkanDeviceCreateInfoKHR
 
 instance ToCStruct VulkanDeviceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanDeviceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_DEVICE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -709,7 +709,7 @@ deriving instance Generic (VulkanGraphicsDeviceGetInfoKHR)
 deriving instance Show VulkanGraphicsDeviceGetInfoKHR
 
 instance ToCStruct VulkanGraphicsDeviceGetInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanGraphicsDeviceGetInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

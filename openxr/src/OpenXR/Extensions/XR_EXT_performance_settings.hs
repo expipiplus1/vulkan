@@ -67,7 +67,7 @@ import OpenXR.Internal.Utils (enumShowsPrec)
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -228,7 +228,7 @@ instance IsEventData EventDataPerfSettingsEXT where
   toEventDataBaseHeader EventDataPerfSettingsEXT{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_PERF_SETTINGS_EXT}
 
 instance ToCStruct EventDataPerfSettingsEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataPerfSettingsEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_PERF_SETTINGS_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

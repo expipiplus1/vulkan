@@ -52,7 +52,7 @@ import OpenXR.Internal.Utils (enumShowsPrec)
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -252,7 +252,7 @@ instance IsEventData EventDataVisibilityMaskChangedKHR where
   toEventDataBaseHeader EventDataVisibilityMaskChangedKHR{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR}
 
 instance ToCStruct EventDataVisibilityMaskChangedKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataVisibilityMaskChangedKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -374,7 +374,7 @@ deriving instance Generic (VisibilityMaskKHR)
 deriving instance Show VisibilityMaskKHR
 
 instance ToCStruct VisibilityMaskKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VisibilityMaskKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VISIBILITY_MASK_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -79,7 +79,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -781,7 +781,7 @@ deriving instance Generic (DebugUtilsObjectNameInfoEXT)
 deriving instance Show DebugUtilsObjectNameInfoEXT
 
 instance ToCStruct DebugUtilsObjectNameInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsObjectNameInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -851,7 +851,7 @@ deriving instance Generic (DebugUtilsLabelEXT)
 deriving instance Show DebugUtilsLabelEXT
 
 instance ToCStruct DebugUtilsLabelEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsLabelEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_DEBUG_UTILS_LABEL_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -967,7 +967,7 @@ deriving instance Generic (DebugUtilsMessengerCallbackDataEXT)
 deriving instance Show DebugUtilsMessengerCallbackDataEXT
 
 instance ToCStruct DebugUtilsMessengerCallbackDataEXT where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCallbackDataEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1112,7 +1112,7 @@ deriving instance Generic (DebugUtilsMessengerCreateInfoEXT)
 deriving instance Show DebugUtilsMessengerCreateInfoEXT
 
 instance ToCStruct DebugUtilsMessengerCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

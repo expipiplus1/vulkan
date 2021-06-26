@@ -11,7 +11,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -393,7 +393,7 @@ instance Extensible SessionBeginInfo where
     | otherwise = Nothing
 
 instance (Extendss SessionBeginInfo es, PokeChain es) => ToCStruct (SessionBeginInfo es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_BEGIN_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)

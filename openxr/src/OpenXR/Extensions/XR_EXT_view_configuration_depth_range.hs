@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_EXT_view_configuration_depth_range  ( ViewConfigurat
                                                                 , pattern EXT_VIEW_CONFIGURATION_DEPTH_RANGE_EXTENSION_NAME
                                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.Coerce (coerce)
@@ -116,7 +116,7 @@ deriving instance Generic (ViewConfigurationDepthRangeEXT)
 deriving instance Show ViewConfigurationDepthRangeEXT
 
 instance ToCStruct ViewConfigurationDepthRangeEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewConfigurationDepthRangeEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_CONFIGURATION_DEPTH_RANGE_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

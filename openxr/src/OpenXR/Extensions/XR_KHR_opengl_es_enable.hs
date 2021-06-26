@@ -49,7 +49,7 @@ module OpenXR.Extensions.XR_KHR_opengl_es_enable  ( getOpenGLESGraphicsRequireme
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -234,7 +234,7 @@ deriving instance Generic (GraphicsBindingOpenGLESAndroidKHR)
 deriving instance Show GraphicsBindingOpenGLESAndroidKHR
 
 instance ToCStruct GraphicsBindingOpenGLESAndroidKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLESAndroidKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -330,7 +330,7 @@ instance IsSwapchainImage SwapchainImageOpenGLESKHR where
   toSwapchainImageBaseHeader SwapchainImageOpenGLESKHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR}
 
 instance ToCStruct SwapchainImageOpenGLESKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageOpenGLESKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -408,7 +408,7 @@ deriving instance Generic (GraphicsRequirementsOpenGLESKHR)
 deriving instance Show GraphicsRequirementsOpenGLESKHR
 
 instance ToCStruct GraphicsRequirementsOpenGLESKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsOpenGLESKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_OPENGL_ES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
