@@ -98,7 +98,7 @@ module Vulkan.Extensions.VK_EXT_texel_buffer_alignment  ( PhysicalDeviceTexelBuf
                                                         , pattern EXT_TEXEL_BUFFER_ALIGNMENT_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -161,7 +161,7 @@ deriving instance Generic (PhysicalDeviceTexelBufferAlignmentFeaturesEXT)
 deriving instance Show PhysicalDeviceTexelBufferAlignmentFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTexelBufferAlignmentFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -254,7 +254,7 @@ deriving instance Generic (PhysicalDeviceTexelBufferAlignmentPropertiesEXT)
 deriving instance Show PhysicalDeviceTexelBufferAlignmentPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTexelBufferAlignmentPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

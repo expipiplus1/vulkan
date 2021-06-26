@@ -25,7 +25,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -294,7 +294,7 @@ freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
   lift $ unless (vkFreeCommandBuffersPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeCommandBuffers is null" Nothing Nothing
   let vkFreeCommandBuffers' = mkVkFreeCommandBuffers vkFreeCommandBuffersPtr
-  pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
+  pPCommandBuffers <- ContT $ allocaBytes @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
   lift $ traceAroundEvent "vkFreeCommandBuffers" (vkFreeCommandBuffers' (deviceHandle (device)) (commandPool) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers))
   pure $ ()
@@ -608,7 +608,7 @@ deriving instance Generic (CommandBufferAllocateInfo)
 deriving instance Show CommandBufferAllocateInfo
 
 instance ToCStruct CommandBufferAllocateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferAllocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -785,7 +785,7 @@ instance Extensible CommandBufferInheritanceInfo where
     | otherwise = Nothing
 
 instance (Extendss CommandBufferInheritanceInfo es, PokeChain es) => ToCStruct (CommandBufferInheritanceInfo es) where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferInheritanceInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -903,7 +903,7 @@ instance Extensible CommandBufferBeginInfo where
     | otherwise = Nothing
 
 instance (Extendss CommandBufferBeginInfo es, PokeChain es) => ToCStruct (CommandBufferBeginInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

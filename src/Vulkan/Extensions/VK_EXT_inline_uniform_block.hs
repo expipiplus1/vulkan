@@ -184,7 +184,7 @@ module Vulkan.Extensions.VK_EXT_inline_uniform_block  ( PhysicalDeviceInlineUnif
                                                       , pattern EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -258,7 +258,7 @@ deriving instance Generic (PhysicalDeviceInlineUniformBlockFeaturesEXT)
 deriving instance Show PhysicalDeviceInlineUniformBlockFeaturesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceInlineUniformBlockFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -353,7 +353,7 @@ deriving instance Generic (PhysicalDeviceInlineUniformBlockPropertiesEXT)
 deriving instance Show PhysicalDeviceInlineUniformBlockPropertiesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceInlineUniformBlockPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -432,7 +432,7 @@ deriving instance Generic (WriteDescriptorSetInlineUniformBlockEXT)
 deriving instance Show WriteDescriptorSetInlineUniformBlockEXT
 
 instance ToCStruct WriteDescriptorSetInlineUniformBlockEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSetInlineUniformBlockEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -487,7 +487,7 @@ deriving instance Generic (DescriptorPoolInlineUniformBlockCreateInfoEXT)
 deriving instance Show DescriptorPoolInlineUniformBlockCreateInfoEXT
 
 instance ToCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorPoolInlineUniformBlockCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

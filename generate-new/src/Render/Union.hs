@@ -16,6 +16,7 @@ import           Foreign.Ptr
 import           Language.Haskell.TH            ( mkName )
 
 import           CType
+import qualified Data.Text                     as T
 import           Error
 import           Haskell                       as H
 import           Marshal.Scheme
@@ -30,8 +31,8 @@ import           Render.State
 import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Type
+import           Render.Utils                   ( chooseAlign )
 import           Spec.Parse
-import qualified Data.Text as T
 
 renderUnion
   :: ( HasErr r
@@ -184,12 +185,13 @@ toCStructInstance MarshaledStruct {..} = do
   tellImport 'free
 
   (size, alignment) <- getTypeSize (TypeName msName)
+  let (a, an, af) = chooseAlign sAlignment
+  tellImport an
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
-      [ "withCStruct x f = allocaBytesAligned"
-      <+> viaShow sSize
-      <+> viaShow sAlignment
+      [ "withCStruct x f ="
+      <+> af (a <+> viaShow sSize)
       <+> "$ \\p -> pokeCStruct p x (f p)"
       , "pokeCStruct ::" <+> pokeCStructTDoc
       , "pokeCStruct"

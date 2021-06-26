@@ -168,7 +168,7 @@ module Vulkan.Extensions.VK_NV_representative_fragment_test  ( PhysicalDeviceRep
                                                              , pattern NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -231,7 +231,7 @@ deriving instance Generic (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 deriving instance Show PhysicalDeviceRepresentativeFragmentTestFeaturesNV
 
 instance ToCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRepresentativeFragmentTestFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -293,7 +293,7 @@ deriving instance Generic (PipelineRepresentativeFragmentTestStateCreateInfoNV)
 deriving instance Show PipelineRepresentativeFragmentTestStateCreateInfoNV
 
 instance ToCStruct PipelineRepresentativeFragmentTestStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRepresentativeFragmentTestStateCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

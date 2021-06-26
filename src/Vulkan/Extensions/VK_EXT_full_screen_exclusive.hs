@@ -287,7 +287,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -688,7 +688,7 @@ deriving instance Generic (SurfaceFullScreenExclusiveInfoEXT)
 deriving instance Show SurfaceFullScreenExclusiveInfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFullScreenExclusiveInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -758,7 +758,7 @@ deriving instance Generic (SurfaceFullScreenExclusiveWin32InfoEXT)
 deriving instance Show SurfaceFullScreenExclusiveWin32InfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveWin32InfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFullScreenExclusiveWin32InfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -822,7 +822,7 @@ deriving instance Generic (SurfaceCapabilitiesFullScreenExclusiveEXT)
 deriving instance Show SurfaceCapabilitiesFullScreenExclusiveEXT
 
 instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilitiesFullScreenExclusiveEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

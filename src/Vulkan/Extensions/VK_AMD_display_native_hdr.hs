@@ -138,7 +138,7 @@ module Vulkan.Extensions.VK_AMD_display_native_hdr  ( setLocalDimmingAMD
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -251,7 +251,7 @@ deriving instance Generic (DisplayNativeHdrSurfaceCapabilitiesAMD)
 deriving instance Show DisplayNativeHdrSurfaceCapabilitiesAMD
 
 instance ToCStruct DisplayNativeHdrSurfaceCapabilitiesAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayNativeHdrSurfaceCapabilitiesAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -322,7 +322,7 @@ deriving instance Generic (SwapchainDisplayNativeHdrCreateInfoAMD)
 deriving instance Show SwapchainDisplayNativeHdrCreateInfoAMD
 
 instance ToCStruct SwapchainDisplayNativeHdrCreateInfoAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainDisplayNativeHdrCreateInfoAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

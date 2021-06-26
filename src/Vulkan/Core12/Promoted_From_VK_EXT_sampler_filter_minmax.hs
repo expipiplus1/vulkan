@@ -8,7 +8,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax  ( PhysicalDevic
                                                                  , SamplerReductionMode(..)
                                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -96,7 +96,7 @@ deriving instance Generic (PhysicalDeviceSamplerFilterMinmaxProperties)
 deriving instance Show PhysicalDeviceSamplerFilterMinmaxProperties
 
 instance ToCStruct PhysicalDeviceSamplerFilterMinmaxProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSamplerFilterMinmaxProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -166,7 +166,7 @@ deriving instance Generic (SamplerReductionModeCreateInfo)
 deriving instance Show SamplerReductionModeCreateInfo
 
 instance ToCStruct SamplerReductionModeCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerReductionModeCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

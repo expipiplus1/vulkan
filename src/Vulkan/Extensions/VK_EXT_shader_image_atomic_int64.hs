@@ -115,7 +115,7 @@ module Vulkan.Extensions.VK_EXT_shader_image_atomic_int64  ( PhysicalDeviceShade
                                                            , pattern EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -178,7 +178,7 @@ deriving instance Generic (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 deriving instance Show PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderImageAtomicInt64FeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderImageAtomicInt64FeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

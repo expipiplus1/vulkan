@@ -116,7 +116,7 @@ module Vulkan.Extensions.VK_EXT_image_robustness  ( PhysicalDeviceImageRobustnes
                                                   , pattern EXT_IMAGE_ROBUSTNESS_EXTENSION_NAME
                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -181,7 +181,7 @@ deriving instance Generic (PhysicalDeviceImageRobustnessFeaturesEXT)
 deriving instance Show PhysicalDeviceImageRobustnessFeaturesEXT
 
 instance ToCStruct PhysicalDeviceImageRobustnessFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImageRobustnessFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

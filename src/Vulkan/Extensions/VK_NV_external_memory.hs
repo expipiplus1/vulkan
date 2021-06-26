@@ -144,7 +144,7 @@ module Vulkan.Extensions.VK_NV_external_memory  ( ExternalMemoryImageCreateInfoN
                                                 , ExternalMemoryHandleTypeFlagsNV
                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -193,7 +193,7 @@ deriving instance Generic (ExternalMemoryImageCreateInfoNV)
 deriving instance Show ExternalMemoryImageCreateInfoNV
 
 instance ToCStruct ExternalMemoryImageCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryImageCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -252,7 +252,7 @@ deriving instance Generic (ExportMemoryAllocateInfoNV)
 deriving instance Show ExportMemoryAllocateInfoNV
 
 instance ToCStruct ExportMemoryAllocateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportMemoryAllocateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

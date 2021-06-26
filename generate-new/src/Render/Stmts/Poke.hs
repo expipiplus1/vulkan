@@ -694,12 +694,9 @@ allocArray allocType name elemType size = do
     tellImportWithAll ''ContT
     alloc <- case allocType of
       Uninitialized -> do
-        tellImport 'allocaBytesAligned
-        pure
-          $   "allocaBytesAligned @"
-          <>  elemTyDoc
-          <+> vecSizeDoc
-          <+> viaShow elemAlign
+        let (a, an, af) = chooseAlign elemAlign
+        tellImport an
+        pure $ af (a <+> "@" <> elemTyDoc <+> vecSizeDoc)
       Zeroed -> do
         tellImport 'callocBytes
         tellImport 'free

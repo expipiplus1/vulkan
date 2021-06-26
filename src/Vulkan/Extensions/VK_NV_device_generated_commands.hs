@@ -595,7 +595,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -1777,7 +1777,7 @@ deriving instance Generic (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDeviceGeneratedCommandsFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1862,7 +1862,7 @@ deriving instance Generic (PhysicalDeviceDeviceGeneratedCommandsPropertiesNV)
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDeviceGeneratedCommandsPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1994,12 +1994,12 @@ deriving instance Generic (GraphicsShaderGroupCreateInfoNV)
 deriving instance Show GraphicsShaderGroupCreateInfoNV
 
 instance ToCStruct GraphicsShaderGroupCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsShaderGroupCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (stages)) :: Word32))
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48) 8
+    pPStages' <- ContT $ allocaBytes @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (stages)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     pVertexInputState'' <- case (vertexInputState) of
@@ -2130,16 +2130,16 @@ deriving instance Generic (GraphicsPipelineShaderGroupsCreateInfoNV)
 deriving instance Show GraphicsPipelineShaderGroupsCreateInfoNV
 
 instance ToCStruct GraphicsPipelineShaderGroupsCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsPipelineShaderGroupsCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (groups)) :: Word32))
-    pPGroups' <- ContT $ allocaBytesAligned @GraphicsShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 48) 8
+    pPGroups' <- ContT $ allocaBytes @GraphicsShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGroups' `plusPtr` (48 * (i)) :: Ptr GraphicsShaderGroupCreateInfoNV) (e) . ($ ())) (groups)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr GraphicsShaderGroupCreateInfoNV))) (pPGroups')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pipelines)) :: Word32))
-    pPPipelines' <- ContT $ allocaBytesAligned @Pipeline ((Data.Vector.length (pipelines)) * 8) 8
+    pPPipelines' <- ContT $ allocaBytes @Pipeline ((Data.Vector.length (pipelines)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPipelines' `plusPtr` (8 * (i)) :: Ptr Pipeline) (e)) (pipelines)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Pipeline))) (pPPipelines')
     lift $ f
@@ -2195,7 +2195,7 @@ deriving instance Generic (BindShaderGroupIndirectCommandNV)
 deriving instance Show BindShaderGroupIndirectCommandNV
 
 instance ToCStruct BindShaderGroupIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 4 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindShaderGroupIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (groupIndex)
     f
@@ -2272,7 +2272,7 @@ deriving instance Generic (BindIndexBufferIndirectCommandNV)
 deriving instance Show BindIndexBufferIndirectCommandNV
 
 instance ToCStruct BindIndexBufferIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindIndexBufferIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (bufferAddress)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (size)
@@ -2346,7 +2346,7 @@ deriving instance Generic (BindVertexBufferIndirectCommandNV)
 deriving instance Show BindVertexBufferIndirectCommandNV
 
 instance ToCStruct BindVertexBufferIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindVertexBufferIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (bufferAddress)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (size)
@@ -2401,7 +2401,7 @@ deriving instance Generic (SetStateFlagsIndirectCommandNV)
 deriving instance Show SetStateFlagsIndirectCommandNV
 
 instance ToCStruct SetStateFlagsIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 4 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SetStateFlagsIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (data')
     f
@@ -2470,7 +2470,7 @@ deriving instance Generic (IndirectCommandsStreamNV)
 deriving instance Show IndirectCommandsStreamNV
 
 instance ToCStruct IndirectCommandsStreamNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IndirectCommandsStreamNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Buffer)) (buffer)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (offset)
@@ -2644,7 +2644,7 @@ deriving instance Generic (IndirectCommandsLayoutTokenNV)
 deriving instance Show IndirectCommandsLayoutTokenNV
 
 instance ToCStruct IndirectCommandsLayoutTokenNV where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IndirectCommandsLayoutTokenNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2662,10 +2662,10 @@ instance ToCStruct IndirectCommandsLayoutTokenNV where
     lift $ unless ((Data.Vector.length $ (indexTypeValues)) == pIndexTypesLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pIndexTypeValues and pIndexTypes must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral pIndexTypesLength :: Word32))
-    pPIndexTypes' <- ContT $ allocaBytesAligned @IndexType ((Data.Vector.length (indexTypes)) * 4) 4
+    pPIndexTypes' <- ContT $ allocaBytes @IndexType ((Data.Vector.length (indexTypes)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPIndexTypes' `plusPtr` (4 * (i)) :: Ptr IndexType) (e)) (indexTypes)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr IndexType))) (pPIndexTypes')
-    pPIndexTypeValues' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (indexTypeValues)) * 4) 4
+    pPIndexTypeValues' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (indexTypeValues)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPIndexTypeValues' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (indexTypeValues)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Word32))) (pPIndexTypeValues')
     lift $ f
@@ -2845,18 +2845,18 @@ deriving instance Generic (IndirectCommandsLayoutCreateInfoNV)
 deriving instance Show IndirectCommandsLayoutCreateInfoNV
 
 instance ToCStruct IndirectCommandsLayoutCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IndirectCommandsLayoutCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr IndirectCommandsLayoutUsageFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (pipelineBindPoint)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (tokens)) :: Word32))
-    pPTokens' <- ContT $ allocaBytesAligned @IndirectCommandsLayoutTokenNV ((Data.Vector.length (tokens)) * 88) 8
+    pPTokens' <- ContT $ allocaBytes @IndirectCommandsLayoutTokenNV ((Data.Vector.length (tokens)) * 88)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTokens' `plusPtr` (88 * (i)) :: Ptr IndirectCommandsLayoutTokenNV) (e) . ($ ())) (tokens)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr IndirectCommandsLayoutTokenNV))) (pPTokens')
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (streamStrides)) :: Word32))
-    pPStreamStrides' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (streamStrides)) * 4) 4
+    pPStreamStrides' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (streamStrides)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPStreamStrides' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (streamStrides)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPStreamStrides')
     lift $ f
@@ -3100,7 +3100,7 @@ deriving instance Generic (GeneratedCommandsInfoNV)
 deriving instance Show GeneratedCommandsInfoNV
 
 instance ToCStruct GeneratedCommandsInfoNV where
-  withCStruct x f = allocaBytesAligned 120 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 120 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeneratedCommandsInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3108,7 +3108,7 @@ instance ToCStruct GeneratedCommandsInfoNV where
     lift $ poke ((p `plusPtr` 24 :: Ptr Pipeline)) (pipeline)
     lift $ poke ((p `plusPtr` 32 :: Ptr IndirectCommandsLayoutNV)) (indirectCommandsLayout)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (streams)) :: Word32))
-    pPStreams' <- ContT $ allocaBytesAligned @IndirectCommandsStreamNV ((Data.Vector.length (streams)) * 16) 8
+    pPStreams' <- ContT $ allocaBytes @IndirectCommandsStreamNV ((Data.Vector.length (streams)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPStreams' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsStreamNV) (e)) (streams)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr IndirectCommandsStreamNV))) (pPStreams')
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (sequencesCount)
@@ -3236,7 +3236,7 @@ deriving instance Generic (GeneratedCommandsMemoryRequirementsInfoNV)
 deriving instance Show GeneratedCommandsMemoryRequirementsInfoNV
 
 instance ToCStruct GeneratedCommandsMemoryRequirementsInfoNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeneratedCommandsMemoryRequirementsInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -6,7 +6,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers  ( pattern STRUCTURE
                                                              , StructureType(..)
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -97,7 +97,7 @@ deriving instance Generic (PhysicalDeviceVariablePointersFeatures)
 deriving instance Show PhysicalDeviceVariablePointersFeatures
 
 instance ToCStruct PhysicalDeviceVariablePointersFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVariablePointersFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

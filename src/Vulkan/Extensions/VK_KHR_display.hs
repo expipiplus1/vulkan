@@ -551,7 +551,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1266,7 +1266,7 @@ deriving instance Generic (DisplayPropertiesKHR)
 deriving instance Show DisplayPropertiesKHR
 
 instance ToCStruct DisplayPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPropertiesKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (display)
     displayName'' <- ContT $ useAsCString (displayName)
@@ -1337,7 +1337,7 @@ deriving instance Generic (DisplayPlanePropertiesKHR)
 deriving instance Show DisplayPlanePropertiesKHR
 
 instance ToCStruct DisplayPlanePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPlanePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (currentDisplay)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (currentStackIndex)
@@ -1406,7 +1406,7 @@ deriving instance Generic (DisplayModeParametersKHR)
 deriving instance Show DisplayModeParametersKHR
 
 instance ToCStruct DisplayModeParametersKHR where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayModeParametersKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Extent2D)) (visibleRegion)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (refreshRate)
@@ -1461,7 +1461,7 @@ deriving instance Generic (DisplayModePropertiesKHR)
 deriving instance Show DisplayModePropertiesKHR
 
 instance ToCStruct DisplayModePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayModePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (displayMode)
     poke ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (parameters)
@@ -1524,7 +1524,7 @@ deriving instance Generic (DisplayModeCreateInfoKHR)
 deriving instance Show DisplayModeCreateInfoKHR
 
 instance ToCStruct DisplayModeCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayModeCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1641,7 +1641,7 @@ deriving instance Generic (DisplayPlaneCapabilitiesKHR)
 deriving instance Show DisplayPlaneCapabilitiesKHR
 
 instance ToCStruct DisplayPlaneCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 68 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPlaneCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DisplayPlaneAlphaFlagsKHR)) (supportedAlpha)
     poke ((p `plusPtr` 4 :: Ptr Offset2D)) (minSrcPosition)
@@ -1806,7 +1806,7 @@ deriving instance Generic (DisplaySurfaceCreateInfoKHR)
 deriving instance Show DisplaySurfaceCreateInfoKHR
 
 instance ToCStruct DisplaySurfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplaySurfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

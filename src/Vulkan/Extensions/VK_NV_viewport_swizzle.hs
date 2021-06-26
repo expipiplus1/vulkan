@@ -284,7 +284,7 @@ module Vulkan.Extensions.VK_NV_viewport_swizzle  ( ViewportSwizzleNV(..)
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -363,7 +363,7 @@ deriving instance Generic (ViewportSwizzleNV)
 deriving instance Show ViewportSwizzleNV
 
 instance ToCStruct ViewportSwizzleNV where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewportSwizzleNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ViewportCoordinateSwizzleNV)) (x)
     poke ((p `plusPtr` 4 :: Ptr ViewportCoordinateSwizzleNV)) (y)
@@ -432,13 +432,13 @@ deriving instance Generic (PipelineViewportSwizzleStateCreateInfoNV)
 deriving instance Show PipelineViewportSwizzleStateCreateInfoNV
 
 instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportSwizzleStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineViewportSwizzleStateCreateFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewportSwizzles)) :: Word32))
-    pPViewportSwizzles' <- ContT $ allocaBytesAligned @ViewportSwizzleNV ((Data.Vector.length (viewportSwizzles)) * 16) 4
+    pPViewportSwizzles' <- ContT $ allocaBytes @ViewportSwizzleNV ((Data.Vector.length (viewportSwizzles)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e)) (viewportSwizzles)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportSwizzleNV))) (pPViewportSwizzles')
     lift $ f

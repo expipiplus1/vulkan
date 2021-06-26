@@ -170,7 +170,7 @@ module Vulkan.Extensions.VK_EXT_subgroup_size_control  ( PhysicalDeviceSubgroupS
                                                        , pattern EXT_SUBGROUP_SIZE_CONTROL_EXTENSION_NAME
                                                        ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -260,7 +260,7 @@ deriving instance Generic (PhysicalDeviceSubgroupSizeControlFeaturesEXT)
 deriving instance Show PhysicalDeviceSubgroupSizeControlFeaturesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSubgroupSizeControlFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -355,7 +355,7 @@ deriving instance Generic (PhysicalDeviceSubgroupSizeControlPropertiesEXT)
 deriving instance Show PhysicalDeviceSubgroupSizeControlPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSubgroupSizeControlPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -436,7 +436,7 @@ deriving instance Generic (PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT)
 deriving instance Show PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
 
 instance ToCStruct PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

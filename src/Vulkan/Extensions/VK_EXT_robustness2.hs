@@ -132,7 +132,7 @@ module Vulkan.Extensions.VK_EXT_robustness2  ( PhysicalDeviceRobustness2Features
                                              , pattern EXT_ROBUSTNESS_2_EXTENSION_NAME
                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -238,7 +238,7 @@ deriving instance Generic (PhysicalDeviceRobustness2FeaturesEXT)
 deriving instance Show PhysicalDeviceRobustness2FeaturesEXT
 
 instance ToCStruct PhysicalDeviceRobustness2FeaturesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRobustness2FeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -319,7 +319,7 @@ deriving instance Generic (PhysicalDeviceRobustness2PropertiesEXT)
 deriving instance Show PhysicalDeviceRobustness2PropertiesEXT
 
 instance ToCStruct PhysicalDeviceRobustness2PropertiesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRobustness2PropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

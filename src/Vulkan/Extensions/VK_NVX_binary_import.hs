@@ -142,7 +142,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -398,7 +398,7 @@ deriving instance Generic (CuModuleCreateInfoNVX)
 deriving instance Show CuModuleCreateInfoNVX
 
 instance ToCStruct CuModuleCreateInfoNVX where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CuModuleCreateInfoNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -447,7 +447,7 @@ deriving instance Generic (CuFunctionCreateInfoNVX)
 deriving instance Show CuFunctionCreateInfoNVX
 
 instance ToCStruct CuFunctionCreateInfoNVX where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CuFunctionCreateInfoNVX{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_FUNCTION_CREATE_INFO_NVX)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -512,7 +512,7 @@ deriving instance Generic (CuLaunchInfoNVX)
 deriving instance Show CuLaunchInfoNVX
 
 instance ToCStruct CuLaunchInfoNVX where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CuLaunchInfoNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

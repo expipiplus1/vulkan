@@ -18,7 +18,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -317,7 +317,7 @@ resetFences device fences = liftIO . evalContT $ do
   lift $ unless (vkResetFencesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetFences is null" Nothing Nothing
   let vkResetFences' = mkVkResetFences vkResetFencesPtr
-  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
+  pPFences <- ContT $ allocaBytes @Fence ((Data.Vector.length (fences)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
   r <- lift $ traceAroundEvent "vkResetFences" (vkResetFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -443,7 +443,7 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
   lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForFences is null" Nothing Nothing
   let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
-  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
+  pPFences <- ContT $ allocaBytes @Fence ((Data.Vector.length (fences)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
   r <- lift $ traceAroundEvent "vkWaitForFences" (vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -612,7 +612,7 @@ instance Extensible FenceCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss FenceCreateInfo es, PokeChain es) => ToCStruct (FenceCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FenceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

@@ -195,7 +195,7 @@ module Vulkan.Extensions.VK_EXT_provoking_vertex  ( PhysicalDeviceProvokingVerte
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -279,7 +279,7 @@ deriving instance Generic (PhysicalDeviceProvokingVertexFeaturesEXT)
 deriving instance Show PhysicalDeviceProvokingVertexFeaturesEXT
 
 instance ToCStruct PhysicalDeviceProvokingVertexFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProvokingVertexFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -351,7 +351,7 @@ deriving instance Generic (PhysicalDeviceProvokingVertexPropertiesEXT)
 deriving instance Show PhysicalDeviceProvokingVertexPropertiesEXT
 
 instance ToCStruct PhysicalDeviceProvokingVertexPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProvokingVertexPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -433,7 +433,7 @@ deriving instance Generic (PipelineRasterizationProvokingVertexStateCreateInfoEX
 deriving instance Show PipelineRasterizationProvokingVertexStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationProvokingVertexStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationProvokingVertexStateCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

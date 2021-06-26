@@ -229,7 +229,7 @@ module Vulkan.Extensions.VK_KHR_shared_presentable_image  ( getSwapchainStatusKH
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -365,7 +365,7 @@ deriving instance Generic (SharedPresentSurfaceCapabilitiesKHR)
 deriving instance Show SharedPresentSurfaceCapabilitiesKHR
 
 instance ToCStruct SharedPresentSurfaceCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SharedPresentSurfaceCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

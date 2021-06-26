@@ -536,7 +536,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1009,9 +1009,9 @@ cmdWaitEvents2KHRSafeOrUnsafe mkVkCmdWaitEvents2KHR commandBuffer events depende
   let pEventsLength = Data.Vector.length $ (events)
   lift $ unless ((Data.Vector.length $ (dependencyInfos)) == pEventsLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pDependencyInfos and pEvents must have the same length" Nothing Nothing
-  pPEvents <- ContT $ allocaBytesAligned @Event ((Data.Vector.length (events)) * 8) 8
+  pPEvents <- ContT $ allocaBytes @Event ((Data.Vector.length (events)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
-  pPDependencyInfos <- ContT $ allocaBytesAligned @DependencyInfoKHR ((Data.Vector.length (dependencyInfos)) * 64) 8
+  pPDependencyInfos <- ContT $ allocaBytes @DependencyInfoKHR ((Data.Vector.length (dependencyInfos)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDependencyInfos `plusPtr` (64 * (i)) :: Ptr DependencyInfoKHR) (e) . ($ ())) (dependencyInfos)
   lift $ traceAroundEvent "vkCmdWaitEvents2KHR" (vkCmdWaitEvents2KHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pEventsLength :: Word32)) (pPEvents) (pPDependencyInfos))
   pure $ ()
@@ -1610,7 +1610,7 @@ queueSubmit2KHR queue submits fence = liftIO . evalContT $ do
   lift $ unless (vkQueueSubmit2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSubmit2KHR is null" Nothing Nothing
   let vkQueueSubmit2KHR' = mkVkQueueSubmit2KHR vkQueueSubmit2KHRPtr
-  pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo2KHR _) ((Data.Vector.length (submits)) * 64) 8
+  pPSubmits <- ContT $ allocaBytes @(SubmitInfo2KHR _) ((Data.Vector.length (submits)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (64 * (i)) :: Ptr (SubmitInfo2KHR _))) (e) . ($ ())) (submits)
   r <- lift $ traceAroundEvent "vkQueueSubmit2KHR" (vkQueueSubmit2KHR' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -2637,7 +2637,7 @@ deriving instance Generic (MemoryBarrier2KHR)
 deriving instance Show MemoryBarrier2KHR
 
 instance ToCStruct MemoryBarrier2KHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryBarrier2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3641,7 +3641,7 @@ instance Extensible ImageMemoryBarrier2KHR where
     | otherwise = Nothing
 
 instance (Extendss ImageMemoryBarrier2KHR es, PokeChain es) => ToCStruct (ImageMemoryBarrier2KHR es) where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryBarrier2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -4372,7 +4372,7 @@ deriving instance Generic (BufferMemoryBarrier2KHR)
 deriving instance Show BufferMemoryBarrier2KHR
 
 instance ToCStruct BufferMemoryBarrier2KHR where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferMemoryBarrier2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -4504,21 +4504,21 @@ deriving instance Generic (DependencyInfoKHR)
 deriving instance Show DependencyInfoKHR
 
 instance ToCStruct DependencyInfoKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DependencyInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEPENDENCY_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DependencyFlags)) (dependencyFlags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32))
-    pPMemoryBarriers' <- ContT $ allocaBytesAligned @MemoryBarrier2KHR ((Data.Vector.length (memoryBarriers)) * 48) 8
+    pPMemoryBarriers' <- ContT $ allocaBytes @MemoryBarrier2KHR ((Data.Vector.length (memoryBarriers)) * 48)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers' `plusPtr` (48 * (i)) :: Ptr MemoryBarrier2KHR) (e)) (memoryBarriers)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr MemoryBarrier2KHR))) (pPMemoryBarriers')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32))
-    pPBufferMemoryBarriers' <- ContT $ allocaBytesAligned @BufferMemoryBarrier2KHR ((Data.Vector.length (bufferMemoryBarriers)) * 80) 8
+    pPBufferMemoryBarriers' <- ContT $ allocaBytes @BufferMemoryBarrier2KHR ((Data.Vector.length (bufferMemoryBarriers)) * 80)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers' `plusPtr` (80 * (i)) :: Ptr BufferMemoryBarrier2KHR) (e)) (bufferMemoryBarriers)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferMemoryBarrier2KHR))) (pPBufferMemoryBarriers')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32))
-    pPImageMemoryBarriers' <- ContT $ allocaBytesAligned @(ImageMemoryBarrier2KHR _) ((Data.Vector.length (imageMemoryBarriers)) * 96) 8
+    pPImageMemoryBarriers' <- ContT $ allocaBytes @(ImageMemoryBarrier2KHR _) ((Data.Vector.length (imageMemoryBarriers)) * 96)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers' `plusPtr` (96 * (i)) :: Ptr (ImageMemoryBarrier2KHR _))) (e) . ($ ())) (imageMemoryBarriers)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (ImageMemoryBarrier2KHR _)))) (pPImageMemoryBarriers')
     lift $ f
@@ -4657,7 +4657,7 @@ deriving instance Generic (SemaphoreSubmitInfoKHR)
 deriving instance Show SemaphoreSubmitInfoKHR
 
 instance ToCStruct SemaphoreSubmitInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreSubmitInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -4743,7 +4743,7 @@ deriving instance Generic (CommandBufferSubmitInfoKHR)
 deriving instance Show CommandBufferSubmitInfoKHR
 
 instance ToCStruct CommandBufferSubmitInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferSubmitInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -4899,22 +4899,22 @@ instance Extensible SubmitInfo2KHR where
     | otherwise = Nothing
 
 instance (Extendss SubmitInfo2KHR es, PokeChain es) => ToCStruct (SubmitInfo2KHR es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubmitInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBMIT_INFO_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr SubmitFlagsKHR)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (waitSemaphoreInfos)) :: Word32))
-    pPWaitSemaphoreInfos' <- ContT $ allocaBytesAligned @SemaphoreSubmitInfoKHR ((Data.Vector.length (waitSemaphoreInfos)) * 48) 8
+    pPWaitSemaphoreInfos' <- ContT $ allocaBytes @SemaphoreSubmitInfoKHR ((Data.Vector.length (waitSemaphoreInfos)) * 48)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreInfos' `plusPtr` (48 * (i)) :: Ptr SemaphoreSubmitInfoKHR) (e)) (waitSemaphoreInfos)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr SemaphoreSubmitInfoKHR))) (pPWaitSemaphoreInfos')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (commandBufferInfos)) :: Word32))
-    pPCommandBufferInfos' <- ContT $ allocaBytesAligned @CommandBufferSubmitInfoKHR ((Data.Vector.length (commandBufferInfos)) * 32) 8
+    pPCommandBufferInfos' <- ContT $ allocaBytes @CommandBufferSubmitInfoKHR ((Data.Vector.length (commandBufferInfos)) * 32)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBufferInfos' `plusPtr` (32 * (i)) :: Ptr CommandBufferSubmitInfoKHR) (e)) (commandBufferInfos)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CommandBufferSubmitInfoKHR))) (pPCommandBufferInfos')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (signalSemaphoreInfos)) :: Word32))
-    pPSignalSemaphoreInfos' <- ContT $ allocaBytesAligned @SemaphoreSubmitInfoKHR ((Data.Vector.length (signalSemaphoreInfos)) * 48) 8
+    pPSignalSemaphoreInfos' <- ContT $ allocaBytes @SemaphoreSubmitInfoKHR ((Data.Vector.length (signalSemaphoreInfos)) * 48)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreInfos' `plusPtr` (48 * (i)) :: Ptr SemaphoreSubmitInfoKHR) (e)) (signalSemaphoreInfos)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SemaphoreSubmitInfoKHR))) (pPSignalSemaphoreInfos')
     lift $ f
@@ -4978,7 +4978,7 @@ deriving instance Generic (QueueFamilyCheckpointProperties2NV)
 deriving instance Show QueueFamilyCheckpointProperties2NV
 
 instance ToCStruct QueueFamilyCheckpointProperties2NV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyCheckpointProperties2NV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5038,7 +5038,7 @@ deriving instance Generic (CheckpointData2NV)
 deriving instance Show CheckpointData2NV
 
 instance ToCStruct CheckpointData2NV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CheckpointData2NV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5110,7 +5110,7 @@ deriving instance Generic (PhysicalDeviceSynchronization2FeaturesKHR)
 deriving instance Show PhysicalDeviceSynchronization2FeaturesKHR
 
 instance ToCStruct PhysicalDeviceSynchronization2FeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSynchronization2FeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

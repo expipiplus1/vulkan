@@ -134,7 +134,7 @@ module Vulkan.Extensions.VK_EXT_global_priority  ( DeviceQueueGlobalPriorityCrea
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -187,7 +187,7 @@ deriving instance Generic (DeviceQueueGlobalPriorityCreateInfoEXT)
 deriving instance Show DeviceQueueGlobalPriorityCreateInfoEXT
 
 instance ToCStruct DeviceQueueGlobalPriorityCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceQueueGlobalPriorityCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -158,7 +158,7 @@ module Vulkan.Extensions.VK_AMD_shader_core_properties  ( PhysicalDeviceShaderCo
                                                         , pattern AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -260,7 +260,7 @@ deriving instance Generic (PhysicalDeviceShaderCorePropertiesAMD)
 deriving instance Show PhysicalDeviceShaderCorePropertiesAMD
 
 instance ToCStruct PhysicalDeviceShaderCorePropertiesAMD where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderCorePropertiesAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

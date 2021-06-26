@@ -146,7 +146,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -623,7 +623,7 @@ mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
   lift $ unless (vkMergeValidationCachesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMergeValidationCachesEXT is null" Nothing Nothing
   let vkMergeValidationCachesEXT' = mkVkMergeValidationCachesEXT vkMergeValidationCachesEXTPtr
-  pPSrcCaches <- ContT $ allocaBytesAligned @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8) 8
+  pPSrcCaches <- ContT $ allocaBytes @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr ValidationCacheEXT) (e)) (srcCaches)
   r <- lift $ traceAroundEvent "vkMergeValidationCachesEXT" (vkMergeValidationCachesEXT' (deviceHandle (device)) (dstCache) ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32)) (pPSrcCaches))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -681,7 +681,7 @@ deriving instance Generic (ValidationCacheCreateInfoEXT)
 deriving instance Show ValidationCacheCreateInfoEXT
 
 instance ToCStruct ValidationCacheCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ValidationCacheCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -744,7 +744,7 @@ deriving instance Generic (ShaderModuleValidationCacheCreateInfoEXT)
 deriving instance Show ShaderModuleValidationCacheCreateInfoEXT
 
 instance ToCStruct ShaderModuleValidationCacheCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderModuleValidationCacheCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

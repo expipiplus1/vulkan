@@ -152,7 +152,7 @@ module Vulkan.Extensions.VK_EXT_validation_features  ( ValidationFeaturesEXT(..)
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -238,16 +238,16 @@ deriving instance Generic (ValidationFeaturesEXT)
 deriving instance Show ValidationFeaturesEXT
 
 instance ToCStruct ValidationFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ValidationFeaturesEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VALIDATION_FEATURES_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledValidationFeatures)) :: Word32))
-    pPEnabledValidationFeatures' <- ContT $ allocaBytesAligned @ValidationFeatureEnableEXT ((Data.Vector.length (enabledValidationFeatures)) * 4) 4
+    pPEnabledValidationFeatures' <- ContT $ allocaBytes @ValidationFeatureEnableEXT ((Data.Vector.length (enabledValidationFeatures)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPEnabledValidationFeatures' `plusPtr` (4 * (i)) :: Ptr ValidationFeatureEnableEXT) (e)) (enabledValidationFeatures)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ValidationFeatureEnableEXT))) (pPEnabledValidationFeatures')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (disabledValidationFeatures)) :: Word32))
-    pPDisabledValidationFeatures' <- ContT $ allocaBytesAligned @ValidationFeatureDisableEXT ((Data.Vector.length (disabledValidationFeatures)) * 4) 4
+    pPDisabledValidationFeatures' <- ContT $ allocaBytes @ValidationFeatureDisableEXT ((Data.Vector.length (disabledValidationFeatures)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDisabledValidationFeatures' `plusPtr` (4 * (i)) :: Ptr ValidationFeatureDisableEXT) (e)) (disabledValidationFeatures)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr ValidationFeatureDisableEXT))) (pPDisabledValidationFeatures')
     lift $ f

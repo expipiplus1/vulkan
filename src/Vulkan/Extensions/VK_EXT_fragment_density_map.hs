@@ -183,7 +183,7 @@ module Vulkan.Extensions.VK_EXT_fragment_density_map  ( PhysicalDeviceFragmentDe
                                                       , pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -268,7 +268,7 @@ deriving instance Generic (PhysicalDeviceFragmentDensityMapFeaturesEXT)
 deriving instance Show PhysicalDeviceFragmentDensityMapFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentDensityMapFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -348,7 +348,7 @@ deriving instance Generic (PhysicalDeviceFragmentDensityMapPropertiesEXT)
 deriving instance Show PhysicalDeviceFragmentDensityMapPropertiesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentDensityMapPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -483,7 +483,7 @@ deriving instance Generic (RenderPassFragmentDensityMapCreateInfoEXT)
 deriving instance Show RenderPassFragmentDensityMapCreateInfoEXT
 
 instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassFragmentDensityMapCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

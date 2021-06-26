@@ -273,7 +273,7 @@ module Vulkan.Extensions.VK_NV_shader_image_footprint  ( PhysicalDeviceShaderIma
                                                        , pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
                                                        ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -336,7 +336,7 @@ deriving instance Generic (PhysicalDeviceShaderImageFootprintFeaturesNV)
 deriving instance Show PhysicalDeviceShaderImageFootprintFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderImageFootprintFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderImageFootprintFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

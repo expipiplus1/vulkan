@@ -16,7 +16,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -490,7 +490,7 @@ instance Extensible DeviceQueueCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss DeviceQueueCreateInfo es, PokeChain es) => ToCStruct (DeviceQueueCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceQueueCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -498,7 +498,7 @@ instance (Extendss DeviceQueueCreateInfo es, PokeChain es) => ToCStruct (DeviceQ
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceQueueCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (queueFamilyIndex)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queuePriorities)) :: Word32))
-    pPQueuePriorities' <- ContT $ allocaBytesAligned @CFloat ((Data.Vector.length (queuePriorities)) * 4) 4
+    pPQueuePriorities' <- ContT $ allocaBytes @CFloat ((Data.Vector.length (queuePriorities)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPQueuePriorities' `plusPtr` (4 * (i)) :: Ptr CFloat) (CFloat (e))) (queuePriorities)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CFloat))) (pPQueuePriorities')
     lift $ f
@@ -982,24 +982,24 @@ instance Extensible DeviceCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss DeviceCreateInfo es, PokeChain es) => ToCStruct (DeviceCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueCreateInfos)) :: Word32))
-    pPQueueCreateInfos' <- ContT $ allocaBytesAligned @(DeviceQueueCreateInfo _) ((Data.Vector.length (queueCreateInfos)) * 40) 8
+    pPQueueCreateInfos' <- ContT $ allocaBytes @(DeviceQueueCreateInfo _) ((Data.Vector.length (queueCreateInfos)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPQueueCreateInfos' `plusPtr` (40 * (i)) :: Ptr (DeviceQueueCreateInfo _))) (e) . ($ ())) (queueCreateInfos)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (DeviceQueueCreateInfo _)))) (pPQueueCreateInfos')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledLayerNames)) :: Word32))
-    pPpEnabledLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledLayerNames)) * 8) 8
+    pPpEnabledLayerNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledLayerNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       ppEnabledLayerNames'' <- ContT $ useAsCString (e)
       lift $ poke (pPpEnabledLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledLayerNames'') (enabledLayerNames)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledLayerNames')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledExtensionNames)) :: Word32))
-    pPpEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8) 8
+    pPpEnabledExtensionNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       ppEnabledExtensionNames'' <- ContT $ useAsCString (e)
       lift $ poke (pPpEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledExtensionNames'') (enabledExtensionNames)

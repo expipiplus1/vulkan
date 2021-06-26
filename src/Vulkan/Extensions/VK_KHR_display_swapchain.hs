@@ -226,7 +226,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -399,7 +399,7 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
   lift $ unless (vkCreateSharedSwapchainsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSharedSwapchainsKHR is null" Nothing Nothing
   let vkCreateSharedSwapchainsKHR' = mkVkCreateSharedSwapchainsKHR vkCreateSharedSwapchainsKHRPtr
-  pPCreateInfos <- ContT $ allocaBytesAligned @(SwapchainCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104) 8
+  pPCreateInfos <- ContT $ allocaBytes @(SwapchainCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (104 * (i)) :: Ptr (SwapchainCreateInfoKHR _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -481,7 +481,7 @@ deriving instance Generic (DisplayPresentInfoKHR)
 deriving instance Show DisplayPresentInfoKHR
 
 instance ToCStruct DisplayPresentInfoKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPresentInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

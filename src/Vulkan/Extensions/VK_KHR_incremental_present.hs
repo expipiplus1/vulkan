@@ -172,7 +172,7 @@ module Vulkan.Extensions.VK_KHR_incremental_present  ( PresentRegionsKHR(..)
                                                      ) where
 
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -251,7 +251,7 @@ deriving instance Generic (PresentRegionsKHR)
 deriving instance Show PresentRegionsKHR
 
 instance ToCStruct PresentRegionsKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentRegionsKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -266,7 +266,7 @@ instance ToCStruct PresentRegionsKHR where
     pRegions'' <- if Data.Vector.null (regions)
       then pure nullPtr
       else do
-        pPRegions <- ContT $ allocaBytesAligned @PresentRegionKHR (((Data.Vector.length (regions))) * 16) 8
+        pPRegions <- ContT $ allocaBytes @PresentRegionKHR (((Data.Vector.length (regions))) * 16)
         Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (16 * (i)) :: Ptr PresentRegionKHR) (e) . ($ ())) ((regions))
         pure $ pPRegions
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentRegionKHR))) pRegions''
@@ -330,7 +330,7 @@ deriving instance Generic (PresentRegionKHR)
 deriving instance Show PresentRegionKHR
 
 instance ToCStruct PresentRegionKHR where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentRegionKHR{..} f = evalContT $ do
     let pRectanglesLength = Data.Vector.length $ (rectangles)
     rectangleCount'' <- lift $ if (rectangleCount) == 0
@@ -343,7 +343,7 @@ instance ToCStruct PresentRegionKHR where
     pRectangles'' <- if Data.Vector.null (rectangles)
       then pure nullPtr
       else do
-        pPRectangles <- ContT $ allocaBytesAligned @RectLayerKHR (((Data.Vector.length (rectangles))) * 20) 4
+        pPRectangles <- ContT $ allocaBytes @RectLayerKHR (((Data.Vector.length (rectangles))) * 20)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPRectangles `plusPtr` (20 * (i)) :: Ptr RectLayerKHR) (e)) ((rectangles))
         pure $ pPRectangles
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr RectLayerKHR))) pRectangles''
@@ -413,7 +413,7 @@ deriving instance Generic (RectLayerKHR)
 deriving instance Show RectLayerKHR
 
 instance ToCStruct RectLayerKHR where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RectLayerKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Offset2D)) (offset)
     poke ((p `plusPtr` 8 :: Ptr Extent2D)) (extent)

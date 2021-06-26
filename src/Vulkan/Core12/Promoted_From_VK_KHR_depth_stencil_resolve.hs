@@ -7,7 +7,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve  ( PhysicalDevic
                                                                  , ResolveModeFlags
                                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Utils (maybePeek)
 import GHC.Ptr (castPtr)
 import Foreign.Ptr (nullPtr)
@@ -106,7 +106,7 @@ deriving instance Generic (PhysicalDeviceDepthStencilResolveProperties)
 deriving instance Show PhysicalDeviceDepthStencilResolveProperties
 
 instance ToCStruct PhysicalDeviceDepthStencilResolveProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDepthStencilResolveProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -282,7 +282,7 @@ deriving instance Generic (SubpassDescriptionDepthStencilResolve)
 deriving instance Show SubpassDescriptionDepthStencilResolve
 
 instance ToCStruct SubpassDescriptionDepthStencilResolve where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassDescriptionDepthStencilResolve{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

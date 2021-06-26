@@ -275,7 +275,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -513,7 +513,7 @@ deriving instance Generic (ImportAndroidHardwareBufferInfoANDROID)
 deriving instance Show ImportAndroidHardwareBufferInfoANDROID
 
 instance ToCStruct ImportAndroidHardwareBufferInfoANDROID where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportAndroidHardwareBufferInfoANDROID{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -587,7 +587,7 @@ deriving instance Generic (AndroidHardwareBufferUsageANDROID)
 deriving instance Show AndroidHardwareBufferUsageANDROID
 
 instance ToCStruct AndroidHardwareBufferUsageANDROID where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AndroidHardwareBufferUsageANDROID{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -664,7 +664,7 @@ instance Extensible AndroidHardwareBufferPropertiesANDROID where
     | otherwise = Nothing
 
 instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PokeChain es) => ToCStruct (AndroidHardwareBufferPropertiesANDROID es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AndroidHardwareBufferPropertiesANDROID{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -745,7 +745,7 @@ deriving instance Generic (MemoryGetAndroidHardwareBufferInfoANDROID)
 deriving instance Show MemoryGetAndroidHardwareBufferInfoANDROID
 
 instance ToCStruct MemoryGetAndroidHardwareBufferInfoANDROID where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryGetAndroidHardwareBufferInfoANDROID{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -909,7 +909,7 @@ deriving instance Generic (AndroidHardwareBufferFormatPropertiesANDROID)
 deriving instance Show AndroidHardwareBufferFormatPropertiesANDROID
 
 instance ToCStruct AndroidHardwareBufferFormatPropertiesANDROID where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AndroidHardwareBufferFormatPropertiesANDROID{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -998,7 +998,7 @@ deriving instance Generic (ExternalFormatANDROID)
 deriving instance Show ExternalFormatANDROID
 
 instance ToCStruct ExternalFormatANDROID where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalFormatANDROID{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

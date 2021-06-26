@@ -5,7 +5,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls  ( PhysicalDevic
                                                                  , ShaderFloatControlsIndependence(..)
                                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -169,7 +169,7 @@ deriving instance Generic (PhysicalDeviceFloatControlsProperties)
 deriving instance Show PhysicalDeviceFloatControlsProperties
 
 instance ToCStruct PhysicalDeviceFloatControlsProperties where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFloatControlsProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

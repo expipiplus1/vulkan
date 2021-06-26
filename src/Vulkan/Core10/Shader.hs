@@ -15,7 +15,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Bits ((.&.))
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (copyBytes)
@@ -360,7 +360,7 @@ instance Extensible ShaderModuleCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (ShaderModuleCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderModuleCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -376,7 +376,7 @@ instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (Shader
       -- Otherwise allocate and copy the bytes
       else do
         let len = Data.ByteString.length (code)
-        mem <- ContT $ allocaBytesAligned @Word32 len 4
+        mem <- ContT $ allocaBytes @Word32 len
         lift $ copyBytes mem (castPtr @CChar @Word32 unalignedCode) len
         pure mem
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) pCode''

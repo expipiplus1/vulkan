@@ -13,7 +13,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -128,7 +128,7 @@ bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   lift $ unless (vkBindBufferMemory2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory2 is null" Nothing Nothing
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 vkBindBufferMemory2Ptr
-  pPBindInfos <- ContT $ allocaBytesAligned @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
+  pPBindInfos <- ContT $ allocaBytes @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _))) (e) . ($ ())) (bindInfos)
   r <- lift $ traceAroundEvent "vkBindBufferMemory2" (vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -199,7 +199,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   lift $ unless (vkBindImageMemory2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory2 is null" Nothing Nothing
   let vkBindImageMemory2' = mkVkBindImageMemory2 vkBindImageMemory2Ptr
-  pPBindInfos <- ContT $ allocaBytesAligned @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
+  pPBindInfos <- ContT $ allocaBytes @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _))) (e) . ($ ())) (bindInfos)
   r <- lift $ traceAroundEvent "vkBindImageMemory2" (vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -382,7 +382,7 @@ instance Extensible BindBufferMemoryInfo where
     | otherwise = Nothing
 
 instance (Extendss BindBufferMemoryInfo es, PokeChain es) => ToCStruct (BindBufferMemoryInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindBufferMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -722,7 +722,7 @@ instance Extensible BindImageMemoryInfo where
     | otherwise = Nothing
 
 instance (Extendss BindImageMemoryInfo es, PokeChain es) => ToCStruct (BindImageMemoryInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImageMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

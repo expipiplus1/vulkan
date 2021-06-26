@@ -173,7 +173,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -386,7 +386,7 @@ deriving instance Generic (ShaderResourceUsageAMD)
 deriving instance Show ShaderResourceUsageAMD
 
 instance ToCStruct ShaderResourceUsageAMD where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderResourceUsageAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (numUsedVgprs)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (numUsedSgprs)
@@ -481,7 +481,7 @@ deriving instance Generic (ShaderStatisticsInfoAMD)
 deriving instance Show ShaderStatisticsInfoAMD
 
 instance ToCStruct ShaderStatisticsInfoAMD where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderStatisticsInfoAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (shaderStageMask)
     poke ((p `plusPtr` 8 :: Ptr ShaderResourceUsageAMD)) (resourceUsage)

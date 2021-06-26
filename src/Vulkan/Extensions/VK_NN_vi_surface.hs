@@ -125,7 +125,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -294,7 +294,7 @@ deriving instance Generic (ViSurfaceCreateInfoNN)
 deriving instance Show ViSurfaceCreateInfoNN
 
 instance ToCStruct ViSurfaceCreateInfoNN where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViSurfaceCreateInfoNN{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

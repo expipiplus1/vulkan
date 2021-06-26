@@ -1247,7 +1247,7 @@ import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -2302,7 +2302,7 @@ cmdWriteAccelerationStructuresPropertiesKHR commandBuffer accelerationStructures
   lift $ unless (vkCmdWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkCmdWriteAccelerationStructuresPropertiesKHR' = mkVkCmdWriteAccelerationStructuresPropertiesKHR vkCmdWriteAccelerationStructuresPropertiesKHRPtr
-  pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
+  pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
   lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesKHR" (vkCmdWriteAccelerationStructuresPropertiesKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery))
   pure $ ()
@@ -2451,7 +2451,7 @@ writeAccelerationStructuresPropertiesKHR device accelerationStructures queryType
   lift $ unless (vkWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkWriteAccelerationStructuresPropertiesKHR' = mkVkWriteAccelerationStructuresPropertiesKHR vkWriteAccelerationStructuresPropertiesKHRPtr
-  pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
+  pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
   r <- lift $ traceAroundEvent "vkWriteAccelerationStructuresPropertiesKHR" (vkWriteAccelerationStructuresPropertiesKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (CSize (dataSize)) (data') (CSize (stride)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -3227,11 +3227,11 @@ cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO .
   let pInfosLength = Data.Vector.length $ (infos)
   lift $ unless ((Data.Vector.length $ (buildRangeInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppBuildRangeInfos and pInfos must have the same length" Nothing Nothing
-  pPInfos <- ContT $ allocaBytesAligned @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80) 8
+  pPInfos <- ContT $ allocaBytes @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
-  pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
+  pPpBuildRangeInfos <- ContT $ allocaBytes @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8)
   Data.Vector.imapM_ (\i e -> do
-    pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
+    pPpBuildRangeInfos' <- ContT $ allocaBytes @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresKHR" (vkCmdBuildAccelerationStructuresKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
@@ -3865,15 +3865,15 @@ cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddr
     throwIO $ IOError Nothing InvalidArgument "" "pIndirectStrides and pInfos must have the same length" Nothing Nothing
   lift $ unless ((Data.Vector.length $ (maxPrimitiveCounts)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppMaxPrimitiveCounts and pInfos must have the same length" Nothing Nothing
-  pPInfos <- ContT $ allocaBytesAligned @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80) 8
+  pPInfos <- ContT $ allocaBytes @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
-  pPIndirectDeviceAddresses <- ContT $ allocaBytesAligned @DeviceAddress ((Data.Vector.length (indirectDeviceAddresses)) * 8) 8
+  pPIndirectDeviceAddresses <- ContT $ allocaBytes @DeviceAddress ((Data.Vector.length (indirectDeviceAddresses)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPIndirectDeviceAddresses `plusPtr` (8 * (i)) :: Ptr DeviceAddress) (e)) (indirectDeviceAddresses)
-  pPIndirectStrides <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (indirectStrides)) * 4) 4
+  pPIndirectStrides <- ContT $ allocaBytes @Word32 ((Data.Vector.length (indirectStrides)) * 4)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPIndirectStrides `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (indirectStrides)
-  pPpMaxPrimitiveCounts <- ContT $ allocaBytesAligned @(Ptr Word32) ((Data.Vector.length (maxPrimitiveCounts)) * 8) 8
+  pPpMaxPrimitiveCounts <- ContT $ allocaBytes @(Ptr Word32) ((Data.Vector.length (maxPrimitiveCounts)) * 8)
   Data.Vector.imapM_ (\i e -> do
-    pPpMaxPrimitiveCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (e)) * 4) 4
+    pPpMaxPrimitiveCounts' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (e)) * 4)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpMaxPrimitiveCounts' `plusPtr` (4 * (i')) :: Ptr Word32) (e')) (e)
     lift $ poke (pPpMaxPrimitiveCounts `plusPtr` (8 * (i)) :: Ptr (Ptr Word32)) (pPpMaxPrimitiveCounts')) (maxPrimitiveCounts)
   lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresIndirectKHR" (vkCmdBuildAccelerationStructuresIndirectKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPIndirectDeviceAddresses) (pPIndirectStrides) (pPpMaxPrimitiveCounts))
@@ -4354,11 +4354,11 @@ buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = 
   let pInfosLength = Data.Vector.length $ (infos)
   lift $ unless ((Data.Vector.length $ (buildRangeInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppBuildRangeInfos and pInfos must have the same length" Nothing Nothing
-  pPInfos <- ContT $ allocaBytesAligned @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80) 8
+  pPInfos <- ContT $ allocaBytes @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
-  pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
+  pPpBuildRangeInfos <- ContT $ allocaBytes @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8)
   Data.Vector.imapM_ (\i e -> do
-    pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
+    pPpBuildRangeInfos' <- ContT $ allocaBytes @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   r <- lift $ traceAroundEvent "vkBuildAccelerationStructuresKHR" (vkBuildAccelerationStructuresKHR' (deviceHandle (device)) (deferredOperation) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
@@ -4597,7 +4597,7 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
   pMaxPrimitiveCounts <- if Data.Vector.null (maxPrimitiveCounts)
     then pure nullPtr
     else do
-      pPMaxPrimitiveCounts <- ContT $ allocaBytesAligned @Word32 (((Data.Vector.length (maxPrimitiveCounts))) * 4) 4
+      pPMaxPrimitiveCounts <- ContT $ allocaBytes @Word32 (((Data.Vector.length (maxPrimitiveCounts))) * 4)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPMaxPrimitiveCounts `plusPtr` (4 * (i)) :: Ptr Word32) (e)) ((maxPrimitiveCounts))
       pure $ pPMaxPrimitiveCounts
   pPSizeInfo <- ContT (withZeroCStruct @AccelerationStructureBuildSizesInfoKHR)
@@ -4658,12 +4658,12 @@ deriving instance Generic (WriteDescriptorSetAccelerationStructureKHR)
 deriving instance Show WriteDescriptorSetAccelerationStructureKHR
 
 instance ToCStruct WriteDescriptorSetAccelerationStructureKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSetAccelerationStructureKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32))
-    pPAccelerationStructures' <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
+    pPAccelerationStructures' <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures' `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureKHR))) (pPAccelerationStructures')
     lift $ f
@@ -4753,7 +4753,7 @@ deriving instance Generic (PhysicalDeviceAccelerationStructureFeaturesKHR)
 deriving instance Show PhysicalDeviceAccelerationStructureFeaturesKHR
 
 instance ToCStruct PhysicalDeviceAccelerationStructureFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceAccelerationStructureFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -4881,7 +4881,7 @@ deriving instance Generic (PhysicalDeviceAccelerationStructurePropertiesKHR)
 deriving instance Show PhysicalDeviceAccelerationStructurePropertiesKHR
 
 instance ToCStruct PhysicalDeviceAccelerationStructurePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceAccelerationStructurePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5046,7 +5046,7 @@ instance Extensible AccelerationStructureGeometryTrianglesDataKHR where
     | otherwise = Nothing
 
 instance (Extendss AccelerationStructureGeometryTrianglesDataKHR es, PokeChain es) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryTrianglesDataKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -5119,7 +5119,7 @@ deriving instance Generic (AccelerationStructureGeometryAabbsDataKHR)
 deriving instance Show AccelerationStructureGeometryAabbsDataKHR
 
 instance ToCStruct AccelerationStructureGeometryAabbsDataKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryAabbsDataKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5175,7 +5175,7 @@ deriving instance Generic (AccelerationStructureGeometryInstancesDataKHR)
 deriving instance Show AccelerationStructureGeometryInstancesDataKHR
 
 instance ToCStruct AccelerationStructureGeometryInstancesDataKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryInstancesDataKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5253,7 +5253,7 @@ deriving instance Generic (AccelerationStructureGeometryKHR)
 deriving instance Show AccelerationStructureGeometryKHR
 
 instance ToCStruct AccelerationStructureGeometryKHR where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5465,7 +5465,7 @@ deriving instance Generic (AccelerationStructureBuildGeometryInfoKHR)
 deriving instance Show AccelerationStructureBuildGeometryInfoKHR
 
 instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureBuildGeometryInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5475,7 +5475,7 @@ instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr AccelerationStructureKHR)) (srcAccelerationStructure)
     lift $ poke ((p `plusPtr` 40 :: Ptr AccelerationStructureKHR)) (dstAccelerationStructure)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (geometries)) :: Word32))
-    pPGeometries' <- ContT $ allocaBytesAligned @AccelerationStructureGeometryKHR ((Data.Vector.length (geometries)) * 96) 8
+    pPGeometries' <- ContT $ allocaBytes @AccelerationStructureGeometryKHR ((Data.Vector.length (geometries)) * 96)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries' `plusPtr` (96 * (i)) :: Ptr AccelerationStructureGeometryKHR) (e) . ($ ())) (geometries)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr AccelerationStructureGeometryKHR))) (pPGeometries')
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr AccelerationStructureGeometryKHR)))) (nullPtr)
@@ -5606,7 +5606,7 @@ deriving instance Generic (AccelerationStructureBuildRangeInfoKHR)
 deriving instance Show AccelerationStructureBuildRangeInfoKHR
 
 instance ToCStruct AccelerationStructureBuildRangeInfoKHR where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureBuildRangeInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (primitiveCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (primitiveOffset)
@@ -5813,7 +5813,7 @@ instance Extensible AccelerationStructureCreateInfoKHR where
     | otherwise = Nothing
 
 instance (Extendss AccelerationStructureCreateInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureCreateInfoKHR es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -5899,7 +5899,7 @@ deriving instance Generic (AabbPositionsKHR)
 deriving instance Show AabbPositionsKHR
 
 instance ToCStruct AabbPositionsKHR where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AabbPositionsKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (minX))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (minY))
@@ -5973,7 +5973,7 @@ deriving instance Generic (TransformMatrixKHR)
 deriving instance Show TransformMatrixKHR
 
 instance ToCStruct TransformMatrixKHR where
-  withCStruct x f = allocaBytesAligned 48 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p TransformMatrixKHR{..} f = do
     let pMatrixRow0' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray 4 CFloat)))
     case (matrixRow0) of
@@ -6112,7 +6112,7 @@ deriving instance Generic (AccelerationStructureInstanceKHR)
 deriving instance Show AccelerationStructureInstanceKHR
 
 instance ToCStruct AccelerationStructureInstanceKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureInstanceKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr TransformMatrixKHR)) (transform)
     poke ((p `plusPtr` 48 :: Ptr Word32)) (((coerce @_ @Word32 (mask)) `shiftL` 24) .|. (instanceCustomIndex))
@@ -6182,7 +6182,7 @@ deriving instance Generic (AccelerationStructureDeviceAddressInfoKHR)
 deriving instance Show AccelerationStructureDeviceAddressInfoKHR
 
 instance ToCStruct AccelerationStructureDeviceAddressInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureDeviceAddressInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6250,7 +6250,7 @@ deriving instance Generic (AccelerationStructureVersionInfoKHR)
 deriving instance Show AccelerationStructureVersionInfoKHR
 
 instance ToCStruct AccelerationStructureVersionInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureVersionInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6344,7 +6344,7 @@ deriving instance Generic (CopyAccelerationStructureInfoKHR)
 deriving instance Show CopyAccelerationStructureInfoKHR
 
 instance ToCStruct CopyAccelerationStructureInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyAccelerationStructureInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6438,7 +6438,7 @@ deriving instance Generic (CopyAccelerationStructureToMemoryInfoKHR)
 deriving instance Show CopyAccelerationStructureToMemoryInfoKHR
 
 instance ToCStruct CopyAccelerationStructureToMemoryInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyAccelerationStructureToMemoryInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6520,7 +6520,7 @@ deriving instance Generic (CopyMemoryToAccelerationStructureInfoKHR)
 deriving instance Show CopyMemoryToAccelerationStructureInfoKHR
 
 instance ToCStruct CopyMemoryToAccelerationStructureInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyMemoryToAccelerationStructureInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6574,7 +6574,7 @@ deriving instance Generic (AccelerationStructureBuildSizesInfoKHR)
 deriving instance Show AccelerationStructureBuildSizesInfoKHR
 
 instance ToCStruct AccelerationStructureBuildSizesInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureBuildSizesInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6619,7 +6619,7 @@ data DeviceOrHostAddressKHR
   deriving (Show)
 
 instance ToCStruct DeviceOrHostAddressKHR where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr DeviceOrHostAddressKHR -> DeviceOrHostAddressKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     DeviceAddress v -> lift $ poke (castPtr @_ @DeviceAddress p) (v)
@@ -6639,7 +6639,7 @@ data DeviceOrHostAddressConstKHR
   deriving (Show)
 
 instance ToCStruct DeviceOrHostAddressConstKHR where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr DeviceOrHostAddressConstKHR -> DeviceOrHostAddressConstKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     DeviceAddressConst v -> lift $ poke (castPtr @_ @DeviceAddress p) (v)
@@ -6660,7 +6660,7 @@ data AccelerationStructureGeometryDataKHR
   deriving (Show)
 
 instance ToCStruct AccelerationStructureGeometryDataKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr AccelerationStructureGeometryDataKHR -> AccelerationStructureGeometryDataKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Triangles v -> ContT $ pokeSomeCStruct (forgetExtensions (castPtr @_ @(AccelerationStructureGeometryTrianglesDataKHR _) p)) (v) . ($ ())

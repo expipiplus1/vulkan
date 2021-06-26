@@ -14,7 +14,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
@@ -166,7 +166,7 @@ instance Extensible PhysicalDeviceExternalSemaphoreInfo where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PokeChain es) => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalSemaphoreInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -237,7 +237,7 @@ deriving instance Generic (ExternalSemaphoreProperties)
 deriving instance Show ExternalSemaphoreProperties
 
 instance ToCStruct ExternalSemaphoreProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalSemaphoreProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

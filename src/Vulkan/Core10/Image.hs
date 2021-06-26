@@ -15,7 +15,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1467,7 +1467,7 @@ instance Extensible ImageCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1483,7 +1483,7 @@ instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateIn
     lift $ poke ((p `plusPtr` 56 :: Ptr ImageUsageFlags)) (usage)
     lift $ poke ((p `plusPtr` 60 :: Ptr SharingMode)) (sharingMode)
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueFamilyIndices)) :: Word32))
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4) 4
+    pPQueueFamilyIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (queueFamilyIndices)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ poke ((p `plusPtr` 80 :: Ptr ImageLayout)) (initialLayout)
@@ -1656,7 +1656,7 @@ deriving instance Generic (SubresourceLayout)
 deriving instance Show SubresourceLayout
 
 instance ToCStruct SubresourceLayout where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubresourceLayout{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (offset)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (size)

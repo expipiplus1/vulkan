@@ -21,7 +21,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address  ( getBufferOpaq
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -332,7 +332,7 @@ deriving instance Generic (PhysicalDeviceBufferDeviceAddressFeatures)
 deriving instance Show PhysicalDeviceBufferDeviceAddressFeatures
 
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceBufferDeviceAddressFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -416,7 +416,7 @@ deriving instance Generic (BufferDeviceAddressInfo)
 deriving instance Show BufferDeviceAddressInfo
 
 instance ToCStruct BufferDeviceAddressInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferDeviceAddressInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -502,7 +502,7 @@ deriving instance Generic (BufferOpaqueCaptureAddressCreateInfo)
 deriving instance Show BufferOpaqueCaptureAddressCreateInfo
 
 instance ToCStruct BufferOpaqueCaptureAddressCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferOpaqueCaptureAddressCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -576,7 +576,7 @@ deriving instance Generic (MemoryOpaqueCaptureAddressAllocateInfo)
 deriving instance Show MemoryOpaqueCaptureAddressAllocateInfo
 
 instance ToCStruct MemoryOpaqueCaptureAddressAllocateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryOpaqueCaptureAddressAllocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -635,7 +635,7 @@ deriving instance Generic (DeviceMemoryOpaqueCaptureAddressInfo)
 deriving instance Show DeviceMemoryOpaqueCaptureAddressInfo
 
 instance ToCStruct DeviceMemoryOpaqueCaptureAddressInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryOpaqueCaptureAddressInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -163,7 +163,7 @@ module Vulkan.Extensions.VK_EXT_astc_decode_mode  ( ImageViewASTCDecodeModeEXT(.
                                                   , pattern EXT_ASTC_DECODE_MODE_EXTENSION_NAME
                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -237,7 +237,7 @@ deriving instance Generic (ImageViewASTCDecodeModeEXT)
 deriving instance Show ImageViewASTCDecodeModeEXT
 
 instance ToCStruct ImageViewASTCDecodeModeEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewASTCDecodeModeEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -306,7 +306,7 @@ deriving instance Generic (PhysicalDeviceASTCDecodeFeaturesEXT)
 deriving instance Show PhysicalDeviceASTCDecodeFeaturesEXT
 
 instance ToCStruct PhysicalDeviceASTCDecodeFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceASTCDecodeFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

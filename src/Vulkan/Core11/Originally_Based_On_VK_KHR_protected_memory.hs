@@ -24,7 +24,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -156,7 +156,7 @@ deriving instance Generic (ProtectedSubmitInfo)
 deriving instance Show ProtectedSubmitInfo
 
 instance ToCStruct ProtectedSubmitInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ProtectedSubmitInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -223,7 +223,7 @@ deriving instance Generic (PhysicalDeviceProtectedMemoryFeatures)
 deriving instance Show PhysicalDeviceProtectedMemoryFeatures
 
 instance ToCStruct PhysicalDeviceProtectedMemoryFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProtectedMemoryFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -287,7 +287,7 @@ deriving instance Generic (PhysicalDeviceProtectedMemoryProperties)
 deriving instance Show PhysicalDeviceProtectedMemoryProperties
 
 instance ToCStruct PhysicalDeviceProtectedMemoryProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProtectedMemoryProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -371,7 +371,7 @@ deriving instance Generic (DeviceQueueInfo2)
 deriving instance Show DeviceQueueInfo2
 
 instance ToCStruct DeviceQueueInfo2 where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceQueueInfo2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

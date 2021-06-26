@@ -92,7 +92,7 @@ module Vulkan.Extensions.VK_GGP_frame_token  ( PresentFrameTokenGGP(..)
                                              , GgpFrameToken
                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -132,7 +132,7 @@ deriving instance Generic (PresentFrameTokenGGP)
 deriving instance Show PresentFrameTokenGGP
 
 instance ToCStruct PresentFrameTokenGGP where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentFrameTokenGGP{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

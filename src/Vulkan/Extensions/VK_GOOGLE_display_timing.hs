@@ -139,7 +139,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -377,7 +377,7 @@ deriving instance Generic (RefreshCycleDurationGOOGLE)
 deriving instance Show RefreshCycleDurationGOOGLE
 
 instance ToCStruct RefreshCycleDurationGOOGLE where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RefreshCycleDurationGOOGLE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word64)) (refreshDuration)
     f
@@ -467,7 +467,7 @@ deriving instance Generic (PastPresentationTimingGOOGLE)
 deriving instance Show PastPresentationTimingGOOGLE
 
 instance ToCStruct PastPresentationTimingGOOGLE where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PastPresentationTimingGOOGLE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (presentID)
     poke ((p `plusPtr` 8 :: Ptr Word64)) (desiredPresentTime)
@@ -556,7 +556,7 @@ deriving instance Generic (PresentTimesInfoGOOGLE)
 deriving instance Show PresentTimesInfoGOOGLE
 
 instance ToCStruct PresentTimesInfoGOOGLE where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentTimesInfoGOOGLE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -571,7 +571,7 @@ instance ToCStruct PresentTimesInfoGOOGLE where
     pTimes'' <- if Data.Vector.null (times)
       then pure nullPtr
       else do
-        pPTimes <- ContT $ allocaBytesAligned @PresentTimeGOOGLE (((Data.Vector.length (times))) * 16) 8
+        pPTimes <- ContT $ allocaBytes @PresentTimeGOOGLE (((Data.Vector.length (times))) * 16)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPTimes `plusPtr` (16 * (i)) :: Ptr PresentTimeGOOGLE) (e)) ((times))
         pure $ pPTimes
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentTimeGOOGLE))) pTimes''
@@ -630,7 +630,7 @@ deriving instance Generic (PresentTimeGOOGLE)
 deriving instance Show PresentTimeGOOGLE
 
 instance ToCStruct PresentTimeGOOGLE where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentTimeGOOGLE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (presentID)
     poke ((p `plusPtr` 8 :: Ptr Word64)) (desiredPresentTime)

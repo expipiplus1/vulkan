@@ -21,7 +21,7 @@ module Vulkan.CStruct.Extends  ( BaseOutStructure(..)
 
 import Data.Maybe (fromMaybe)
 import Type.Reflection (typeRep)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (join)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -698,7 +698,7 @@ deriving instance Generic (BaseOutStructure)
 deriving instance Show BaseOutStructure
 
 instance ToCStruct BaseOutStructure where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BaseOutStructure{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (sType)
     poke ((p `plusPtr` 8 :: Ptr (Ptr BaseOutStructure))) (next)
@@ -752,7 +752,7 @@ deriving instance Generic (BaseInStructure)
 deriving instance Show BaseInStructure
 
 instance ToCStruct BaseInStructure where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BaseInStructure{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (sType)
     poke ((p `plusPtr` 8 :: Ptr (Ptr BaseInStructure))) (next)

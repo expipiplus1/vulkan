@@ -174,7 +174,7 @@ module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor  ( VertexInputBindingDi
                                                           , pattern EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME
                                                           ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -266,7 +266,7 @@ deriving instance Generic (VertexInputBindingDivisorDescriptionEXT)
 deriving instance Show VertexInputBindingDivisorDescriptionEXT
 
 instance ToCStruct VertexInputBindingDivisorDescriptionEXT where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VertexInputBindingDivisorDescriptionEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (divisor)
@@ -323,12 +323,12 @@ deriving instance Generic (PipelineVertexInputDivisorStateCreateInfoEXT)
 deriving instance Show PipelineVertexInputDivisorStateCreateInfoEXT
 
 instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineVertexInputDivisorStateCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexBindingDivisors)) :: Word32))
-    pPVertexBindingDivisors' <- ContT $ allocaBytesAligned @VertexInputBindingDivisorDescriptionEXT ((Data.Vector.length (vertexBindingDivisors)) * 8) 4
+    pPVertexBindingDivisors' <- ContT $ allocaBytes @VertexInputBindingDivisorDescriptionEXT ((Data.Vector.length (vertexBindingDivisors)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDivisors' `plusPtr` (8 * (i)) :: Ptr VertexInputBindingDivisorDescriptionEXT) (e)) (vertexBindingDivisors)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDivisorDescriptionEXT))) (pPVertexBindingDivisors')
     lift $ f
@@ -383,7 +383,7 @@ deriving instance Generic (PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
 deriving instance Show PhysicalDeviceVertexAttributeDivisorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVertexAttributeDivisorPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -456,7 +456,7 @@ deriving instance Generic (PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
 deriving instance Show PhysicalDeviceVertexAttributeDivisorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVertexAttributeDivisorFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -192,7 +192,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -365,7 +365,7 @@ deriving instance Generic (PhysicalDeviceToolPropertiesEXT)
 deriving instance Show PhysicalDeviceToolPropertiesEXT
 
 instance ToCStruct PhysicalDeviceToolPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 1048 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 1048 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceToolPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

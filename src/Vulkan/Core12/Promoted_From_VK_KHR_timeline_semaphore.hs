@@ -20,7 +20,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -386,7 +386,7 @@ deriving instance Generic (PhysicalDeviceTimelineSemaphoreFeatures)
 deriving instance Show PhysicalDeviceTimelineSemaphoreFeatures
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTimelineSemaphoreFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -448,7 +448,7 @@ deriving instance Generic (PhysicalDeviceTimelineSemaphoreProperties)
 deriving instance Show PhysicalDeviceTimelineSemaphoreProperties
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTimelineSemaphoreProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -534,7 +534,7 @@ deriving instance Generic (SemaphoreTypeCreateInfo)
 deriving instance Show SemaphoreTypeCreateInfo
 
 instance ToCStruct SemaphoreTypeCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreTypeCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -626,7 +626,7 @@ deriving instance Generic (TimelineSemaphoreSubmitInfo)
 deriving instance Show TimelineSemaphoreSubmitInfo
 
 instance ToCStruct TimelineSemaphoreSubmitInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p TimelineSemaphoreSubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -641,7 +641,7 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
     pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
       then pure nullPtr
       else do
-        pPWaitSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8) 8
+        pPWaitSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
         pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
@@ -656,7 +656,7 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
     pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
       then pure nullPtr
       else do
-        pPSignalSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8) 8
+        pPSignalSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((signalSemaphoreValues))
         pure $ pPSignalSemaphoreValues
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word64))) pSignalSemaphoreValues''
@@ -746,7 +746,7 @@ deriving instance Generic (SemaphoreWaitInfo)
 deriving instance Show SemaphoreWaitInfo
 
 instance ToCStruct SemaphoreWaitInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreWaitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -755,10 +755,10 @@ instance ToCStruct SemaphoreWaitInfo where
     lift $ unless ((Data.Vector.length $ (values)) == pSemaphoresLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pValues and pSemaphores must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral pSemaphoresLength :: Word32))
-    pPSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (semaphores)) * 8) 8
+    pPSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (semaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (semaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPSemaphores')
-    pPValues' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (values)) * 8) 8
+    pPValues' <- ContT $ allocaBytes @Word64 ((Data.Vector.length (values)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPValues' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (values)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word64))) (pPValues')
     lift $ f
@@ -829,7 +829,7 @@ deriving instance Generic (SemaphoreSignalInfo)
 deriving instance Show SemaphoreSignalInfo
 
 instance ToCStruct SemaphoreSignalInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreSignalInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

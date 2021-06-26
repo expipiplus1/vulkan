@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [3.11.0.1] - 2021-06-26
+- Use allocaBytes over allocaBytesAligned where possible
+
 ## [3.11] - 2021-06-21
 - Bump API version to v1.2.182
 

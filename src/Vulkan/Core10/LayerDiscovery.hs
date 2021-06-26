@@ -10,7 +10,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -258,7 +258,7 @@ deriving instance Generic (LayerProperties)
 deriving instance Show LayerProperties
 
 instance ToCStruct LayerProperties where
-  withCStruct x f = allocaBytesAligned 520 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 520 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p LayerProperties{..} f = do
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (layerName)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (specVersion)

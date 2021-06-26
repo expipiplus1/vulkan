@@ -206,7 +206,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -630,7 +630,7 @@ deriving instance Generic (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
 deriving instance Show PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
 
 instance ToCStruct PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePipelineExecutablePropertiesFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -683,7 +683,7 @@ deriving instance Generic (PipelineInfoKHR)
 deriving instance Show PipelineInfoKHR
 
 instance ToCStruct PipelineInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -762,7 +762,7 @@ deriving instance Generic (PipelineExecutablePropertiesKHR)
 deriving instance Show PipelineExecutablePropertiesKHR
 
 instance ToCStruct PipelineExecutablePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 536 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 536 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineExecutablePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -839,7 +839,7 @@ deriving instance Generic (PipelineExecutableInfoKHR)
 deriving instance Show PipelineExecutableInfoKHR
 
 instance ToCStruct PipelineExecutableInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineExecutableInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -908,7 +908,7 @@ deriving instance Generic (PipelineExecutableStatisticKHR)
 deriving instance Show PipelineExecutableStatisticKHR
 
 instance ToCStruct PipelineExecutableStatisticKHR where
-  withCStruct x f = allocaBytesAligned 544 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 544 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineExecutableStatisticKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1001,7 +1001,7 @@ deriving instance Generic (PipelineExecutableInternalRepresentationKHR)
 deriving instance Show PipelineExecutableInternalRepresentationKHR
 
 instance ToCStruct PipelineExecutableInternalRepresentationKHR where
-  withCStruct x f = allocaBytesAligned 552 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 552 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineExecutableInternalRepresentationKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1055,7 +1055,7 @@ data PipelineExecutableStatisticValueKHR
   deriving (Show)
 
 instance ToCStruct PipelineExecutableStatisticValueKHR where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr PipelineExecutableStatisticValueKHR -> PipelineExecutableStatisticValueKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     B32 v -> lift $ poke (castPtr @_ @Bool32 p) (boolToBool32 (v))

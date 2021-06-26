@@ -226,7 +226,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -434,7 +434,7 @@ cmdSetFragmentShadingRateKHR commandBuffer fragmentSize combinerOps = liftIO . e
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetFragmentShadingRateKHR is null" Nothing Nothing
   let vkCmdSetFragmentShadingRateKHR' = mkVkCmdSetFragmentShadingRateKHR vkCmdSetFragmentShadingRateKHRPtr
   pFragmentSize <- ContT $ withCStruct (fragmentSize)
-  pCombinerOps <- ContT $ allocaBytesAligned @(FixedArray 2 FragmentShadingRateCombinerOpKHR) 8 4
+  pCombinerOps <- ContT $ allocaBytes @(FixedArray 2 FragmentShadingRateCombinerOpKHR) 8
   let pCombinerOps' = lowerArrayPtr pCombinerOps
   lift $ case (combinerOps) of
     (e0, e1) -> do
@@ -725,7 +725,7 @@ deriving instance Generic (FragmentShadingRateAttachmentInfoKHR)
 deriving instance Show FragmentShadingRateAttachmentInfoKHR
 
 instance ToCStruct FragmentShadingRateAttachmentInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FragmentShadingRateAttachmentInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -810,7 +810,7 @@ deriving instance Generic (PipelineFragmentShadingRateStateCreateInfoKHR)
 deriving instance Show PipelineFragmentShadingRateStateCreateInfoKHR
 
 instance ToCStruct PipelineFragmentShadingRateStateCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineFragmentShadingRateStateCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -901,7 +901,7 @@ deriving instance Generic (PhysicalDeviceFragmentShadingRateFeaturesKHR)
 deriving instance Show PhysicalDeviceFragmentShadingRateFeaturesKHR
 
 instance ToCStruct PhysicalDeviceFragmentShadingRateFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentShadingRateFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1166,7 +1166,7 @@ deriving instance Generic (PhysicalDeviceFragmentShadingRatePropertiesKHR)
 deriving instance Show PhysicalDeviceFragmentShadingRatePropertiesKHR
 
 instance ToCStruct PhysicalDeviceFragmentShadingRatePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentShadingRatePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1287,7 +1287,7 @@ deriving instance Generic (PhysicalDeviceFragmentShadingRateKHR)
 deriving instance Show PhysicalDeviceFragmentShadingRateKHR
 
 instance ToCStruct PhysicalDeviceFragmentShadingRateKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentShadingRateKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

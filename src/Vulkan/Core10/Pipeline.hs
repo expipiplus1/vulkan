@@ -65,7 +65,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -375,7 +375,7 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
   lift $ unless (vkCreateGraphicsPipelinesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateGraphicsPipelines is null" Nothing Nothing
   let vkCreateGraphicsPipelines' = mkVkCreateGraphicsPipelines vkCreateGraphicsPipelinesPtr
-  pPCreateInfos <- ContT $ allocaBytesAligned @(GraphicsPipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 144) 8
+  pPCreateInfos <- ContT $ allocaBytes @(GraphicsPipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 144)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (144 * (i)) :: Ptr (GraphicsPipelineCreateInfo _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -504,7 +504,7 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
   lift $ unless (vkCreateComputePipelinesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateComputePipelines is null" Nothing Nothing
   let vkCreateComputePipelines' = mkVkCreateComputePipelines vkCreateComputePipelinesPtr
-  pPCreateInfos <- ContT $ allocaBytesAligned @(ComputePipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 96) 8
+  pPCreateInfos <- ContT $ allocaBytes @(ComputePipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 96)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (96 * (i)) :: Ptr (ComputePipelineCreateInfo _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -719,7 +719,7 @@ deriving instance Generic (Viewport)
 deriving instance Show Viewport
 
 instance ToCStruct Viewport where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Viewport{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -802,7 +802,7 @@ deriving instance Generic (SpecializationMapEntry)
 deriving instance Show SpecializationMapEntry
 
 instance ToCStruct SpecializationMapEntry where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpecializationMapEntry{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (constantID)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (offset)
@@ -881,10 +881,10 @@ deriving instance Generic (SpecializationInfo)
 deriving instance Show SpecializationInfo
 
 instance ToCStruct SpecializationInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpecializationInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (mapEntries)) :: Word32))
-    pPMapEntries' <- ContT $ allocaBytesAligned @SpecializationMapEntry ((Data.Vector.length (mapEntries)) * 16) 8
+    pPMapEntries' <- ContT $ allocaBytes @SpecializationMapEntry ((Data.Vector.length (mapEntries)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e)) (mapEntries)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr SpecializationMapEntry))) (pPMapEntries')
     lift $ poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (dataSize))
@@ -1199,7 +1199,7 @@ instance Extensible PipelineShaderStageCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss PipelineShaderStageCreateInfo es, PokeChain es) => ToCStruct (PipelineShaderStageCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineShaderStageCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1429,7 +1429,7 @@ instance Extensible ComputePipelineCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss ComputePipelineCreateInfo es, PokeChain es) => ToCStruct (ComputePipelineCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ComputePipelineCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1519,7 +1519,7 @@ deriving instance Generic (VertexInputBindingDescription)
 deriving instance Show VertexInputBindingDescription
 
 instance ToCStruct VertexInputBindingDescription where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VertexInputBindingDescription{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (stride)
@@ -1615,7 +1615,7 @@ deriving instance Generic (VertexInputAttributeDescription)
 deriving instance Show VertexInputAttributeDescription
 
 instance ToCStruct VertexInputAttributeDescription where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VertexInputAttributeDescription{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (location)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (binding)
@@ -1744,18 +1744,18 @@ instance Extensible PipelineVertexInputStateCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss PipelineVertexInputStateCreateInfo es, PokeChain es) => ToCStruct (PipelineVertexInputStateCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineVertexInputStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineVertexInputStateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexBindingDescriptions)) :: Word32))
-    pPVertexBindingDescriptions' <- ContT $ allocaBytesAligned @VertexInputBindingDescription ((Data.Vector.length (vertexBindingDescriptions)) * 12) 4
+    pPVertexBindingDescriptions' <- ContT $ allocaBytes @VertexInputBindingDescription ((Data.Vector.length (vertexBindingDescriptions)) * 12)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e)) (vertexBindingDescriptions)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDescription))) (pPVertexBindingDescriptions')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexAttributeDescriptions)) :: Word32))
-    pPVertexAttributeDescriptions' <- ContT $ allocaBytesAligned @VertexInputAttributeDescription ((Data.Vector.length (vertexAttributeDescriptions)) * 16) 4
+    pPVertexAttributeDescriptions' <- ContT $ allocaBytes @VertexInputAttributeDescription ((Data.Vector.length (vertexAttributeDescriptions)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e)) (vertexAttributeDescriptions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr VertexInputAttributeDescription))) (pPVertexAttributeDescriptions')
     lift $ f
@@ -1886,7 +1886,7 @@ deriving instance Generic (PipelineInputAssemblyStateCreateInfo)
 deriving instance Show PipelineInputAssemblyStateCreateInfo
 
 instance ToCStruct PipelineInputAssemblyStateCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineInputAssemblyStateCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1980,7 +1980,7 @@ instance Extensible PipelineTessellationStateCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss PipelineTessellationStateCreateInfo es, PokeChain es) => ToCStruct (PipelineTessellationStateCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineTessellationStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2146,7 +2146,7 @@ instance Extensible PipelineViewportStateCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruct (PipelineViewportStateCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2163,7 +2163,7 @@ instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruc
     pViewports'' <- if Data.Vector.null (viewports)
       then pure nullPtr
       else do
-        pPViewports <- ContT $ allocaBytesAligned @Viewport (((Data.Vector.length (viewports))) * 24) 4
+        pPViewports <- ContT $ allocaBytes @Viewport (((Data.Vector.length (viewports))) * 24)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) ((viewports))
         pure $ pPViewports
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Viewport))) pViewports''
@@ -2178,7 +2178,7 @@ instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruc
     pScissors'' <- if Data.Vector.null (scissors)
       then pure nullPtr
       else do
-        pPScissors <- ContT $ allocaBytesAligned @Rect2D (((Data.Vector.length (scissors))) * 16) 4
+        pPScissors <- ContT $ allocaBytes @Rect2D (((Data.Vector.length (scissors))) * 16)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) ((scissors))
         pure $ pPScissors
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Rect2D))) pScissors''
@@ -2363,7 +2363,7 @@ instance Extensible PipelineRasterizationStateCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss PipelineRasterizationStateCreateInfo es, PokeChain es) => ToCStruct (PipelineRasterizationStateCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2558,7 +2558,7 @@ instance Extensible PipelineMultisampleStateCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss PipelineMultisampleStateCreateInfo es, PokeChain es) => ToCStruct (PipelineMultisampleStateCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineMultisampleStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2575,7 +2575,7 @@ instance (Extendss PipelineMultisampleStateCreateInfo es, PokeChain es) => ToCSt
         lift $ unless (requiredLen == fromIntegral vecLen) $
           throwIO $ IOError Nothing InvalidArgument "" "sampleMask must be either empty or contain enough bits to cover all the sample specified by 'rasterizationSamples'" Nothing Nothing
         do
-          pPSampleMask' <- ContT $ allocaBytesAligned @SampleMask ((Data.Vector.length ((sampleMask))) * 4) 4
+          pPSampleMask' <- ContT $ allocaBytes @SampleMask ((Data.Vector.length ((sampleMask))) * 4)
           lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleMask' `plusPtr` (4 * (i)) :: Ptr SampleMask) (e)) ((sampleMask))
           pure $ pPSampleMask'
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SampleMask))) pSampleMask''
@@ -2819,7 +2819,7 @@ deriving instance Generic (PipelineColorBlendAttachmentState)
 deriving instance Show PipelineColorBlendAttachmentState
 
 instance ToCStruct PipelineColorBlendAttachmentState where
-  withCStruct x f = allocaBytesAligned 32 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineColorBlendAttachmentState{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Bool32)) (boolToBool32 (blendEnable))
     poke ((p `plusPtr` 4 :: Ptr BlendFactor)) (srcColorBlendFactor)
@@ -2976,7 +2976,7 @@ instance Extensible PipelineColorBlendStateCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss PipelineColorBlendStateCreateInfo es, PokeChain es) => ToCStruct (PipelineColorBlendStateCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineColorBlendStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2985,7 +2985,7 @@ instance (Extendss PipelineColorBlendStateCreateInfo es, PokeChain es) => ToCStr
     lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (logicOpEnable))
     lift $ poke ((p `plusPtr` 24 :: Ptr LogicOp)) (logicOp)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
-    pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (attachments)) * 32) 4
+    pPAttachments' <- ContT $ allocaBytes @PipelineColorBlendAttachmentState ((Data.Vector.length (attachments)) * 32)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e)) (attachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
     let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
@@ -3089,13 +3089,13 @@ deriving instance Generic (PipelineDynamicStateCreateInfo)
 deriving instance Show PipelineDynamicStateCreateInfo
 
 instance ToCStruct PipelineDynamicStateCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineDynamicStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDynamicStateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (dynamicStates)) :: Word32))
-    pPDynamicStates' <- ContT $ allocaBytesAligned @DynamicState ((Data.Vector.length (dynamicStates)) * 4) 4
+    pPDynamicStates' <- ContT $ allocaBytes @DynamicState ((Data.Vector.length (dynamicStates)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDynamicStates' `plusPtr` (4 * (i)) :: Ptr DynamicState) (e)) (dynamicStates)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DynamicState))) (pPDynamicStates')
     lift $ f
@@ -3174,7 +3174,7 @@ deriving instance Generic (StencilOpState)
 deriving instance Show StencilOpState
 
 instance ToCStruct StencilOpState where
-  withCStruct x f = allocaBytesAligned 28 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 28 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p StencilOpState{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StencilOp)) (failOp)
     poke ((p `plusPtr` 4 :: Ptr StencilOp)) (passOp)
@@ -3318,7 +3318,7 @@ deriving instance Generic (PipelineDepthStencilStateCreateInfo)
 deriving instance Show PipelineDepthStencilStateCreateInfo
 
 instance ToCStruct PipelineDepthStencilStateCreateInfo where
-  withCStruct x f = allocaBytesAligned 104 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineDepthStencilStateCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -4683,14 +4683,14 @@ instance Extensible GraphicsPipelineCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss GraphicsPipelineCreateInfo es, PokeChain es) => ToCStruct (GraphicsPipelineCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 144 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 144 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsPipelineCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (stages)) :: Word32))
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48) 8
+    pPStages' <- ContT $ allocaBytes @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (stages)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     pVertexInputState'' <- case (vertexInputState) of

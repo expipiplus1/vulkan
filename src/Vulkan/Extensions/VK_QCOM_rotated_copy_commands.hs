@@ -128,7 +128,7 @@ module Vulkan.Extensions.VK_QCOM_rotated_copy_commands  ( CopyCommandTransformIn
                                                         , SurfaceTransformFlagsKHR
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -179,7 +179,7 @@ deriving instance Generic (CopyCommandTransformInfoQCOM)
 deriving instance Show CopyCommandTransformInfoQCOM
 
 instance ToCStruct CopyCommandTransformInfoQCOM where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyCommandTransformInfoQCOM{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

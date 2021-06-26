@@ -13,7 +13,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance2  ( InputAttachmentAspectR
                                                         , TessellationDomainOrigin(..)
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -104,7 +104,7 @@ deriving instance Generic (InputAttachmentAspectReference)
 deriving instance Show InputAttachmentAspectReference
 
 instance ToCStruct InputAttachmentAspectReference where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InputAttachmentAspectReference{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (subpass)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (inputAttachmentIndex)
@@ -176,12 +176,12 @@ deriving instance Generic (RenderPassInputAttachmentAspectCreateInfo)
 deriving instance Show RenderPassInputAttachmentAspectCreateInfo
 
 instance ToCStruct RenderPassInputAttachmentAspectCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassInputAttachmentAspectCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (aspectReferences)) :: Word32))
-    pPAspectReferences' <- ContT $ allocaBytesAligned @InputAttachmentAspectReference ((Data.Vector.length (aspectReferences)) * 12) 4
+    pPAspectReferences' <- ContT $ allocaBytes @InputAttachmentAspectReference ((Data.Vector.length (aspectReferences)) * 12)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAspectReferences' `plusPtr` (12 * (i)) :: Ptr InputAttachmentAspectReference) (e)) (aspectReferences)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr InputAttachmentAspectReference))) (pPAspectReferences')
     lift $ f
@@ -236,7 +236,7 @@ deriving instance Generic (PhysicalDevicePointClippingProperties)
 deriving instance Show PhysicalDevicePointClippingProperties
 
 instance ToCStruct PhysicalDevicePointClippingProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePointClippingProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -302,7 +302,7 @@ deriving instance Generic (ImageViewUsageCreateInfo)
 deriving instance Show ImageViewUsageCreateInfo
 
 instance ToCStruct ImageViewUsageCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewUsageCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -368,7 +368,7 @@ deriving instance Generic (PipelineTessellationDomainOriginStateCreateInfo)
 deriving instance Show PipelineTessellationDomainOriginStateCreateInfo
 
 instance ToCStruct PipelineTessellationDomainOriginStateCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineTessellationDomainOriginStateCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

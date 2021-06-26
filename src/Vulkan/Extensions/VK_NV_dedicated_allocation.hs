@@ -184,7 +184,7 @@ module Vulkan.Extensions.VK_NV_dedicated_allocation  ( DedicatedAllocationImageC
                                                      , pattern NV_DEDICATED_ALLOCATION_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -251,7 +251,7 @@ deriving instance Generic (DedicatedAllocationImageCreateInfoNV)
 deriving instance Show DedicatedAllocationImageCreateInfoNV
 
 instance ToCStruct DedicatedAllocationImageCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DedicatedAllocationImageCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -302,7 +302,7 @@ deriving instance Generic (DedicatedAllocationBufferCreateInfoNV)
 deriving instance Show DedicatedAllocationBufferCreateInfoNV
 
 instance ToCStruct DedicatedAllocationBufferCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DedicatedAllocationBufferCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -420,7 +420,7 @@ deriving instance Generic (DedicatedAllocationMemoryAllocateInfoNV)
 deriving instance Show DedicatedAllocationMemoryAllocateInfoNV
 
 instance ToCStruct DedicatedAllocationMemoryAllocateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DedicatedAllocationMemoryAllocateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

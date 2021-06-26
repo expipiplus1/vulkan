@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types  ( Phys
                                                                           , StructureType(..)
                                                                           ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -70,7 +70,7 @@ deriving instance Generic (PhysicalDeviceShaderSubgroupExtendedTypesFeatures)
 deriving instance Show PhysicalDeviceShaderSubgroupExtendedTypesFeatures
 
 instance ToCStruct PhysicalDeviceShaderSubgroupExtendedTypesFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderSubgroupExtendedTypesFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

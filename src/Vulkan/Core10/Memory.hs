@@ -19,7 +19,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -648,7 +648,7 @@ flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   lift $ unless (vkFlushMappedMemoryRangesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFlushMappedMemoryRanges is null" Nothing Nothing
   let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges vkFlushMappedMemoryRangesPtr
-  pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
+  pPMemoryRanges <- ContT $ allocaBytes @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
   r <- lift $ traceAroundEvent "vkFlushMappedMemoryRanges" (vkFlushMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -720,7 +720,7 @@ invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   lift $ unless (vkInvalidateMappedMemoryRangesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInvalidateMappedMemoryRanges is null" Nothing Nothing
   let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRangesPtr
-  pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
+  pPMemoryRanges <- ContT $ allocaBytes @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
   r <- lift $ traceAroundEvent "vkInvalidateMappedMemoryRanges" (vkInvalidateMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1204,7 +1204,7 @@ instance Extensible MemoryAllocateInfo where
     | otherwise = Nothing
 
 instance (Extendss MemoryAllocateInfo es, PokeChain es) => ToCStruct (MemoryAllocateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1305,7 +1305,7 @@ deriving instance Generic (MappedMemoryRange)
 deriving instance Show MappedMemoryRange
 
 instance ToCStruct MappedMemoryRange where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MappedMemoryRange{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MAPPED_MEMORY_RANGE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

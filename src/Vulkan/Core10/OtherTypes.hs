@@ -13,7 +13,7 @@ module Vulkan.Core10.OtherTypes  ( MemoryBarrier(..)
                                  ) where
 
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Ptr (castPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -108,7 +108,7 @@ deriving instance Generic (MemoryBarrier)
 deriving instance Show MemoryBarrier
 
 instance ToCStruct MemoryBarrier where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryBarrier{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_BARRIER)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -280,7 +280,7 @@ deriving instance Generic (BufferMemoryBarrier)
 deriving instance Show BufferMemoryBarrier
 
 instance ToCStruct BufferMemoryBarrier where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferMemoryBarrier{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -757,7 +757,7 @@ instance Extensible ImageMemoryBarrier where
     | otherwise = Nothing
 
 instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemoryBarrier es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryBarrier{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -854,7 +854,7 @@ deriving instance Generic (DrawIndirectCommand)
 deriving instance Show DrawIndirectCommand
 
 instance ToCStruct DrawIndirectCommand where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrawIndirectCommand{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (vertexCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (instanceCount)
@@ -944,7 +944,7 @@ deriving instance Generic (DrawIndexedIndirectCommand)
 deriving instance Show DrawIndexedIndirectCommand
 
 instance ToCStruct DrawIndexedIndirectCommand where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrawIndexedIndirectCommand{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (indexCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (instanceCount)
@@ -1028,7 +1028,7 @@ deriving instance Generic (DispatchIndirectCommand)
 deriving instance Show DispatchIndirectCommand
 
 instance ToCStruct DispatchIndirectCommand where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DispatchIndirectCommand{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (x)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (y)

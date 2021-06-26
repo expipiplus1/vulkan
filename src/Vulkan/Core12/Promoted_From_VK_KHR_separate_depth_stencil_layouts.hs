@@ -7,7 +7,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts  ( Phys
                                                                           , StructureType(..)
                                                                           ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -82,7 +82,7 @@ deriving instance Generic (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
 deriving instance Show PhysicalDeviceSeparateDepthStencilLayoutsFeatures
 
 instance ToCStruct PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSeparateDepthStencilLayoutsFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -151,7 +151,7 @@ deriving instance Generic (AttachmentReferenceStencilLayout)
 deriving instance Show AttachmentReferenceStencilLayout
 
 instance ToCStruct AttachmentReferenceStencilLayout where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentReferenceStencilLayout{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -243,7 +243,7 @@ deriving instance Generic (AttachmentDescriptionStencilLayout)
 deriving instance Show AttachmentDescriptionStencilLayout
 
 instance ToCStruct AttachmentDescriptionStencilLayout where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentDescriptionStencilLayout{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

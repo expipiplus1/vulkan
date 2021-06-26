@@ -5,7 +5,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation  ( MemoryDedicate
                                                                 , StructureType(..)
                                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -124,7 +124,7 @@ deriving instance Generic (MemoryDedicatedRequirements)
 deriving instance Show MemoryDedicatedRequirements
 
 instance ToCStruct MemoryDedicatedRequirements where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryDedicatedRequirements{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -307,7 +307,7 @@ deriving instance Generic (MemoryDedicatedAllocateInfo)
 deriving instance Show MemoryDedicatedAllocateInfo
 
 instance ToCStruct MemoryDedicatedAllocateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryDedicatedAllocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

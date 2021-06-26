@@ -158,7 +158,7 @@ module Vulkan.Extensions.VK_NV_inherited_viewport_scissor  ( PhysicalDeviceInher
                                                            , pattern NV_INHERITED_VIEWPORT_SCISSOR_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -230,7 +230,7 @@ deriving instance Generic (PhysicalDeviceInheritedViewportScissorFeaturesNV)
 deriving instance Show PhysicalDeviceInheritedViewportScissorFeaturesNV
 
 instance ToCStruct PhysicalDeviceInheritedViewportScissorFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceInheritedViewportScissorFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INHERITED_VIEWPORT_SCISSOR_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -407,7 +407,7 @@ deriving instance Generic (CommandBufferInheritanceViewportScissorInfoNV)
 deriving instance Show CommandBufferInheritanceViewportScissorInfoNV
 
 instance ToCStruct CommandBufferInheritanceViewportScissorInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferInheritanceViewportScissorInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_VIEWPORT_SCISSOR_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

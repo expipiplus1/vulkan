@@ -104,7 +104,7 @@ module Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandleNVX
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -318,7 +318,7 @@ deriving instance Generic (ImageViewHandleInfoNVX)
 deriving instance Show ImageViewHandleInfoNVX
 
 instance ToCStruct ImageViewHandleInfoNVX where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewHandleInfoNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -380,7 +380,7 @@ deriving instance Generic (ImageViewAddressPropertiesNVX)
 deriving instance Show ImageViewAddressPropertiesNVX
 
 instance ToCStruct ImageViewAddressPropertiesNVX where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewAddressPropertiesNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

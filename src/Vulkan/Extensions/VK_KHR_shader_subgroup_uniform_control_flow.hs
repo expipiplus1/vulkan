@@ -102,7 +102,7 @@ module Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow  ( Physical
                                                                       , pattern KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME
                                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -165,7 +165,7 @@ deriving instance Generic (PhysicalDeviceShaderSubgroupUniformControlFlowFeature
 deriving instance Show PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR
 
 instance ToCStruct PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

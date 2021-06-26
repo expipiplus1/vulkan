@@ -18,7 +18,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -288,7 +288,7 @@ deriving instance Generic (ComponentMapping)
 deriving instance Show ComponentMapping
 
 instance ToCStruct ComponentMapping where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ComponentMapping{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ComponentSwizzle)) (r)
     poke ((p `plusPtr` 4 :: Ptr ComponentSwizzle)) (g)
@@ -465,7 +465,7 @@ deriving instance Generic (ImageSubresourceRange)
 deriving instance Show ImageSubresourceRange
 
 instance ToCStruct ImageSubresourceRange where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSubresourceRange{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (baseMipLevel)
@@ -1231,7 +1231,7 @@ instance Extensible ImageViewCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss ImageViewCreateInfo es, PokeChain es) => ToCStruct (ImageViewCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

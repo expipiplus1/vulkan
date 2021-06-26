@@ -182,7 +182,7 @@ module Vulkan.Extensions.VK_EXT_external_memory_host  ( getMemoryHostPointerProp
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -402,7 +402,7 @@ deriving instance Generic (ImportMemoryHostPointerInfoEXT)
 deriving instance Show ImportMemoryHostPointerInfoEXT
 
 instance ToCStruct ImportMemoryHostPointerInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportMemoryHostPointerInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -462,7 +462,7 @@ deriving instance Generic (MemoryHostPointerPropertiesEXT)
 deriving instance Show MemoryHostPointerPropertiesEXT
 
 instance ToCStruct MemoryHostPointerPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryHostPointerPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -526,7 +526,7 @@ deriving instance Generic (PhysicalDeviceExternalMemoryHostPropertiesEXT)
 deriving instance Show PhysicalDeviceExternalMemoryHostPropertiesEXT
 
 instance ToCStruct PhysicalDeviceExternalMemoryHostPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalMemoryHostPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

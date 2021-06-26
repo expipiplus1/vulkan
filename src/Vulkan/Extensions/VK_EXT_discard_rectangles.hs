@@ -143,7 +143,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -305,7 +305,7 @@ cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles 
   lift $ unless (vkCmdSetDiscardRectangleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleEXT is null" Nothing Nothing
   let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXTPtr
-  pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
+  pPDiscardRectangles <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (discardRectangles)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (discardRectangles)
   lift $ traceAroundEvent "vkCmdSetDiscardRectangleEXT" (vkCmdSetDiscardRectangleEXT' (commandBufferHandle (commandBuffer)) (firstDiscardRectangle) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32)) (pPDiscardRectangles))
   pure $ ()
@@ -340,7 +340,7 @@ deriving instance Generic (PhysicalDeviceDiscardRectanglePropertiesEXT)
 deriving instance Show PhysicalDeviceDiscardRectanglePropertiesEXT
 
 instance ToCStruct PhysicalDeviceDiscardRectanglePropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDiscardRectanglePropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -419,14 +419,14 @@ deriving instance Generic (PipelineDiscardRectangleStateCreateInfoEXT)
 deriving instance Show PipelineDiscardRectangleStateCreateInfoEXT
 
 instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineDiscardRectangleStateCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDiscardRectangleStateCreateFlagsEXT)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (discardRectangleMode)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32))
-    pPDiscardRectangles' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
+    pPDiscardRectangles' <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (discardRectangles)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (discardRectangles)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) (pPDiscardRectangles')
     lift $ f

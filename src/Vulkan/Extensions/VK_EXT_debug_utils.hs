@@ -532,7 +532,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -1421,7 +1421,7 @@ deriving instance Generic (DebugUtilsObjectNameInfoEXT)
 deriving instance Show DebugUtilsObjectNameInfoEXT
 
 instance ToCStruct DebugUtilsObjectNameInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsObjectNameInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1512,7 +1512,7 @@ deriving instance Generic (DebugUtilsObjectTagInfoEXT)
 deriving instance Show DebugUtilsObjectTagInfoEXT
 
 instance ToCStruct DebugUtilsObjectTagInfoEXT where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsObjectTagInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1589,7 +1589,7 @@ deriving instance Generic (DebugUtilsLabelEXT)
 deriving instance Show DebugUtilsLabelEXT
 
 instance ToCStruct DebugUtilsLabelEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsLabelEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1732,7 +1732,7 @@ deriving instance Generic (DebugUtilsMessengerCreateInfoEXT)
 deriving instance Show DebugUtilsMessengerCreateInfoEXT
 
 instance ToCStruct DebugUtilsMessengerCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1894,7 +1894,7 @@ deriving instance Generic (DebugUtilsMessengerCallbackDataEXT)
 deriving instance Show DebugUtilsMessengerCallbackDataEXT
 
 instance ToCStruct DebugUtilsMessengerCallbackDataEXT where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCallbackDataEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1907,15 +1907,15 @@ instance ToCStruct DebugUtilsMessengerCallbackDataEXT where
     pMessage'' <- ContT $ useAsCString (message)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CChar))) pMessage''
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueLabels)) :: Word32))
-    pPQueueLabels' <- ContT $ allocaBytesAligned @DebugUtilsLabelEXT ((Data.Vector.length (queueLabels)) * 40) 8
+    pPQueueLabels' <- ContT $ allocaBytes @DebugUtilsLabelEXT ((Data.Vector.length (queueLabels)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPQueueLabels' `plusPtr` (40 * (i)) :: Ptr DebugUtilsLabelEXT) (e) . ($ ())) (queueLabels)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr DebugUtilsLabelEXT))) (pPQueueLabels')
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (cmdBufLabels)) :: Word32))
-    pPCmdBufLabels' <- ContT $ allocaBytesAligned @DebugUtilsLabelEXT ((Data.Vector.length (cmdBufLabels)) * 40) 8
+    pPCmdBufLabels' <- ContT $ allocaBytes @DebugUtilsLabelEXT ((Data.Vector.length (cmdBufLabels)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCmdBufLabels' `plusPtr` (40 * (i)) :: Ptr DebugUtilsLabelEXT) (e) . ($ ())) (cmdBufLabels)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr DebugUtilsLabelEXT))) (pPCmdBufLabels')
     lift $ poke ((p `plusPtr` 80 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (objects)) :: Word32))
-    pPObjects' <- ContT $ allocaBytesAligned @DebugUtilsObjectNameInfoEXT ((Data.Vector.length (objects)) * 40) 8
+    pPObjects' <- ContT $ allocaBytes @DebugUtilsObjectNameInfoEXT ((Data.Vector.length (objects)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPObjects' `plusPtr` (40 * (i)) :: Ptr DebugUtilsObjectNameInfoEXT) (e) . ($ ())) (objects)
     lift $ poke ((p `plusPtr` 88 :: Ptr (Ptr DebugUtilsObjectNameInfoEXT))) (pPObjects')
     lift $ f

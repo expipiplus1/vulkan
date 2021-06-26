@@ -138,7 +138,7 @@ module Vulkan.Extensions.VK_NV_shader_sm_builtins  ( PhysicalDeviceShaderSMBuilt
                                                    , pattern NV_SHADER_SM_BUILTINS_EXTENSION_NAME
                                                    ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -195,7 +195,7 @@ deriving instance Generic (PhysicalDeviceShaderSMBuiltinsPropertiesNV)
 deriving instance Show PhysicalDeviceShaderSMBuiltinsPropertiesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsPropertiesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderSMBuiltinsPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -266,7 +266,7 @@ deriving instance Generic (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
 deriving instance Show PhysicalDeviceShaderSMBuiltinsFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderSMBuiltinsFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -112,7 +112,7 @@ module Vulkan.Extensions.VK_KHR_shader_clock  ( PhysicalDeviceShaderClockFeature
                                               , pattern KHR_SHADER_CLOCK_EXTENSION_NAME
                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -174,7 +174,7 @@ deriving instance Generic (PhysicalDeviceShaderClockFeaturesKHR)
 deriving instance Show PhysicalDeviceShaderClockFeaturesKHR
 
 instance ToCStruct PhysicalDeviceShaderClockFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderClockFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

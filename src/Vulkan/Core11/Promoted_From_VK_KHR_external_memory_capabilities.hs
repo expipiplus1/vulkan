@@ -20,7 +20,7 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -166,7 +166,7 @@ deriving instance Generic (ExternalMemoryProperties)
 deriving instance Show ExternalMemoryProperties
 
 instance ToCStruct ExternalMemoryProperties where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ExternalMemoryFeatureFlags)) (externalMemoryFeatures)
     poke ((p `plusPtr` 4 :: Ptr ExternalMemoryHandleTypeFlags)) (exportFromImportedHandleTypes)
@@ -245,7 +245,7 @@ deriving instance Generic (PhysicalDeviceExternalImageFormatInfo)
 deriving instance Show PhysicalDeviceExternalImageFormatInfo
 
 instance ToCStruct PhysicalDeviceExternalImageFormatInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalImageFormatInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -296,7 +296,7 @@ deriving instance Generic (ExternalImageFormatProperties)
 deriving instance Show ExternalImageFormatProperties
 
 instance ToCStruct ExternalImageFormatProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalImageFormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -380,7 +380,7 @@ deriving instance Generic (PhysicalDeviceExternalBufferInfo)
 deriving instance Show PhysicalDeviceExternalBufferInfo
 
 instance ToCStruct PhysicalDeviceExternalBufferInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalBufferInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -441,7 +441,7 @@ deriving instance Generic (ExternalBufferProperties)
 deriving instance Show ExternalBufferProperties
 
 instance ToCStruct ExternalBufferProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalBufferProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -615,7 +615,7 @@ deriving instance Generic (PhysicalDeviceIDProperties)
 deriving instance Show PhysicalDeviceIDProperties
 
 instance ToCStruct PhysicalDeviceIDProperties where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceIDProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

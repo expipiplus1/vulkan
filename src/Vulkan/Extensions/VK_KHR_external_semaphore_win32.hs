@@ -166,7 +166,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -492,7 +492,7 @@ deriving instance Generic (ImportSemaphoreWin32HandleInfoKHR)
 deriving instance Show ImportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ImportSemaphoreWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportSemaphoreWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -621,7 +621,7 @@ deriving instance Generic (ExportSemaphoreWin32HandleInfoKHR)
 deriving instance Show ExportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ExportSemaphoreWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportSemaphoreWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -746,7 +746,7 @@ deriving instance Generic (D3D12FenceSubmitInfoKHR)
 deriving instance Show D3D12FenceSubmitInfoKHR
 
 instance ToCStruct D3D12FenceSubmitInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p D3D12FenceSubmitInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -761,7 +761,7 @@ instance ToCStruct D3D12FenceSubmitInfoKHR where
     pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
       then pure nullPtr
       else do
-        pPWaitSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8) 8
+        pPWaitSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
         pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
@@ -776,7 +776,7 @@ instance ToCStruct D3D12FenceSubmitInfoKHR where
     pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
       then pure nullPtr
       else do
-        pPSignalSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8) 8
+        pPSignalSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((signalSemaphoreValues))
         pure $ pPSignalSemaphoreValues
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word64))) pSignalSemaphoreValues''
@@ -895,7 +895,7 @@ deriving instance Generic (SemaphoreGetWin32HandleInfoKHR)
 deriving instance Show SemaphoreGetWin32HandleInfoKHR
 
 instance ToCStruct SemaphoreGetWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreGetWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

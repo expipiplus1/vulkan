@@ -1128,7 +1128,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -2705,7 +2705,7 @@ instance Extensible SwapchainCreateInfoKHR where
     | otherwise = Nothing
 
 instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (SwapchainCreateInfoKHR es) where
-  withCStruct x f = allocaBytesAligned 104 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2720,7 +2720,7 @@ instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (Swapch
     lift $ poke ((p `plusPtr` 56 :: Ptr ImageUsageFlags)) (imageUsage)
     lift $ poke ((p `plusPtr` 60 :: Ptr SharingMode)) (imageSharingMode)
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueFamilyIndices)) :: Word32))
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4) 4
+    pPQueueFamilyIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (queueFamilyIndices)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ poke ((p `plusPtr` 80 :: Ptr SurfaceTransformFlagBitsKHR)) (preTransform)
@@ -2923,23 +2923,23 @@ instance Extensible PresentInfoKHR where
     | otherwise = Nothing
 
 instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_INFO_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (waitSemaphores)) :: Word32))
-    pPWaitSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (waitSemaphores)) * 8) 8
+    pPWaitSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (waitSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (waitSemaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPWaitSemaphores')
     let pSwapchainsLength = Data.Vector.length $ (swapchains)
     lift $ unless ((Data.Vector.length $ (imageIndices)) == pSwapchainsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pImageIndices and pSwapchains must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral pSwapchainsLength :: Word32))
-    pPSwapchains' <- ContT $ allocaBytesAligned @SwapchainKHR ((Data.Vector.length (swapchains)) * 8) 8
+    pPSwapchains' <- ContT $ allocaBytes @SwapchainKHR ((Data.Vector.length (swapchains)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains' `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SwapchainKHR))) (pPSwapchains')
-    pPImageIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (imageIndices)) * 4) 4
+    pPImageIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (imageIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPImageIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (imageIndices)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPImageIndices')
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr Result))) (results)
@@ -3016,7 +3016,7 @@ deriving instance Generic (DeviceGroupPresentCapabilitiesKHR)
 deriving instance Show DeviceGroupPresentCapabilitiesKHR
 
 instance ToCStruct DeviceGroupPresentCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 152 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 152 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupPresentCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3088,7 +3088,7 @@ deriving instance Generic (ImageSwapchainCreateInfoKHR)
 deriving instance Show ImageSwapchainCreateInfoKHR
 
 instance ToCStruct ImageSwapchainCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSwapchainCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3168,7 +3168,7 @@ deriving instance Generic (BindImageMemorySwapchainInfoKHR)
 deriving instance Show BindImageMemorySwapchainInfoKHR
 
 instance ToCStruct BindImageMemorySwapchainInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImageMemorySwapchainInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3314,7 +3314,7 @@ deriving instance Generic (AcquireNextImageInfoKHR)
 deriving instance Show AcquireNextImageInfoKHR
 
 instance ToCStruct AcquireNextImageInfoKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AcquireNextImageInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3466,12 +3466,12 @@ deriving instance Generic (DeviceGroupPresentInfoKHR)
 deriving instance Show DeviceGroupPresentInfoKHR
 
 instance ToCStruct DeviceGroupPresentInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupPresentInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceMasks)) :: Word32))
-    pPDeviceMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (deviceMasks)) * 4) 4
+    pPDeviceMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (deviceMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (deviceMasks)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDeviceMasks')
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceGroupPresentModeFlagBitsKHR)) (mode)
@@ -3530,7 +3530,7 @@ deriving instance Generic (DeviceGroupSwapchainCreateInfoKHR)
 deriving instance Show DeviceGroupSwapchainCreateInfoKHR
 
 instance ToCStruct DeviceGroupSwapchainCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupSwapchainCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

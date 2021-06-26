@@ -17,7 +17,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -489,7 +489,7 @@ deriving instance Generic (DescriptorUpdateTemplateEntry)
 deriving instance Show DescriptorUpdateTemplateEntry
 
 instance ToCStruct DescriptorUpdateTemplateEntry where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorUpdateTemplateEntry{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (dstBinding)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (dstArrayElement)
@@ -660,13 +660,13 @@ deriving instance Generic (DescriptorUpdateTemplateCreateInfo)
 deriving instance Show DescriptorUpdateTemplateCreateInfo
 
 instance ToCStruct DescriptorUpdateTemplateCreateInfo where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorUpdateTemplateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorUpdateTemplateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorUpdateEntries)) :: Word32))
-    pPDescriptorUpdateEntries' <- ContT $ allocaBytesAligned @DescriptorUpdateTemplateEntry ((Data.Vector.length (descriptorUpdateEntries)) * 32) 8
+    pPDescriptorUpdateEntries' <- ContT $ allocaBytes @DescriptorUpdateTemplateEntry ((Data.Vector.length (descriptorUpdateEntries)) * 32)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e)) (descriptorUpdateEntries)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorUpdateTemplateEntry))) (pPDescriptorUpdateEntries')
     lift $ poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (templateType)

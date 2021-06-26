@@ -177,7 +177,7 @@ module Vulkan.Extensions.VK_AMD_rasterization_order  ( PipelineRasterizationStat
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -230,7 +230,7 @@ deriving instance Generic (PipelineRasterizationStateRasterizationOrderAMD)
 deriving instance Show PipelineRasterizationStateRasterizationOrderAMD
 
 instance ToCStruct PipelineRasterizationStateRasterizationOrderAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationStateRasterizationOrderAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

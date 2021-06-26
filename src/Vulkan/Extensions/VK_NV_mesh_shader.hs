@@ -271,7 +271,7 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -2206,7 +2206,7 @@ deriving instance Generic (PhysicalDeviceMeshShaderFeaturesNV)
 deriving instance Show PhysicalDeviceMeshShaderFeaturesNV
 
 instance ToCStruct PhysicalDeviceMeshShaderFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMeshShaderFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2326,7 +2326,7 @@ deriving instance Generic (PhysicalDeviceMeshShaderPropertiesNV)
 deriving instance Show PhysicalDeviceMeshShaderPropertiesNV
 
 instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMeshShaderPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2462,7 +2462,7 @@ deriving instance Generic (DrawMeshTasksIndirectCommandNV)
 deriving instance Show DrawMeshTasksIndirectCommandNV
 
 instance ToCStruct DrawMeshTasksIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrawMeshTasksIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (taskCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (firstTask)

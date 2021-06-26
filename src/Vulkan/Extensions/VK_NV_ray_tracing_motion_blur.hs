@@ -215,7 +215,7 @@ import Data.Bits ((.&.))
 import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Ptr (castPtr)
@@ -322,7 +322,7 @@ deriving instance Generic (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 deriving instance Show PhysicalDeviceRayTracingMotionBlurFeaturesNV
 
 instance ToCStruct PhysicalDeviceRayTracingMotionBlurFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRayTracingMotionBlurFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MOTION_BLUR_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -388,7 +388,7 @@ deriving instance Generic (AccelerationStructureGeometryMotionTrianglesDataNV)
 deriving instance Show AccelerationStructureGeometryMotionTrianglesDataNV
 
 instance ToCStruct AccelerationStructureGeometryMotionTrianglesDataNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryMotionTrianglesDataNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -433,7 +433,7 @@ deriving instance Generic (AccelerationStructureMotionInfoNV)
 deriving instance Show AccelerationStructureMotionInfoNV
 
 instance ToCStruct AccelerationStructureMotionInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureMotionInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MOTION_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -558,7 +558,7 @@ deriving instance Generic (SRTDataNV)
 deriving instance Show SRTDataNV
 
 instance ToCStruct SRTDataNV where
-  withCStruct x f = allocaBytesAligned 64 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SRTDataNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (sx))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (a))
@@ -733,7 +733,7 @@ deriving instance Generic (AccelerationStructureSRTMotionInstanceNV)
 deriving instance Show AccelerationStructureSRTMotionInstanceNV
 
 instance ToCStruct AccelerationStructureSRTMotionInstanceNV where
-  withCStruct x f = allocaBytesAligned 144 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 144 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureSRTMotionInstanceNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr SRTDataNV)) (transformT0)
     poke ((p `plusPtr` 64 :: Ptr SRTDataNV)) (transformT1)
@@ -874,7 +874,7 @@ deriving instance Generic (AccelerationStructureMatrixMotionInstanceNV)
 deriving instance Show AccelerationStructureMatrixMotionInstanceNV
 
 instance ToCStruct AccelerationStructureMatrixMotionInstanceNV where
-  withCStruct x f = allocaBytesAligned 112 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 112 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureMatrixMotionInstanceNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr TransformMatrixKHR)) (transformT0)
     poke ((p `plusPtr` 48 :: Ptr TransformMatrixKHR)) (transformT1)
@@ -985,7 +985,7 @@ deriving instance Generic (AccelerationStructureMotionInstanceNV)
 deriving instance Show AccelerationStructureMotionInstanceNV
 
 instance ToCStruct AccelerationStructureMotionInstanceNV where
-  withCStruct x f = allocaBytesAligned 152 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 152 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureMotionInstanceNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr AccelerationStructureMotionInstanceTypeNV)) (type')
     lift $ poke ((p `plusPtr` 4 :: Ptr AccelerationStructureMotionInstanceFlagsNV)) (flags)
@@ -1012,7 +1012,7 @@ data AccelerationStructureMotionInstanceDataNV
   deriving (Show)
 
 instance ToCStruct AccelerationStructureMotionInstanceDataNV where
-  withCStruct x f = allocaBytesAligned 144 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 144 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr AccelerationStructureMotionInstanceDataNV -> AccelerationStructureMotionInstanceDataNV -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     StaticInstance v -> lift $ poke (castPtr @_ @AccelerationStructureInstanceKHR p) (v)

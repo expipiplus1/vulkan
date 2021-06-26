@@ -8,7 +8,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_multiview  ( PhysicalDeviceMultiviewFe
                                                      , DependencyFlags
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -124,7 +124,7 @@ deriving instance Generic (PhysicalDeviceMultiviewFeatures)
 deriving instance Show PhysicalDeviceMultiviewFeatures
 
 instance ToCStruct PhysicalDeviceMultiviewFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiviewFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -198,7 +198,7 @@ deriving instance Generic (PhysicalDeviceMultiviewProperties)
 deriving instance Show PhysicalDeviceMultiviewProperties
 
 instance ToCStruct PhysicalDeviceMultiviewProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiviewProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -373,20 +373,20 @@ deriving instance Generic (RenderPassMultiviewCreateInfo)
 deriving instance Show RenderPassMultiviewCreateInfo
 
 instance ToCStruct RenderPassMultiviewCreateInfo where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassMultiviewCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewMasks)) :: Word32))
-    pPViewMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (viewMasks)) * 4) 4
+    pPViewMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (viewMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (viewMasks)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPViewMasks')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewOffsets)) :: Word32))
-    pPViewOffsets' <- ContT $ allocaBytesAligned @Int32 ((Data.Vector.length (viewOffsets)) * 4) 4
+    pPViewOffsets' <- ContT $ allocaBytes @Int32 ((Data.Vector.length (viewOffsets)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewOffsets' `plusPtr` (4 * (i)) :: Ptr Int32) (e)) (viewOffsets)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Int32))) (pPViewOffsets')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (correlationMasks)) :: Word32))
-    pPCorrelationMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (correlationMasks)) * 4) 4
+    pPCorrelationMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (correlationMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCorrelationMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (correlationMasks)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr Word32))) (pPCorrelationMasks')
     lift $ f

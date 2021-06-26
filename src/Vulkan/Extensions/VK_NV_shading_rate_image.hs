@@ -318,7 +318,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -589,7 +589,7 @@ cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalett
   lift $ unless (vkCmdSetViewportShadingRatePaletteNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportShadingRatePaletteNV is null" Nothing Nothing
   let vkCmdSetViewportShadingRatePaletteNV' = mkVkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNVPtr
-  pPShadingRatePalettes <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
+  pPShadingRatePalettes <- ContT $ allocaBytes @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
   lift $ traceAroundEvent "vkCmdSetViewportShadingRatePaletteNV" (vkCmdSetViewportShadingRatePaletteNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32)) (pPShadingRatePalettes))
   pure $ ()
@@ -685,7 +685,7 @@ cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = lif
   lift $ unless (vkCmdSetCoarseSampleOrderNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCoarseSampleOrderNV is null" Nothing Nothing
   let vkCmdSetCoarseSampleOrderNV' = mkVkCmdSetCoarseSampleOrderNV vkCmdSetCoarseSampleOrderNVPtr
-  pPCustomSampleOrders <- ContT $ allocaBytesAligned @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24) 8
+  pPCustomSampleOrders <- ContT $ allocaBytes @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCustomSampleOrders `plusPtr` (24 * (i)) :: Ptr CoarseSampleOrderCustomNV) (e) . ($ ())) (customSampleOrders)
   lift $ traceAroundEvent "vkCmdSetCoarseSampleOrderNV" (vkCmdSetCoarseSampleOrderNV' (commandBufferHandle (commandBuffer)) (sampleOrderType) ((fromIntegral (Data.Vector.length $ (customSampleOrders)) :: Word32)) (pPCustomSampleOrders))
   pure $ ()
@@ -732,10 +732,10 @@ deriving instance Generic (ShadingRatePaletteNV)
 deriving instance Show ShadingRatePaletteNV
 
 instance ToCStruct ShadingRatePaletteNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShadingRatePaletteNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (shadingRatePaletteEntries)) :: Word32))
-    pPShadingRatePaletteEntries' <- ContT $ allocaBytesAligned @ShadingRatePaletteEntryNV ((Data.Vector.length (shadingRatePaletteEntries)) * 4) 4
+    pPShadingRatePaletteEntries' <- ContT $ allocaBytes @ShadingRatePaletteEntryNV ((Data.Vector.length (shadingRatePaletteEntries)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPShadingRatePaletteEntries' `plusPtr` (4 * (i)) :: Ptr ShadingRatePaletteEntryNV) (e)) (shadingRatePaletteEntries)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ShadingRatePaletteEntryNV))) (pPShadingRatePaletteEntries')
     lift $ f
@@ -809,13 +809,13 @@ deriving instance Generic (PipelineViewportShadingRateImageStateCreateInfoNV)
 deriving instance Show PipelineViewportShadingRateImageStateCreateInfoNV
 
 instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportShadingRateImageStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shadingRateImageEnable))
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32))
-    pPShadingRatePalettes' <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
+    pPShadingRatePalettes' <- ContT $ allocaBytes @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes' `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV))) (pPShadingRatePalettes')
     lift $ f
@@ -889,7 +889,7 @@ deriving instance Generic (PhysicalDeviceShadingRateImageFeaturesNV)
 deriving instance Show PhysicalDeviceShadingRateImageFeaturesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImageFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShadingRateImageFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -971,7 +971,7 @@ deriving instance Generic (PhysicalDeviceShadingRateImagePropertiesNV)
 deriving instance Show PhysicalDeviceShadingRateImagePropertiesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImagePropertiesNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShadingRateImagePropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1046,7 +1046,7 @@ deriving instance Generic (CoarseSampleLocationNV)
 deriving instance Show CoarseSampleLocationNV
 
 instance ToCStruct CoarseSampleLocationNV where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CoarseSampleLocationNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (pixelX)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (pixelY)
@@ -1156,12 +1156,12 @@ deriving instance Generic (CoarseSampleOrderCustomNV)
 deriving instance Show CoarseSampleOrderCustomNV
 
 instance ToCStruct CoarseSampleOrderCustomNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CoarseSampleOrderCustomNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr ShadingRatePaletteEntryNV)) (shadingRate)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (sampleCount)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
-    pPSampleLocations' <- ContT $ allocaBytesAligned @CoarseSampleLocationNV ((Data.Vector.length (sampleLocations)) * 12) 4
+    pPSampleLocations' <- ContT $ allocaBytes @CoarseSampleLocationNV ((Data.Vector.length (sampleLocations)) * 12)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e)) (sampleLocations)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CoarseSampleLocationNV))) (pPSampleLocations')
     lift $ f
@@ -1254,13 +1254,13 @@ deriving instance Generic (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
 deriving instance Show PipelineViewportCoarseSampleOrderStateCreateInfoNV
 
 instance ToCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportCoarseSampleOrderStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr CoarseSampleOrderTypeNV)) (sampleOrderType)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (customSampleOrders)) :: Word32))
-    pPCustomSampleOrders' <- ContT $ allocaBytesAligned @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24) 8
+    pPCustomSampleOrders' <- ContT $ allocaBytes @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCustomSampleOrders' `plusPtr` (24 * (i)) :: Ptr CoarseSampleOrderCustomNV) (e) . ($ ())) (customSampleOrders)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr CoarseSampleOrderCustomNV))) (pPCustomSampleOrders')
     lift $ f

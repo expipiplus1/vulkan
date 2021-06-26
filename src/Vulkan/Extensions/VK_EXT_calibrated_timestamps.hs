@@ -195,7 +195,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -394,7 +394,7 @@ getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
   lift $ unless (vkGetCalibratedTimestampsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetCalibratedTimestampsEXT is null" Nothing Nothing
   let vkGetCalibratedTimestampsEXT' = mkVkGetCalibratedTimestampsEXT vkGetCalibratedTimestampsEXTPtr
-  pPTimestampInfos <- ContT $ allocaBytesAligned @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24) 8
+  pPTimestampInfos <- ContT $ allocaBytes @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e)) (timestampInfos)
   pPTimestamps <- ContT $ bracket (callocBytes @Word64 ((fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) * 8)) free
   pPMaxDeviation <- ContT $ bracket (callocBytes @Word64 8) free
@@ -432,7 +432,7 @@ deriving instance Generic (CalibratedTimestampInfoEXT)
 deriving instance Show CalibratedTimestampInfoEXT
 
 instance ToCStruct CalibratedTimestampInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CalibratedTimestampInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
