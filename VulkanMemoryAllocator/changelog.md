@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.6.0.1] - 2021-06-26
 - Bump VMA, no functional change
 - Use allocaBytes over allocaBytesAligned where possible
 
