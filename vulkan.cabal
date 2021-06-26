@@ -606,12 +606,13 @@ test-suite test
       TypeSynonymInstances
       UndecidableInstances
       ViewPatterns
+  build-tool-depends:
+      tasty-discover:tasty-discover
   build-depends:
       base
     , containers
     , inline-c
     , tasty
-    , tasty-discover
     , tasty-hunit
     , template-haskell
     , vulkan

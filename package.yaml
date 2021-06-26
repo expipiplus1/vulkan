@@ -71,10 +71,11 @@ tests:
     - containers
     - inline-c
     - tasty
-    - tasty-discover
     - tasty-hunit
     - template-haskell
     - vulkan
+    build-tools:
+    - tasty-discover:tasty-discover
 
 default-extensions:
 - AllowAmbiguousTypes
