@@ -183,7 +183,7 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -1013,9 +1013,9 @@ allocateMemoryPages :: forall io
                        ("createInfo" ::: Vector AllocationCreateInfo)
                     -> io (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
 allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
-  pPVkMemoryRequirements <- ContT $ allocaBytesAligned @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24) 8
+  pPVkMemoryRequirements <- ContT $ allocaBytes @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVkMemoryRequirements `plusPtr` (24 * (i)) :: Ptr MemoryRequirements) (e) . ($ ())) (vkMemoryRequirements)
-  pPCreateInfo <- ContT $ allocaBytesAligned @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 48) 8
+  pPCreateInfo <- ContT $ allocaBytes @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 48)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCreateInfo `plusPtr` (48 * (i)) :: Ptr AllocationCreateInfo) (e)) (createInfo)
   let pVkMemoryRequirementsLength = Data.Vector.length $ (vkMemoryRequirements)
   lift $ unless ((Data.Vector.length $ (createInfo)) == pVkMemoryRequirementsLength) $
@@ -1186,7 +1186,7 @@ freeMemoryPages :: forall io
                    ("allocations" ::: Vector Allocation)
                 -> io ()
 freeMemoryPages allocator allocations = liftIO . evalContT $ do
-  pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pPAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   lift $ traceAroundEvent "vmaFreeMemoryPages" ((ffiVmaFreeMemoryPages) (allocator) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocations))
   pure $ ()
@@ -1603,18 +1603,18 @@ flushAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
   let sizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
-  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   offsets' <- if Data.Vector.null (offsets)
     then pure nullPtr
     else do
-      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      pOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (offsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
       pure $ pOffsets
   sizes' <- if Data.Vector.null (sizes)
     then pure nullPtr
     else do
-      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      pSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
   r <- lift $ traceAroundEvent "vmaFlushAllocations" ((ffiVmaFlushAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
@@ -1675,18 +1675,18 @@ invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $
   let sizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
-  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   offsets' <- if Data.Vector.null (offsets)
     then pure nullPtr
     else do
-      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      pOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (offsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
       pure $ pOffsets
   sizes' <- if Data.Vector.null (sizes)
     then pure nullPtr
     else do
-      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      pSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
   r <- lift $ traceAroundEvent "vmaInvalidateAllocations" ((ffiVmaInvalidateAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
@@ -1998,7 +1998,7 @@ defragment :: forall io
               ("defragmentationInfo" ::: Maybe DefragmentationInfo)
            -> io (("allocationsChanged" ::: Vector Bool), DefragmentationStats)
 defragment allocator allocations defragmentationInfo = liftIO . evalContT $ do
-  pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pPAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   pPAllocationsChanged <- ContT $ bracket (callocBytes @Bool32 ((fromIntegral ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize))) * 4)) free
   pDefragmentationInfo <- case (defragmentationInfo) of
@@ -2524,7 +2524,7 @@ deriving instance Generic (DeviceMemoryCallbacks)
 deriving instance Show DeviceMemoryCallbacks
 
 instance ToCStruct DeviceMemoryCallbacks where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryCallbacks{..} f = do
     poke ((p `plusPtr` 0 :: Ptr PFN_vmaAllocateDeviceMemoryFunction)) (pfnAllocate)
     poke ((p `plusPtr` 8 :: Ptr PFN_vmaFreeDeviceMemoryFunction)) (pfnFree)
@@ -2781,7 +2781,7 @@ deriving instance Generic (VulkanFunctions)
 deriving instance Show VulkanFunctions
 
 instance ToCStruct VulkanFunctions where
-  withCStruct x f = allocaBytesAligned 176 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 176 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanFunctions{..} f = do
     poke ((p `plusPtr` 0 :: Ptr PFN_vkGetPhysicalDeviceProperties)) (vkGetPhysicalDeviceProperties)
     poke ((p `plusPtr` 8 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties)) (vkGetPhysicalDeviceMemoryProperties)
@@ -2923,7 +2923,7 @@ deriving instance Generic (RecordSettings)
 deriving instance Show RecordSettings
 
 instance ToCStruct RecordSettings where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RecordSettings{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr RecordFlags)) (flags)
     pFilePath'' <- ContT $ useAsCString (filePath)
@@ -3060,7 +3060,7 @@ deriving instance Generic (AllocatorCreateInfo)
 deriving instance Show AllocatorCreateInfo
 
 instance ToCStruct AllocatorCreateInfo where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocatorCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr AllocatorCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr PhysicalDevice_T))) (physicalDevice)
@@ -3163,7 +3163,7 @@ deriving instance Generic (AllocatorInfo)
 deriving instance Show AllocatorInfo
 
 instance ToCStruct AllocatorInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocatorInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr (Ptr Instance_T))) (instance')
     poke ((p `plusPtr` 8 :: Ptr (Ptr PhysicalDevice_T))) (physicalDevice)
@@ -3232,7 +3232,7 @@ deriving instance Generic (StatInfo)
 deriving instance Show StatInfo
 
 instance ToCStruct StatInfo where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p StatInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (blockCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (allocationCount)
@@ -3339,7 +3339,7 @@ deriving instance Generic (Stats)
 deriving instance Show Stats
 
 instance ToCStruct Stats where
-  withCStruct x f = allocaBytesAligned 3920 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 3920 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Stats{..} f = do
     unless ((Data.Vector.length $ (memoryType)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryType is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
@@ -3421,7 +3421,7 @@ deriving instance Generic (Budget)
 deriving instance Show Budget
 
 instance ToCStruct Budget where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Budget{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (blockBytes)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (allocationBytes)
@@ -3799,7 +3799,7 @@ deriving instance Generic (AllocationCreateInfo)
 deriving instance Show AllocationCreateInfo
 
 instance ToCStruct AllocationCreateInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocationCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr AllocationCreateFlags)) (flags)
     poke ((p `plusPtr` 4 :: Ptr MemoryUsage)) (usage)
@@ -4017,7 +4017,7 @@ deriving instance Generic (PoolCreateInfo)
 deriving instance Show PoolCreateInfo
 
 instance ToCStruct PoolCreateInfo where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PoolCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeIndex)
     poke ((p `plusPtr` 4 :: Ptr PoolCreateFlags)) (flags)
@@ -4107,7 +4107,7 @@ deriving instance Generic (PoolStats)
 deriving instance Show PoolStats
 
 instance ToCStruct PoolStats where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PoolStats{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (unusedSize)
@@ -4252,7 +4252,7 @@ deriving instance Generic (AllocationInfo)
 deriving instance Show AllocationInfo
 
 instance ToCStruct AllocationInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocationInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryType)
     poke ((p `plusPtr` 8 :: Ptr DeviceMemory)) (deviceMemory)
@@ -4422,16 +4422,16 @@ deriving instance Generic (DefragmentationInfo2)
 deriving instance Show DefragmentationInfo2
 
 instance ToCStruct DefragmentationInfo2 where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr DefragmentationFlags)) (flags)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (allocations)) :: Word32))
-    pPAllocations' <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+    pPAllocations' <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations' `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr Allocation))) (pPAllocations')
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Bool32))) (allocationsChanged)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pools)) :: Word32))
-    pPPools' <- ContT $ allocaBytesAligned @Pool ((Data.Vector.length (pools)) * 8) 8
+    pPPools' <- ContT $ allocaBytes @Pool ((Data.Vector.length (pools)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPools' `plusPtr` (8 * (i)) :: Ptr Pool) (e)) (pools)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Pool))) (pPPools')
     lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (maxCpuBytesToMove)
@@ -4497,7 +4497,7 @@ deriving instance Generic (DefragmentationPassMoveInfo)
 deriving instance Show DefragmentationPassMoveInfo
 
 instance ToCStruct DefragmentationPassMoveInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationPassMoveInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Allocation)) (allocation)
     poke ((p `plusPtr` 8 :: Ptr DeviceMemory)) (memory)
@@ -4550,7 +4550,7 @@ deriving instance Generic (DefragmentationPassInfo)
 deriving instance Show DefragmentationPassInfo
 
 instance ToCStruct DefragmentationPassInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationPassInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (moveCount)
     poke ((p `plusPtr` 8 :: Ptr (Ptr DefragmentationPassMoveInfo))) (moves)
@@ -4608,7 +4608,7 @@ deriving instance Generic (DefragmentationInfo)
 deriving instance Show DefragmentationInfo
 
 instance ToCStruct DefragmentationInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (maxBytesToMove)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (maxAllocationsToMove)
@@ -4662,7 +4662,7 @@ deriving instance Generic (DefragmentationStats)
 deriving instance Show DefragmentationStats
 
 instance ToCStruct DefragmentationStats where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationStats{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (bytesMoved)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (bytesFreed)
