@@ -13,7 +13,6 @@ import           Relude                  hiding ( Handle )
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Control.Monad.Trans.Cont       ( evalContT )
-import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import           Foreign.Storable
 
@@ -381,7 +380,6 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
   tellImportWithAll (TyConName "ToCStruct")
   let con         = mkConName msName msName
       Struct {..} = msStruct
-  tellImport 'allocaBytesAligned
   zero    <- pokeZeroCStructDecl m
   pokeDoc <- case pokeValue of
     ContTStmts d -> do
@@ -391,12 +389,13 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
   (size, alignment) <- getTypeSize (TypeName msName)
   let unpack = if all (isElided . msmScheme) msMembers then "" else "{..}"
   stub <- toCStructInstanceStub tellImport msStruct
+  let (a, an, af) = chooseAlign sAlignment
+  tellImport an
   tellDoc $ (stub <+> "where") <> line <> indent
     2
     (vsep
-      [ "withCStruct x f = allocaBytesAligned"
-      <+> viaShow sSize
-      <+> viaShow sAlignment
+      [ "withCStruct x f ="
+      <+> af (a <+> viaShow sSize)
       <+> "$ \\p -> pokeCStruct p x (f p)"
       , "pokeCStruct"
       <+> pretty addrVar

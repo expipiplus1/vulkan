@@ -3,8 +3,12 @@ module Render.Utils
 
 import qualified Data.Text                     as T
 import           Data.Text.Prettyprint.Doc
+import           Foreign.Marshal.Alloc          ( allocaBytes
+                                                , allocaBytesAligned
+                                                )
 import           Relude
 import           Text.Wrap
+import qualified Language.Haskell.TH as TH
 
 parenList :: Foldable f => f (Doc ()) -> Doc ()
 parenList = genericList (<>) "(" ")"
@@ -84,3 +88,8 @@ unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t
     , "where"
     ]
   preludeWords = ["filter"]
+
+chooseAlign :: Int -> (Doc ann, TH.Name, Doc ann -> Doc ann)
+chooseAlign align = if align <= 8
+  then ("allocaBytes", 'allocaBytes, id)
+  else ("allocaBytesAligned", 'allocaBytesAligned, (<+> viaShow align))

@@ -419,7 +419,7 @@ difficultLengths =
             tellImport ''CChar
             tellImport ''Word32
             tellImportWithAll ''ContT
-            tellImport 'allocaBytesAligned
+            tellImport 'allocaBytes
             tellImport 'lift
             tellQualImport 'BS.length
             tellImport 'copyBytes
@@ -439,9 +439,8 @@ difficultLengths =
                       , "-- Otherwise allocate and copy the bytes"
                       , "else" <+> doBlock
                         [ "let len =" <+> len
-                        , "mem <- ContT $ allocaBytesAligned @Word32"
+                        , "mem <- ContT $ allocaBytes @Word32"
                         <+> "len"
-                        <+> "4"
                         , "lift $ copyBytes mem (castPtr @CChar @Word32"
                         <+> maybeAligned
                         <>  ")"
