@@ -1,100 +1,98 @@
 name: vulkan
-version: "3.11"
+version: '3.11'
 synopsis: Bindings to the Vulkan graphics API.
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
-  - readme.md
-  - changelog.md
-  - package.yaml
+- readme.md
+- changelog.md
+- package.yaml
 license: BSD-3-Clause
 
 library:
   source-dirs:
-    - src
-    - src-manual
+  - src
+  - src-manual
   verbatim:
     other-modules:
   dependencies:
-    - base <5
-    - bytestring
-    - transformers
-    - vector
+  - base <5
+  - bytestring
+  - transformers
+  - vector
   when:
-    - condition: os(windows)
-      extra-libraries: vulkan-1
-    - condition: os(darwin)
-      extra-libraries: vulkan
-    - condition: "!os(windows) && !os(darwin)"
-      pkg-config-dependencies: vulkan
-    - condition: flag(safe-foreign-calls)
-      cpp-options: -DSAFE_FOREIGN_CALLS
-    - condition: flag(generic-instances)
-      cpp-options: -DGENERIC_INSTANCES
-    - condition: flag(trace-calls)
-      cpp-options: -DTRACE_CALLS
+  - condition: os(windows)
+    extra-libraries: vulkan-1
+  - condition: os(darwin)
+    extra-libraries: vulkan
+  - condition: '!os(windows) && !os(darwin)'
+    pkg-config-dependencies: vulkan
+  - condition: flag(safe-foreign-calls)
+    cpp-options: -DSAFE_FOREIGN_CALLS
+  - condition: flag(generic-instances)
+    cpp-options: -DGENERIC_INSTANCES
+  - condition: flag(trace-calls)
+    cpp-options: -DTRACE_CALLS
   ghc-options:
-    - -Wall
-    - -Wno-unticked-promoted-constructors
-    - -Wno-missing-pattern-synonym-signatures
-    - -Wno-unused-imports
-    - -Wno-missing-signatures
-    - -Wno-partial-type-signatures
+  - -Wall
+  - -Wno-unticked-promoted-constructors
+  - -Wno-missing-pattern-synonym-signatures
+  - -Wno-unused-imports
+  - -Wno-missing-signatures
+  - -Wno-partial-type-signatures
 
 flags:
   safe-foreign-calls:
-    description:
-      Do not mark foreign imports as 'unsafe'. This means that
-      callbacks from Vulkan to Haskell will work. If you are using
-      these then make sure this flag is enabled.
+    description: Do not mark foreign imports as 'unsafe'. This means that callbacks
+      from Vulkan to Haskell will work. If you are using these then make sure this
+      flag is enabled.
     default: no
     manual: yes
 
   generic-instances:
-    description:
-      Derive Generic instances for all structs. Disabled by default because of
-      code size and compile time impact.
+    description: Derive Generic instances for all structs. Disabled by default because
+      of code size and compile time impact.
     default: no
     manual: yes
 
   trace-calls:
-    description:
-      Inserts calls to Debug.Trace.traceEventIO around every Vulkan call.
+    description: Inserts calls to Debug.Trace.traceEventIO around every Vulkan call.
     default: no
     manual: yes
 
 default-extensions:
-  - AllowAmbiguousTypes
-  - CPP
-  - DataKinds
-  - DefaultSignatures
-  - DeriveAnyClass
-  - DeriveGeneric
-  - DerivingStrategies
-  - DuplicateRecordFields
-  - FlexibleContexts
-  - FlexibleInstances
-  - GADTs
-  - GeneralizedNewtypeDeriving
-  - InstanceSigs
-  - LambdaCase
-  - MagicHash
-  - NoMonomorphismRestriction
-  - OverloadedStrings
-  - PartialTypeSignatures
-  - PatternSynonyms
-  - PolyKinds
-  - QuantifiedConstraints
-  - RankNTypes
-  - RecordWildCards
-  - RoleAnnotations
-  - ScopedTypeVariables
-  - StandaloneDeriving
-  - Strict
-  - TypeApplications
-  - TypeFamilyDependencies
-  - TypeOperators
-  - TypeSynonymInstances
-  - UndecidableInstances
-  - ViewPatterns
+- AllowAmbiguousTypes
+- CPP
+- DataKinds
+- DefaultSignatures
+- DeriveAnyClass
+- DeriveGeneric
+- DerivingStrategies
+- DuplicateRecordFields
+- FlexibleContexts
+- FlexibleInstances
+- GADTs
+- GeneralizedNewtypeDeriving
+- InstanceSigs
+- LambdaCase
+- MagicHash
+- NoMonomorphismRestriction
+- OverloadedStrings
+- PartialTypeSignatures
+- PatternSynonyms
+- PolyKinds
+- QuantifiedConstraints
+- RankNTypes
+- RecordWildCards
+- RoleAnnotations
+- ScopedTypeVariables
+- StandaloneDeriving
+- Strict
+- TypeApplications
+- TypeFamilyDependencies
+- TypeOperators
+- TypeSynonymInstances
+- UndecidableInstances
+- ViewPatterns
+
