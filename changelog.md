@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Tweak cabal file to please `cabal check`
 
 ## [3.11.0.1] - 2021-06-26
 - Use allocaBytes over allocaBytesAligned where possible
