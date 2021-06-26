@@ -24,7 +24,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -985,7 +985,7 @@ deriving instance Generic (ApiLayerProperties)
 deriving instance Show ApiLayerProperties
 
 instance ToCStruct ApiLayerProperties where
-  withCStruct x f = allocaBytesAligned 544 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 544 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ApiLayerProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_API_LAYER_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1052,7 +1052,7 @@ deriving instance Generic (ExtensionProperties)
 deriving instance Show ExtensionProperties
 
 instance ToCStruct ExtensionProperties where
-  withCStruct x f = allocaBytesAligned 152 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 152 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExtensionProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EXTENSION_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1152,7 +1152,7 @@ deriving instance Generic (ApplicationInfo)
 deriving instance Show ApplicationInfo
 
 instance ToCStruct ApplicationInfo where
-  withCStruct x f = allocaBytesAligned 272 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 272 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ApplicationInfo{..} f = do
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_APPLICATION_NAME_SIZE CChar))) (applicationName)
     poke ((p `plusPtr` 128 :: Ptr Word32)) (applicationVersion)
@@ -1271,7 +1271,7 @@ instance Extensible InstanceCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 328 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 328 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INSTANCE_CREATE_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -1279,13 +1279,13 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
     lift $ poke ((p `plusPtr` 16 :: Ptr InstanceCreateFlags)) (createFlags)
     lift $ poke ((p `plusPtr` 24 :: Ptr ApplicationInfo)) (applicationInfo)
     lift $ poke ((p `plusPtr` 296 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledApiLayerNames)) :: Word32))
-    pEnabledApiLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledApiLayerNames)) * 8) 8
+    pEnabledApiLayerNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledApiLayerNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       enabledApiLayerNames'' <- ContT $ useAsCString (e)
       lift $ poke (pEnabledApiLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) enabledApiLayerNames'') (enabledApiLayerNames)
     lift $ poke ((p `plusPtr` 304 :: Ptr (Ptr (Ptr CChar)))) (pEnabledApiLayerNames')
     lift $ poke ((p `plusPtr` 312 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledExtensionNames)) :: Word32))
-    pEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8) 8
+    pEnabledExtensionNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       enabledExtensionNames'' <- ContT $ useAsCString (e)
       lift $ poke (pEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) enabledExtensionNames'') (enabledExtensionNames)
@@ -1348,7 +1348,7 @@ deriving instance Generic (InstanceProperties)
 deriving instance Show InstanceProperties
 
 instance ToCStruct InstanceProperties where
-  withCStruct x f = allocaBytesAligned 152 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 152 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INSTANCE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1402,7 +1402,7 @@ deriving instance Generic (EventDataBuffer)
 deriving instance Show EventDataBuffer
 
 instance ToCStruct EventDataBuffer where
-  withCStruct x f = allocaBytesAligned 4016 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4016 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataBuffer{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_BUFFER)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

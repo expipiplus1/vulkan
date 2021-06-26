@@ -63,7 +63,7 @@ module OpenXR.Extensions.XR_KHR_opengl_enable  ( getOpenGLGraphicsRequirementsKH
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -252,7 +252,7 @@ deriving instance Generic (GraphicsBindingOpenGLWin32KHR)
 deriving instance Show GraphicsBindingOpenGLWin32KHR
 
 instance ToCStruct GraphicsBindingOpenGLWin32KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLWin32KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_WIN32_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -352,7 +352,7 @@ deriving instance Generic (GraphicsBindingOpenGLXlibKHR)
 deriving instance Show GraphicsBindingOpenGLXlibKHR
 
 instance ToCStruct GraphicsBindingOpenGLXlibKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLXlibKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_XLIB_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -470,7 +470,7 @@ deriving instance Generic (GraphicsBindingOpenGLXcbKHR)
 deriving instance Show GraphicsBindingOpenGLXcbKHR
 
 instance ToCStruct GraphicsBindingOpenGLXcbKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLXcbKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_XCB_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -568,7 +568,7 @@ deriving instance Generic (GraphicsBindingOpenGLWaylandKHR)
 deriving instance Show GraphicsBindingOpenGLWaylandKHR
 
 instance ToCStruct GraphicsBindingOpenGLWaylandKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLWaylandKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_WAYLAND_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -654,7 +654,7 @@ instance IsSwapchainImage SwapchainImageOpenGLKHR where
   toSwapchainImageBaseHeader SwapchainImageOpenGLKHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR}
 
 instance ToCStruct SwapchainImageOpenGLKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageOpenGLKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -732,7 +732,7 @@ deriving instance Generic (GraphicsRequirementsOpenGLKHR)
 deriving instance Show GraphicsRequirementsOpenGLKHR
 
 instance ToCStruct GraphicsRequirementsOpenGLKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsOpenGLKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_OPENGL_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

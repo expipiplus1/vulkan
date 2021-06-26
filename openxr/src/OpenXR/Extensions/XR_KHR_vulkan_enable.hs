@@ -56,7 +56,7 @@ import qualified OpenXR.VulkanTypes (PhysicalDevice_T)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -552,7 +552,7 @@ deriving instance Generic (GraphicsBindingVulkanKHR)
 deriving instance Show GraphicsBindingVulkanKHR
 
 instance ToCStruct GraphicsBindingVulkanKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingVulkanKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -656,7 +656,7 @@ instance IsSwapchainImage SwapchainImageVulkanKHR where
   toSwapchainImageBaseHeader SwapchainImageVulkanKHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR}
 
 instance ToCStruct SwapchainImageVulkanKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageVulkanKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -735,7 +735,7 @@ deriving instance Generic (GraphicsRequirementsVulkanKHR)
 deriving instance Show GraphicsRequirementsVulkanKHR
 
 instance ToCStruct GraphicsRequirementsVulkanKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsVulkanKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

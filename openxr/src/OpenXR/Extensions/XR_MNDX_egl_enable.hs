@@ -43,7 +43,7 @@ module OpenXR.Extensions.XR_MNDX_egl_enable  ( GraphicsBindingEGLMNDX(..)
                                              , EGLContext
                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -136,7 +136,7 @@ deriving instance Generic (GraphicsBindingEGLMNDX)
 deriving instance Show GraphicsBindingEGLMNDX
 
 instance ToCStruct GraphicsBindingEGLMNDX where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingEGLMNDX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_EGL_MNDX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

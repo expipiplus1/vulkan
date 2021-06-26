@@ -20,7 +20,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -668,7 +668,7 @@ deriving instance Generic (View)
 deriving instance Show View
 
 instance ToCStruct View where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p View{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -753,7 +753,7 @@ deriving instance Generic (ViewLocateInfo)
 deriving instance Show ViewLocateInfo
 
 instance ToCStruct ViewLocateInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewLocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_LOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -823,7 +823,7 @@ deriving instance Generic (ViewState)
 deriving instance Show ViewState
 
 instance ToCStruct ViewState where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewState{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_STATE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -879,7 +879,7 @@ deriving instance Generic (FrameBeginInfo)
 deriving instance Show FrameBeginInfo
 
 instance ToCStruct FrameBeginInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameBeginInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_BEGIN_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -983,7 +983,7 @@ instance Extensible FrameEndInfo where
     | otherwise = Nothing
 
 instance (Extendss FrameEndInfo es, PokeChain es) => ToCStruct (FrameEndInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameEndInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_END_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -1001,7 +1001,7 @@ instance (Extendss FrameEndInfo es, PokeChain es) => ToCStruct (FrameEndInfo es)
     layers'' <- if Data.Vector.null (layers)
       then pure nullPtr
       else do
-        pLayers <- ContT $ allocaBytesAligned @(Ptr _) (((Data.Vector.length (layers))) * 8) 8
+        pLayers <- ContT $ allocaBytes @(Ptr _) (((Data.Vector.length (layers))) * 8)
         Data.Vector.imapM_ (\i e -> do
           layers' <- ContT $ withSomeChild (e)
           lift $ poke (pLayers `plusPtr` (8 * (i)) :: Ptr (Ptr _)) layers') ((layers))
@@ -1066,7 +1066,7 @@ deriving instance Generic (FrameWaitInfo)
 deriving instance Show FrameWaitInfo
 
 instance ToCStruct FrameWaitInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameWaitInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_WAIT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1168,7 +1168,7 @@ instance Extensible FrameState where
     | otherwise = Nothing
 
 instance (Extendss FrameState es, PokeChain es) => ToCStruct (FrameState es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameState{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_STATE)
     next'' <- fmap castPtr . ContT $ withChain (next)

@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_composition_layer_cylinder  ( CompositionLayerCy
                                                             , pattern KHR_COMPOSITION_LAYER_CYLINDER_EXTENSION_NAME
                                                             ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.Coerce (coerce)
@@ -158,7 +158,7 @@ instance IsCompositionLayer CompositionLayerCylinderKHR where
   toCompositionLayerBaseHeader CompositionLayerCylinderKHR{..} = CompositionLayerBaseHeader{type' = TYPE_COMPOSITION_LAYER_CYLINDER_KHR, next = (), ..}
 
 instance ToCStruct CompositionLayerCylinderKHR where
-  withCStruct x f = allocaBytesAligned 112 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 112 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerCylinderKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_CYLINDER_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

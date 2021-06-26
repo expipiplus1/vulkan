@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_EPIC_view_configuration_fov  ( ViewConfigurationView
                                                          , pattern EPIC_VIEW_CONFIGURATION_FOV_EXTENSION_NAME
                                                          ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -92,7 +92,7 @@ deriving instance Generic (ViewConfigurationViewFovEPIC)
 deriving instance Show ViewConfigurationViewFovEPIC
 
 instance ToCStruct ViewConfigurationViewFovEPIC where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewConfigurationViewFovEPIC{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_CONFIGURATION_VIEW_FOV_EPIC)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

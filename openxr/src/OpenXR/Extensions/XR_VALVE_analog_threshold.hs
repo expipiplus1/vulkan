@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_VALVE_analog_threshold  ( InteractionProfileAnalogTh
                                                     , pattern VALVE_ANALOG_THRESHOLD_EXTENSION_NAME
                                                     ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -168,7 +168,7 @@ deriving instance Generic (InteractionProfileAnalogThresholdVALVE)
 deriving instance Show InteractionProfileAnalogThresholdVALVE
 
 instance ToCStruct InteractionProfileAnalogThresholdVALVE where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InteractionProfileAnalogThresholdVALVE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

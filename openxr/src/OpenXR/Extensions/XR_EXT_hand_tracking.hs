@@ -99,7 +99,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -440,7 +440,7 @@ deriving instance Generic (SystemHandTrackingPropertiesEXT)
 deriving instance Show SystemHandTrackingPropertiesEXT
 
 instance ToCStruct SystemHandTrackingPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemHandTrackingPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_HAND_TRACKING_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -526,7 +526,7 @@ instance Extensible HandTrackerCreateInfoEXT where
     | otherwise = Nothing
 
 instance (Extendss HandTrackerCreateInfoEXT es, PokeChain es) => ToCStruct (HandTrackerCreateInfoEXT es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandTrackerCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_TRACKER_CREATE_INFO_EXT)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -600,7 +600,7 @@ deriving instance Generic (HandJointsLocateInfoEXT)
 deriving instance Show HandJointsLocateInfoEXT
 
 instance ToCStruct HandJointsLocateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandJointsLocateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_JOINTS_LOCATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -689,7 +689,7 @@ deriving instance Generic (HandJointLocationEXT)
 deriving instance Show HandJointLocationEXT
 
 instance ToCStruct HandJointLocationEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandJointLocationEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr SpaceLocationFlags)) (locationFlags)
     poke ((p `plusPtr` 8 :: Ptr Posef)) (pose)
@@ -772,7 +772,7 @@ deriving instance Generic (HandJointVelocityEXT)
 deriving instance Show HandJointVelocityEXT
 
 instance ToCStruct HandJointVelocityEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandJointVelocityEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr SpaceVelocityFlags)) (velocityFlags)
     poke ((p `plusPtr` 8 :: Ptr Vector3f)) (linearVelocity)
@@ -908,7 +908,7 @@ instance Extensible HandJointLocationsEXT where
     | otherwise = Nothing
 
 instance (Extendss HandJointLocationsEXT es, PokeChain es) => ToCStruct (HandJointLocationsEXT es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandJointLocationsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_JOINT_LOCATIONS_EXT)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -1033,7 +1033,7 @@ deriving instance Generic (HandJointVelocitiesEXT)
 deriving instance Show HandJointVelocitiesEXT
 
 instance ToCStruct HandJointVelocitiesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandJointVelocitiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_JOINT_VELOCITIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

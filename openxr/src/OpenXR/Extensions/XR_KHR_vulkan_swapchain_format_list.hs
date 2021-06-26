@@ -42,7 +42,7 @@ module OpenXR.Extensions.XR_KHR_vulkan_swapchain_format_list  ( VulkanSwapchainF
                                                               ) where
 
 import qualified OpenXR.VulkanTypes (Format)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -102,12 +102,12 @@ deriving instance Generic (VulkanSwapchainFormatListCreateInfoKHR)
 deriving instance Show VulkanSwapchainFormatListCreateInfoKHR
 
 instance ToCStruct VulkanSwapchainFormatListCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanSwapchainFormatListCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewFormats)) :: Word32))
-    pViewFormats' <- ContT $ allocaBytesAligned @OpenXR.VulkanTypes.Format ((Data.Vector.length (viewFormats)) * 4) 4
+    pViewFormats' <- ContT $ allocaBytes @OpenXR.VulkanTypes.Format ((Data.Vector.length (viewFormats)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pViewFormats' `plusPtr` (4 * (i)) :: Ptr OpenXR.VulkanTypes.Format) (e)) (viewFormats)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.Format))) (pViewFormats')
     lift $ f

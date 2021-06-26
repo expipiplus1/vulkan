@@ -51,7 +51,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -422,7 +422,7 @@ deriving instance Generic (SpatialAnchorCreateInfoMSFT)
 deriving instance Show SpatialAnchorCreateInfoMSFT
 
 instance ToCStruct SpatialAnchorCreateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpatialAnchorCreateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPATIAL_ANCHOR_CREATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -503,7 +503,7 @@ deriving instance Generic (SpatialAnchorSpaceCreateInfoMSFT)
 deriving instance Show SpatialAnchorSpaceCreateInfoMSFT
 
 instance ToCStruct SpatialAnchorSpaceCreateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpatialAnchorSpaceCreateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPATIAL_ANCHOR_SPACE_CREATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

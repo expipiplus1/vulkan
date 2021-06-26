@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump API version to v1.2.182
 
 ## [3.11.0.1] - 2021-06-26
 - Use allocaBytes over allocaBytesAligned where possible
