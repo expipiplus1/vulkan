@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_composition_layer_cube  ( CompositionLayerCubeKH
                                                         , pattern KHR_COMPOSITION_LAYER_CUBE_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -145,7 +145,7 @@ instance IsCompositionLayer CompositionLayerCubeKHR where
   toCompositionLayerBaseHeader CompositionLayerCubeKHR{..} = CompositionLayerBaseHeader{type' = TYPE_COMPOSITION_LAYER_CUBE_KHR, next = (), ..}
 
 instance ToCStruct CompositionLayerCubeKHR where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerCubeKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_CUBE_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

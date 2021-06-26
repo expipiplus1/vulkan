@@ -51,7 +51,7 @@ module OpenXR.Extensions.XR_KHR_D3D12_enable  ( getD3D12GraphicsRequirementsKHR
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -230,7 +230,7 @@ deriving instance Generic (GraphicsBindingD3D12KHR)
 deriving instance Show GraphicsBindingD3D12KHR
 
 instance ToCStruct GraphicsBindingD3D12KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingD3D12KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_D3D12_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -322,7 +322,7 @@ instance IsSwapchainImage SwapchainImageD3D12KHR where
   toSwapchainImageBaseHeader SwapchainImageD3D12KHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_D3D12_KHR}
 
 instance ToCStruct SwapchainImageD3D12KHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageD3D12KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_D3D12_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -402,7 +402,7 @@ deriving instance Generic (GraphicsRequirementsD3D12KHR)
 deriving instance Show GraphicsRequirementsD3D12KHR
 
 instance ToCStruct GraphicsRequirementsD3D12KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsD3D12KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_D3D12_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

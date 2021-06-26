@@ -48,7 +48,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -399,7 +399,7 @@ instance IsEventData EventDataDisplayRefreshRateChangedFB where
   toEventDataBaseHeader EventDataDisplayRefreshRateChangedFB{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB}
 
 instance ToCStruct EventDataDisplayRefreshRateChangedFB where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataDisplayRefreshRateChangedFB{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

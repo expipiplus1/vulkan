@@ -10,7 +10,7 @@ module OpenXR.Core10.Haptics  ( applyHapticFeedback
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -264,7 +264,7 @@ instance Inheritable HapticBaseHeader where
           Nothing
 
 instance ToCStruct HapticBaseHeader where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HapticBaseHeader{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -336,7 +336,7 @@ deriving instance Generic (HapticActionInfo)
 deriving instance Show HapticActionInfo
 
 instance ToCStruct HapticActionInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HapticActionInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAPTIC_ACTION_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

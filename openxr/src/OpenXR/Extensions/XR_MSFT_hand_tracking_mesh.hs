@@ -67,7 +67,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -399,7 +399,7 @@ deriving instance Generic (HandMeshSpaceCreateInfoMSFT)
 deriving instance Show HandMeshSpaceCreateInfoMSFT
 
 instance ToCStruct HandMeshSpaceCreateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshSpaceCreateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -492,7 +492,7 @@ deriving instance Generic (HandMeshUpdateInfoMSFT)
 deriving instance Show HandMeshUpdateInfoMSFT
 
 instance ToCStruct HandMeshUpdateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshUpdateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_MESH_UPDATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -609,7 +609,7 @@ deriving instance Generic (HandMeshMSFT)
 deriving instance Show HandMeshMSFT
 
 instance ToCStruct HandMeshMSFT where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_MESH_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -752,7 +752,7 @@ deriving instance Generic (HandMeshIndexBufferMSFT)
 deriving instance Show HandMeshIndexBufferMSFT
 
 instance ToCStruct HandMeshIndexBufferMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshIndexBufferMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (indexBufferKey)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (indexCapacityInput)
@@ -881,7 +881,7 @@ deriving instance Generic (HandMeshVertexBufferMSFT)
 deriving instance Show HandMeshVertexBufferMSFT
 
 instance ToCStruct HandMeshVertexBufferMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshVertexBufferMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Time)) (vertexUpdateTime)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (vertexCapacityInput)
@@ -944,7 +944,7 @@ deriving instance Generic (HandMeshVertexMSFT)
 deriving instance Show HandMeshVertexMSFT
 
 instance ToCStruct HandMeshVertexMSFT where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshVertexMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Vector3f)) (position)
     poke ((p `plusPtr` 12 :: Ptr Vector3f)) (normal)
@@ -1035,7 +1035,7 @@ deriving instance Generic (SystemHandTrackingMeshPropertiesMSFT)
 deriving instance Show SystemHandTrackingMeshPropertiesMSFT
 
 instance ToCStruct SystemHandTrackingMeshPropertiesMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemHandTrackingMeshPropertiesMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1106,7 +1106,7 @@ deriving instance Generic (HandPoseTypeInfoMSFT)
 deriving instance Show HandPoseTypeInfoMSFT
 
 instance ToCStruct HandPoseTypeInfoMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandPoseTypeInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_POSE_TYPE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

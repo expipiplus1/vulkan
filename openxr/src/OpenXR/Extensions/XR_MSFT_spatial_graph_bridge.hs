@@ -53,7 +53,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -240,7 +240,7 @@ deriving instance Generic (SpatialGraphNodeSpaceCreateInfoMSFT)
 deriving instance Show SpatialGraphNodeSpaceCreateInfoMSFT
 
 instance ToCStruct SpatialGraphNodeSpaceCreateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpatialGraphNodeSpaceCreateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

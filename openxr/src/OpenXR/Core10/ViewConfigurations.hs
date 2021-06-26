@@ -12,7 +12,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -452,7 +452,7 @@ instance Extensible ViewConfigurationView where
     | otherwise = Nothing
 
 instance (Extendss ViewConfigurationView es, PokeChain es) => ToCStruct (ViewConfigurationView es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewConfigurationView{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_CONFIGURATION_VIEW)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -533,7 +533,7 @@ deriving instance Generic (ViewConfigurationProperties)
 deriving instance Show ViewConfigurationProperties
 
 instance ToCStruct ViewConfigurationProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewConfigurationProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_CONFIGURATION_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

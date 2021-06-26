@@ -20,7 +20,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -615,7 +615,7 @@ deriving instance Generic (SystemGetInfo)
 deriving instance Show SystemGetInfo
 
 instance ToCStruct SystemGetInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemGetInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_GET_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -701,7 +701,7 @@ instance Extensible SystemProperties where
     | otherwise = Nothing
 
 instance (Extendss SystemProperties es, PokeChain es) => ToCStruct (SystemProperties es) where
-  withCStruct x f = allocaBytesAligned 304 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 304 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemProperties{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_PROPERTIES)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -776,7 +776,7 @@ deriving instance Generic (SystemGraphicsProperties)
 deriving instance Show SystemGraphicsProperties
 
 instance ToCStruct SystemGraphicsProperties where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemGraphicsProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (maxSwapchainImageHeight)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (maxSwapchainImageWidth)
@@ -839,7 +839,7 @@ deriving instance Generic (SystemTrackingProperties)
 deriving instance Show SystemTrackingProperties
 
 instance ToCStruct SystemTrackingProperties where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemTrackingProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Bool32)) (boolToBool32 (orientationTracking))
     poke ((p `plusPtr` 4 :: Ptr Bool32)) (boolToBool32 (positionTracking))
@@ -950,7 +950,7 @@ instance Extensible SessionCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss SessionCreateInfo es, PokeChain es) => ToCStruct (SessionCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_CREATE_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)

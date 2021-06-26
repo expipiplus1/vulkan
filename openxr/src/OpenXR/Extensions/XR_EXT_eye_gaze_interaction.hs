@@ -40,7 +40,7 @@ module OpenXR.Extensions.XR_EXT_eye_gaze_interaction  ( SystemEyeGazeInteraction
                                                       , pattern EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME
                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -99,7 +99,7 @@ deriving instance Generic (SystemEyeGazeInteractionPropertiesEXT)
 deriving instance Show SystemEyeGazeInteractionPropertiesEXT
 
 instance ToCStruct SystemEyeGazeInteractionPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemEyeGazeInteractionPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -158,7 +158,7 @@ deriving instance Generic (EyeGazeSampleTimeEXT)
 deriving instance Show EyeGazeSampleTimeEXT
 
 instance ToCStruct EyeGazeSampleTimeEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EyeGazeSampleTimeEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EYE_GAZE_SAMPLE_TIME_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

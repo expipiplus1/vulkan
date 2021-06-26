@@ -22,7 +22,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -727,7 +727,7 @@ deriving instance Generic (Vector3f)
 deriving instance Show Vector3f
 
 instance ToCStruct Vector3f where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Vector3f{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -788,7 +788,7 @@ deriving instance Generic (Quaternionf)
 deriving instance Show Quaternionf
 
 instance ToCStruct Quaternionf where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Quaternionf{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -874,7 +874,7 @@ deriving instance Generic (Posef)
 deriving instance Show Posef
 
 instance ToCStruct Posef where
-  withCStruct x f = allocaBytesAligned 28 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 28 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Posef{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Quaternionf)) (orientation)
     poke ((p `plusPtr` 16 :: Ptr Vector3f)) (position)
@@ -935,7 +935,7 @@ deriving instance Generic (ReferenceSpaceCreateInfo)
 deriving instance Show ReferenceSpaceCreateInfo
 
 instance ToCStruct ReferenceSpaceCreateInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ReferenceSpaceCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_REFERENCE_SPACE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1007,7 +1007,7 @@ deriving instance Generic (ActionSpaceCreateInfo)
 deriving instance Show ActionSpaceCreateInfo
 
 instance ToCStruct ActionSpaceCreateInfo where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionSpaceCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_SPACE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1098,7 +1098,7 @@ instance Extensible SpaceLocation where
     | otherwise = Nothing
 
 instance (Extendss SpaceLocation es, PokeChain es) => ToCStruct (SpaceLocation es) where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpaceLocation{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_LOCATION)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -1172,7 +1172,7 @@ deriving instance Generic (SpaceVelocity)
 deriving instance Show SpaceVelocity
 
 instance ToCStruct SpaceVelocity where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpaceVelocity{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_VELOCITY)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

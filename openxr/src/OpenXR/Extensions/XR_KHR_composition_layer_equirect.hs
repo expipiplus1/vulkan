@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_composition_layer_equirect  ( CompositionLayerEq
                                                             , pattern KHR_COMPOSITION_LAYER_EQUIRECT_EXTENSION_NAME
                                                             ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.Coerce (coerce)
@@ -158,7 +158,7 @@ instance IsCompositionLayer CompositionLayerEquirectKHR where
   toCompositionLayerBaseHeader CompositionLayerEquirectKHR{..} = CompositionLayerBaseHeader{type' = TYPE_COMPOSITION_LAYER_EQUIRECT_KHR, next = (), ..}
 
 instance ToCStruct CompositionLayerEquirectKHR where
-  withCStruct x f = allocaBytesAligned 120 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 120 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerEquirectKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_EQUIRECT_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
