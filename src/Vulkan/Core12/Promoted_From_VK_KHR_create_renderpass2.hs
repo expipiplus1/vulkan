@@ -20,7 +20,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -868,7 +868,7 @@ instance Extensible AttachmentDescription2 where
     | otherwise = Nothing
 
 instance (Extendss AttachmentDescription2 es, PokeChain es) => ToCStruct (AttachmentDescription2 es) where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentDescription2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1064,7 +1064,7 @@ instance Extensible AttachmentReference2 where
     | otherwise = Nothing
 
 instance (Extendss AttachmentReference2 es, PokeChain es) => ToCStruct (AttachmentReference2 es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentReference2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1375,7 +1375,7 @@ instance Extensible SubpassDescription2 where
     | otherwise = Nothing
 
 instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDescription2 es) where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassDescription2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1384,7 +1384,7 @@ instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDe
     lift $ poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (pipelineBindPoint)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (viewMask)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (inputAttachments)) :: Word32))
-    pPInputAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (inputAttachments)) * 32) 8
+    pPInputAttachments' <- ContT $ allocaBytes @(AttachmentReference2 _) ((Data.Vector.length (inputAttachments)) * 32)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPInputAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (inputAttachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr (AttachmentReference2 _)))) (pPInputAttachments')
     let pColorAttachmentsLength = Data.Vector.length $ (colorAttachments)
@@ -1392,13 +1392,13 @@ instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDe
     lift $ unless (fromIntegral pResolveAttachmentsLength == pColorAttachmentsLength || pResolveAttachmentsLength == 0) $
       throwIO $ IOError Nothing InvalidArgument "" "pResolveAttachments and pColorAttachments must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral pColorAttachmentsLength :: Word32))
-    pPColorAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (colorAttachments)) * 32) 8
+    pPColorAttachments' <- ContT $ allocaBytes @(AttachmentReference2 _) ((Data.Vector.length (colorAttachments)) * 32)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPColorAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (colorAttachments)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 _)))) (pPColorAttachments')
     pResolveAttachments'' <- if Data.Vector.null (resolveAttachments)
       then pure nullPtr
       else do
-        pPResolveAttachments <- ContT $ allocaBytesAligned @(AttachmentReference2 _) (((Data.Vector.length (resolveAttachments))) * 32) 8
+        pPResolveAttachments <- ContT $ allocaBytes @(AttachmentReference2 _) (((Data.Vector.length (resolveAttachments))) * 32)
         Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPResolveAttachments `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) ((resolveAttachments))
         pure $ pPResolveAttachments
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 _)))) pResolveAttachments''
@@ -1407,7 +1407,7 @@ instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDe
       Just j -> ContT @_ @_ @(Ptr (AttachmentReference2 '[])) $ \cont -> withSomeCStruct @AttachmentReference2 (j) (cont . castPtr)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (AttachmentReference2 _)))) pDepthStencilAttachment''
     lift $ poke ((p `plusPtr` 72 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (preserveAttachments)) :: Word32))
-    pPPreserveAttachments' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (preserveAttachments)) * 4) 4
+    pPPreserveAttachments' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (preserveAttachments)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPreserveAttachments' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (preserveAttachments)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Word32))) (pPPreserveAttachments')
     lift $ f
@@ -1671,7 +1671,7 @@ instance Extensible SubpassDependency2 where
     | otherwise = Nothing
 
 instance (Extendss SubpassDependency2 es, PokeChain es) => ToCStruct (SubpassDependency2 es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassDependency2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1985,26 +1985,26 @@ instance Extensible RenderPassCreateInfo2 where
     | otherwise = Nothing
 
 instance (Extendss RenderPassCreateInfo2 es, PokeChain es) => ToCStruct (RenderPassCreateInfo2 es) where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassCreateInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr RenderPassCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
-    pPAttachments' <- ContT $ allocaBytesAligned @(AttachmentDescription2 _) ((Data.Vector.length (attachments)) * 56) 8
+    pPAttachments' <- ContT $ allocaBytes @(AttachmentDescription2 _) ((Data.Vector.length (attachments)) * 56)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPAttachments' `plusPtr` (56 * (i)) :: Ptr (AttachmentDescription2 _))) (e) . ($ ())) (attachments)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (AttachmentDescription2 _)))) (pPAttachments')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (subpasses)) :: Word32))
-    pPSubpasses' <- ContT $ allocaBytesAligned @(SubpassDescription2 _) ((Data.Vector.length (subpasses)) * 88) 8
+    pPSubpasses' <- ContT $ allocaBytes @(SubpassDescription2 _) ((Data.Vector.length (subpasses)) * 88)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubpasses' `plusPtr` (88 * (i)) :: Ptr (SubpassDescription2 _))) (e) . ($ ())) (subpasses)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 _)))) (pPSubpasses')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (dependencies)) :: Word32))
-    pPDependencies' <- ContT $ allocaBytesAligned @(SubpassDependency2 _) ((Data.Vector.length (dependencies)) * 48) 8
+    pPDependencies' <- ContT $ allocaBytes @(SubpassDependency2 _) ((Data.Vector.length (dependencies)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDependencies' `plusPtr` (48 * (i)) :: Ptr (SubpassDependency2 _))) (e) . ($ ())) (dependencies)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (SubpassDependency2 _)))) (pPDependencies')
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (correlatedViewMasks)) :: Word32))
-    pPCorrelatedViewMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (correlatedViewMasks)) * 4) 4
+    pPCorrelatedViewMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (correlatedViewMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCorrelatedViewMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (correlatedViewMasks)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr Word32))) (pPCorrelatedViewMasks')
     lift $ f
@@ -2072,7 +2072,7 @@ deriving instance Generic (SubpassBeginInfo)
 deriving instance Show SubpassBeginInfo
 
 instance ToCStruct SubpassBeginInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassBeginInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_BEGIN_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2122,7 +2122,7 @@ deriving instance Generic (SubpassEndInfo)
 deriving instance Show SubpassEndInfo
 
 instance ToCStruct SubpassEndInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassEndInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_END_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

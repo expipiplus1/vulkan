@@ -175,7 +175,7 @@ module Vulkan.Extensions.VK_EXT_buffer_device_address  ( pattern STRUCTURE_TYPE_
                                                        , pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
                                                        ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -293,7 +293,7 @@ deriving instance Generic (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
 deriving instance Show PhysicalDeviceBufferDeviceAddressFeaturesEXT
 
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceBufferDeviceAddressFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -366,7 +366,7 @@ deriving instance Generic (BufferDeviceAddressCreateInfoEXT)
 deriving instance Show BufferDeviceAddressCreateInfoEXT
 
 instance ToCStruct BufferDeviceAddressCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferDeviceAddressCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

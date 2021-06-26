@@ -8,7 +8,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset  ( resetQueryPool
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -157,7 +157,7 @@ deriving instance Generic (PhysicalDeviceHostQueryResetFeatures)
 deriving instance Show PhysicalDeviceHostQueryResetFeatures
 
 instance ToCStruct PhysicalDeviceHostQueryResetFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceHostQueryResetFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

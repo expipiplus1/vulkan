@@ -127,7 +127,7 @@ module Vulkan.Extensions.VK_EXT_extended_dynamic_state2  ( cmdSetPatchControlPoi
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -616,7 +616,7 @@ deriving instance Generic (PhysicalDeviceExtendedDynamicState2FeaturesEXT)
 deriving instance Show PhysicalDeviceExtendedDynamicState2FeaturesEXT
 
 instance ToCStruct PhysicalDeviceExtendedDynamicState2FeaturesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExtendedDynamicState2FeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

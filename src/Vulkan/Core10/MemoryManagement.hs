@@ -11,7 +11,7 @@ module Vulkan.Core10.MemoryManagement  ( getBufferMemoryRequirements
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -560,7 +560,7 @@ deriving instance Generic (MemoryRequirements)
 deriving instance Show MemoryRequirements
 
 instance ToCStruct MemoryRequirements where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryRequirements{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (alignment)

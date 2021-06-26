@@ -99,7 +99,7 @@ module Vulkan.Extensions.VK_EXT_memory_priority  ( PhysicalDeviceMemoryPriorityF
                                                  , pattern EXT_MEMORY_PRIORITY_EXTENSION_NAME
                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.Coerce (coerce)
@@ -163,7 +163,7 @@ deriving instance Generic (PhysicalDeviceMemoryPriorityFeaturesEXT)
 deriving instance Show PhysicalDeviceMemoryPriorityFeaturesEXT
 
 instance ToCStruct PhysicalDeviceMemoryPriorityFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryPriorityFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -225,7 +225,7 @@ deriving instance Generic (MemoryPriorityAllocateInfoEXT)
 deriving instance Show MemoryPriorityAllocateInfoEXT
 
 instance ToCStruct MemoryPriorityAllocateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryPriorityAllocateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

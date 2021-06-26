@@ -107,7 +107,7 @@ module Vulkan.Extensions.VK_EXT_shader_atomic_float  ( PhysicalDeviceShaderAtomi
                                                      , pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -211,7 +211,7 @@ deriving instance Generic (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 deriving instance Show PhysicalDeviceShaderAtomicFloatFeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderAtomicFloatFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderAtomicFloatFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

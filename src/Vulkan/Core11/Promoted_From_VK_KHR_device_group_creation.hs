@@ -15,7 +15,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -197,7 +197,7 @@ deriving instance Generic (PhysicalDeviceGroupProperties)
 deriving instance Show PhysicalDeviceGroupProperties
 
 instance ToCStruct PhysicalDeviceGroupProperties where
-  withCStruct x f = allocaBytesAligned 288 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 288 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceGroupProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -296,12 +296,12 @@ deriving instance Generic (DeviceGroupDeviceCreateInfo)
 deriving instance Show DeviceGroupDeviceCreateInfo
 
 instance ToCStruct DeviceGroupDeviceCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupDeviceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (physicalDevices)) :: Word32))
-    pPPhysicalDevices' <- ContT $ allocaBytesAligned @(Ptr PhysicalDevice_T) ((Data.Vector.length (physicalDevices)) * 8) 8
+    pPPhysicalDevices' <- ContT $ allocaBytes @(Ptr PhysicalDevice_T) ((Data.Vector.length (physicalDevices)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPhysicalDevices' `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (physicalDevices)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (Ptr PhysicalDevice_T)))) (pPPhysicalDevices')
     lift $ f

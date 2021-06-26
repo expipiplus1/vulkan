@@ -10,7 +10,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -277,7 +277,7 @@ deriving instance Generic (ExtensionProperties)
 deriving instance Show ExtensionProperties
 
 instance ToCStruct ExtensionProperties where
-  withCStruct x f = allocaBytesAligned 260 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 260 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExtensionProperties{..} f = do
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (extensionName)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (specVersion)

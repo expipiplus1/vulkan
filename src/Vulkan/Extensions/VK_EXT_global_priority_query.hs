@@ -128,7 +128,7 @@ module Vulkan.Extensions.VK_EXT_global_priority_query  ( PhysicalDeviceGlobalPri
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -205,7 +205,7 @@ deriving instance Generic (PhysicalDeviceGlobalPriorityQueryFeaturesEXT)
 deriving instance Show PhysicalDeviceGlobalPriorityQueryFeaturesEXT
 
 instance ToCStruct PhysicalDeviceGlobalPriorityQueryFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceGlobalPriorityQueryFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -291,7 +291,7 @@ deriving instance Generic (QueueFamilyGlobalPriorityPropertiesEXT)
 deriving instance Show QueueFamilyGlobalPriorityPropertiesEXT
 
 instance ToCStruct QueueFamilyGlobalPriorityPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyGlobalPriorityPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

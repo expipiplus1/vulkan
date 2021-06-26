@@ -187,7 +187,7 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -405,7 +405,7 @@ deriving instance Generic (SampleLocationEXT)
 deriving instance Show SampleLocationEXT
 
 instance ToCStruct SampleLocationEXT where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SampleLocationEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -505,14 +505,14 @@ deriving instance Generic (SampleLocationsInfoEXT)
 deriving instance Show SampleLocationsInfoEXT
 
 instance ToCStruct SampleLocationsInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SampleLocationsInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlagBits)) (sampleLocationsPerPixel)
     lift $ poke ((p `plusPtr` 20 :: Ptr Extent2D)) (sampleLocationGridSize)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
-    pPSampleLocations' <- ContT $ allocaBytesAligned @SampleLocationEXT ((Data.Vector.length (sampleLocations)) * 8) 4
+    pPSampleLocations' <- ContT $ allocaBytes @SampleLocationEXT ((Data.Vector.length (sampleLocations)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e)) (sampleLocations)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SampleLocationEXT))) (pPSampleLocations')
     lift $ f
@@ -584,7 +584,7 @@ deriving instance Generic (AttachmentSampleLocationsEXT)
 deriving instance Show AttachmentSampleLocationsEXT
 
 instance ToCStruct AttachmentSampleLocationsEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentSampleLocationsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (attachmentIndex)
     ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr SampleLocationsInfoEXT)) (sampleLocationsInfo) . ($ ())
@@ -655,7 +655,7 @@ deriving instance Generic (SubpassSampleLocationsEXT)
 deriving instance Show SubpassSampleLocationsEXT
 
 instance ToCStruct SubpassSampleLocationsEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassSampleLocationsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (subpassIndex)
     ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr SampleLocationsInfoEXT)) (sampleLocationsInfo) . ($ ())
@@ -744,16 +744,16 @@ deriving instance Generic (RenderPassSampleLocationsBeginInfoEXT)
 deriving instance Show RenderPassSampleLocationsBeginInfoEXT
 
 instance ToCStruct RenderPassSampleLocationsBeginInfoEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassSampleLocationsBeginInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachmentInitialSampleLocations)) :: Word32))
-    pPAttachmentInitialSampleLocations' <- ContT $ allocaBytesAligned @AttachmentSampleLocationsEXT ((Data.Vector.length (attachmentInitialSampleLocations)) * 48) 8
+    pPAttachmentInitialSampleLocations' <- ContT $ allocaBytes @AttachmentSampleLocationsEXT ((Data.Vector.length (attachmentInitialSampleLocations)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachmentInitialSampleLocations' `plusPtr` (48 * (i)) :: Ptr AttachmentSampleLocationsEXT) (e) . ($ ())) (attachmentInitialSampleLocations)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AttachmentSampleLocationsEXT))) (pPAttachmentInitialSampleLocations')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (postSubpassSampleLocations)) :: Word32))
-    pPPostSubpassSampleLocations' <- ContT $ allocaBytesAligned @SubpassSampleLocationsEXT ((Data.Vector.length (postSubpassSampleLocations)) * 48) 8
+    pPPostSubpassSampleLocations' <- ContT $ allocaBytes @SubpassSampleLocationsEXT ((Data.Vector.length (postSubpassSampleLocations)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPostSubpassSampleLocations' `plusPtr` (48 * (i)) :: Ptr SubpassSampleLocationsEXT) (e) . ($ ())) (postSubpassSampleLocations)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SubpassSampleLocationsEXT))) (pPPostSubpassSampleLocations')
     lift $ f
@@ -814,7 +814,7 @@ deriving instance Generic (PipelineSampleLocationsStateCreateInfoEXT)
 deriving instance Show PipelineSampleLocationsStateCreateInfoEXT
 
 instance ToCStruct PipelineSampleLocationsStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineSampleLocationsStateCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -896,7 +896,7 @@ deriving instance Generic (PhysicalDeviceSampleLocationsPropertiesEXT)
 deriving instance Show PhysicalDeviceSampleLocationsPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSampleLocationsPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -974,7 +974,7 @@ deriving instance Generic (MultisamplePropertiesEXT)
 deriving instance Show MultisamplePropertiesEXT
 
 instance ToCStruct MultisamplePropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MultisamplePropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -118,7 +118,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -320,7 +320,7 @@ deriving instance Generic (QueueFamilyCheckpointPropertiesNV)
 deriving instance Show QueueFamilyCheckpointPropertiesNV
 
 instance ToCStruct QueueFamilyCheckpointPropertiesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyCheckpointPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -382,7 +382,7 @@ deriving instance Generic (CheckpointDataNV)
 deriving instance Show CheckpointDataNV
 
 instance ToCStruct CheckpointDataNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CheckpointDataNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CHECKPOINT_DATA_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

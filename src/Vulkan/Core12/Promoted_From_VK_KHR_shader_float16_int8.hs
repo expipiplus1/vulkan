@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8  ( PhysicalDeviceS
                                                                , StructureType(..)
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -80,7 +80,7 @@ deriving instance Generic (PhysicalDeviceShaderFloat16Int8Features)
 deriving instance Show PhysicalDeviceShaderFloat16Int8Features
 
 instance ToCStruct PhysicalDeviceShaderFloat16Int8Features where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderFloat16Int8Features{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

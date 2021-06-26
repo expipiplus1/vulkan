@@ -6,7 +6,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore  ( ExportSemaphoreC
                                                               , SemaphoreImportFlags
                                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -65,7 +65,7 @@ deriving instance Generic (ExportSemaphoreCreateInfo)
 deriving instance Show ExportSemaphoreCreateInfo
 
 instance ToCStruct ExportSemaphoreCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportSemaphoreCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

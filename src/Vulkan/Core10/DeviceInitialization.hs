@@ -68,7 +68,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -1154,7 +1154,7 @@ deriving instance Generic (PhysicalDeviceProperties)
 deriving instance Show PhysicalDeviceProperties
 
 instance ToCStruct PhysicalDeviceProperties where
-  withCStruct x f = allocaBytesAligned 824 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 824 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (apiVersion)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (driverVersion)
@@ -1329,7 +1329,7 @@ deriving instance Generic (ApplicationInfo)
 deriving instance Show ApplicationInfo
 
 instance ToCStruct ApplicationInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ApplicationInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_APPLICATION_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1489,7 +1489,7 @@ instance Extensible InstanceCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1500,13 +1500,13 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
       Just j -> ContT $ withCStruct (j)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ApplicationInfo))) pApplicationInfo''
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledLayerNames)) :: Word32))
-    pPpEnabledLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledLayerNames)) * 8) 8
+    pPpEnabledLayerNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledLayerNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       ppEnabledLayerNames'' <- ContT $ useAsCString (e)
       lift $ poke (pPpEnabledLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledLayerNames'') (enabledLayerNames)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledLayerNames')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledExtensionNames)) :: Word32))
-    pPpEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8) 8
+    pPpEnabledExtensionNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       ppEnabledExtensionNames'' <- ContT $ useAsCString (e)
       lift $ poke (pPpEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledExtensionNames'') (enabledExtensionNames)
@@ -1646,7 +1646,7 @@ deriving instance Generic (QueueFamilyProperties)
 deriving instance Show QueueFamilyProperties
 
 instance ToCStruct QueueFamilyProperties where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr QueueFlags)) (queueFlags)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (queueCount)
@@ -1971,7 +1971,7 @@ deriving instance Generic (PhysicalDeviceMemoryProperties)
 deriving instance Show PhysicalDeviceMemoryProperties
 
 instance ToCStruct PhysicalDeviceMemoryProperties where
-  withCStruct x f = allocaBytesAligned 520 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 520 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeCount)
     unless ((Data.Vector.length $ (memoryTypes)) <= MAX_MEMORY_TYPES) $
@@ -2035,7 +2035,7 @@ deriving instance Generic (MemoryType)
 deriving instance Show MemoryType
 
 instance ToCStruct MemoryType where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryType{..} f = do
     poke ((p `plusPtr` 0 :: Ptr MemoryPropertyFlags)) (propertyFlags)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (heapIndex)
@@ -2087,7 +2087,7 @@ deriving instance Generic (MemoryHeap)
 deriving instance Show MemoryHeap
 
 instance ToCStruct MemoryHeap where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryHeap{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
     poke ((p `plusPtr` 8 :: Ptr MemoryHeapFlags)) (flags)
@@ -2161,7 +2161,7 @@ deriving instance Generic (FormatProperties)
 deriving instance Show FormatProperties
 
 instance ToCStruct FormatProperties where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr FormatFeatureFlags)) (linearTilingFeatures)
     poke ((p `plusPtr` 4 :: Ptr FormatFeatureFlags)) (optimalTilingFeatures)
@@ -2311,7 +2311,7 @@ deriving instance Generic (ImageFormatProperties)
 deriving instance Show ImageFormatProperties
 
 instance ToCStruct ImageFormatProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageFormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Extent3D)) (maxExtent)
     poke ((p `plusPtr` 12 :: Ptr Word32)) (maxMipLevels)
@@ -3262,7 +3262,7 @@ deriving instance Generic (PhysicalDeviceFeatures)
 deriving instance Show PhysicalDeviceFeatures
 
 instance ToCStruct PhysicalDeviceFeatures where
-  withCStruct x f = allocaBytesAligned 220 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 220 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Bool32)) (boolToBool32 (robustBufferAccess))
     poke ((p `plusPtr` 4 :: Ptr Bool32)) (boolToBool32 (fullDrawIndexUint32))
@@ -3574,7 +3574,7 @@ deriving instance Generic (PhysicalDeviceSparseProperties)
 deriving instance Show PhysicalDeviceSparseProperties
 
 instance ToCStruct PhysicalDeviceSparseProperties where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSparseProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Bool32)) (boolToBool32 (residencyStandard2DBlockShape))
     poke ((p `plusPtr` 4 :: Ptr Bool32)) (boolToBool32 (residencyStandard2DMultisampleBlockShape))
@@ -4497,7 +4497,7 @@ deriving instance Generic (PhysicalDeviceLimits)
 deriving instance Show PhysicalDeviceLimits
 
 instance ToCStruct PhysicalDeviceLimits where
-  withCStruct x f = allocaBytesAligned 504 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 504 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceLimits{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (maxImageDimension1D)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (maxImageDimension2D)

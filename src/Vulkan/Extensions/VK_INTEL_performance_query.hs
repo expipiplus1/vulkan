@@ -367,7 +367,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1057,7 +1057,7 @@ deriving instance Generic (PerformanceValueINTEL)
 deriving instance Show PerformanceValueINTEL
 
 instance ToCStruct PerformanceValueINTEL where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceValueINTEL{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr PerformanceValueTypeINTEL)) (type')
     ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr PerformanceValueDataINTEL)) (data') . ($ ())
@@ -1101,7 +1101,7 @@ deriving instance Generic (InitializePerformanceApiInfoINTEL)
 deriving instance Show InitializePerformanceApiInfoINTEL
 
 instance ToCStruct InitializePerformanceApiInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InitializePerformanceApiInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1164,7 +1164,7 @@ deriving instance Generic (QueryPoolPerformanceQueryCreateInfoINTEL)
 deriving instance Show QueryPoolPerformanceQueryCreateInfoINTEL
 
 instance ToCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolPerformanceQueryCreateInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1214,7 +1214,7 @@ deriving instance Generic (PerformanceMarkerInfoINTEL)
 deriving instance Show PerformanceMarkerInfoINTEL
 
 instance ToCStruct PerformanceMarkerInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceMarkerInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1279,7 +1279,7 @@ deriving instance Generic (PerformanceStreamMarkerInfoINTEL)
 deriving instance Show PerformanceStreamMarkerInfoINTEL
 
 instance ToCStruct PerformanceStreamMarkerInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceStreamMarkerInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1337,7 +1337,7 @@ deriving instance Generic (PerformanceOverrideInfoINTEL)
 deriving instance Show PerformanceOverrideInfoINTEL
 
 instance ToCStruct PerformanceOverrideInfoINTEL where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceOverrideInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1400,7 +1400,7 @@ deriving instance Generic (PerformanceConfigurationAcquireInfoINTEL)
 deriving instance Show PerformanceConfigurationAcquireInfoINTEL
 
 instance ToCStruct PerformanceConfigurationAcquireInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceConfigurationAcquireInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1440,7 +1440,7 @@ data PerformanceValueDataINTEL
   deriving (Show)
 
 instance ToCStruct PerformanceValueDataINTEL where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr PerformanceValueDataINTEL -> PerformanceValueDataINTEL -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Value32 v -> lift $ poke (castPtr @_ @Word32 p) (v)

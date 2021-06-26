@@ -255,7 +255,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -472,14 +472,14 @@ cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets si
   let pSizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral pSizesLength == pBuffersLength || pSizesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pSizes and pBuffers must have the same length" Nothing Nothing
-  pPBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (buffers)) * 8) 8
+  pPBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (buffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)
-  pPOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (offsets)) * 8) 8
+  pPOffsets <- ContT $ allocaBytes @DeviceSize ((Data.Vector.length (offsets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (offsets)
   pSizes <- if Data.Vector.null (sizes)
     then pure nullPtr
     else do
-      pPSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      pPSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pPSizes
   lift $ traceAroundEvent "vkCmdBindTransformFeedbackBuffersEXT" (vkCmdBindTransformFeedbackBuffersEXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes)
@@ -642,12 +642,12 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
   let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pCounterBufferOffsets and pCounterBuffers must have the same length" Nothing Nothing
-  pPCounterBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (counterBuffers)) * 8) 8
+  pPCounterBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (counterBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (counterBuffers)
   pCounterBufferOffsets <- if Data.Vector.null (counterBufferOffsets)
     then pure nullPtr
     else do
-      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
+      pPCounterBufferOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
   lift $ traceAroundEvent "vkCmdBeginTransformFeedbackEXT" (vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
@@ -800,12 +800,12 @@ cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers count
   let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pCounterBufferOffsets and pCounterBuffers must have the same length" Nothing Nothing
-  pPCounterBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (counterBuffers)) * 8) 8
+  pPCounterBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (counterBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (counterBuffers)
   pCounterBufferOffsets <- if Data.Vector.null (counterBufferOffsets)
     then pure nullPtr
     else do
-      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
+      pPCounterBufferOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
   lift $ traceAroundEvent "vkCmdEndTransformFeedbackEXT" (vkCmdEndTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
@@ -1849,7 +1849,7 @@ deriving instance Generic (PhysicalDeviceTransformFeedbackFeaturesEXT)
 deriving instance Show PhysicalDeviceTransformFeedbackFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTransformFeedbackFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1971,7 +1971,7 @@ deriving instance Generic (PhysicalDeviceTransformFeedbackPropertiesEXT)
 deriving instance Show PhysicalDeviceTransformFeedbackPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTransformFeedbackPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2077,7 +2077,7 @@ deriving instance Generic (PipelineRasterizationStateStreamCreateInfoEXT)
 deriving instance Show PipelineRasterizationStateStreamCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationStateStreamCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationStateStreamCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

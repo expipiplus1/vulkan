@@ -136,7 +136,7 @@ module Vulkan.Extensions.VK_EXT_filter_cubic  ( pattern FILTER_CUBIC_EXT
                                               , pattern EXT_FILTER_CUBIC_EXTENSION_NAME
                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -195,7 +195,7 @@ deriving instance Generic (PhysicalDeviceImageViewImageFormatInfoEXT)
 deriving instance Show PhysicalDeviceImageViewImageFormatInfoEXT
 
 instance ToCStruct PhysicalDeviceImageViewImageFormatInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImageViewImageFormatInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -268,7 +268,7 @@ deriving instance Generic (FilterCubicImageViewImageFormatPropertiesEXT)
 deriving instance Show FilterCubicImageViewImageFormatPropertiesEXT
 
 instance ToCStruct FilterCubicImageViewImageFormatPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FilterCubicImageViewImageFormatPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

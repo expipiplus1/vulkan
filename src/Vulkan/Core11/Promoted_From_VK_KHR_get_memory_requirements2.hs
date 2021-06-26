@@ -16,7 +16,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -246,7 +246,7 @@ deriving instance Generic (BufferMemoryRequirementsInfo2)
 deriving instance Show BufferMemoryRequirementsInfo2
 
 instance ToCStruct BufferMemoryRequirementsInfo2 where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferMemoryRequirementsInfo2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -363,7 +363,7 @@ instance Extensible ImageMemoryRequirementsInfo2 where
     | otherwise = Nothing
 
 instance (Extendss ImageMemoryRequirementsInfo2 es, PokeChain es) => ToCStruct (ImageMemoryRequirementsInfo2 es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryRequirementsInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -416,7 +416,7 @@ deriving instance Generic (ImageSparseMemoryRequirementsInfo2)
 deriving instance Show ImageSparseMemoryRequirementsInfo2
 
 instance ToCStruct ImageSparseMemoryRequirementsInfo2 where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSparseMemoryRequirementsInfo2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -495,7 +495,7 @@ instance Extensible MemoryRequirements2 where
     | otherwise = Nothing
 
 instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryRequirements2 es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryRequirements2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -547,7 +547,7 @@ deriving instance Generic (SparseImageMemoryRequirements2)
 deriving instance Show SparseImageMemoryRequirements2
 
 instance ToCStruct SparseImageMemoryRequirements2 where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageMemoryRequirements2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -24,7 +24,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -669,7 +669,7 @@ deriving instance Generic (MemoryAllocateFlagsInfo)
 deriving instance Show MemoryAllocateFlagsInfo
 
 instance ToCStruct MemoryAllocateFlagsInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryAllocateFlagsInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -780,13 +780,13 @@ deriving instance Generic (DeviceGroupRenderPassBeginInfo)
 deriving instance Show DeviceGroupRenderPassBeginInfo
 
 instance ToCStruct DeviceGroupRenderPassBeginInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupRenderPassBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (deviceMask)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceRenderAreas)) :: Word32))
-    pPDeviceRenderAreas' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (deviceRenderAreas)) * 16) 4
+    pPDeviceRenderAreas' <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (deviceRenderAreas)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceRenderAreas' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (deviceRenderAreas)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPDeviceRenderAreas')
     lift $ f
@@ -846,7 +846,7 @@ deriving instance Generic (DeviceGroupCommandBufferBeginInfo)
 deriving instance Show DeviceGroupCommandBufferBeginInfo
 
 instance ToCStruct DeviceGroupCommandBufferBeginInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupCommandBufferBeginInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -954,20 +954,20 @@ deriving instance Generic (DeviceGroupSubmitInfo)
 deriving instance Show DeviceGroupSubmitInfo
 
 instance ToCStruct DeviceGroupSubmitInfo where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupSubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (waitSemaphoreDeviceIndices)) :: Word32))
-    pPWaitSemaphoreDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (waitSemaphoreDeviceIndices)) * 4) 4
+    pPWaitSemaphoreDeviceIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (waitSemaphoreDeviceIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (waitSemaphoreDeviceIndices)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPWaitSemaphoreDeviceIndices')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (commandBufferDeviceMasks)) :: Word32))
-    pPCommandBufferDeviceMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (commandBufferDeviceMasks)) * 4) 4
+    pPCommandBufferDeviceMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (commandBufferDeviceMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBufferDeviceMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (commandBufferDeviceMasks)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word32))) (pPCommandBufferDeviceMasks')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (signalSemaphoreDeviceIndices)) :: Word32))
-    pPSignalSemaphoreDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (signalSemaphoreDeviceIndices)) * 4) 4
+    pPSignalSemaphoreDeviceIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (signalSemaphoreDeviceIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (signalSemaphoreDeviceIndices)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr Word32))) (pPSignalSemaphoreDeviceIndices')
     lift $ f
@@ -1045,7 +1045,7 @@ deriving instance Generic (DeviceGroupBindSparseInfo)
 deriving instance Show DeviceGroupBindSparseInfo
 
 instance ToCStruct DeviceGroupBindSparseInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupBindSparseInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

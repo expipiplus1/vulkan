@@ -19,7 +19,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -583,7 +583,7 @@ instance Extensible QueryPoolCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss QueryPoolCreateInfo es, PokeChain es) => ToCStruct (QueryPoolCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

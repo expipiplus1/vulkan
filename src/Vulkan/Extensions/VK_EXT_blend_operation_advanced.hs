@@ -296,7 +296,7 @@ module Vulkan.Extensions.VK_EXT_blend_operation_advanced  ( PhysicalDeviceBlendO
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -373,7 +373,7 @@ deriving instance Generic (PhysicalDeviceBlendOperationAdvancedFeaturesEXT)
 deriving instance Show PhysicalDeviceBlendOperationAdvancedFeaturesEXT
 
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceBlendOperationAdvancedFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -467,7 +467,7 @@ deriving instance Generic (PhysicalDeviceBlendOperationAdvancedPropertiesEXT)
 deriving instance Show PhysicalDeviceBlendOperationAdvancedPropertiesEXT
 
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceBlendOperationAdvancedPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -579,7 +579,7 @@ deriving instance Generic (PipelineColorBlendAdvancedStateCreateInfoEXT)
 deriving instance Show PipelineColorBlendAdvancedStateCreateInfoEXT
 
 instance ToCStruct PipelineColorBlendAdvancedStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineColorBlendAdvancedStateCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

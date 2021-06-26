@@ -24,7 +24,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -778,7 +778,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceFeatures2 es, PokeChain es) => ToCStruct (PhysicalDeviceFeatures2 es) where
-  withCStruct x f = allocaBytesAligned 240 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 240 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFeatures2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -960,7 +960,7 @@ instance Extensible PhysicalDeviceProperties2 where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceProperties2 es, PokeChain es) => ToCStruct (PhysicalDeviceProperties2 es) where
-  withCStruct x f = allocaBytesAligned 840 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 840 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1038,7 +1038,7 @@ instance Extensible FormatProperties2 where
     | otherwise = Nothing
 
 instance (Extendss FormatProperties2 es, PokeChain es) => ToCStruct (FormatProperties2 es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FormatProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FORMAT_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1142,7 +1142,7 @@ instance Extensible ImageFormatProperties2 where
     | otherwise = Nothing
 
 instance (Extendss ImageFormatProperties2 es, PokeChain es) => ToCStruct (ImageFormatProperties2 es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageFormatProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1297,7 +1297,7 @@ instance Extensible PhysicalDeviceImageFormatInfo2 where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceImageFormatInfo2 es, PokeChain es) => ToCStruct (PhysicalDeviceImageFormatInfo2 es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImageFormatInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1395,7 +1395,7 @@ instance Extensible QueueFamilyProperties2 where
     | otherwise = Nothing
 
 instance (Extendss QueueFamilyProperties2 es, PokeChain es) => ToCStruct (QueueFamilyProperties2 es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1472,7 +1472,7 @@ instance Extensible PhysicalDeviceMemoryProperties2 where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceMemoryProperties2 es, PokeChain es) => ToCStruct (PhysicalDeviceMemoryProperties2 es) where
-  withCStruct x f = allocaBytesAligned 536 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 536 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1526,7 +1526,7 @@ deriving instance Generic (SparseImageFormatProperties2)
 deriving instance Show SparseImageFormatProperties2
 
 instance ToCStruct SparseImageFormatProperties2 where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageFormatProperties2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1622,7 +1622,7 @@ deriving instance Generic (PhysicalDeviceSparseImageFormatInfo2)
 deriving instance Show PhysicalDeviceSparseImageFormatInfo2
 
 instance ToCStruct PhysicalDeviceSparseImageFormatInfo2 where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSparseImageFormatInfo2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

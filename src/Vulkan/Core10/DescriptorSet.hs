@@ -36,7 +36,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -768,7 +768,7 @@ freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ d
   lift $ unless (vkFreeDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeDescriptorSets is null" Nothing Nothing
   let vkFreeDescriptorSets' = mkVkFreeDescriptorSets vkFreeDescriptorSetsPtr
-  pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
+  pPDescriptorSets <- ContT $ allocaBytes @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
   _ <- lift $ traceAroundEvent "vkFreeDescriptorSets" (vkFreeDescriptorSets' (deviceHandle (device)) (descriptorPool) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets))
   pure $ ()
@@ -863,9 +863,9 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
   lift $ unless (vkUpdateDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSets is null" Nothing Nothing
   let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets vkUpdateDescriptorSetsPtr
-  pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
+  pPDescriptorWrites <- ContT $ allocaBytes @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
-  pPDescriptorCopies <- ContT $ allocaBytesAligned @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56) 8
+  pPDescriptorCopies <- ContT $ allocaBytes @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorCopies `plusPtr` (56 * (i)) :: Ptr CopyDescriptorSet) (e)) (descriptorCopies)
   lift $ traceAroundEvent "vkUpdateDescriptorSets" (vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies))
   pure $ ()
@@ -949,7 +949,7 @@ deriving instance Generic (DescriptorBufferInfo)
 deriving instance Show DescriptorBufferInfo
 
 instance ToCStruct DescriptorBufferInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorBufferInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Buffer)) (buffer)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (offset)
@@ -1071,7 +1071,7 @@ deriving instance Generic (DescriptorImageInfo)
 deriving instance Show DescriptorImageInfo
 
 instance ToCStruct DescriptorImageInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorImageInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Sampler)) (sampler)
     poke ((p `plusPtr` 8 :: Ptr ImageView)) (imageView)
@@ -1608,7 +1608,7 @@ instance Extensible WriteDescriptorSet where
     | otherwise = Nothing
 
 instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescriptorSet es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSet{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1630,21 +1630,21 @@ instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescr
     pImageInfo'' <- if Data.Vector.null (imageInfo)
       then pure nullPtr
       else do
-        pPImageInfo <- ContT $ allocaBytesAligned @DescriptorImageInfo (((Data.Vector.length (imageInfo))) * 24) 8
+        pPImageInfo <- ContT $ allocaBytes @DescriptorImageInfo (((Data.Vector.length (imageInfo))) * 24)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPImageInfo `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e)) ((imageInfo))
         pure $ pPImageInfo
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo))) pImageInfo''
     pBufferInfo'' <- if Data.Vector.null (bufferInfo)
       then pure nullPtr
       else do
-        pPBufferInfo <- ContT $ allocaBytesAligned @DescriptorBufferInfo (((Data.Vector.length (bufferInfo))) * 24) 8
+        pPBufferInfo <- ContT $ allocaBytes @DescriptorBufferInfo (((Data.Vector.length (bufferInfo))) * 24)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferInfo `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e)) ((bufferInfo))
         pure $ pPBufferInfo
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo))) pBufferInfo''
     pTexelBufferView'' <- if Data.Vector.null (texelBufferView)
       then pure nullPtr
       else do
-        pPTexelBufferView <- ContT $ allocaBytesAligned @BufferView (((Data.Vector.length (texelBufferView))) * 8) 8
+        pPTexelBufferView <- ContT $ allocaBytes @BufferView (((Data.Vector.length (texelBufferView))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPTexelBufferView `plusPtr` (8 * (i)) :: Ptr BufferView) (e)) ((texelBufferView))
         pure $ pPTexelBufferView
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr BufferView))) pTexelBufferView''
@@ -1898,7 +1898,7 @@ deriving instance Generic (CopyDescriptorSet)
 deriving instance Show CopyDescriptorSet
 
 instance ToCStruct CopyDescriptorSet where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyDescriptorSet{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_DESCRIPTOR_SET)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2097,7 +2097,7 @@ deriving instance Generic (DescriptorSetLayoutBinding)
 deriving instance Show DescriptorSetLayoutBinding
 
 instance ToCStruct DescriptorSetLayoutBinding where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     lift $ poke ((p `plusPtr` 4 :: Ptr DescriptorType)) (descriptorType)
@@ -2113,7 +2113,7 @@ instance ToCStruct DescriptorSetLayoutBinding where
     pImmutableSamplers'' <- if Data.Vector.null (immutableSamplers)
       then pure nullPtr
       else do
-        pPImmutableSamplers <- ContT $ allocaBytesAligned @Sampler (((Data.Vector.length (immutableSamplers))) * 8) 8
+        pPImmutableSamplers <- ContT $ allocaBytes @Sampler (((Data.Vector.length (immutableSamplers))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPImmutableSamplers `plusPtr` (8 * (i)) :: Ptr Sampler) (e)) ((immutableSamplers))
         pure $ pPImmutableSamplers
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Sampler))) pImmutableSamplers''
@@ -2296,14 +2296,14 @@ instance Extensible DescriptorSetLayoutCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss DescriptorSetLayoutCreateInfo es, PokeChain es) => ToCStruct (DescriptorSetLayoutCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorSetLayoutCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bindings)) :: Word32))
-    pPBindings' <- ContT $ allocaBytesAligned @DescriptorSetLayoutBinding ((Data.Vector.length (bindings)) * 24) 8
+    pPBindings' <- ContT $ allocaBytes @DescriptorSetLayoutBinding ((Data.Vector.length (bindings)) * 24)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindings' `plusPtr` (24 * (i)) :: Ptr DescriptorSetLayoutBinding) (e) . ($ ())) (bindings)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayoutBinding))) (pPBindings')
     lift $ f
@@ -2380,7 +2380,7 @@ deriving instance Generic (DescriptorPoolSize)
 deriving instance Show DescriptorPoolSize
 
 instance ToCStruct DescriptorPoolSize where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorPoolSize{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DescriptorType)) (type')
     poke ((p `plusPtr` 4 :: Ptr Word32)) (descriptorCount)
@@ -2590,7 +2590,7 @@ instance Extensible DescriptorPoolCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (DescriptorPoolCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorPoolCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2598,7 +2598,7 @@ instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (Desc
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorPoolCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (maxSets)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (poolSizes)) :: Word32))
-    pPPoolSizes' <- ContT $ allocaBytesAligned @DescriptorPoolSize ((Data.Vector.length (poolSizes)) * 8) 4
+    pPPoolSizes' <- ContT $ allocaBytes @DescriptorPoolSize ((Data.Vector.length (poolSizes)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e)) (poolSizes)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
@@ -2716,14 +2716,14 @@ instance Extensible DescriptorSetAllocateInfo where
     | otherwise = Nothing
 
 instance (Extendss DescriptorSetAllocateInfo es, PokeChain es) => ToCStruct (DescriptorSetAllocateInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorPool)) (descriptorPool)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (setLayouts)) :: Word32))
-    pPSetLayouts' <- ContT $ allocaBytesAligned @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8) 8
+    pPSetLayouts' <- ContT $ allocaBytes @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSetLayouts' `plusPtr` (8 * (i)) :: Ptr DescriptorSetLayout) (e)) (setLayouts)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ f

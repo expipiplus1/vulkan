@@ -141,7 +141,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -418,7 +418,7 @@ deriving instance Generic (ImportFenceWin32HandleInfoKHR)
 deriving instance Show ImportFenceWin32HandleInfoKHR
 
 instance ToCStruct ImportFenceWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportFenceWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -534,7 +534,7 @@ deriving instance Generic (ExportFenceWin32HandleInfoKHR)
 deriving instance Show ExportFenceWin32HandleInfoKHR
 
 instance ToCStruct ExportFenceWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportFenceWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -649,7 +649,7 @@ deriving instance Generic (FenceGetWin32HandleInfoKHR)
 deriving instance Show FenceGetWin32HandleInfoKHR
 
 instance ToCStruct FenceGetWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FenceGetWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

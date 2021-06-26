@@ -9,7 +9,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_memory  ( ExternalMemoryImage
                                                            , pattern QUEUE_FAMILY_EXTERNAL
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -68,7 +68,7 @@ deriving instance Generic (ExternalMemoryImageCreateInfo)
 deriving instance Show ExternalMemoryImageCreateInfo
 
 instance ToCStruct ExternalMemoryImageCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryImageCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -132,7 +132,7 @@ deriving instance Generic (ExternalMemoryBufferCreateInfo)
 deriving instance Show ExternalMemoryBufferCreateInfo
 
 instance ToCStruct ExternalMemoryBufferCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryBufferCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -201,7 +201,7 @@ deriving instance Generic (ExportMemoryAllocateInfo)
 deriving instance Show ExportMemoryAllocateInfo
 
 instance ToCStruct ExportMemoryAllocateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportMemoryAllocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

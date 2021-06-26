@@ -152,7 +152,7 @@ module Vulkan.Extensions.VK_EXT_fragment_density_map2  ( PhysicalDeviceFragmentD
                                                        , pattern EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME
                                                        ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -217,7 +217,7 @@ deriving instance Generic (PhysicalDeviceFragmentDensityMap2FeaturesEXT)
 deriving instance Show PhysicalDeviceFragmentDensityMap2FeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMap2FeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentDensityMap2FeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -297,7 +297,7 @@ deriving instance Generic (PhysicalDeviceFragmentDensityMap2PropertiesEXT)
 deriving instance Show PhysicalDeviceFragmentDensityMap2PropertiesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMap2PropertiesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentDensityMap2PropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

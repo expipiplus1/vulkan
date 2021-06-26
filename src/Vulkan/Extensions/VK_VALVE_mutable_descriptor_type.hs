@@ -143,7 +143,7 @@ module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type  ( PhysicalDeviceMutab
                                                            , pattern VALVE_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -266,7 +266,7 @@ deriving instance Generic (PhysicalDeviceMutableDescriptorTypeFeaturesVALVE)
 deriving instance Show PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
 
 instance ToCStruct PhysicalDeviceMutableDescriptorTypeFeaturesVALVE where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMutableDescriptorTypeFeaturesVALVE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -360,10 +360,10 @@ deriving instance Generic (MutableDescriptorTypeListVALVE)
 deriving instance Show MutableDescriptorTypeListVALVE
 
 instance ToCStruct MutableDescriptorTypeListVALVE where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MutableDescriptorTypeListVALVE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorTypes)) :: Word32))
-    pPDescriptorTypes' <- ContT $ allocaBytesAligned @DescriptorType ((Data.Vector.length (descriptorTypes)) * 4) 4
+    pPDescriptorTypes' <- ContT $ allocaBytes @DescriptorType ((Data.Vector.length (descriptorTypes)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorTypes' `plusPtr` (4 * (i)) :: Ptr DescriptorType) (e)) (descriptorTypes)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr DescriptorType))) (pPDescriptorTypes')
     lift $ f
@@ -424,12 +424,12 @@ deriving instance Generic (MutableDescriptorTypeCreateInfoVALVE)
 deriving instance Show MutableDescriptorTypeCreateInfoVALVE
 
 instance ToCStruct MutableDescriptorTypeCreateInfoVALVE where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MutableDescriptorTypeCreateInfoVALVE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (mutableDescriptorTypeLists)) :: Word32))
-    pPMutableDescriptorTypeLists' <- ContT $ allocaBytesAligned @MutableDescriptorTypeListVALVE ((Data.Vector.length (mutableDescriptorTypeLists)) * 16) 8
+    pPMutableDescriptorTypeLists' <- ContT $ allocaBytes @MutableDescriptorTypeListVALVE ((Data.Vector.length (mutableDescriptorTypeLists)) * 16)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMutableDescriptorTypeLists' `plusPtr` (16 * (i)) :: Ptr MutableDescriptorTypeListVALVE) (e) . ($ ())) (mutableDescriptorTypeLists)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr MutableDescriptorTypeListVALVE))) (pPMutableDescriptorTypeLists')
     lift $ f

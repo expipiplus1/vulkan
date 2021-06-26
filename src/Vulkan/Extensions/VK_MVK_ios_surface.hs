@@ -126,7 +126,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -317,7 +317,7 @@ deriving instance Generic (IOSSurfaceCreateInfoMVK)
 deriving instance Show IOSSurfaceCreateInfoMVK
 
 instance ToCStruct IOSSurfaceCreateInfoMVK where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IOSSurfaceCreateInfoMVK{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

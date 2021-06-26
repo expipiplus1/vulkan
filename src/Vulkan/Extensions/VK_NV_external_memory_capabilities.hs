@@ -162,7 +162,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -368,7 +368,7 @@ deriving instance Generic (ExternalImageFormatPropertiesNV)
 deriving instance Show ExternalImageFormatPropertiesNV
 
 instance ToCStruct ExternalImageFormatPropertiesNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalImageFormatPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageFormatProperties)) (imageFormatProperties)
     poke ((p `plusPtr` 32 :: Ptr ExternalMemoryFeatureFlagsNV)) (externalMemoryFeatures)

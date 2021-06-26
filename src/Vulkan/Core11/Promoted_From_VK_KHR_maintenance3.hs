@@ -10,7 +10,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
@@ -176,7 +176,7 @@ deriving instance Generic (PhysicalDeviceMaintenance3Properties)
 deriving instance Show PhysicalDeviceMaintenance3Properties
 
 instance ToCStruct PhysicalDeviceMaintenance3Properties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMaintenance3Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -261,7 +261,7 @@ instance Extensible DescriptorSetLayoutSupport where
     | otherwise = Nothing
 
 instance (Extendss DescriptorSetLayoutSupport es, PokeChain es) => ToCStruct (DescriptorSetLayoutSupport es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutSupport{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

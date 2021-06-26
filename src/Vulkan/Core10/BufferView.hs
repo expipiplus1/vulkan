@@ -12,7 +12,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -369,7 +369,7 @@ deriving instance Generic (BufferViewCreateInfo)
 deriving instance Show BufferViewCreateInfo
 
 instance ToCStruct BufferViewCreateInfo where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferViewCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

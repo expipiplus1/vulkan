@@ -123,7 +123,7 @@ module Vulkan.Extensions.VK_EXT_color_write_enable  ( cmdSetColorWriteEnableEXT
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -254,7 +254,7 @@ cmdSetColorWriteEnableEXT commandBuffer colorWriteEnables = liftIO . evalContT $
   lift $ unless (vkCmdSetColorWriteEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetColorWriteEnableEXT is null" Nothing Nothing
   let vkCmdSetColorWriteEnableEXT' = mkVkCmdSetColorWriteEnableEXT vkCmdSetColorWriteEnableEXTPtr
-  pPColorWriteEnables <- ContT $ allocaBytesAligned @Bool32 ((Data.Vector.length (colorWriteEnables)) * 4) 4
+  pPColorWriteEnables <- ContT $ allocaBytes @Bool32 ((Data.Vector.length (colorWriteEnables)) * 4)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPColorWriteEnables `plusPtr` (4 * (i)) :: Ptr Bool32) (boolToBool32 (e))) (colorWriteEnables)
   lift $ traceAroundEvent "vkCmdSetColorWriteEnableEXT" (vkCmdSetColorWriteEnableEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (colorWriteEnables)) :: Word32)) (pPColorWriteEnables))
   pure $ ()
@@ -298,7 +298,7 @@ deriving instance Generic (PhysicalDeviceColorWriteEnableFeaturesEXT)
 deriving instance Show PhysicalDeviceColorWriteEnableFeaturesEXT
 
 instance ToCStruct PhysicalDeviceColorWriteEnableFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceColorWriteEnableFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COLOR_WRITE_ENABLE_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -398,12 +398,12 @@ deriving instance Generic (PipelineColorWriteCreateInfoEXT)
 deriving instance Show PipelineColorWriteCreateInfoEXT
 
 instance ToCStruct PipelineColorWriteCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineColorWriteCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (colorWriteEnables)) :: Word32))
-    pPColorWriteEnables' <- ContT $ allocaBytesAligned @Bool32 ((Data.Vector.length (colorWriteEnables)) * 4) 4
+    pPColorWriteEnables' <- ContT $ allocaBytes @Bool32 ((Data.Vector.length (colorWriteEnables)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPColorWriteEnables' `plusPtr` (4 * (i)) :: Ptr Bool32) (boolToBool32 (e))) (colorWriteEnables)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Bool32))) (pPColorWriteEnables')
     lift $ f

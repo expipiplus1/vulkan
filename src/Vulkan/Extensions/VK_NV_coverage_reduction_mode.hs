@@ -151,7 +151,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -332,7 +332,7 @@ deriving instance Generic (PhysicalDeviceCoverageReductionModeFeaturesNV)
 deriving instance Show PhysicalDeviceCoverageReductionModeFeaturesNV
 
 instance ToCStruct PhysicalDeviceCoverageReductionModeFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCoverageReductionModeFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COVERAGE_REDUCTION_MODE_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -415,7 +415,7 @@ deriving instance Generic (PipelineCoverageReductionStateCreateInfoNV)
 deriving instance Show PipelineCoverageReductionStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageReductionStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCoverageReductionStateCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -485,7 +485,7 @@ deriving instance Generic (FramebufferMixedSamplesCombinationNV)
 deriving instance Show FramebufferMixedSamplesCombinationNV
 
 instance ToCStruct FramebufferMixedSamplesCombinationNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FramebufferMixedSamplesCombinationNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -52,7 +52,7 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout
 import Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model
 import Vulkan.CStruct.Utils (FixedArray)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -212,7 +212,7 @@ deriving instance Generic (PhysicalDeviceVulkan11Features)
 deriving instance Show PhysicalDeviceVulkan11Features
 
 instance ToCStruct PhysicalDeviceVulkan11Features where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan11Features{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -417,7 +417,7 @@ deriving instance Generic (PhysicalDeviceVulkan11Properties)
 deriving instance Show PhysicalDeviceVulkan11Properties
 
 instance ToCStruct PhysicalDeviceVulkan11Properties where
-  withCStruct x f = allocaBytesAligned 112 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 112 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan11Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1033,7 +1033,7 @@ deriving instance Generic (PhysicalDeviceVulkan12Features)
 deriving instance Show PhysicalDeviceVulkan12Features
 
 instance ToCStruct PhysicalDeviceVulkan12Features where
-  withCStruct x f = allocaBytesAligned 208 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 208 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan12Features{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1652,7 +1652,7 @@ deriving instance Generic (PhysicalDeviceVulkan12Properties)
 deriving instance Show PhysicalDeviceVulkan12Properties
 
 instance ToCStruct PhysicalDeviceVulkan12Properties where
-  withCStruct x f = allocaBytesAligned 736 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 736 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan12Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

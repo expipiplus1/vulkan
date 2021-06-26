@@ -181,7 +181,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -464,7 +464,7 @@ deriving instance Generic (ConditionalRenderingBeginInfoEXT)
 deriving instance Show ConditionalRenderingBeginInfoEXT
 
 instance ToCStruct ConditionalRenderingBeginInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ConditionalRenderingBeginInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -544,7 +544,7 @@ deriving instance Generic (CommandBufferInheritanceConditionalRenderingInfoEXT)
 deriving instance Show CommandBufferInheritanceConditionalRenderingInfoEXT
 
 instance ToCStruct CommandBufferInheritanceConditionalRenderingInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferInheritanceConditionalRenderingInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -617,7 +617,7 @@ deriving instance Generic (PhysicalDeviceConditionalRenderingFeaturesEXT)
 deriving instance Show PhysicalDeviceConditionalRenderingFeaturesEXT
 
 instance ToCStruct PhysicalDeviceConditionalRenderingFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceConditionalRenderingFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

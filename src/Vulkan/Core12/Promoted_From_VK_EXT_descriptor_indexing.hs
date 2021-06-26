@@ -15,7 +15,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing  ( PhysicalDeviceD
                                                                , DescriptorBindingFlags
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -274,7 +274,7 @@ deriving instance Generic (PhysicalDeviceDescriptorIndexingFeatures)
 deriving instance Show PhysicalDeviceDescriptorIndexingFeatures
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingFeatures where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDescriptorIndexingFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -594,7 +594,7 @@ deriving instance Generic (PhysicalDeviceDescriptorIndexingProperties)
 deriving instance Show PhysicalDeviceDescriptorIndexingProperties
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingProperties where
-  withCStruct x f = allocaBytesAligned 112 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 112 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDescriptorIndexingProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -881,12 +881,12 @@ deriving instance Generic (DescriptorSetLayoutBindingFlagsCreateInfo)
 deriving instance Show DescriptorSetLayoutBindingFlagsCreateInfo
 
 instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutBindingFlagsCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bindingFlags)) :: Word32))
-    pPBindingFlags' <- ContT $ allocaBytesAligned @DescriptorBindingFlags ((Data.Vector.length (bindingFlags)) * 4) 4
+    pPBindingFlags' <- ContT $ allocaBytes @DescriptorBindingFlags ((Data.Vector.length (bindingFlags)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags' `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) (bindingFlags)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags))) (pPBindingFlags')
     lift $ f
@@ -968,12 +968,12 @@ deriving instance Generic (DescriptorSetVariableDescriptorCountAllocateInfo)
 deriving instance Show DescriptorSetVariableDescriptorCountAllocateInfo
 
 instance ToCStruct DescriptorSetVariableDescriptorCountAllocateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetVariableDescriptorCountAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorCounts)) :: Word32))
-    pPDescriptorCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (descriptorCounts)) * 4) 4
+    pPDescriptorCounts' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (descriptorCounts)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorCounts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (descriptorCounts)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDescriptorCounts')
     lift $ f
@@ -1043,7 +1043,7 @@ deriving instance Generic (DescriptorSetVariableDescriptorCountLayoutSupport)
 deriving instance Show DescriptorSetVariableDescriptorCountLayoutSupport
 
 instance ToCStruct DescriptorSetVariableDescriptorCountLayoutSupport where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetVariableDescriptorCountLayoutSupport{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

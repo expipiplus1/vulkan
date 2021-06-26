@@ -138,7 +138,7 @@ module Vulkan.Extensions.VK_KHR_push_descriptor  ( cmdPushDescriptorSetKHR
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -344,7 +344,7 @@ cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWri
   lift $ unless (vkCmdPushDescriptorSetKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetKHR is null" Nothing Nothing
   let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHRPtr
-  pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
+  pPDescriptorWrites <- ContT $ allocaBytes @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
   lift $ traceAroundEvent "vkCmdPushDescriptorSetKHR" (vkCmdPushDescriptorSetKHR' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (set) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)))
   pure $ ()
@@ -532,7 +532,7 @@ deriving instance Generic (PhysicalDevicePushDescriptorPropertiesKHR)
 deriving instance Show PhysicalDevicePushDescriptorPropertiesKHR
 
 instance ToCStruct PhysicalDevicePushDescriptorPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePushDescriptorPropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

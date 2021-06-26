@@ -71,7 +71,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -528,7 +528,7 @@ cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
   lift $ unless (vkCmdSetViewportPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewport is null" Nothing Nothing
   let vkCmdSetViewport' = mkVkCmdSetViewport vkCmdSetViewportPtr
-  pPViewports <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (viewports)) * 24) 4
+  pPViewports <- ContT $ allocaBytes @Viewport ((Data.Vector.length (viewports)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) (viewports)
   lift $ traceAroundEvent "vkCmdSetViewport" (vkCmdSetViewport' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports))
   pure $ ()
@@ -646,7 +646,7 @@ cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
   lift $ unless (vkCmdSetScissorPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetScissor is null" Nothing Nothing
   let vkCmdSetScissor' = mkVkCmdSetScissor vkCmdSetScissorPtr
-  pPScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (scissors)) * 16) 4
+  pPScissors <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (scissors)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (scissors)
   lift $ traceAroundEvent "vkCmdSetScissor" (vkCmdSetScissor' (commandBufferHandle (commandBuffer)) (firstScissor) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors))
   pure $ ()
@@ -928,7 +928,7 @@ cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
   lift $ unless (vkCmdSetBlendConstantsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetBlendConstants is null" Nothing Nothing
   let vkCmdSetBlendConstants' = mkVkCmdSetBlendConstants vkCmdSetBlendConstantsPtr
-  pBlendConstants <- ContT $ allocaBytesAligned @(FixedArray 4 CFloat) 16 4
+  pBlendConstants <- ContT $ allocaBytes @(FixedArray 4 CFloat) 16
   let pBlendConstants' = lowerArrayPtr pBlendConstants
   lift $ case (blendConstants) of
     (e0, e1, e2, e3) -> do
@@ -1480,9 +1480,9 @@ cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptor
   lift $ unless (vkCmdBindDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindDescriptorSets is null" Nothing Nothing
   let vkCmdBindDescriptorSets' = mkVkCmdBindDescriptorSets vkCmdBindDescriptorSetsPtr
-  pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
+  pPDescriptorSets <- ContT $ allocaBytes @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
-  pPDynamicOffsets <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (dynamicOffsets)) * 4) 4
+  pPDynamicOffsets <- ContT $ allocaBytes @Word32 ((Data.Vector.length (dynamicOffsets)) * 4)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDynamicOffsets `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (dynamicOffsets)
   lift $ traceAroundEvent "vkCmdBindDescriptorSets" (vkCmdBindDescriptorSets' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (firstSet) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets) ((fromIntegral (Data.Vector.length $ (dynamicOffsets)) :: Word32)) (pPDynamicOffsets))
   pure $ ()
@@ -1726,9 +1726,9 @@ cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalC
   let pBuffersLength = Data.Vector.length $ (buffers)
   lift $ unless ((Data.Vector.length $ (offsets)) == pBuffersLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pOffsets and pBuffers must have the same length" Nothing Nothing
-  pPBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (buffers)) * 8) 8
+  pPBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (buffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)
-  pPOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (offsets)) * 8) 8
+  pPOffsets <- ContT $ allocaBytes @DeviceSize ((Data.Vector.length (offsets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (offsets)
   lift $ traceAroundEvent "vkCmdBindVertexBuffers" (vkCmdBindVertexBuffers' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets))
   pure $ ()
@@ -5035,7 +5035,7 @@ cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ d
   lift $ unless (vkCmdCopyBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer is null" Nothing Nothing
   let vkCmdCopyBuffer' = mkVkCmdCopyBuffer vkCmdCopyBufferPtr
-  pPRegions <- ContT $ allocaBytesAligned @BufferCopy ((Data.Vector.length (regions)) * 24) 8
+  pPRegions <- ContT $ allocaBytes @BufferCopy ((Data.Vector.length (regions)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (24 * (i)) :: Ptr BufferCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyBuffer" (vkCmdCopyBuffer' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -5580,7 +5580,7 @@ cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regio
   lift $ unless (vkCmdCopyImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage is null" Nothing Nothing
   let vkCmdCopyImage' = mkVkCmdCopyImage vkCmdCopyImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @ImageCopy ((Data.Vector.length (regions)) * 68) 4
+  pPRegions <- ContT $ allocaBytes @ImageCopy ((Data.Vector.length (regions)) * 68)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyImage" (vkCmdCopyImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -6026,7 +6026,7 @@ cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regio
   lift $ unless (vkCmdBlitImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage is null" Nothing Nothing
   let vkCmdBlitImage' = mkVkCmdBlitImage vkCmdBlitImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @ImageBlit ((Data.Vector.length (regions)) * 80) 4
+  pPRegions <- ContT $ allocaBytes @ImageBlit ((Data.Vector.length (regions)) * 80)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (80 * (i)) :: Ptr ImageBlit) (e)) (regions)
   lift $ traceAroundEvent "vkCmdBlitImage" (vkCmdBlitImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions) (filter'))
   pure $ ()
@@ -6382,7 +6382,7 @@ cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = l
   lift $ unless (vkCmdCopyBufferToImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage is null" Nothing Nothing
   let vkCmdCopyBufferToImage' = mkVkCmdCopyBufferToImage vkCmdCopyBufferToImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
+  pPRegions <- ContT $ allocaBytes @BufferImageCopy ((Data.Vector.length (regions)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyBufferToImage" (vkCmdCopyBufferToImage' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -6729,7 +6729,7 @@ cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = l
   lift $ unless (vkCmdCopyImageToBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer is null" Nothing Nothing
   let vkCmdCopyImageToBuffer' = mkVkCmdCopyImageToBuffer vkCmdCopyImageToBufferPtr
-  pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
+  pPRegions <- ContT $ allocaBytes @BufferImageCopy ((Data.Vector.length (regions)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyImageToBuffer" (vkCmdCopyImageToBuffer' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -7203,7 +7203,7 @@ cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalC
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearColorImage is null" Nothing Nothing
   let vkCmdClearColorImage' = mkVkCmdClearColorImage vkCmdClearColorImagePtr
   pColor <- ContT $ withCStruct (color)
-  pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
+  pPRanges <- ContT $ allocaBytes @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e)) (ranges)
   lift $ traceAroundEvent "vkCmdClearColorImage" (vkCmdClearColorImage' (commandBufferHandle (commandBuffer)) (image) (imageLayout) pColor ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32)) (pPRanges))
   pure $ ()
@@ -7421,7 +7421,7 @@ cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearDepthStencilImage is null" Nothing Nothing
   let vkCmdClearDepthStencilImage' = mkVkCmdClearDepthStencilImage vkCmdClearDepthStencilImagePtr
   pDepthStencil <- ContT $ withCStruct (depthStencil)
-  pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
+  pPRanges <- ContT $ allocaBytes @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e)) (ranges)
   lift $ traceAroundEvent "vkCmdClearDepthStencilImage" (vkCmdClearDepthStencilImage' (commandBufferHandle (commandBuffer)) (image) (imageLayout) pDepthStencil ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32)) (pPRanges))
   pure $ ()
@@ -7595,9 +7595,9 @@ cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
   lift $ unless (vkCmdClearAttachmentsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearAttachments is null" Nothing Nothing
   let vkCmdClearAttachments' = mkVkCmdClearAttachments vkCmdClearAttachmentsPtr
-  pPAttachments <- ContT $ allocaBytesAligned @ClearAttachment ((Data.Vector.length (attachments)) * 24) 4
+  pPAttachments <- ContT $ allocaBytes @ClearAttachment ((Data.Vector.length (attachments)) * 24)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments `plusPtr` (24 * (i)) :: Ptr ClearAttachment) (e) . ($ ())) (attachments)
-  pPRects <- ContT $ allocaBytesAligned @ClearRect ((Data.Vector.length (rects)) * 24) 4
+  pPRects <- ContT $ allocaBytes @ClearRect ((Data.Vector.length (rects)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRects `plusPtr` (24 * (i)) :: Ptr ClearRect) (e)) (rects)
   lift $ traceAroundEvent "vkCmdClearAttachments" (vkCmdClearAttachments' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32)) (pPAttachments) ((fromIntegral (Data.Vector.length $ (rects)) :: Word32)) (pPRects))
   pure $ ()
@@ -7872,7 +7872,7 @@ cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout re
   lift $ unless (vkCmdResolveImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage is null" Nothing Nothing
   let vkCmdResolveImage' = mkVkCmdResolveImage vkCmdResolveImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @ImageResolve ((Data.Vector.length (regions)) * 68) 4
+  pPRegions <- ContT $ allocaBytes @ImageResolve ((Data.Vector.length (regions)) * 68)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageResolve) (e)) (regions)
   lift $ traceAroundEvent "vkCmdResolveImage" (vkCmdResolveImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -8239,13 +8239,13 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
   lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents is null" Nothing Nothing
   let vkCmdWaitEvents' = mkVkCmdWaitEvents vkCmdWaitEventsPtr
-  pPEvents <- ContT $ allocaBytesAligned @Event ((Data.Vector.length (events)) * 8) 8
+  pPEvents <- ContT $ allocaBytes @Event ((Data.Vector.length (events)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
-  pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
+  pPMemoryBarriers <- ContT $ allocaBytes @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e)) (memoryBarriers)
-  pPBufferMemoryBarriers <- ContT $ allocaBytesAligned @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56) 8
+  pPBufferMemoryBarriers <- ContT $ allocaBytes @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e)) (bufferMemoryBarriers)
-  pPImageMemoryBarriers <- ContT $ allocaBytesAligned @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72) 8
+  pPImageMemoryBarriers <- ContT $ allocaBytes @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
   lift $ traceAroundEvent "vkCmdWaitEvents" (vkCmdWaitEvents' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (events)) :: Word32)) (pPEvents) (srcStageMask) (dstStageMask) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers)))
   pure $ ()
@@ -9035,11 +9035,11 @@ cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memor
   lift $ unless (vkCmdPipelineBarrierPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPipelineBarrier is null" Nothing Nothing
   let vkCmdPipelineBarrier' = mkVkCmdPipelineBarrier vkCmdPipelineBarrierPtr
-  pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
+  pPMemoryBarriers <- ContT $ allocaBytes @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e)) (memoryBarriers)
-  pPBufferMemoryBarriers <- ContT $ allocaBytesAligned @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56) 8
+  pPBufferMemoryBarriers <- ContT $ allocaBytes @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e)) (bufferMemoryBarriers)
-  pPImageMemoryBarriers <- ContT $ allocaBytesAligned @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72) 8
+  pPImageMemoryBarriers <- ContT $ allocaBytes @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
   lift $ traceAroundEvent "vkCmdPipelineBarrier" (vkCmdPipelineBarrier' (commandBufferHandle (commandBuffer)) (srcStageMask) (dstStageMask) (dependencyFlags) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers)))
   pure $ ()
@@ -10717,7 +10717,7 @@ cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
   lift $ unless (vkCmdExecuteCommandsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteCommands is null" Nothing Nothing
   let vkCmdExecuteCommands' = mkVkCmdExecuteCommands vkCmdExecuteCommandsPtr
-  pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
+  pPCommandBuffers <- ContT $ allocaBytes @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
   lift $ traceAroundEvent "vkCmdExecuteCommands" (vkCmdExecuteCommands' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers))
   pure $ ()
@@ -10748,7 +10748,7 @@ deriving instance Generic (ClearRect)
 deriving instance Show ClearRect
 
 instance ToCStruct ClearRect where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ClearRect{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Rect2D)) (rect)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (baseArrayLayer)
@@ -10843,7 +10843,7 @@ deriving instance Generic (ImageSubresourceLayers)
 deriving instance Show ImageSubresourceLayers
 
 instance ToCStruct ImageSubresourceLayers where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSubresourceLayers{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (mipLevel)
@@ -10908,7 +10908,7 @@ deriving instance Generic (BufferCopy)
 deriving instance Show BufferCopy
 
 instance ToCStruct BufferCopy where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferCopy{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (srcOffset)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (dstOffset)
@@ -11010,7 +11010,7 @@ deriving instance Generic (ImageCopy)
 deriving instance Show ImageCopy
 
 instance ToCStruct ImageCopy where
-  withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 68 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageCopy{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     poke ((p `plusPtr` 16 :: Ptr Offset3D)) (srcOffset)
@@ -11101,7 +11101,7 @@ deriving instance Generic (ImageBlit)
 deriving instance Show ImageBlit
 
 instance ToCStruct ImageBlit where
-  withCStruct x f = allocaBytesAligned 80 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageBlit{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray 2 Offset3D)))
@@ -11273,7 +11273,7 @@ deriving instance Generic (BufferImageCopy)
 deriving instance Show BufferImageCopy
 
 instance ToCStruct BufferImageCopy where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferImageCopy{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (bufferOffset)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (bufferRowLength)
@@ -11367,7 +11367,7 @@ deriving instance Generic (ImageResolve)
 deriving instance Show ImageResolve
 
 instance ToCStruct ImageResolve where
-  withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 68 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageResolve{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     poke ((p `plusPtr` 16 :: Ptr Offset3D)) (srcOffset)
@@ -11749,7 +11749,7 @@ instance Extensible RenderPassBeginInfo where
     | otherwise = Nothing
 
 instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPassBeginInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -11758,7 +11758,7 @@ instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPas
     lift $ poke ((p `plusPtr` 24 :: Ptr Framebuffer)) (framebuffer)
     lift $ poke ((p `plusPtr` 32 :: Ptr Rect2D)) (renderArea)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (clearValues)) :: Word32))
-    pPClearValues' <- ContT $ allocaBytesAligned @ClearValue ((Data.Vector.length (clearValues)) * 16) 4
+    pPClearValues' <- ContT $ allocaBytes @ClearValue ((Data.Vector.length (clearValues)) * 16)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPClearValues' `plusPtr` (16 * (i)) :: Ptr ClearValue) (e) . ($ ())) (clearValues)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr ClearValue))) (pPClearValues')
     lift $ f
@@ -11812,7 +11812,7 @@ deriving instance Generic (ClearDepthStencilValue)
 deriving instance Show ClearDepthStencilValue
 
 instance ToCStruct ClearDepthStencilValue where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ClearDepthStencilValue{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (depth))
     poke ((p `plusPtr` 4 :: Ptr Word32)) (stencil)
@@ -11915,7 +11915,7 @@ deriving instance Generic (ClearAttachment)
 deriving instance Show ClearAttachment
 
 instance ToCStruct ClearAttachment where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ClearAttachment{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (colorAttachment)
@@ -11943,7 +11943,7 @@ data ClearColorValue
   deriving (Show)
 
 instance ToCStruct ClearColorValue where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr ClearColorValue -> ClearColorValue -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Float32 v0 v1 v2 v3 -> lift $ do
@@ -11985,7 +11985,7 @@ data ClearValue
   deriving (Show)
 
 instance ToCStruct ClearValue where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr ClearValue -> ClearValue -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Color v -> ContT $ pokeCStruct (castPtr @_ @ClearColorValue p) (v) . ($ ())

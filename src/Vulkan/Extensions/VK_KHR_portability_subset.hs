@@ -144,7 +144,7 @@ module Vulkan.Extensions.VK_KHR_portability_subset  ( PhysicalDevicePortabilityS
                                                     , pattern KHR_PORTABILITY_SUBSET_EXTENSION_NAME
                                                     ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -296,7 +296,7 @@ deriving instance Generic (PhysicalDevicePortabilitySubsetFeaturesKHR)
 deriving instance Show PhysicalDevicePortabilitySubsetFeaturesKHR
 
 instance ToCStruct PhysicalDevicePortabilitySubsetFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePortabilitySubsetFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -415,7 +415,7 @@ deriving instance Generic (PhysicalDevicePortabilitySubsetPropertiesKHR)
 deriving instance Show PhysicalDevicePortabilitySubsetPropertiesKHR
 
 instance ToCStruct PhysicalDevicePortabilitySubsetPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePortabilitySubsetPropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

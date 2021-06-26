@@ -133,7 +133,7 @@ module Vulkan.Extensions.VK_NV_scissor_exclusive  ( cmdSetExclusiveScissorNV
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -295,7 +295,7 @@ cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors =
   lift $ unless (vkCmdSetExclusiveScissorNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetExclusiveScissorNV is null" Nothing Nothing
   let vkCmdSetExclusiveScissorNV' = mkVkCmdSetExclusiveScissorNV vkCmdSetExclusiveScissorNVPtr
-  pPExclusiveScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
+  pPExclusiveScissors <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (exclusiveScissors)
   lift $ traceAroundEvent "vkCmdSetExclusiveScissorNV" (vkCmdSetExclusiveScissorNV' (commandBufferHandle (commandBuffer)) (firstExclusiveScissor) ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32)) (pPExclusiveScissors))
   pure $ ()
@@ -341,7 +341,7 @@ deriving instance Generic (PhysicalDeviceExclusiveScissorFeaturesNV)
 deriving instance Show PhysicalDeviceExclusiveScissorFeaturesNV
 
 instance ToCStruct PhysicalDeviceExclusiveScissorFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExclusiveScissorFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -426,12 +426,12 @@ deriving instance Generic (PipelineViewportExclusiveScissorStateCreateInfoNV)
 deriving instance Show PipelineViewportExclusiveScissorStateCreateInfoNV
 
 instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportExclusiveScissorStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32))
-    pPExclusiveScissors' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
+    pPExclusiveScissors' <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (exclusiveScissors)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPExclusiveScissors')
     lift $ f

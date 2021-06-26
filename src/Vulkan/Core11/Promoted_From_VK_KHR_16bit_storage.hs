@@ -4,7 +4,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage  ( PhysicalDevice16BitSt
                                                          , StructureType(..)
                                                          ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -91,7 +91,7 @@ deriving instance Generic (PhysicalDevice16BitStorageFeatures)
 deriving instance Show PhysicalDevice16BitStorageFeatures
 
 instance ToCStruct PhysicalDevice16BitStorageFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevice16BitStorageFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

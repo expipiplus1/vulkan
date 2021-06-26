@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model  ( PhysicalDeviceV
                                                                , StructureType(..)
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -81,7 +81,7 @@ deriving instance Generic (PhysicalDeviceVulkanMemoryModelFeatures)
 deriving instance Show PhysicalDeviceVulkanMemoryModelFeatures
 
 instance ToCStruct PhysicalDeviceVulkanMemoryModelFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkanMemoryModelFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

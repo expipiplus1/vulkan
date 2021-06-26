@@ -576,7 +576,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1114,7 +1114,7 @@ bindAccelerationStructureMemoryNV device bindInfos = liftIO . evalContT $ do
   lift $ unless (vkBindAccelerationStructureMemoryNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindAccelerationStructureMemoryNV is null" Nothing Nothing
   let vkBindAccelerationStructureMemoryNV' = mkVkBindAccelerationStructureMemoryNV vkBindAccelerationStructureMemoryNVPtr
-  pPBindInfos <- ContT $ allocaBytesAligned @BindAccelerationStructureMemoryInfoNV ((Data.Vector.length (bindInfos)) * 56) 8
+  pPBindInfos <- ContT $ allocaBytes @BindAccelerationStructureMemoryInfoNV ((Data.Vector.length (bindInfos)) * 56)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (56 * (i)) :: Ptr BindAccelerationStructureMemoryInfoNV) (e) . ($ ())) (bindInfos)
   r <- lift $ traceAroundEvent "vkBindAccelerationStructureMemoryNV" (vkBindAccelerationStructureMemoryNV' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1375,7 +1375,7 @@ cmdWriteAccelerationStructuresPropertiesNV commandBuffer accelerationStructures 
   lift $ unless (vkCmdWriteAccelerationStructuresPropertiesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteAccelerationStructuresPropertiesNV is null" Nothing Nothing
   let vkCmdWriteAccelerationStructuresPropertiesNV' = mkVkCmdWriteAccelerationStructuresPropertiesNV vkCmdWriteAccelerationStructuresPropertiesNVPtr
-  pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
+  pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
   lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesNV" (vkCmdWriteAccelerationStructuresPropertiesNV' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery))
   pure $ ()
@@ -2237,7 +2237,7 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
   lift $ unless (vkCreateRayTracingPipelinesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesNV is null" Nothing Nothing
   let vkCreateRayTracingPipelinesNV' = mkVkCreateRayTracingPipelinesNV vkCreateRayTracingPipelinesNVPtr
-  pPCreateInfos <- ContT $ allocaBytesAligned @(RayTracingPipelineCreateInfoNV _) ((Data.Vector.length (createInfos)) * 80) 8
+  pPCreateInfos <- ContT $ allocaBytes @(RayTracingPipelineCreateInfoNV _) ((Data.Vector.length (createInfos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (80 * (i)) :: Ptr (RayTracingPipelineCreateInfoNV _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -2498,7 +2498,7 @@ deriving instance Generic (RayTracingShaderGroupCreateInfoNV)
 deriving instance Show RayTracingShaderGroupCreateInfoNV
 
 instance ToCStruct RayTracingShaderGroupCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingShaderGroupCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2757,18 +2757,18 @@ instance Extensible RayTracingPipelineCreateInfoNV where
     | otherwise = Nothing
 
 instance (Extendss RayTracingPipelineCreateInfoNV es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoNV es) where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingPipelineCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (stages)) :: Word32))
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48) 8
+    pPStages' <- ContT $ allocaBytes @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (stages)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (groups)) :: Word32))
-    pPGroups' <- ContT $ allocaBytesAligned @RayTracingShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 40) 8
+    pPGroups' <- ContT $ allocaBytes @RayTracingShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 40)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPGroups' `plusPtr` (40 * (i)) :: Ptr RayTracingShaderGroupCreateInfoNV) (e)) (groups)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr RayTracingShaderGroupCreateInfoNV))) (pPGroups')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (maxRecursionDepth)
@@ -2949,7 +2949,7 @@ deriving instance Generic (GeometryTrianglesNV)
 deriving instance Show GeometryTrianglesNV
 
 instance ToCStruct GeometryTrianglesNV where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryTrianglesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3069,7 +3069,7 @@ deriving instance Generic (GeometryAABBNV)
 deriving instance Show GeometryAABBNV
 
 instance ToCStruct GeometryAABBNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryAABBNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_AABB_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3140,7 +3140,7 @@ deriving instance Generic (GeometryDataNV)
 deriving instance Show GeometryDataNV
 
 instance ToCStruct GeometryDataNV where
-  withCStruct x f = allocaBytesAligned 136 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 136 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryDataNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr GeometryTrianglesNV)) (triangles)
     poke ((p `plusPtr` 96 :: Ptr GeometryAABBNV)) (aabbs)
@@ -3216,7 +3216,7 @@ deriving instance Generic (GeometryNV)
 deriving instance Show GeometryNV
 
 instance ToCStruct GeometryNV where
-  withCStruct x f = allocaBytesAligned 168 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 168 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3354,7 +3354,7 @@ deriving instance Generic (AccelerationStructureInfoNV)
 deriving instance Show AccelerationStructureInfoNV
 
 instance ToCStruct AccelerationStructureInfoNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3362,7 +3362,7 @@ instance ToCStruct AccelerationStructureInfoNV where
     lift $ poke ((p `plusPtr` 20 :: Ptr BuildAccelerationStructureFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (instanceCount)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (geometries)) :: Word32))
-    pPGeometries' <- ContT $ allocaBytesAligned @GeometryNV ((Data.Vector.length (geometries)) * 168) 8
+    pPGeometries' <- ContT $ allocaBytes @GeometryNV ((Data.Vector.length (geometries)) * 168)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPGeometries' `plusPtr` (168 * (i)) :: Ptr GeometryNV) (e)) (geometries)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr GeometryNV))) (pPGeometries')
     lift $ f
@@ -3436,7 +3436,7 @@ deriving instance Generic (AccelerationStructureCreateInfoNV)
 deriving instance Show AccelerationStructureCreateInfoNV
 
 instance ToCStruct AccelerationStructureCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3557,7 +3557,7 @@ deriving instance Generic (BindAccelerationStructureMemoryInfoNV)
 deriving instance Show BindAccelerationStructureMemoryInfoNV
 
 instance ToCStruct BindAccelerationStructureMemoryInfoNV where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindAccelerationStructureMemoryInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3565,7 +3565,7 @@ instance ToCStruct BindAccelerationStructureMemoryInfoNV where
     lift $ poke ((p `plusPtr` 24 :: Ptr DeviceMemory)) (memory)
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (memoryOffset)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceIndices)) :: Word32))
-    pPDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (deviceIndices)) * 4) 4
+    pPDeviceIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (deviceIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (deviceIndices)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPDeviceIndices')
     lift $ f
@@ -3649,12 +3649,12 @@ deriving instance Generic (WriteDescriptorSetAccelerationStructureNV)
 deriving instance Show WriteDescriptorSetAccelerationStructureNV
 
 instance ToCStruct WriteDescriptorSetAccelerationStructureNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSetAccelerationStructureNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32))
-    pPAccelerationStructures' <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
+    pPAccelerationStructures' <- ContT $ allocaBytes @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures' `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureNV))) (pPAccelerationStructures')
     lift $ f
@@ -3719,7 +3719,7 @@ deriving instance Generic (AccelerationStructureMemoryRequirementsInfoNV)
 deriving instance Show AccelerationStructureMemoryRequirementsInfoNV
 
 instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureMemoryRequirementsInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3810,7 +3810,7 @@ deriving instance Generic (PhysicalDeviceRayTracingPropertiesNV)
 deriving instance Show PhysicalDeviceRayTracingPropertiesNV
 
 instance ToCStruct PhysicalDeviceRayTracingPropertiesNV where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRayTracingPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

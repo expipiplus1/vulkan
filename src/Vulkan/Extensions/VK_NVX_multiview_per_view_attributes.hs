@@ -161,7 +161,7 @@ module Vulkan.Extensions.VK_NVX_multiview_per_view_attributes  ( PhysicalDeviceM
                                                                , pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -215,7 +215,7 @@ deriving instance Generic (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 deriving instance Show PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 
 instance ToCStruct PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

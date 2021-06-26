@@ -139,7 +139,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -396,7 +396,7 @@ deriving instance Generic (ImportMemoryFdInfoKHR)
 deriving instance Show ImportMemoryFdInfoKHR
 
 instance ToCStruct ImportMemoryFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportMemoryFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -449,7 +449,7 @@ deriving instance Generic (MemoryFdPropertiesKHR)
 deriving instance Show MemoryFdPropertiesKHR
 
 instance ToCStruct MemoryFdPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryFdPropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -540,7 +540,7 @@ deriving instance Generic (MemoryGetFdInfoKHR)
 deriving instance Show MemoryGetFdInfoKHR
 
 instance ToCStruct MemoryGetFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryGetFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -130,7 +130,7 @@ module Vulkan.Extensions.VK_EXT_hdr_metadata  ( setHdrMetadataEXT
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -226,9 +226,9 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   let pSwapchainsLength = Data.Vector.length $ (swapchains)
   lift $ unless ((Data.Vector.length $ (metadata)) == pSwapchainsLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pMetadata and pSwapchains must have the same length" Nothing Nothing
-  pPSwapchains <- ContT $ allocaBytesAligned @SwapchainKHR ((Data.Vector.length (swapchains)) * 8) 8
+  pPSwapchains <- ContT $ allocaBytes @SwapchainKHR ((Data.Vector.length (swapchains)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)
-  pPMetadata <- ContT $ allocaBytesAligned @HdrMetadataEXT ((Data.Vector.length (metadata)) * 64) 8
+  pPMetadata <- ContT $ allocaBytes @HdrMetadataEXT ((Data.Vector.length (metadata)) * 64)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMetadata `plusPtr` (64 * (i)) :: Ptr HdrMetadataEXT) (e)) (metadata)
   lift $ traceAroundEvent "vkSetHdrMetadataEXT" (vkSetHdrMetadataEXT' (deviceHandle (device)) ((fromIntegral pSwapchainsLength :: Word32)) (pPSwapchains) (pPMetadata))
   pure $ ()
@@ -252,7 +252,7 @@ deriving instance Generic (XYColorEXT)
 deriving instance Show XYColorEXT
 
 instance ToCStruct XYColorEXT where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p XYColorEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -325,7 +325,7 @@ deriving instance Generic (HdrMetadataEXT)
 deriving instance Show HdrMetadataEXT
 
 instance ToCStruct HdrMetadataEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HdrMetadataEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_HDR_METADATA_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

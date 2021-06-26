@@ -131,7 +131,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -339,7 +339,7 @@ deriving instance Generic (ImportMemoryZirconHandleInfoFUCHSIA)
 deriving instance Show ImportMemoryZirconHandleInfoFUCHSIA
 
 instance ToCStruct ImportMemoryZirconHandleInfoFUCHSIA where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportMemoryZirconHandleInfoFUCHSIA{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -392,7 +392,7 @@ deriving instance Generic (MemoryZirconHandlePropertiesFUCHSIA)
 deriving instance Show MemoryZirconHandlePropertiesFUCHSIA
 
 instance ToCStruct MemoryZirconHandlePropertiesFUCHSIA where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryZirconHandlePropertiesFUCHSIA{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ZIRCON_HANDLE_PROPERTIES_FUCHSIA)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -467,7 +467,7 @@ deriving instance Generic (MemoryGetZirconHandleInfoFUCHSIA)
 deriving instance Show MemoryGetZirconHandleInfoFUCHSIA
 
 instance ToCStruct MemoryGetZirconHandleInfoFUCHSIA where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryGetZirconHandleInfoFUCHSIA{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

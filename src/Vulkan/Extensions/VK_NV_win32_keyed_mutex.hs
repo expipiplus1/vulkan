@@ -238,7 +238,7 @@ module Vulkan.Extensions.VK_NV_win32_keyed_mutex  ( Win32KeyedMutexAcquireReleas
                                                   ) where
 
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -339,7 +339,7 @@ deriving instance Generic (Win32KeyedMutexAcquireReleaseInfoNV)
 deriving instance Show Win32KeyedMutexAcquireReleaseInfoNV
 
 instance ToCStruct Win32KeyedMutexAcquireReleaseInfoNV where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Win32KeyedMutexAcquireReleaseInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -349,23 +349,23 @@ instance ToCStruct Win32KeyedMutexAcquireReleaseInfoNV where
     lift $ unless ((Data.Vector.length $ (acquireTimeoutMilliseconds)) == pAcquireSyncsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pAcquireTimeoutMilliseconds and pAcquireSyncs must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral pAcquireSyncsLength :: Word32))
-    pPAcquireSyncs' <- ContT $ allocaBytesAligned @DeviceMemory ((Data.Vector.length (acquireSyncs)) * 8) 8
+    pPAcquireSyncs' <- ContT $ allocaBytes @DeviceMemory ((Data.Vector.length (acquireSyncs)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAcquireSyncs' `plusPtr` (8 * (i)) :: Ptr DeviceMemory) (e)) (acquireSyncs)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DeviceMemory))) (pPAcquireSyncs')
-    pPAcquireKeys' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (acquireKeys)) * 8) 8
+    pPAcquireKeys' <- ContT $ allocaBytes @Word64 ((Data.Vector.length (acquireKeys)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAcquireKeys' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (acquireKeys)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word64))) (pPAcquireKeys')
-    pPAcquireTimeoutMilliseconds' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (acquireTimeoutMilliseconds)) * 4) 4
+    pPAcquireTimeoutMilliseconds' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (acquireTimeoutMilliseconds)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAcquireTimeoutMilliseconds' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (acquireTimeoutMilliseconds)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word32))) (pPAcquireTimeoutMilliseconds')
     let pReleaseSyncsLength = Data.Vector.length $ (releaseSyncs)
     lift $ unless ((Data.Vector.length $ (releaseKeys)) == pReleaseSyncsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pReleaseKeys and pReleaseSyncs must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral pReleaseSyncsLength :: Word32))
-    pPReleaseSyncs' <- ContT $ allocaBytesAligned @DeviceMemory ((Data.Vector.length (releaseSyncs)) * 8) 8
+    pPReleaseSyncs' <- ContT $ allocaBytes @DeviceMemory ((Data.Vector.length (releaseSyncs)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPReleaseSyncs' `plusPtr` (8 * (i)) :: Ptr DeviceMemory) (e)) (releaseSyncs)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr DeviceMemory))) (pPReleaseSyncs')
-    pPReleaseKeys' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (releaseKeys)) * 8) 8
+    pPReleaseKeys' <- ContT $ allocaBytes @Word64 ((Data.Vector.length (releaseKeys)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPReleaseKeys' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (releaseKeys)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr Word64))) (pPReleaseKeys')
     lift $ f

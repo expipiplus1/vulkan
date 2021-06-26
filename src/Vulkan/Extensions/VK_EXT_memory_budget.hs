@@ -110,7 +110,7 @@ module Vulkan.Extensions.VK_EXT_memory_budget  ( PhysicalDeviceMemoryBudgetPrope
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -184,7 +184,7 @@ deriving instance Generic (PhysicalDeviceMemoryBudgetPropertiesEXT)
 deriving instance Show PhysicalDeviceMemoryBudgetPropertiesEXT
 
 instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 272 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 272 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryBudgetPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -108,7 +108,7 @@ module Vulkan.Extensions.VK_EXT_physical_device_drm  ( PhysicalDeviceDrmProperti
                                                      , pattern EXT_PHYSICAL_DEVICE_DRM_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -175,7 +175,7 @@ deriving instance Generic (PhysicalDeviceDrmPropertiesEXT)
 deriving instance Show PhysicalDeviceDrmPropertiesEXT
 
 instance ToCStruct PhysicalDeviceDrmPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDrmPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

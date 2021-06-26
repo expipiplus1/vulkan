@@ -167,7 +167,7 @@ module Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceCons
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -312,7 +312,7 @@ deriving instance Generic (PhysicalDeviceConservativeRasterizationPropertiesEXT)
 deriving instance Show PhysicalDeviceConservativeRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceConservativeRasterizationPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -417,7 +417,7 @@ deriving instance Generic (PipelineRasterizationConservativeStateCreateInfoEXT)
 deriving instance Show PipelineRasterizationConservativeStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationConservativeStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationConservativeStateCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

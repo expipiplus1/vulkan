@@ -131,7 +131,7 @@ module Vulkan.Extensions.VK_EXT_fragment_shader_interlock  ( PhysicalDeviceFragm
                                                            , pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -200,7 +200,7 @@ deriving instance Generic (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
 deriving instance Show PhysicalDeviceFragmentShaderInterlockFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentShaderInterlockFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentShaderInterlockFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_INTERLOCK_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

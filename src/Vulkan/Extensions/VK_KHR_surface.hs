@@ -437,7 +437,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1033,7 +1033,7 @@ deriving instance Generic (SurfaceCapabilitiesKHR)
 deriving instance Show SurfaceCapabilitiesKHR
 
 instance ToCStruct SurfaceCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 52 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 52 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (minImageCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (maxImageCount)
@@ -1119,7 +1119,7 @@ deriving instance Generic (SurfaceFormatKHR)
 deriving instance Show SurfaceFormatKHR
 
 instance ToCStruct SurfaceFormatKHR where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFormatKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Format)) (format)
     poke ((p `plusPtr` 4 :: Ptr ColorSpaceKHR)) (colorSpace)

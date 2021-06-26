@@ -179,7 +179,7 @@ module Vulkan.Extensions.VK_EXT_extended_dynamic_state  ( cmdSetCullModeEXT
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -546,7 +546,7 @@ cmdSetViewportWithCountEXT commandBuffer viewports = liftIO . evalContT $ do
   lift $ unless (vkCmdSetViewportWithCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWithCountEXT is null" Nothing Nothing
   let vkCmdSetViewportWithCountEXT' = mkVkCmdSetViewportWithCountEXT vkCmdSetViewportWithCountEXTPtr
-  pPViewports <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (viewports)) * 24) 4
+  pPViewports <- ContT $ allocaBytes @Viewport ((Data.Vector.length (viewports)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) (viewports)
   lift $ traceAroundEvent "vkCmdSetViewportWithCountEXT" (vkCmdSetViewportWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports))
   pure $ ()
@@ -649,7 +649,7 @@ cmdSetScissorWithCountEXT commandBuffer scissors = liftIO . evalContT $ do
   lift $ unless (vkCmdSetScissorWithCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetScissorWithCountEXT is null" Nothing Nothing
   let vkCmdSetScissorWithCountEXT' = mkVkCmdSetScissorWithCountEXT vkCmdSetScissorWithCountEXTPtr
-  pPScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (scissors)) * 16) 4
+  pPScissors <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (scissors)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (scissors)
   lift $ traceAroundEvent "vkCmdSetScissorWithCountEXT" (vkCmdSetScissorWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors))
   pure $ ()
@@ -842,20 +842,20 @@ cmdBindVertexBuffers2EXT commandBuffer firstBinding buffers offsets sizes stride
   let pStridesLength = Data.Vector.length $ (strides)
   lift $ unless (fromIntegral pStridesLength == pBuffersLength || pStridesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pStrides and pBuffers must have the same length" Nothing Nothing
-  pPBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (buffers)) * 8) 8
+  pPBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (buffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)
-  pPOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (offsets)) * 8) 8
+  pPOffsets <- ContT $ allocaBytes @DeviceSize ((Data.Vector.length (offsets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (offsets)
   pSizes <- if Data.Vector.null (sizes)
     then pure nullPtr
     else do
-      pPSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      pPSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pPSizes
   pStrides <- if Data.Vector.null (strides)
     then pure nullPtr
     else do
-      pPStrides <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (strides))) * 8) 8
+      pPStrides <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (strides))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPStrides `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((strides))
       pure $ pPStrides
   lift $ traceAroundEvent "vkCmdBindVertexBuffers2EXT" (vkCmdBindVertexBuffers2EXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes pStrides)
@@ -1422,7 +1422,7 @@ deriving instance Generic (PhysicalDeviceExtendedDynamicStateFeaturesEXT)
 deriving instance Show PhysicalDeviceExtendedDynamicStateFeaturesEXT
 
 instance ToCStruct PhysicalDeviceExtendedDynamicStateFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExtendedDynamicStateFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

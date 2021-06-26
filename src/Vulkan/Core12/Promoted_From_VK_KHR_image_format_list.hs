@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_image_format_list  ( ImageFormatListCr
                                                              , StructureType(..)
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -66,12 +66,12 @@ deriving instance Generic (ImageFormatListCreateInfo)
 deriving instance Show ImageFormatListCreateInfo
 
 instance ToCStruct ImageFormatListCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageFormatListCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewFormats)) :: Word32))
-    pPViewFormats' <- ContT $ allocaBytesAligned @Format ((Data.Vector.length (viewFormats)) * 4) 4
+    pPViewFormats' <- ContT $ allocaBytes @Format ((Data.Vector.length (viewFormats)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewFormats' `plusPtr` (4 * (i)) :: Ptr Format) (e)) (viewFormats)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Format))) (pPViewFormats')
     lift $ f

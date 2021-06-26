@@ -137,7 +137,7 @@ module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModu
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -285,7 +285,7 @@ deriving instance Generic (PipelineCoverageModulationStateCreateInfoNV)
 deriving instance Show PipelineCoverageModulationStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCoverageModulationStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -303,7 +303,7 @@ instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where
     pCoverageModulationTable'' <- if Data.Vector.null (coverageModulationTable)
       then pure nullPtr
       else do
-        pPCoverageModulationTable <- ContT $ allocaBytesAligned @CFloat (((Data.Vector.length (coverageModulationTable))) * 4) 4
+        pPCoverageModulationTable <- ContT $ allocaBytes @CFloat (((Data.Vector.length (coverageModulationTable))) * 4)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPCoverageModulationTable `plusPtr` (4 * (i)) :: Ptr CFloat) (CFloat (e))) ((coverageModulationTable))
         pure $ pPCoverageModulationTable
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CFloat))) pCoverageModulationTable''

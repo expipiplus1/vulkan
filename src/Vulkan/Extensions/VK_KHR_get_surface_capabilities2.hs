@@ -165,7 +165,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -517,7 +517,7 @@ instance Extensible PhysicalDeviceSurfaceInfo2KHR where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PokeChain es) => ToCStruct (PhysicalDeviceSurfaceInfo2KHR es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSurfaceInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -599,7 +599,7 @@ instance Extensible SurfaceCapabilities2KHR where
     | otherwise = Nothing
 
 instance (Extendss SurfaceCapabilities2KHR es, PokeChain es) => ToCStruct (SurfaceCapabilities2KHR es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilities2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -651,7 +651,7 @@ deriving instance Generic (SurfaceFormat2KHR)
 deriving instance Show SurfaceFormat2KHR
 
 instance ToCStruct SurfaceFormat2KHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFormat2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -11,7 +11,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_driver_properties  ( ConformanceVersio
                                                              ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -68,7 +68,7 @@ deriving instance Generic (ConformanceVersion)
 deriving instance Show ConformanceVersion
 
 instance ToCStruct ConformanceVersion where
-  withCStruct x f = allocaBytesAligned 4 1 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ConformanceVersion{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word8)) (major)
     poke ((p `plusPtr` 1 :: Ptr Word8)) (minor)
@@ -154,7 +154,7 @@ deriving instance Generic (PhysicalDeviceDriverProperties)
 deriving instance Show PhysicalDeviceDriverProperties
 
 instance ToCStruct PhysicalDeviceDriverProperties where
-  withCStruct x f = allocaBytesAligned 536 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 536 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDriverProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -104,7 +104,7 @@ module Vulkan.Extensions.VK_AMD_memory_overallocation_behavior  ( DeviceMemoryOv
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -151,7 +151,7 @@ deriving instance Generic (DeviceMemoryOverallocationCreateInfoAMD)
 deriving instance Show DeviceMemoryOverallocationCreateInfoAMD
 
 instance ToCStruct DeviceMemoryOverallocationCreateInfoAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryOverallocationCreateInfoAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

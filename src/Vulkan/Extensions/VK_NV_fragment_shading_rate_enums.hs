@@ -209,7 +209,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -393,7 +393,7 @@ cmdSetFragmentShadingRateEnumNV commandBuffer shadingRate combinerOps = liftIO .
   lift $ unless (vkCmdSetFragmentShadingRateEnumNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetFragmentShadingRateEnumNV is null" Nothing Nothing
   let vkCmdSetFragmentShadingRateEnumNV' = mkVkCmdSetFragmentShadingRateEnumNV vkCmdSetFragmentShadingRateEnumNVPtr
-  pCombinerOps <- ContT $ allocaBytesAligned @(FixedArray 2 FragmentShadingRateCombinerOpKHR) 8 4
+  pCombinerOps <- ContT $ allocaBytes @(FixedArray 2 FragmentShadingRateCombinerOpKHR) 8
   let pCombinerOps' = lowerArrayPtr pCombinerOps
   lift $ case (combinerOps) of
     (e0, e1) -> do
@@ -451,7 +451,7 @@ deriving instance Generic (PhysicalDeviceFragmentShadingRateEnumsFeaturesNV)
 deriving instance Show PhysicalDeviceFragmentShadingRateEnumsFeaturesNV
 
 instance ToCStruct PhysicalDeviceFragmentShadingRateEnumsFeaturesNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentShadingRateEnumsFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -532,7 +532,7 @@ deriving instance Generic (PhysicalDeviceFragmentShadingRateEnumsPropertiesNV)
 deriving instance Show PhysicalDeviceFragmentShadingRateEnumsPropertiesNV
 
 instance ToCStruct PhysicalDeviceFragmentShadingRateEnumsPropertiesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentShadingRateEnumsPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -632,7 +632,7 @@ deriving instance Generic (PipelineFragmentShadingRateEnumStateCreateInfoNV)
 deriving instance Show PipelineFragmentShadingRateEnumStateCreateInfoNV
 
 instance ToCStruct PipelineFragmentShadingRateEnumStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineFragmentShadingRateEnumStateCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -114,7 +114,7 @@ module Vulkan.Extensions.VK_KHR_surface_protected_capabilities  ( SurfaceProtect
                                                                 , pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
                                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -161,7 +161,7 @@ deriving instance Generic (SurfaceProtectedCapabilitiesKHR)
 deriving instance Show SurfaceProtectedCapabilitiesKHR
 
 instance ToCStruct SurfaceProtectedCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceProtectedCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

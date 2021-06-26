@@ -110,7 +110,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -326,7 +326,7 @@ deriving instance Generic (ScreenSurfaceCreateInfoQNX)
 deriving instance Show ScreenSurfaceCreateInfoQNX
 
 instance ToCStruct ScreenSurfaceCreateInfoQNX where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ScreenSurfaceCreateInfoQNX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SCREEN_SURFACE_CREATE_INFO_QNX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

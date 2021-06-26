@@ -129,7 +129,7 @@ module Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state  ( cmdSetVertexInputE
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -280,9 +280,9 @@ cmdSetVertexInputEXT commandBuffer vertexBindingDescriptions vertexAttributeDesc
   lift $ unless (vkCmdSetVertexInputEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetVertexInputEXT is null" Nothing Nothing
   let vkCmdSetVertexInputEXT' = mkVkCmdSetVertexInputEXT vkCmdSetVertexInputEXTPtr
-  pPVertexBindingDescriptions <- ContT $ allocaBytesAligned @VertexInputBindingDescription2EXT ((Data.Vector.length (vertexBindingDescriptions)) * 32) 8
+  pPVertexBindingDescriptions <- ContT $ allocaBytes @VertexInputBindingDescription2EXT ((Data.Vector.length (vertexBindingDescriptions)) * 32)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDescriptions `plusPtr` (32 * (i)) :: Ptr VertexInputBindingDescription2EXT) (e)) (vertexBindingDescriptions)
-  pPVertexAttributeDescriptions <- ContT $ allocaBytesAligned @VertexInputAttributeDescription2EXT ((Data.Vector.length (vertexAttributeDescriptions)) * 32) 8
+  pPVertexAttributeDescriptions <- ContT $ allocaBytes @VertexInputAttributeDescription2EXT ((Data.Vector.length (vertexAttributeDescriptions)) * 32)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexAttributeDescriptions `plusPtr` (32 * (i)) :: Ptr VertexInputAttributeDescription2EXT) (e)) (vertexAttributeDescriptions)
   lift $ traceAroundEvent "vkCmdSetVertexInputEXT" (vkCmdSetVertexInputEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (vertexBindingDescriptions)) :: Word32)) (pPVertexBindingDescriptions) ((fromIntegral (Data.Vector.length $ (vertexAttributeDescriptions)) :: Word32)) (pPVertexAttributeDescriptions))
   pure $ ()
@@ -326,7 +326,7 @@ deriving instance Generic (PhysicalDeviceVertexInputDynamicStateFeaturesEXT)
 deriving instance Show PhysicalDeviceVertexInputDynamicStateFeaturesEXT
 
 instance ToCStruct PhysicalDeviceVertexInputDynamicStateFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVertexInputDynamicStateFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_INPUT_DYNAMIC_STATE_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -434,7 +434,7 @@ deriving instance Generic (VertexInputBindingDescription2EXT)
 deriving instance Show VertexInputBindingDescription2EXT
 
 instance ToCStruct VertexInputBindingDescription2EXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VertexInputBindingDescription2EXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -543,7 +543,7 @@ deriving instance Generic (VertexInputAttributeDescription2EXT)
 deriving instance Show VertexInputAttributeDescription2EXT
 
 instance ToCStruct VertexInputAttributeDescription2EXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VertexInputAttributeDescription2EXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

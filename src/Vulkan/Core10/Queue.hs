@@ -17,7 +17,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -409,7 +409,7 @@ queueSubmit queue submits fence = liftIO . evalContT $ do
   lift $ unless (vkQueueSubmitPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSubmit is null" Nothing Nothing
   let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
-  pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
+  pPSubmits <- ContT $ allocaBytes @(SubmitInfo _) ((Data.Vector.length (submits)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _))) (e) . ($ ())) (submits)
   r <- lift $ traceAroundEvent "vkQueueSubmit" (vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -798,7 +798,7 @@ instance Extensible SubmitInfo where
     | otherwise = Nothing
 
 instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBMIT_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -807,18 +807,18 @@ instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) whe
     lift $ unless ((Data.Vector.length $ (waitDstStageMask)) == pWaitSemaphoresLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pWaitDstStageMask and pWaitSemaphores must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral pWaitSemaphoresLength :: Word32))
-    pPWaitSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (waitSemaphores)) * 8) 8
+    pPWaitSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (waitSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (waitSemaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPWaitSemaphores')
-    pPWaitDstStageMask' <- ContT $ allocaBytesAligned @PipelineStageFlags ((Data.Vector.length (waitDstStageMask)) * 4) 4
+    pPWaitDstStageMask' <- ContT $ allocaBytes @PipelineStageFlags ((Data.Vector.length (waitDstStageMask)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitDstStageMask' `plusPtr` (4 * (i)) :: Ptr PipelineStageFlags) (e)) (waitDstStageMask)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineStageFlags))) (pPWaitDstStageMask')
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32))
-    pPCommandBuffers' <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
+    pPCommandBuffers' <- ContT $ allocaBytes @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers' `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (e)) (commandBuffers)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (Ptr CommandBuffer_T)))) (pPCommandBuffers')
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (signalSemaphores)) :: Word32))
-    pPSignalSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (signalSemaphores)) * 8) 8
+    pPSignalSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (signalSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (signalSemaphores)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr Semaphore))) (pPSignalSemaphores')
     lift $ f

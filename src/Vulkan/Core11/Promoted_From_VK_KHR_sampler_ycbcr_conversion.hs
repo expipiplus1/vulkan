@@ -29,7 +29,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -299,7 +299,7 @@ deriving instance Generic (SamplerYcbcrConversionInfo)
 deriving instance Show SamplerYcbcrConversionInfo
 
 instance ToCStruct SamplerYcbcrConversionInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -569,7 +569,7 @@ instance Extensible SamplerYcbcrConversionCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss SamplerYcbcrConversionCreateInfo es, PokeChain es) => ToCStruct (SamplerYcbcrConversionCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -681,7 +681,7 @@ deriving instance Generic (BindImagePlaneMemoryInfo)
 deriving instance Show BindImagePlaneMemoryInfo
 
 instance ToCStruct BindImagePlaneMemoryInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImagePlaneMemoryInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -768,7 +768,7 @@ deriving instance Generic (ImagePlaneMemoryRequirementsInfo)
 deriving instance Show ImagePlaneMemoryRequirementsInfo
 
 instance ToCStruct ImagePlaneMemoryRequirementsInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImagePlaneMemoryRequirementsInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -839,7 +839,7 @@ deriving instance Generic (PhysicalDeviceSamplerYcbcrConversionFeatures)
 deriving instance Show PhysicalDeviceSamplerYcbcrConversionFeatures
 
 instance ToCStruct PhysicalDeviceSamplerYcbcrConversionFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSamplerYcbcrConversionFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -889,7 +889,7 @@ deriving instance Generic (SamplerYcbcrConversionImageFormatProperties)
 deriving instance Show SamplerYcbcrConversionImageFormatProperties
 
 instance ToCStruct SamplerYcbcrConversionImageFormatProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionImageFormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

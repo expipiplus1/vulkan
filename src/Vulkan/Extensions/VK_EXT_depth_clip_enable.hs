@@ -118,7 +118,7 @@ module Vulkan.Extensions.VK_EXT_depth_clip_enable  ( PhysicalDeviceDepthClipEnab
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -189,7 +189,7 @@ deriving instance Generic (PhysicalDeviceDepthClipEnableFeaturesEXT)
 deriving instance Show PhysicalDeviceDepthClipEnableFeaturesEXT
 
 instance ToCStruct PhysicalDeviceDepthClipEnableFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDepthClipEnableFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -248,7 +248,7 @@ deriving instance Generic (PipelineRasterizationDepthClipStateCreateInfoEXT)
 deriving instance Show PipelineRasterizationDepthClipStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationDepthClipStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationDepthClipStateCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64  ( PhysicalDeviceS
                                                                , StructureType(..)
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -68,7 +68,7 @@ deriving instance Generic (PhysicalDeviceShaderAtomicInt64Features)
 deriving instance Show PhysicalDeviceShaderAtomicInt64Features
 
 instance ToCStruct PhysicalDeviceShaderAtomicInt64Features where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderAtomicInt64Features{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

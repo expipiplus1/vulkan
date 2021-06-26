@@ -136,7 +136,7 @@ module Vulkan.Extensions.VK_EXT_multi_draw  ( cmdDrawMultiEXT
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Utils (with)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -798,7 +798,7 @@ cmdDrawMultiEXT commandBuffer vertexInfo instanceCount firstInstance stride = li
   lift $ unless (vkCmdDrawMultiEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMultiEXT is null" Nothing Nothing
   let vkCmdDrawMultiEXT' = mkVkCmdDrawMultiEXT vkCmdDrawMultiEXTPtr
-  pPVertexInfo <- ContT $ allocaBytesAligned @MultiDrawInfoEXT ((Data.Vector.length (vertexInfo)) * 8) 4
+  pPVertexInfo <- ContT $ allocaBytes @MultiDrawInfoEXT ((Data.Vector.length (vertexInfo)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexInfo `plusPtr` (8 * (i)) :: Ptr MultiDrawInfoEXT) (e)) (vertexInfo)
   lift $ traceAroundEvent "vkCmdDrawMultiEXT" (vkCmdDrawMultiEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (vertexInfo)) :: Word32)) (pPVertexInfo) (instanceCount) (firstInstance) (stride))
   pure $ ()
@@ -1444,7 +1444,7 @@ cmdDrawMultiIndexedEXT commandBuffer indexInfo instanceCount firstInstance strid
   lift $ unless (vkCmdDrawMultiIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMultiIndexedEXT is null" Nothing Nothing
   let vkCmdDrawMultiIndexedEXT' = mkVkCmdDrawMultiIndexedEXT vkCmdDrawMultiIndexedEXTPtr
-  pPIndexInfo <- ContT $ allocaBytesAligned @MultiDrawIndexedInfoEXT ((Data.Vector.length (indexInfo)) * 12) 4
+  pPIndexInfo <- ContT $ allocaBytes @MultiDrawIndexedInfoEXT ((Data.Vector.length (indexInfo)) * 12)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPIndexInfo `plusPtr` (12 * (i)) :: Ptr MultiDrawIndexedInfoEXT) (e)) (indexInfo)
   pVertexOffset <- case (vertexOffset) of
     Nothing -> pure nullPtr
@@ -1477,7 +1477,7 @@ deriving instance Generic (MultiDrawInfoEXT)
 deriving instance Show MultiDrawInfoEXT
 
 instance ToCStruct MultiDrawInfoEXT where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MultiDrawInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (firstVertex)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (vertexCount)
@@ -1536,7 +1536,7 @@ deriving instance Generic (MultiDrawIndexedInfoEXT)
 deriving instance Show MultiDrawIndexedInfoEXT
 
 instance ToCStruct MultiDrawIndexedInfoEXT where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MultiDrawIndexedInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (firstIndex)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (indexCount)
@@ -1605,7 +1605,7 @@ deriving instance Generic (PhysicalDeviceMultiDrawPropertiesEXT)
 deriving instance Show PhysicalDeviceMultiDrawPropertiesEXT
 
 instance ToCStruct PhysicalDeviceMultiDrawPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiDrawPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1673,7 +1673,7 @@ deriving instance Generic (PhysicalDeviceMultiDrawFeaturesEXT)
 deriving instance Show PhysicalDeviceMultiDrawFeaturesEXT
 
 instance ToCStruct PhysicalDeviceMultiDrawFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiDrawFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

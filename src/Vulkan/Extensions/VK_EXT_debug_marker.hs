@@ -291,7 +291,7 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -729,7 +729,7 @@ deriving instance Generic (DebugMarkerObjectNameInfoEXT)
 deriving instance Show DebugMarkerObjectNameInfoEXT
 
 instance ToCStruct DebugMarkerObjectNameInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugMarkerObjectNameInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -823,7 +823,7 @@ deriving instance Generic (DebugMarkerObjectTagInfoEXT)
 deriving instance Show DebugMarkerObjectTagInfoEXT
 
 instance ToCStruct DebugMarkerObjectTagInfoEXT where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugMarkerObjectTagInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -899,7 +899,7 @@ deriving instance Generic (DebugMarkerMarkerInfoEXT)
 deriving instance Show DebugMarkerMarkerInfoEXT
 
 instance ToCStruct DebugMarkerMarkerInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugMarkerMarkerInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -7,7 +7,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2  ( 
                                                                               , ImageCreateFlags
                                                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -99,12 +99,12 @@ deriving instance Generic (BindBufferMemoryDeviceGroupInfo)
 deriving instance Show BindBufferMemoryDeviceGroupInfo
 
 instance ToCStruct BindBufferMemoryDeviceGroupInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindBufferMemoryDeviceGroupInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceIndices)) :: Word32))
-    pPDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (deviceIndices)) * 4) 4
+    pPDeviceIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (deviceIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (deviceIndices)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDeviceIndices')
     lift $ f
@@ -251,16 +251,16 @@ deriving instance Generic (BindImageMemoryDeviceGroupInfo)
 deriving instance Show BindImageMemoryDeviceGroupInfo
 
 instance ToCStruct BindImageMemoryDeviceGroupInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImageMemoryDeviceGroupInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceIndices)) :: Word32))
-    pPDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (deviceIndices)) * 4) 4
+    pPDeviceIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (deviceIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (deviceIndices)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDeviceIndices')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (splitInstanceBindRegions)) :: Word32))
-    pPSplitInstanceBindRegions' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (splitInstanceBindRegions)) * 16) 4
+    pPSplitInstanceBindRegions' <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (splitInstanceBindRegions)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSplitInstanceBindRegions' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (splitInstanceBindRegions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Rect2D))) (pPSplitInstanceBindRegions')
     lift $ f

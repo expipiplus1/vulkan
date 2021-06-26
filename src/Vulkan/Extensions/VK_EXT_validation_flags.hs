@@ -117,7 +117,7 @@ module Vulkan.Extensions.VK_EXT_validation_flags  ( ValidationFlagsEXT(..)
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -173,12 +173,12 @@ deriving instance Generic (ValidationFlagsEXT)
 deriving instance Show ValidationFlagsEXT
 
 instance ToCStruct ValidationFlagsEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ValidationFlagsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VALIDATION_FLAGS_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (disabledValidationChecks)) :: Word32))
-    pPDisabledValidationChecks' <- ContT $ allocaBytesAligned @ValidationCheckEXT ((Data.Vector.length (disabledValidationChecks)) * 4) 4
+    pPDisabledValidationChecks' <- ContT $ allocaBytes @ValidationCheckEXT ((Data.Vector.length (disabledValidationChecks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDisabledValidationChecks' `plusPtr` (4 * (i)) :: Ptr ValidationCheckEXT) (e)) (disabledValidationChecks)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ValidationCheckEXT))) (pPDisabledValidationChecks')
     lift $ f

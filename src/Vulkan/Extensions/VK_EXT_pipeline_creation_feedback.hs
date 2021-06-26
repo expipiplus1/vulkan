@@ -131,7 +131,7 @@ module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFe
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -190,7 +190,7 @@ deriving instance Generic (PipelineCreationFeedbackEXT)
 deriving instance Show PipelineCreationFeedbackEXT
 
 instance ToCStruct PipelineCreationFeedbackEXT where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCreationFeedbackEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr PipelineCreationFeedbackFlagsEXT)) (flags)
     poke ((p `plusPtr` 8 :: Ptr Word64)) (duration)
@@ -323,7 +323,7 @@ deriving instance Generic (PipelineCreationFeedbackCreateInfoEXT)
 deriving instance Show PipelineCreationFeedbackCreateInfoEXT
 
 instance ToCStruct PipelineCreationFeedbackCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCreationFeedbackCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

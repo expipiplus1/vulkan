@@ -259,7 +259,7 @@ module Vulkan.Extensions.VK_EXT_device_memory_report  ( PhysicalDeviceDeviceMemo
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -337,7 +337,7 @@ deriving instance Generic (PhysicalDeviceDeviceMemoryReportFeaturesEXT)
 deriving instance Show PhysicalDeviceDeviceMemoryReportFeaturesEXT
 
 instance ToCStruct PhysicalDeviceDeviceMemoryReportFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDeviceMemoryReportFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -414,7 +414,7 @@ deriving instance Generic (DeviceDeviceMemoryReportCreateInfoEXT)
 deriving instance Show DeviceDeviceMemoryReportCreateInfoEXT
 
 instance ToCStruct DeviceDeviceMemoryReportCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceDeviceMemoryReportCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -546,7 +546,7 @@ deriving instance Generic (DeviceMemoryReportCallbackDataEXT)
 deriving instance Show DeviceMemoryReportCallbackDataEXT
 
 instance ToCStruct DeviceMemoryReportCallbackDataEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryReportCallbackDataEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

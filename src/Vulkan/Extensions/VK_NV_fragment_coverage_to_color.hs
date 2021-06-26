@@ -100,7 +100,7 @@ module Vulkan.Extensions.VK_NV_fragment_coverage_to_color  ( PipelineCoverageToC
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -204,7 +204,7 @@ deriving instance Generic (PipelineCoverageToColorStateCreateInfoNV)
 deriving instance Show PipelineCoverageToColorStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageToColorStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCoverageToColorStateCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

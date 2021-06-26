@@ -262,7 +262,7 @@ module Vulkan.Extensions.VK_QCOM_render_pass_transform  ( RenderPassTransformBeg
                                                         , SurfaceTransformFlagsKHR
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -326,7 +326,7 @@ deriving instance Generic (RenderPassTransformBeginInfoQCOM)
 deriving instance Show RenderPassTransformBeginInfoQCOM
 
 instance ToCStruct RenderPassTransformBeginInfoQCOM where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassTransformBeginInfoQCOM{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -400,7 +400,7 @@ deriving instance Generic (CommandBufferInheritanceRenderPassTransformInfoQCOM)
 deriving instance Show CommandBufferInheritanceRenderPassTransformInfoQCOM
 
 instance ToCStruct CommandBufferInheritanceRenderPassTransformInfoQCOM where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferInheritanceRenderPassTransformInfoQCOM{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

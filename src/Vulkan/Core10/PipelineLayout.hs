@@ -12,7 +12,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -275,7 +275,7 @@ deriving instance Generic (PushConstantRange)
 deriving instance Show PushConstantRange
 
 instance ToCStruct PushConstantRange where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PushConstantRange{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (stageFlags)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (offset)
@@ -722,17 +722,17 @@ deriving instance Generic (PipelineLayoutCreateInfo)
 deriving instance Show PipelineLayoutCreateInfo
 
 instance ToCStruct PipelineLayoutCreateInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineLayoutCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineLayoutCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (setLayouts)) :: Word32))
-    pPSetLayouts' <- ContT $ allocaBytesAligned @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8) 8
+    pPSetLayouts' <- ContT $ allocaBytes @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSetLayouts' `plusPtr` (8 * (i)) :: Ptr DescriptorSetLayout) (e)) (setLayouts)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pushConstantRanges)) :: Word32))
-    pPPushConstantRanges' <- ContT $ allocaBytesAligned @PushConstantRange ((Data.Vector.length (pushConstantRanges)) * 12) 4
+    pPPushConstantRanges' <- ContT $ allocaBytes @PushConstantRange ((Data.Vector.length (pushConstantRanges)) * 12)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e)) (pushConstantRanges)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr PushConstantRange))) (pPPushConstantRanges')
     lift $ f

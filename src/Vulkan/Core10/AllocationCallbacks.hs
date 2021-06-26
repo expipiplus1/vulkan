@@ -2,7 +2,7 @@
 -- No documentation found for Chapter "AllocationCallbacks"
 module Vulkan.Core10.AllocationCallbacks  (AllocationCallbacks(..)) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -186,7 +186,7 @@ deriving instance Generic (AllocationCallbacks)
 deriving instance Show AllocationCallbacks
 
 instance ToCStruct AllocationCallbacks where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocationCallbacks{..} f = do
     poke ((p `plusPtr` 0 :: Ptr (Ptr ()))) (userData)
     poke ((p `plusPtr` 8 :: Ptr PFN_vkAllocationFunction)) (pfnAllocation)

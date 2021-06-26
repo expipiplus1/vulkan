@@ -23,7 +23,7 @@ module Vulkan.Core10.FundamentalTypes  ( boolToBool32
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Data.Bool (bool)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
 import Vulkan.CStruct (FromCStruct)
@@ -78,7 +78,7 @@ deriving instance Generic (Offset2D)
 deriving instance Show Offset2D
 
 instance ToCStruct Offset2D where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Offset2D{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Int32)) (x)
     poke ((p `plusPtr` 4 :: Ptr Int32)) (y)
@@ -137,7 +137,7 @@ deriving instance Generic (Offset3D)
 deriving instance Show Offset3D
 
 instance ToCStruct Offset3D where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Offset3D{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Int32)) (x)
     poke ((p `plusPtr` 4 :: Ptr Int32)) (y)
@@ -216,7 +216,7 @@ deriving instance Generic (Extent2D)
 deriving instance Show Extent2D
 
 instance ToCStruct Extent2D where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Extent2D{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (width)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (height)
@@ -277,7 +277,7 @@ deriving instance Generic (Extent3D)
 deriving instance Show Extent3D
 
 instance ToCStruct Extent3D where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Extent3D{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (width)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (height)
@@ -344,7 +344,7 @@ deriving instance Generic (Rect2D)
 deriving instance Show Rect2D
 
 instance ToCStruct Rect2D where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Rect2D{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Offset2D)) (offset)
     poke ((p `plusPtr` 8 :: Ptr Extent2D)) (extent)

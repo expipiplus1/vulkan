@@ -259,7 +259,7 @@ module Vulkan.Extensions.VK_EXT_custom_border_color  ( SamplerCustomBorderColorC
                                                      , pattern EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -349,7 +349,7 @@ deriving instance Generic (SamplerCustomBorderColorCreateInfoEXT)
 deriving instance Show SamplerCustomBorderColorCreateInfoEXT
 
 instance ToCStruct SamplerCustomBorderColorCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerCustomBorderColorCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -401,7 +401,7 @@ deriving instance Generic (PhysicalDeviceCustomBorderColorPropertiesEXT)
 deriving instance Show PhysicalDeviceCustomBorderColorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCustomBorderColorPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -484,7 +484,7 @@ deriving instance Generic (PhysicalDeviceCustomBorderColorFeaturesEXT)
 deriving instance Show PhysicalDeviceCustomBorderColorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCustomBorderColorFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

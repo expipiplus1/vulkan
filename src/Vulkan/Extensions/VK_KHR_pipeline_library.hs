@@ -89,7 +89,7 @@ module Vulkan.Extensions.VK_KHR_pipeline_library  ( PipelineLibraryCreateInfoKHR
                                                   , pattern KHR_PIPELINE_LIBRARY_EXTENSION_NAME
                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -155,12 +155,12 @@ deriving instance Generic (PipelineLibraryCreateInfoKHR)
 deriving instance Show PipelineLibraryCreateInfoKHR
 
 instance ToCStruct PipelineLibraryCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineLibraryCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (libraries)) :: Word32))
-    pPLibraries' <- ContT $ allocaBytesAligned @Pipeline ((Data.Vector.length (libraries)) * 8) 8
+    pPLibraries' <- ContT $ allocaBytes @Pipeline ((Data.Vector.length (libraries)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPLibraries' `plusPtr` (8 * (i)) :: Ptr Pipeline) (e)) (libraries)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Pipeline))) (pPLibraries')
     lift $ f

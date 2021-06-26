@@ -540,7 +540,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -933,7 +933,7 @@ deriving instance Generic (PhysicalDevicePerformanceQueryFeaturesKHR)
 deriving instance Show PhysicalDevicePerformanceQueryFeaturesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePerformanceQueryFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -999,7 +999,7 @@ deriving instance Generic (PhysicalDevicePerformanceQueryPropertiesKHR)
 deriving instance Show PhysicalDevicePerformanceQueryPropertiesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePerformanceQueryPropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1063,7 +1063,7 @@ deriving instance Generic (PerformanceCounterKHR)
 deriving instance Show PerformanceCounterKHR
 
 instance ToCStruct PerformanceCounterKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceCounterKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1140,7 +1140,7 @@ deriving instance Generic (PerformanceCounterDescriptionKHR)
 deriving instance Show PerformanceCounterDescriptionKHR
 
 instance ToCStruct PerformanceCounterDescriptionKHR where
-  withCStruct x f = allocaBytesAligned 792 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 792 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceCounterDescriptionKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1235,13 +1235,13 @@ deriving instance Generic (QueryPoolPerformanceCreateInfoKHR)
 deriving instance Show QueryPoolPerformanceCreateInfoKHR
 
 instance ToCStruct QueryPoolPerformanceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolPerformanceCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (queueFamilyIndex)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (counterIndices)) :: Word32))
-    pPCounterIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (counterIndices)) * 4) 4
+    pPCounterIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (counterIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (counterIndices)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPCounterIndices')
     lift $ f
@@ -1299,7 +1299,7 @@ deriving instance Generic (AcquireProfilingLockInfoKHR)
 deriving instance Show AcquireProfilingLockInfoKHR
 
 instance ToCStruct AcquireProfilingLockInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AcquireProfilingLockInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1362,7 +1362,7 @@ deriving instance Generic (PerformanceQuerySubmitInfoKHR)
 deriving instance Show PerformanceQuerySubmitInfoKHR
 
 instance ToCStruct PerformanceQuerySubmitInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceQuerySubmitInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1403,7 +1403,7 @@ data PerformanceCounterResultKHR
   deriving (Show)
 
 instance ToCStruct PerformanceCounterResultKHR where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr PerformanceCounterResultKHR -> PerformanceCounterResultKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Int32Counter v -> lift $ poke (castPtr @_ @Int32 p) (v)

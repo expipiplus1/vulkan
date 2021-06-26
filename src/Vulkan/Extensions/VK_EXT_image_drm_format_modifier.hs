@@ -542,7 +542,7 @@ module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDrmFormatMo
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -688,7 +688,7 @@ deriving instance Generic (DrmFormatModifierPropertiesListEXT)
 deriving instance Show DrmFormatModifierPropertiesListEXT
 
 instance ToCStruct DrmFormatModifierPropertiesListEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrmFormatModifierPropertiesListEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -828,7 +828,7 @@ deriving instance Generic (DrmFormatModifierPropertiesEXT)
 deriving instance Show DrmFormatModifierPropertiesEXT
 
 instance ToCStruct DrmFormatModifierPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrmFormatModifierPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word64)) (drmFormatModifier)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (drmFormatModifierPlaneCount)
@@ -933,14 +933,14 @@ deriving instance Generic (PhysicalDeviceImageDrmFormatModifierInfoEXT)
 deriving instance Show PhysicalDeviceImageDrmFormatModifierInfoEXT
 
 instance ToCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImageDrmFormatModifierInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word64)) (drmFormatModifier)
     lift $ poke ((p `plusPtr` 24 :: Ptr SharingMode)) (sharingMode)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueFamilyIndices)) :: Word32))
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4) 4
+    pPQueueFamilyIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (queueFamilyIndices)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ f
@@ -1009,12 +1009,12 @@ deriving instance Generic (ImageDrmFormatModifierListCreateInfoEXT)
 deriving instance Show ImageDrmFormatModifierListCreateInfoEXT
 
 instance ToCStruct ImageDrmFormatModifierListCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageDrmFormatModifierListCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (drmFormatModifiers)) :: Word32))
-    pPDrmFormatModifiers' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (drmFormatModifiers)) * 8) 8
+    pPDrmFormatModifiers' <- ContT $ allocaBytes @Word64 ((Data.Vector.length (drmFormatModifiers)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDrmFormatModifiers' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (drmFormatModifiers)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) (pPDrmFormatModifiers')
     lift $ f
@@ -1120,13 +1120,13 @@ deriving instance Generic (ImageDrmFormatModifierExplicitCreateInfoEXT)
 deriving instance Show ImageDrmFormatModifierExplicitCreateInfoEXT
 
 instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageDrmFormatModifierExplicitCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word64)) (drmFormatModifier)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (planeLayouts)) :: Word32))
-    pPPlaneLayouts' <- ContT $ allocaBytesAligned @SubresourceLayout ((Data.Vector.length (planeLayouts)) * 40) 8
+    pPPlaneLayouts' <- ContT $ allocaBytes @SubresourceLayout ((Data.Vector.length (planeLayouts)) * 40)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPlaneLayouts' `plusPtr` (40 * (i)) :: Ptr SubresourceLayout) (e)) (planeLayouts)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SubresourceLayout))) (pPPlaneLayouts')
     lift $ f
@@ -1185,7 +1185,7 @@ deriving instance Generic (ImageDrmFormatModifierPropertiesEXT)
 deriving instance Show ImageDrmFormatModifierPropertiesEXT
 
 instance ToCStruct ImageDrmFormatModifierPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageDrmFormatModifierPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -159,7 +159,7 @@ module Vulkan.Extensions.VK_NV_corner_sampled_image  ( PhysicalDeviceCornerSampl
                                                      , pattern NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -221,7 +221,7 @@ deriving instance Generic (PhysicalDeviceCornerSampledImageFeaturesNV)
 deriving instance Show PhysicalDeviceCornerSampledImageFeaturesNV
 
 instance ToCStruct PhysicalDeviceCornerSampledImageFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCornerSampledImageFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

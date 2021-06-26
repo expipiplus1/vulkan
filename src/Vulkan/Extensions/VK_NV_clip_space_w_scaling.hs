@@ -215,7 +215,7 @@ module Vulkan.Extensions.VK_NV_clip_space_w_scaling  ( cmdSetViewportWScalingNV
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -344,7 +344,7 @@ cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO 
   lift $ unless (vkCmdSetViewportWScalingNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWScalingNV is null" Nothing Nothing
   let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNVPtr
-  pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8) 4
+  pPViewportWScalings <- ContT $ allocaBytes @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e)) (viewportWScalings)
   lift $ traceAroundEvent "vkCmdSetViewportWScalingNV" (vkCmdSetViewportWScalingNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewportWScalings)) :: Word32)) (pPViewportWScalings))
   pure $ ()
@@ -369,7 +369,7 @@ deriving instance Generic (ViewportWScalingNV)
 deriving instance Show ViewportWScalingNV
 
 instance ToCStruct ViewportWScalingNV where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewportWScalingNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (xcoeff))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (ycoeff))
@@ -433,7 +433,7 @@ deriving instance Generic (PipelineViewportWScalingStateCreateInfoNV)
 deriving instance Show PipelineViewportWScalingStateCreateInfoNV
 
 instance ToCStruct PipelineViewportWScalingStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportWScalingStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -449,7 +449,7 @@ instance ToCStruct PipelineViewportWScalingStateCreateInfoNV where
     pViewportWScalings'' <- if Data.Vector.null (viewportWScalings)
       then pure nullPtr
       else do
-        pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV (((Data.Vector.length (viewportWScalings))) * 8) 4
+        pPViewportWScalings <- ContT $ allocaBytes @ViewportWScalingNV (((Data.Vector.length (viewportWScalings))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e)) ((viewportWScalings))
         pure $ pPViewportWScalings
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportWScalingNV))) pViewportWScalings''
