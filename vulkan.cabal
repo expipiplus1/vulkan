@@ -562,3 +562,57 @@ library
   if flag(trace-calls)
     cpp-options: -DTRACE_CALLS
   default-language: Haskell2010
+
+test-suite test
+  type: exitcode-stdio-1.0
+  main-is: Driver.hs
+  other-modules:
+      Structs
+      VkCtx
+      Paths_vulkan
+  hs-source-dirs:
+      test
+  default-extensions:
+      AllowAmbiguousTypes
+      CPP
+      DataKinds
+      DefaultSignatures
+      DeriveAnyClass
+      DeriveGeneric
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NoMonomorphismRestriction
+      OverloadedStrings
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      UndecidableInstances
+      ViewPatterns
+  build-depends:
+      base
+    , containers
+    , inline-c
+    , tasty
+    , tasty-discover
+    , tasty-hunit
+    , template-haskell
+    , vulkan
+  default-language: Haskell2010

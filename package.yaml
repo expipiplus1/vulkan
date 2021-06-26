@@ -61,6 +61,21 @@ flags:
     default: no
     manual: yes
 
+tests:
+  test:
+    main: Driver.hs
+    source-dirs:
+    - test
+    dependencies:
+    - base
+    - containers
+    - inline-c
+    - tasty
+    - tasty-discover
+    - tasty-hunit
+    - template-haskell
+    - vulkan
+
 default-extensions:
 - AllowAmbiguousTypes
 - CPP
@@ -95,4 +110,3 @@ default-extensions:
 - TypeSynonymInstances
 - UndecidableInstances
 - ViewPatterns
-
