@@ -62,34 +62,40 @@ jobs:
         code=${PIPESTATUS[0]}
         set -e
 
-        echo '<details> <summary>log of `generate-new/bin/vk`</summary> <p>' >> "$issue_body"
-        echo '' >> "$issue_body"
-        echo '```' >> "$issue_body"
-        cat ~/update_output >> "$issue_body"
-        echo '```' >> "$issue_body"
-        echo '' >> "$issue_body"
-        echo '</p></details>' >> "$issue_body"
+        {
+          echo '<details> <summary>log of `generate-new/bin/vk`</summary> <p>'
+          echo ''
+          echo '```'
+          cat ~/update_output
+          echo '```'
+          echo ''
+          echo '</p></details>'
+        } >> "$issue_body"
 
         gist="$HOME/gist-post.json"
-        jq -R -s '{"description": "Vulkan update diff", "public": false, "files": {"vulkan.diff": {"content": .}}}' < "$ndd" > "$gist"
-        gist_url=$( (curl \
-          --header "Content-Type: application/json" \
-          --data @"$gist" \
-          --user "$tok:" \
-          https://api.github.com/gists |
-          jq --raw-output .html_url |
-          sed 's/.*/[Diff without documentation changes](\0)/') ||
-          echo "Failed to create gist for diff"
-         )
+        make_gist(){
+          set -o pipefail
+          jq -R -s '{"description": "Vulkan update diff", "public": false, "files": {"vulkan.diff": {"content": .}}}' < "$ndd" > "$gist" &&
+            curl \
+              --header "Content-Type: application/json" \
+              --data @"$gist" \
+              --user "$tok:" \
+              https://api.github.com/gists |
+              jq --raw-output .html_url |
+              sed 's/.*/[Diff without documentation changes](\0)/'
+        }
+        gist_url=$(make_gist || echo "Failed to create gist for diff")
         echo gist_url = "$gist_url"
 
-        echo "pr_message<<EOF_HS_VK" >> "$GITHUB_ENV"
-        cat $pr_body >> "$GITHUB_ENV"
-        echo >> "$GITHUB_ENV"
-        echo "$gist_url" >> "$GITHUB_ENV"
-        echo "EOF_HS_VK" >> $GITHUB_ENV
+        {
+          echo "pr_message<<EOF_HS_VK"
+          cat "$pr_body"
+          echo
+          echo "$gist_url"
+          echo "EOF_HS_VK"
+        } >> "$GITHUB_ENV"
 
-        (exit $code)
+        (exit "$code")
 
     - id: check_pr
       run: |
