@@ -496,7 +496,10 @@ lenRefFromSibling name = do
           ("either id (fromIntegral . Data.Vector.length)" <+> vec)
         -- Assume vector for now, TODO, put this in CustomScheme
         Custom _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
-        _ -> throw "Trying to get the length of a non vector type sibling"
+        s ->
+          throw
+            $  "Trying to get the length of a non vector type sibling: "
+            <> show s
 
 
 -- TODO: the type of the value here could be improved
