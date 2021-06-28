@@ -409,15 +409,12 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkResetEvent-event-03821# There /must/ be an execution
---     dependency between
---     'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' and the
---     execution of any 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'
---     that includes @event@ in its @pEvents@ parameter
+--     dependency between 'resetEvent' and the execution of any
+--     'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' that includes
+--     @event@ in its @pEvents@ parameter
 --
 -- -   #VUID-vkResetEvent-event-03822# There /must/ be an execution
---     dependency between
---     'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' and the
---     execution of any
+--     dependency between 'resetEvent' and the execution of any
 --     'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR' that
 --     includes @event@ in its @pEvents@ parameter
 --

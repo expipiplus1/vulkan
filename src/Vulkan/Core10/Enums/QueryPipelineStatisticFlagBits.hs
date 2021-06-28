@@ -46,9 +46,10 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 -- multiple times, affecting some of the counts.
 --
 -- If a pipeline has @rasterizerDiscardEnable@ enabled, implementations
--- /may/ discard primitives after the final vertex processing stage. As a
--- result, if @rasterizerDiscardEnable@ is enabled, the clipping input and
--- output primitives counters /may/ not be incremented.
+-- /may/ discard primitives after the final
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- As a result, if @rasterizerDiscardEnable@ is enabled, the clipping input
+-- and output primitives counters /may/ not be incremented.
 --
 -- When a pipeline statistics query finishes, the result for that query is
 -- marked as available. The application /can/ copy the result to a buffer

@@ -537,6 +537,9 @@ foreign import ccall
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
+-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]

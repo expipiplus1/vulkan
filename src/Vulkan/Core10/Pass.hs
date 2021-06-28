@@ -1314,9 +1314,9 @@ data SubpassDescription = SubpassDescription
     -- @colorAttachmentCount@ 'AttachmentReference' structures defining the
     -- resolve attachments for this subpass and their layouts.
     resolveAttachments :: Vector AttachmentReference
-  , -- | @pDepthStencilAttachment@ is a pointer to an array of
-    -- 'AttachmentReference' structures specifying the depth\/stencil
-    -- attachment for this subpass and its layout.
+  , -- | @pDepthStencilAttachment@ is a pointer to a 'AttachmentReference'
+    -- structure specifying the depth\/stencil attachment for this subpass and
+    -- its layout.
     depthStencilAttachment :: Maybe AttachmentReference
   , -- | @pPreserveAttachments@ is a pointer to an array of
     -- @preserveAttachmentCount@ render pass attachment indices identifying

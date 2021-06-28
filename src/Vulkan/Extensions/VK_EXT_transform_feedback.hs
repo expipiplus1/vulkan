@@ -205,9 +205,11 @@
 -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'.
 -- A query pool created with this type will capture 2 integers -
 -- numPrimitivesWritten and numPrimitivesNeeded - for the specified vertex
--- stream output from the last vertex processing stage. The vertex stream
--- output queried is zero by default, but can be specified with the new
--- 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT' commands.
+-- stream output from the last
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- The vertex stream output queried is zero by default, but can be
+-- specified with the new 'cmdBeginQueryIndexedEXT' and
+-- 'cmdEndQueryIndexedEXT' commands.
 --
 -- == Version History
 --
@@ -543,9 +545,10 @@ foreign import ccall
 --     with a @usage@ value containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-04128# The last vertex
---     processing stage of the bound graphics pipeline /must/ have been
---     declared with the @Xfb@ execution mode
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-04128# The last
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     of the bound graphics pipeline /must/ have been declared with the
+--     @Xfb@ execution mode
 --
 -- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-02373# Transform feedback
 --     /must/ not be made active in a render pass instance with multiview
@@ -1914,7 +1917,8 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     maxTransformFeedbackStreams :: Word32
   , -- | #limits-maxTransformFeedbackBuffers# @maxTransformFeedbackBuffers@ is
     -- the maximum number of transform feedback buffers that can be bound for
-    -- capturing shader outputs from the last vertex processing stage.
+    -- capturing shader outputs from the last
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
     maxTransformFeedbackBuffers :: Word32
   , -- | #limits-maxTransformFeedbackBufferSize# @maxTransformFeedbackBufferSize@
     -- is the maximum size that can be specified when binding a buffer for

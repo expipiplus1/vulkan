@@ -2200,6 +2200,7 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 -- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-03903# If @srcAccessMask@
 --     includes 'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR', @srcStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR',
+--     @VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI@,
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -2429,6 +2430,7 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 -- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-03903# If @dstAccessMask@
 --     includes 'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR', @dstStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR',
+--     @VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI@,
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -2619,14 +2621,16 @@ data MemoryBarrier2KHR = MemoryBarrier2KHR
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes first synchronization scope>.
     srcStageMask :: PipelineStageFlags2KHR
-  , -- | @srcAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+  , -- | @srcAccessMask@ is a 'AccessFlags2KHR' mask of access flags to be
+    -- included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes first access scope>.
     srcAccessMask :: AccessFlags2KHR
   , -- | @dstStageMask@ is a 'PipelineStageFlags2KHR' mask of pipeline stages to
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes second synchronization scope>.
     dstStageMask :: PipelineStageFlags2KHR
-  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of access flags to be
+    -- included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstAccessMask :: AccessFlags2KHR
   }
@@ -2829,6 +2833,7 @@ instance Zero MemoryBarrier2KHR where
 --     @srcAccessMask@ includes 'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR',
 --     @srcStageMask@ /must/ include
 --     'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR',
+--     @VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI@,
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -3076,6 +3081,7 @@ instance Zero MemoryBarrier2KHR where
 --     @dstAccessMask@ includes 'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR',
 --     @dstStageMask@ /must/ include
 --     'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR',
+--     @VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI@,
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -3596,14 +3602,16 @@ data ImageMemoryBarrier2KHR (es :: [Type]) = ImageMemoryBarrier2KHR
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes first synchronization scope>.
     srcStageMask :: PipelineStageFlags2KHR
-  , -- | @srcAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+  , -- | @srcAccessMask@ is a 'AccessFlags2KHR' mask of access flags to be
+    -- included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes first access scope>.
     srcAccessMask :: AccessFlags2KHR
   , -- | @dstStageMask@ is a 'PipelineStageFlags2KHR' mask of pipeline stages to
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes second synchronization scope>.
     dstStageMask :: PipelineStageFlags2KHR
-  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of access flags to be
+    -- included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstAccessMask :: AccessFlags2KHR
   , -- | @oldLayout@ is the old layout in an
@@ -3831,6 +3839,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     @srcAccessMask@ includes 'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR',
 --     @srcStageMask@ /must/ include
 --     'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR',
+--     @VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI@,
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -4078,6 +4087,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     @dstAccessMask@ includes 'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR',
 --     @dstStageMask@ /must/ include
 --     'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR',
+--     @VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI@,
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
@@ -4337,14 +4347,16 @@ data BufferMemoryBarrier2KHR = BufferMemoryBarrier2KHR
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes first synchronization scope>.
     srcStageMask :: PipelineStageFlags2KHR
-  , -- | @srcAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+  , -- | @srcAccessMask@ is a 'AccessFlags2KHR' mask of access flags to be
+    -- included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes first access scope>.
     srcAccessMask :: AccessFlags2KHR
   , -- | @dstStageMask@ is a 'PipelineStageFlags2KHR' mask of pipeline stages to
     -- be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes second synchronization scope>.
     dstStageMask :: PipelineStageFlags2KHR
-  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of pipeline
+  , -- | @dstAccessMask@ is a 'AccessFlags2KHR' mask of access flags to be
+    -- included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes second access scope>.
     dstAccessMask :: AccessFlags2KHR
   , -- | @srcQueueFamilyIndex@ is the source queue family for a
@@ -5591,7 +5603,8 @@ pattern PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR                    = PipelineStageF
 -- the pipeline where vertex buffers are consumed.
 pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR         = PipelineStageFlagBits2KHR 0x0000002000000000
 -- | 'PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR' is equivalent to
--- specifying all supported stages from:
+-- specifying all supported
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>:
 --
 -- -   'PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR'
 --
