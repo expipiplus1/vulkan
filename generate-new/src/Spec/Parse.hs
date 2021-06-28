@@ -1056,8 +1056,6 @@ parseSPIRVThings thingType mkThing es = V.fromList <$> sequenceV
   [ parseExtension e
   | Element e <- es
   , thingType == name e
-    -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1565
-  , getAttr "name" e /= Just "RayTracingMotionBlurNV"
   ]
  where
   parseExtension n = do
