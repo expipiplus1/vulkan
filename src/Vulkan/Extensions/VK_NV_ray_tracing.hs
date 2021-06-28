@@ -1151,6 +1151,10 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
+-- -   #VUID-vkCmdCopyAccelerationStructureNV-src-04963# The source
+--     acceleration structure @src@ /must/ have been built prior to the
+--     execution of this command
+--
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-src-03411# If @mode@ is
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR',
 --     @src@ /must/ have been built with
@@ -1279,6 +1283,10 @@ foreign import ccall
 --     @accelerationStructure@ /must/ be bound completely and contiguously
 --     to a single 'Vulkan.Core10.Handles.DeviceMemory' object via
 --     'bindAccelerationStructureMemoryNV'
+--
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-pAccelerationStructures-04958#
+--     All acceleration structures in @pAccelerationStructures@ /must/ have
+--     been built prior to the execution of this command
 --
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-accelerationStructures-03431#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have

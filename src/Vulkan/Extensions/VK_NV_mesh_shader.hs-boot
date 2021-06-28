@@ -63,10 +63,11 @@
 --
 -- There are new programmable shader types — the task and mesh shader — to
 -- generate these collections to be processed by fixed-function primitive
--- assembly and rasterization logic. When the task and mesh shaders are
--- dispatched, they replace the standard programmable vertex processing
--- pipeline, including vertex array attribute fetching, vertex shader
--- processing, tessellation, and the geometry shader processing.
+-- assembly and rasterization logic. When task and mesh shaders are
+-- dispatched, they replace the core
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization stages>,
+-- including vertex array attribute fetching, vertex shader processing,
+-- tessellation, and geometry shader processing.
 --
 -- This extension also adds support for the following SPIR-V extension in
 -- Vulkan:

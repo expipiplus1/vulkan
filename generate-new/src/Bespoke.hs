@@ -1176,8 +1176,8 @@ cuLaunchSchemes :: BespokeScheme
 cuLaunchSchemes =
    BespokeScheme $ \case
       "VkCuLaunchInfoNVX" -> \case
-        a | "pParams" <- name a -> Just (Preserve (type' a))
-        a | "pExtras" <- name a -> Just (Preserve (type' a))
+        a | "pParams" <- name a -> Just (Vector NotNullable VoidPtr)
+        a | "pExtras" <- name a -> Just (Vector NotNullable VoidPtr)
         _                       -> Nothing
       _ -> const Nothing
 

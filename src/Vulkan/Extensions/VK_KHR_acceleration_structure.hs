@@ -2205,6 +2205,10 @@ foreign import ccall
 --     sum of @query@ plus @accelerationStructureCount@ /must/ be less than
 --     or equal to the number of queries in @queryPool@
 --
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-04964#
+--     All acceleration structures in @pAccelerationStructures@ /must/ have
+--     been built prior to the execution of this command
+--
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-accelerationStructures-03431#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
 --     been built with
@@ -2325,6 +2329,10 @@ foreign import ccall
 -- host.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-04964#
+--     All acceleration structures in @pAccelerationStructures@ /must/ have
+--     been built prior to the execution of this command
 --
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-accelerationStructures-03431#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
@@ -6287,6 +6295,10 @@ instance Zero AccelerationStructureVersionInfoKHR where
 --     be 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' or
 --     'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-04963# The source
+--     acceleration structure @src@ /must/ have been built prior to the
+--     execution of this command
+--
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-03411# If @mode@ is
 --     'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR', @src@ /must/ have
 --     been built with
@@ -6388,6 +6400,10 @@ instance Zero CopyAccelerationStructureInfoKHR where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-src-04959# The
+--     source acceleration structure @src@ /must/ have been built prior to
+--     the execution of this command
+--
 -- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-dst-03561# The
 --     memory pointed to by @dst@ /must/ be at least as large as the
 --     serialization size of @src@, as reported by
@@ -6467,6 +6483,12 @@ instance Zero CopyAccelerationStructureToMemoryInfoKHR where
 -- deserializing an acceleration structure
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-src-04960# The
+--     source memory pointed to by @src@ /must/ contain data previously
+--     serialized using 'cmdCopyAccelerationStructureToMemoryKHR',
+--     potentially modified to relocate acceleration structure references
+--     as described in that command
 --
 -- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-mode-03413# @mode@
 --     /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'

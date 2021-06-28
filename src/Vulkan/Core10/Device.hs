@@ -120,6 +120,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shader_barycentric (Physi
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_global_priority_query (PhysicalDeviceGlobalPriorityQueryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_robustness (PhysicalDeviceImageRobustnessFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (PhysicalDeviceImagelessFramebufferFeatures)
@@ -745,6 +746,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_fragment_shader_interlock.PhysicalDeviceFragmentShaderInterlockFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PhysicalDeviceFragmentShadingRateEnumsFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRateFeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_global_priority_query.PhysicalDeviceGlobalPriorityQueryFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.PhysicalDeviceHostQueryResetFeatures',
 --     'Vulkan.Extensions.VK_EXT_image_robustness.PhysicalDeviceImageRobustnessFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.PhysicalDeviceImagelessFramebufferFeatures',
@@ -962,6 +964,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorIndexingFeatures = Just f
     | Just Refl <- eqT @e @DeviceDeviceMemoryReportCreateInfoEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDeviceMemoryReportFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceGlobalPriorityQueryFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceHostQueryResetFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderFloat16Int8Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderDrawParametersFeatures = Just f

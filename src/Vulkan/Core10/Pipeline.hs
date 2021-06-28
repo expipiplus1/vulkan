@@ -643,8 +643,8 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
 -- also adjust the @y@ value to point to the lower left corner of the
 -- viewport instead of the upper left corner. Using the negative @height@
 -- allows the application to avoid having to negate the y component of the
--- @Position@ output from the last vertex processing stage in shaders that
--- also target other graphics APIs.
+-- @Position@ output from the last
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
 --
 -- The width and height of the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxViewportDimensions implementation-dependent maximum viewport dimensions>
@@ -1004,14 +1004,16 @@ instance Zero SpecializationInfo where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxGeometryShaderInvocations@
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-02596# If @stage@ is a
---     vertex processing stage, and the identified entry point writes to
---     @Layer@ for any primitive, it /must/ write the same value to @Layer@
---     for all vertices of a given primitive
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>,
+--     and the identified entry point writes to @Layer@ for any primitive,
+--     it /must/ write the same value to @Layer@ for all vertices of a
+--     given primitive
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-02597# If @stage@ is a
---     vertex processing stage, and the identified entry point writes to
---     @ViewportIndex@ for any primitive, it /must/ write the same value to
---     @ViewportIndex@ for all vertices of a given primitive
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>,
+--     and the identified entry point writes to @ViewportIndex@ for any
+--     primitive, it /must/ write the same value to @ViewportIndex@ for all
+--     vertices of a given primitive
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-00718# If @stage@ is
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT',
@@ -3412,8 +3414,19 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- Pre-rasterization shader state is defined by:
 --
--- -   'PipelineShaderStageCreateInfo' entries for each vertex processing
---     shader stage used
+-- -   'PipelineShaderStageCreateInfo' entries for:
+--
+--     -   Vertex shaders
+--
+--     -   Tessellation control shaders
+--
+--     -   Tessellation evaluation shaders
+--
+--     -   Geometry shaders
+--
+--     -   Task shaders
+--
+--     -   Mesh shaders
 --
 -- -   Within the 'Vulkan.Core10.Handles.PipelineLayout', all bindings that
 --     affect the specified shader stages
@@ -3653,9 +3666,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
---     the fragment shader and last vertex processing shader stage and any
---     relevant state /must/ adhere to the pipeline linking rules described
---     in the
+--     the fragment shader and last
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     and any relevant state /must/ adhere to the pipeline linking rules
+--     described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces Shader Interfaces>
 --     chapter
 --
@@ -4019,7 +4033,8 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     being created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and any shader stage in @pStages@ specifies @Xfb@ execution mode it
---     /must/ be the last vertex processing stage
+--     /must/ be the last
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-rasterizationStream-02319# If the
 --     pipeline is being created with
@@ -4046,8 +4061,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-geometryStreams-02321# If the
 --     pipeline is being created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the last vertex processing stage is a geometry shader, and that
---     geometry shader uses the @GeometryStreams@ capability, then
+--     and the last
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     is a geometry shader, and that geometry shader uses the
+--     @GeometryStreams@ capability, then
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackFeaturesEXT'::@geometryStreams@
 --     feature /must/ be enabled
 --

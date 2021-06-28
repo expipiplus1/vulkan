@@ -57,10 +57,11 @@ pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM         = SubpassDescriptio
 pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX = SubpassDescriptionFlagBits 0x00000002
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX' specifies that shaders
 -- compiled for this subpass write the attributes for all views in a single
--- invocation of each vertex processing stage. All pipelines compiled
--- against a subpass that includes this bit /must/ write per-view
--- attributes to the @*PerViewNV[]@ shader outputs, in addition to the
--- non-per-view (e.g. @Position@) outputs.
+-- invocation of each
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- All pipelines compiled against a subpass that includes this bit /must/
+-- write per-view attributes to the @*PerViewNV[]@ shader outputs, in
+-- addition to the non-per-view (e.g. @Position@) outputs.
 pattern SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX      = SubpassDescriptionFlagBits 0x00000001
 
 conNameSubpassDescriptionFlagBits :: String

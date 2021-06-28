@@ -149,7 +149,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     pipelines.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV' specifies that the
---     pipeline is allowed to use OpTraceRaysMotionNV.
+--     pipeline is allowed to use OpTraceRayMotionNV.
 --
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a

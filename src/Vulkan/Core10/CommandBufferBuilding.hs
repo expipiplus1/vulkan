@@ -7106,6 +7106,9 @@ foreign import ccall
 -- -   #VUID-vkCmdClearColorImage-image-00007# @image@ /must/ not have a
 --     compressed or depth\/stencil format
 --
+-- -   #VUID-vkCmdClearColorImage-pColor-04961# @pColor@ /must/ be a valid
+--     pointer to a 'ClearColorValue' union
+--
 -- -   #VUID-vkCmdClearColorImage-commandBuffer-01805# If @commandBuffer@
 --     is an unprotected command buffer, then @image@ /must/ not be a
 --     protected image
@@ -11448,6 +11451,10 @@ instance Zero ImageResolve where
 --     that specifies a @loadOp@ (or @stencilLoadOp@, if the attachment has
 --     a depth\/stencil format) of
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'
+--
+-- -   #VUID-VkRenderPassBeginInfo-clearValueCount-04962# If
+--     @clearValueCount@ is not @0@, @pClearValues@ /must/ be a valid
+--     pointer to an array of @clearValueCount@ 'ClearValue' unions
 --
 -- -   #VUID-VkRenderPassBeginInfo-renderPass-00904# @renderPass@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>

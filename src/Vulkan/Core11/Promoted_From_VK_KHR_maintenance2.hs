@@ -63,7 +63,7 @@ import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..
 --
 -- @subpass@ and @inputAttachmentIndex@ index into the render pass as:
 --
--- > pname:pCreateInfo->pSubpasses[subpass].pInputAttachments[inputAttachmentIndex]
+-- > pCreateInfo->pSubpasses[subpass].pInputAttachments[inputAttachmentIndex]
 --
 -- == Valid Usage (Implicit)
 --

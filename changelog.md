@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [3.11.1] - 2021-06-28
+- Bump API version to v1.2.183
+
 ## [3.11.0.2] - 2021-06-26
 - Tweak cabal file to please `cabal check`
 

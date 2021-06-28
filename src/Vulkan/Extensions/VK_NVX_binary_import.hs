@@ -155,6 +155,9 @@ import Data.ByteString (useAsCString)
 import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
@@ -181,6 +184,8 @@ import Data.Word (Word64)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (CommandBuffer)
@@ -496,16 +501,12 @@ data CuLaunchInfoNVX = CuLaunchInfoNVX
     blockDimZ :: Word32
   , -- No documentation found for Nested "VkCuLaunchInfoNVX" "sharedMemBytes"
     sharedMemBytes :: Word32
-  , -- No documentation found for Nested "VkCuLaunchInfoNVX" "paramCount"
-    paramCount :: Word64
   , -- No documentation found for Nested "VkCuLaunchInfoNVX" "pParams"
-    params :: Ptr (Ptr ())
-  , -- No documentation found for Nested "VkCuLaunchInfoNVX" "extraCount"
-    extraCount :: Word64
+    params :: Vector (Ptr ())
   , -- No documentation found for Nested "VkCuLaunchInfoNVX" "pExtras"
-    extras :: Ptr (Ptr ())
+    extras :: Vector (Ptr ())
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (CuLaunchInfoNVX)
 #endif
@@ -513,22 +514,26 @@ deriving instance Show CuLaunchInfoNVX
 
 instance ToCStruct CuLaunchInfoNVX where
   withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CuLaunchInfoNVX{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr CuFunctionNVX)) (function)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (gridDimX)
-    poke ((p `plusPtr` 28 :: Ptr Word32)) (gridDimY)
-    poke ((p `plusPtr` 32 :: Ptr Word32)) (gridDimZ)
-    poke ((p `plusPtr` 36 :: Ptr Word32)) (blockDimX)
-    poke ((p `plusPtr` 40 :: Ptr Word32)) (blockDimY)
-    poke ((p `plusPtr` 44 :: Ptr Word32)) (blockDimZ)
-    poke ((p `plusPtr` 48 :: Ptr Word32)) (sharedMemBytes)
-    poke ((p `plusPtr` 56 :: Ptr CSize)) (CSize (paramCount))
-    poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ())))) (params)
-    poke ((p `plusPtr` 72 :: Ptr CSize)) (CSize (extraCount))
-    poke ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ())))) (extras)
-    f
+  pokeCStruct p CuLaunchInfoNVX{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr CuFunctionNVX)) (function)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (gridDimX)
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (gridDimY)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (gridDimZ)
+    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (blockDimX)
+    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (blockDimY)
+    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (blockDimZ)
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (sharedMemBytes)
+    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (params)) :: CSize))
+    pPParams' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (params)) * 8)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPParams' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (params)
+    lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ())))) (pPParams')
+    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (extras)) :: CSize))
+    pPExtras' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (extras)) * 8)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPExtras' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (extras)
+    lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ())))) (pPExtras')
+    lift $ f
   cStructSize = 88
   cStructAlignment = 8
   pokeZeroCStruct p f = do
@@ -542,10 +547,6 @@ instance ToCStruct CuLaunchInfoNVX where
     poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 56 :: Ptr CSize)) (CSize (zero))
-    poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ())))) (zero)
-    poke ((p `plusPtr` 72 :: Ptr CSize)) (CSize (zero))
-    poke ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ())))) (zero)
     f
 
 instance FromCStruct CuLaunchInfoNVX where
@@ -560,16 +561,12 @@ instance FromCStruct CuLaunchInfoNVX where
     sharedMemBytes <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     paramCount <- peek @CSize ((p `plusPtr` 56 :: Ptr CSize))
     pParams <- peek @(Ptr (Ptr ())) ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ()))))
+    pParams' <- generateM (fromIntegral (coerce @CSize @Word64 paramCount)) (\i -> peek @(Ptr ()) ((pParams `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
     extraCount <- peek @CSize ((p `plusPtr` 72 :: Ptr CSize))
     pExtras <- peek @(Ptr (Ptr ())) ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ()))))
+    pExtras' <- generateM (fromIntegral (coerce @CSize @Word64 extraCount)) (\i -> peek @(Ptr ()) ((pExtras `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
     pure $ CuLaunchInfoNVX
-             function gridDimX gridDimY gridDimZ blockDimX blockDimY blockDimZ sharedMemBytes (coerce @CSize @Word64 paramCount) pParams (coerce @CSize @Word64 extraCount) pExtras
-
-instance Storable CuLaunchInfoNVX where
-  sizeOf ~_ = 88
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
+             function gridDimX gridDimY gridDimZ blockDimX blockDimY blockDimZ sharedMemBytes pParams' pExtras'
 
 instance Zero CuLaunchInfoNVX where
   zero = CuLaunchInfoNVX
@@ -581,10 +578,8 @@ instance Zero CuLaunchInfoNVX where
            zero
            zero
            zero
-           zero
-           zero
-           zero
-           zero
+           mempty
+           mempty
 
 
 type NVX_BINARY_IMPORT_SPEC_VERSION = 1
