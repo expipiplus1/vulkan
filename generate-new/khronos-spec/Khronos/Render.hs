@@ -131,7 +131,7 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
     , rsAPIConstants       = renderConstant <$> filterConstants specAPIConstants
     , rsExtensionConstants = renderConstant
                                <$> filterConstants specExtensionConstants
-    , rsOthers             = bespokeElements (specFlavor @t)
+    , rsOthers             = bespokeElements spec
                              <> V.singleton (renderDynamicLoader (specFlavor @t) cs)
                              <> V.singleton marshalUtils
                              <> V.singleton hasObjectTypeClass

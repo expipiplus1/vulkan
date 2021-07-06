@@ -874,11 +874,12 @@ bespokeZeroCStruct = flip
   ]
 
 bespokeElements
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => SpecFlavor
+  :: forall t r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Spec t
   -> Vector (Sem r RenderElement)
-bespokeElements = \case
-  SpecVk ->
+bespokeElements Spec {..} = case specHeaderVersion of
+  VkVersion v ->
     fromList
       $  shared
       <> [ baseType "VkSampleMask"    ''Word32
@@ -889,8 +890,9 @@ bespokeElements = \case
          ]
       <> wsiTypes SpecVk
       <> [ extensionBaseType "VkRemoteAddressNV" (Ptr NonConst Void)
+         | v >= 184
          ]
-  SpecXr ->
+  XrVersion{} ->
     fromList
       $  shared
       <> [ baseType "XrFlags64"  ''Word64
@@ -899,7 +901,8 @@ bespokeElements = \case
          ]
       <> wsiTypes SpecXr
       <> [resultMatchers]
-  where shared = fromList [namedType, nullHandle, boolConversion]
+ where
+  shared = [namedType, nullHandle, boolConversion] :: [Sem r RenderElement]
 
 boolConversion :: HasRenderParams r => Sem r RenderElement
 boolConversion = genRe "Bool conversion" $ do
