@@ -787,6 +787,7 @@ bespokeSizes t =
         , ("VkFlags"        , (4, 4))
         , ("VkDeviceSize"   , (8, 8))
         , ("VkDeviceAddress", (8, 8))
+        , ("VkRemoteAddressNV", (8, 8))
         ]
         <> (fst <$> concat
              [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp]
@@ -873,7 +874,9 @@ bespokeZeroCStruct = flip
   ]
 
 bespokeElements
-  :: (HasErr r, HasRenderParams r) => SpecFlavor -> Vector (Sem r RenderElement)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => SpecFlavor
+  -> Vector (Sem r RenderElement)
 bespokeElements = \case
   SpecVk ->
     fromList
@@ -885,6 +888,8 @@ bespokeElements = \case
          , baseType "VkDeviceAddress" ''Word64
          ]
       <> wsiTypes SpecVk
+      <> [ extensionBaseType "VkRemoteAddressNV" (Ptr NonConst Void)
+         ]
   SpecXr ->
     fromList
       $  shared
@@ -943,6 +948,20 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   tDoc <- renderType (ConT t)
   tellDocWithHaddock $ \getDoc ->
     vsep [getDoc (TopLevel n), "type" <+> pretty n' <+> "=" <+> tDoc]
+
+extensionBaseType
+  :: (HasRenderParams r, HasErr r, HasSpecInfo r)
+  => CName
+  -> CType
+  -> Sem r RenderElement
+extensionBaseType n t =
+  fmap identicalBoot . genRe ("extension base type " <> unCName n) $ do
+    RenderParams {..} <- input
+    let n' = mkTyName n
+    tellExport (EType n')
+    tDoc <- renderType =<< cToHsType DoPreserve t
+    tellDocWithHaddock $ \getDoc ->
+      vsep [getDoc (TopLevel n), "type" <+> pretty n' <+> "=" <+> tDoc]
 
 ----------------------------------------------------------------
 -- Base Vulkan stuff
