@@ -21,16 +21,6 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkImageViewType - Image view types
 --
--- = Description
---
--- The exact image view type is partially implicit, based on the image’s
--- type and sample count, as well as the view creation parameters as
--- described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-compatibility image view compatibility table>
--- for 'Vulkan.Core10.ImageView.createImageView'. This table also shows
--- which SPIR-V @OpTypeImage@ @Dim@ and @Arrayed@ parameters correspond to
--- each image view type.
---
 -- = See Also
 --
 -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',

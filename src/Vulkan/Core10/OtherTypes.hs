@@ -3,6 +3,7 @@
 module Vulkan.Core10.OtherTypes  ( MemoryBarrier(..)
                                  , BufferMemoryBarrier(..)
                                  , ImageMemoryBarrier(..)
+                                 , PipelineCacheHeaderVersionOne(..)
                                  , DrawIndirectCommand(..)
                                  , DrawIndexedIndirectCommand(..)
                                  , DispatchIndirectCommand(..)
@@ -12,6 +13,7 @@ module Vulkan.Core10.OtherTypes  ( MemoryBarrier(..)
                                  , VendorId(..)
                                  ) where
 
+import Vulkan.CStruct.Utils (FixedArray)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Ptr (castPtr)
@@ -34,8 +36,12 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
+import Data.Word (Word8)
+import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
+import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
@@ -48,10 +54,12 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.ImageView (ImageSubresourceRange)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.Core10.Enums.PipelineCacheHeaderVersion (PipelineCacheHeaderVersion)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.APIConstants (UUID_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_BARRIER))
@@ -813,6 +821,111 @@ instance es ~ '[] => Zero (ImageMemoryBarrier es) where
            zero
            zero
            zero
+
+
+-- | VkPipelineCacheHeaderVersionOne - Structure describing the layout of the
+-- pipeline cache header
+--
+-- = Description
+--
+-- Unlike most structures declared by the Vulkan API, all fields of this
+-- structure are written with the least significant byte first, regardless
+-- of host byte-order.
+--
+-- The C language specification does not define the packing of structure
+-- members. This layout assumes tight structure member packing, with
+-- members laid out in the order listed in the structure, and the intended
+-- size of the structure is 32 bytes. If a compiler produces code that
+-- diverges from that pattern, applications /must/ employ another method to
+-- set values at the correct offsets.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
+data PipelineCacheHeaderVersionOne = PipelineCacheHeaderVersionOne
+  { -- | @headerSize@ is the length in bytes of the pipeline cache header.
+    --
+    -- #VUID-VkPipelineCacheHeaderVersionOne-headerSize-04967# @headerSize@
+    -- /must/ be 32
+    headerSize :: Word32
+  , -- | @headerVersion@ is a
+    -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
+    -- enum value specifying the version of the header. A consumer of the
+    -- pipeline cache /should/ use the cache version to interpret the remainder
+    -- of the cache header.
+    --
+    -- #VUID-VkPipelineCacheHeaderVersionOne-headerVersion-04968#
+    -- @headerVersion@ /must/ be
+    -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PIPELINE_CACHE_HEADER_VERSION_ONE'
+    --
+    -- #VUID-VkPipelineCacheHeaderVersionOne-headerVersion-parameter#
+    -- @headerVersion@ /must/ be a valid
+    -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
+    -- value
+    headerVersion :: PipelineCacheHeaderVersion
+  , -- | @vendorID@ is the
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@vendorID@
+    -- of the implementation.
+    vendorID :: Word32
+  , -- | @deviceID@ is the
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@deviceID@
+    -- of the implementation.
+    deviceID :: Word32
+  , -- | @pipelineCacheUUID@ is the
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@pipelineCacheUUID@
+    -- of the implementation.
+    pipelineCacheUUID :: ByteString
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineCacheHeaderVersionOne)
+#endif
+deriving instance Show PipelineCacheHeaderVersionOne
+
+instance ToCStruct PipelineCacheHeaderVersionOne where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PipelineCacheHeaderVersionOne{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (headerSize)
+    poke ((p `plusPtr` 4 :: Ptr PipelineCacheHeaderVersion)) (headerVersion)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (vendorID)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (deviceID)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (pipelineCacheUUID)
+    f
+  cStructSize = 32
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr PipelineCacheHeaderVersion)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    f
+
+instance FromCStruct PipelineCacheHeaderVersionOne where
+  peekCStruct p = do
+    headerSize <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
+    headerVersion <- peek @PipelineCacheHeaderVersion ((p `plusPtr` 4 :: Ptr PipelineCacheHeaderVersion))
+    vendorID <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    deviceID <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
+    pipelineCacheUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8)))
+    pure $ PipelineCacheHeaderVersionOne
+             headerSize headerVersion vendorID deviceID pipelineCacheUUID
+
+instance Storable PipelineCacheHeaderVersionOne where
+  sizeOf ~_ = 32
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PipelineCacheHeaderVersionOne where
+  zero = PipelineCacheHeaderVersionOne
+           zero
+           zero
+           zero
+           zero
+           mempty
 
 
 -- | VkDrawIndirectCommand - Structure specifying a indirect drawing command

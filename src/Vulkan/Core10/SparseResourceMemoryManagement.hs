@@ -570,7 +570,8 @@ instance Zero SparseImageFormatProperties where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.SparseImageMemoryRequirements2',
 -- 'getImageSparseMemoryRequirements'
 data SparseImageMemoryRequirements = SparseImageMemoryRequirements
-  { -- No documentation found for Nested "VkSparseImageMemoryRequirements" "formatProperties"
+  { -- | @formatProperties@ is a 'SparseImageFormatProperties' structure
+    -- specifying properties of the image format.
     formatProperties :: SparseImageFormatProperties
   , -- | @imageMipTailFirstLod@ is the first mip level at which image
     -- subresources are included in the mip tail region.

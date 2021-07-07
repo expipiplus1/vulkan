@@ -216,6 +216,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_device_generated_commands
                           , module Vulkan.Extensions.VK_NV_external_memory
                           , module Vulkan.Extensions.VK_NV_external_memory_capabilities
+                          , module Vulkan.Extensions.VK_NV_external_memory_rdma
                           , module Vulkan.Extensions.VK_NV_external_memory_win32
                           , module Vulkan.Extensions.VK_NV_fill_rectangle
                           , module Vulkan.Extensions.VK_NV_fragment_coverage_to_color
@@ -461,6 +462,7 @@ import Vulkan.Extensions.VK_NV_device_diagnostics_config
 import Vulkan.Extensions.VK_NV_device_generated_commands
 import Vulkan.Extensions.VK_NV_external_memory
 import Vulkan.Extensions.VK_NV_external_memory_capabilities
+import Vulkan.Extensions.VK_NV_external_memory_rdma
 import Vulkan.Extensions.VK_NV_external_memory_win32
 import Vulkan.Extensions.VK_NV_fill_rectangle
 import Vulkan.Extensions.VK_NV_fragment_coverage_to_color

@@ -224,6 +224,7 @@ import {-# SOURCE #-} Vulkan.Core10.OtherTypes (MemoryBarrier)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (MemoryFdPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (MemoryGetAndroidHardwareBufferInfoANDROID)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (MemoryGetFdInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_rdma (MemoryGetRemoteAddressInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryGetWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryGetZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (MemoryHostPointerPropertiesEXT)
@@ -299,6 +300,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (RayTracingP
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (RayTracingPipelineCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Rect2D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (RefreshCycleDurationGOOGLE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_rdma (RemoteAddressNV)
 import {-# SOURCE #-} Vulkan.Core10.Handles (RenderPass)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (RenderPassCreateInfo)
@@ -823,6 +825,7 @@ data DeviceCmds = DeviceCmds
   , pVkGetMemoryFdPropertiesKHR :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: CInt) -> ("pMemoryFdProperties" ::: Ptr MemoryFdPropertiesKHR) -> IO Result)
   , pVkGetMemoryZirconHandleFUCHSIA :: FunPtr (Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr MemoryGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result)
   , pVkGetMemoryZirconHandlePropertiesFUCHSIA :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("zirconHandle" ::: Zx_handle_t) -> ("pMemoryZirconHandleProperties" ::: Ptr MemoryZirconHandlePropertiesFUCHSIA) -> IO Result)
+  , pVkGetMemoryRemoteAddressNV :: FunPtr (Ptr Device_T -> ("getMemoryRemoteAddressInfo" ::: Ptr MemoryGetRemoteAddressInfoNV) -> ("pAddress" ::: Ptr RemoteAddressNV) -> IO Result)
   , pVkGetSemaphoreWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr SemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result)
   , pVkImportSemaphoreWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr ImportSemaphoreWin32HandleInfoKHR) -> IO Result)
   , pVkGetSemaphoreFdKHR :: FunPtr (Ptr Device_T -> ("pGetFdInfo" ::: Ptr SemaphoreGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result)
@@ -1061,7 +1064,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1234,6 +1237,7 @@ initDeviceCmds instanceCmds handle = do
   vkGetMemoryFdPropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryFdPropertiesKHR"#)
   vkGetMemoryZirconHandleFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetMemoryZirconHandleFUCHSIA"#)
   vkGetMemoryZirconHandlePropertiesFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetMemoryZirconHandlePropertiesFUCHSIA"#)
+  vkGetMemoryRemoteAddressNV <- getDeviceProcAddr' handle (Ptr "vkGetMemoryRemoteAddressNV"#)
   vkGetSemaphoreWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkGetSemaphoreWin32HandleKHR"#)
   vkImportSemaphoreWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkImportSemaphoreWin32HandleKHR"#)
   vkGetSemaphoreFdKHR <- getDeviceProcAddr' handle (Ptr "vkGetSemaphoreFdKHR"#)
@@ -1577,6 +1581,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: CInt) -> ("pMemoryFdProperties" ::: Ptr MemoryFdPropertiesKHR) -> IO Result) vkGetMemoryFdPropertiesKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr MemoryGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result) vkGetMemoryZirconHandleFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("zirconHandle" ::: Zx_handle_t) -> ("pMemoryZirconHandleProperties" ::: Ptr MemoryZirconHandlePropertiesFUCHSIA) -> IO Result) vkGetMemoryZirconHandlePropertiesFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> ("getMemoryRemoteAddressInfo" ::: Ptr MemoryGetRemoteAddressInfoNV) -> ("pAddress" ::: Ptr RemoteAddressNV) -> IO Result) vkGetMemoryRemoteAddressNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr SemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result) vkGetSemaphoreWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr ImportSemaphoreWin32HandleInfoKHR) -> IO Result) vkImportSemaphoreWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetFdInfo" ::: Ptr SemaphoreGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result) vkGetSemaphoreFdKHR)
