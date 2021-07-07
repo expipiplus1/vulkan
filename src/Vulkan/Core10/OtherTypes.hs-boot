@@ -6,6 +6,7 @@ module Vulkan.Core10.OtherTypes  ( BufferMemoryBarrier
                                  , DrawIndirectCommand
                                  , ImageMemoryBarrier
                                  , MemoryBarrier
+                                 , PipelineCacheHeaderVersionOne
                                  ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -62,4 +63,12 @@ instance ToCStruct MemoryBarrier
 instance Show MemoryBarrier
 
 instance FromCStruct MemoryBarrier
+
+
+data PipelineCacheHeaderVersionOne
+
+instance ToCStruct PipelineCacheHeaderVersionOne
+instance Show PipelineCacheHeaderVersionOne
+
+instance FromCStruct PipelineCacheHeaderVersionOne
 

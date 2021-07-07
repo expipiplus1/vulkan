@@ -164,6 +164,7 @@ import Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (pattern NV_DEVICE_
 import Vulkan.Extensions.VK_NV_device_generated_commands (pattern NV_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_external_memory_capabilities (pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_external_memory (pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME)
+import Vulkan.Extensions.VK_NV_external_memory_rdma (pattern NV_EXTERNAL_MEMORY_RDMA_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_external_memory_win32 (pattern NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (pattern NV_FRAGMENT_SHADING_RATE_ENUMS_EXTENSION_NAME)
@@ -521,6 +522,11 @@ extensionDependencies = \case
   FUCHSIA_EXTERNAL_SEMAPHORE_EXTENSION_NAME ->
     [ KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME
     , KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME
+    , KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+    ]
+  NV_EXTERNAL_MEMORY_RDMA_EXTENSION_NAME ->
+    [ KHR_EXTERNAL_MEMORY_EXTENSION_NAME
+    , KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
     , KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
     ]
   EXT_EXTENDED_DYNAMIC_STATE_2_EXTENSION_NAME -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]

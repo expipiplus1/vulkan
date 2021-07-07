@@ -1853,6 +1853,10 @@ instance Zero QueueFamilyProperties where
 --     |
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD'
 --
+-- -   'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
+--     |
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV'
+--
 -- There /must/ be at least one memory type with both the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_VISIBLE_BIT'
 -- and

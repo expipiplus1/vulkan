@@ -638,118 +638,33 @@ instance Zero ImageSubresourceRange where
 -- which chroma reconstruction operations operate on the same (/uplane/,
 -- /vplane/) or (/iplane/, /jplane/) coordinates.
 --
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | Dim,     | Image parameters                                                               | View parameters                                                |
--- | Arrayed, |                                                                                |                                                                |
--- | MS       |                                                                                |                                                                |
--- +==========+================================================================================+================================================================+
--- |          | @imageType@ = ci.@imageType@                                                   | @baseArrayLayer@, @layerCount@, and @levelCount@ are members   |
--- |          | @width@ = ci.@extent.width@                                                    | of the @subresourceRange@ member.                              |
--- |          | @height@ = ci.@extent.height@                                                  |                                                                |
--- |          | @depth@ = ci.@extent.depth@                                                    |                                                                |
--- |          | @arrayLayers@ = ci.@arrayLayers@                                               |                                                                |
--- |          | @samples@ = ci.@samples@                                                       |                                                                |
--- |          | @flags@ = ci.@flags@                                                           |                                                                |
--- |          | where ci is the 'Vulkan.Core10.Image.ImageCreateInfo' used to create @image@.  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __1D, 0, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D'                    | @viewType@ =                                                   |
--- | 0__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D'         |
--- |          | @height@ = 1                                                                   | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ = 1                                               |
--- |          | @arrayLayers@ ≥ 1                                                              |                                                                |
--- |          | @samples@ = 1                                                                  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __1D, 1, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D'                    | @viewType@ =                                                   |
--- | 0__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY'   |
--- |          | @height@ = 1                                                                   | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ ≥ 1                                               |
--- |          | @arrayLayers@ ≥ 1                                                              |                                                                |
--- |          | @samples@ = 1                                                                  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __2D, 0, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'                    | @viewType@ =                                                   |
--- | 0__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'         |
--- |          | @height@ ≥ 1                                                                   | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ = 1                                               |
--- |          | @arrayLayers@ ≥ 1                                                              |                                                                |
--- |          | @samples@ = 1                                                                  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __2D, 1, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'                    | @viewType@ =                                                   |
--- | 0__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'   |
--- |          | @height@ ≥ 1                                                                   | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ ≥ 1                                               |
--- |          | @arrayLayers@ ≥ 1                                                              |                                                                |
--- |          | @samples@ = 1                                                                  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __2D, 0, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'                    | @viewType@ =                                                   |
--- | 1__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'         |
--- |          | @height@ ≥ 1                                                                   | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ = 1                                               |
--- |          | @arrayLayers@ ≥ 1                                                              |                                                                |
--- |          | @samples@ > 1                                                                  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __2D, 1, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'                    | @viewType@ =                                                   |
--- | 1__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'   |
--- |          | @height@ ≥ 1                                                                   | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ ≥ 1                                               |
--- |          | @arrayLayers@ ≥ 1                                                              |                                                                |
--- |          | @samples@ > 1                                                                  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __CUBE,  | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'                    | @viewType@ =                                                   |
--- | 0, 0__   | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE'       |
--- |          | @height@ = @width@                                                             | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ = 6                                               |
--- |          | @arrayLayers@ ≥ 6                                                              |                                                                |
--- |          | @samples@ = 1                                                                  |                                                                |
--- |          | @flags@ includes                                                               |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'     |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __CUBE,  | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'                    | @viewType@ =                                                   |
--- | 1, 0__   | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY' |
--- |          | @height@ = width                                                               | @baseArrayLayer@ ≥ 0                                           |
--- |          | @depth@ = 1                                                                    | @layerCount@ = 6 × /N/, /N/ ≥ 1                                |
--- |          | /N/ ≥ 1                                                                        |                                                                |
--- |          | @arrayLayers@ ≥ 6 × /N/                                                        |                                                                |
--- |          | @samples@ = 1                                                                  |                                                                |
--- |          | @flags@ includes                                                               |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'     |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __3D, 0, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'                    | @viewType@ =                                                   |
--- | 0__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'         |
--- |          | @height@ ≥ 1                                                                   | @baseArrayLayer@ = 0                                           |
--- |          | @depth@ ≥ 1                                                                    | @layerCount@ = 1                                               |
--- |          | @arrayLayers@ = 1                                                              |                                                                |
--- |          | @samples@ = 1                                                                  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __3D, 0, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'                    | @viewType@ =                                                   |
--- | 0__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'         |
--- |          | @height@ ≥ 1                                                                   | @levelCount@ = 1                                               |
--- |          | @depth@ ≥ 1                                                                    | @baseArrayLayer@ ≥ 0                                           |
--- |          | @arrayLayers@ = 1                                                              | @layerCount@ = 1                                               |
--- |          | @samples@ = 1                                                                  |                                                                |
--- |          | @flags@ includes                                                               |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT' |                                                                |
--- |          | @flags@ does not include                                                       |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',     |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',   |                                                                |
--- |          | and 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
--- | __3D, 0, | @imageType@ = 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'                    | @viewType@ =                                                   |
--- | 0__      | @width@ ≥ 1                                                                    | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'   |
--- |          | @height@ ≥ 1                                                                   | @levelCount@ = 1                                               |
--- |          | @depth@ ≥ 1                                                                    | @baseArrayLayer@ ≥ 0                                           |
--- |          | @arrayLayers@ = 1                                                              | @layerCount@ ≥ 1                                               |
--- |          | @samples@ = 1                                                                  |                                                                |
--- |          | @flags@ includes                                                               |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT' |                                                                |
--- |          | @flags@ does not include                                                       |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',     |                                                                |
--- |          | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',   |                                                                |
--- |          | and 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'  |                                                                |
--- +----------+--------------------------------------------------------------------------------+----------------------------------------------------------------+
+-- +----------------------------------------------------------------+-----------------------------------------------+
+-- | Image View Type                                                | Compatible Image Types                        |
+-- +================================================================+===============================================+
+-- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D'         | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' |
+-- +----------------------------------------------------------------+-----------------------------------------------+
+-- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY'   | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' |
+-- +----------------------------------------------------------------+-----------------------------------------------+
+-- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'         | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' |
+-- |                                                                | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' |
+-- +----------------------------------------------------------------+-----------------------------------------------+
+-- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'   | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' |
+-- |                                                                | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' |
+-- +----------------------------------------------------------------+-----------------------------------------------+
+-- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE'       | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' |
+-- +----------------------------------------------------------------+-----------------------------------------------+
+-- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY' | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' |
+-- +----------------------------------------------------------------+-----------------------------------------------+
+-- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'         | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' |
+-- +----------------------------------------------------------------+-----------------------------------------------+
 --
--- Image and image view parameter compatibility requirements
+-- Image type and image view type compatibility requirements
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkImageViewCreateInfo-imageViewType-04969# @imageViewType@
+--     /must/ be compatible with the type of @image@ as shown in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-compatibility view type compatibility table>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01003# If @image@ was not created
 --     with
@@ -767,6 +682,29 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' but without
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
 --     set then @viewType@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
+--
+-- -   #VUID-VkImageViewCreateInfo-image-04970# If @image@ was created with
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @imageViewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' then
+--     @subresourceRange.levelCount@ /must/ be 1
+--
+-- -   #VUID-VkImageViewCreateInfo-image-04971# If @image@ was created with
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @imageViewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' then
+--     @flags@ /must/ not contain any of
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
+--     and
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
+--
+-- -   #VUID-VkImageViewCreateInfo-image-04972# If @image@ was created with
+--     a @samples@ value not equal to
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' then
+--     @imageViewType@ /must/ be either
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
@@ -1102,6 +1040,22 @@ instance Zero ImageSubresourceRange where
 --     structure /must/ not include any bits that were not set in the
 --     @usage@ member of the 'Vulkan.Core10.Image.ImageCreateInfo'
 --     structure used to create @image@
+--
+-- -   #VUID-VkImageViewCreateInfo-imageViewType-04973# If @imageViewType@
+--     is 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D',
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D', or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'; and
+--     @subresourceRange.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', then
+--     @subresourceRange.layerCount@ /must/ be 1
+--
+-- -   #VUID-VkImageViewCreateInfo-imageViewType-04974# If @imageViewType@
+--     is 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D',
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D', or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'; and
+--     @subresourceRange.layerCount@ is
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', then the
+--     remaining number of layers /must/ be 1
 --
 -- -   #VUID-VkImageViewCreateInfo-viewType-02960# If @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE' and

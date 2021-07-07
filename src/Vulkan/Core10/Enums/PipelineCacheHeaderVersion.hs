@@ -17,6 +17,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- 'Vulkan.Core10.OtherTypes.PipelineCacheHeaderVersionOne',
 -- 'Vulkan.Core10.PipelineCache.createPipelineCache',
 -- 'Vulkan.Core10.PipelineCache.getPipelineCacheData'
 newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32

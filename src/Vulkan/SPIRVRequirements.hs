@@ -665,32 +665,36 @@ spirvCapabilityRequirements = \case
   "DerivativeControl" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 0 0]
   "Geometry" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "geometryShader"
                            , checkFeature  = geometryShader :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { geometryShader = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Tessellation" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "tessellationShader"
                            , checkFeature  = tessellationShader :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { tessellationShader = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Float64" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderFloat64"
                            , checkFeature  = shaderFloat64 :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderFloat64 = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Int64" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderInt64"
                            , checkFeature  = shaderInt64 :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderInt64 = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Int64Atomics" -> (,)
     [ RequireInstanceVersion $ MAKE_API_VERSION 1 2 0
@@ -759,161 +763,182 @@ spirvCapabilityRequirements = \case
                              }
     ]
   "Int16" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderInt16"
                            , checkFeature  = shaderInt16 :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderInt16 = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "TessellationPointSize" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderTessellationAndGeometryPointSize"
-        , checkFeature  = shaderTessellationAndGeometryPointSize :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderTessellationAndGeometryPointSize = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderTessellationAndGeometryPointSize"
+      , checkFeature  = shaderTessellationAndGeometryPointSize :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderTessellationAndGeometryPointSize = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "GeometryPointSize" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderTessellationAndGeometryPointSize"
-        , checkFeature  = shaderTessellationAndGeometryPointSize :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderTessellationAndGeometryPointSize = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderTessellationAndGeometryPointSize"
+      , checkFeature  = shaderTessellationAndGeometryPointSize :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderTessellationAndGeometryPointSize = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ImageGatherExtended" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderImageGatherExtended"
                            , checkFeature  = shaderImageGatherExtended :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderImageGatherExtended = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageMultisample" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderStorageImageMultisample"
                            , checkFeature  = shaderStorageImageMultisample :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderStorageImageMultisample = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "UniformBufferArrayDynamicIndexing" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderUniformBufferArrayDynamicIndexing"
-        , checkFeature  = shaderUniformBufferArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderUniformBufferArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderUniformBufferArrayDynamicIndexing"
+      , checkFeature  = shaderUniformBufferArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderUniformBufferArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "SampledImageArrayDynamicIndexing" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderSampledImageArrayDynamicIndexing"
-        , checkFeature  = shaderSampledImageArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderSampledImageArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderSampledImageArrayDynamicIndexing"
+      , checkFeature  = shaderSampledImageArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderSampledImageArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageBufferArrayDynamicIndexing" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderStorageBufferArrayDynamicIndexing"
-        , checkFeature  = shaderStorageBufferArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderStorageBufferArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderStorageBufferArrayDynamicIndexing"
+      , checkFeature  = shaderStorageBufferArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderStorageBufferArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageArrayDynamicIndexing" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderStorageImageArrayDynamicIndexing"
-        , checkFeature  = shaderStorageImageArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderStorageImageArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderStorageImageArrayDynamicIndexing"
+      , checkFeature  = shaderStorageImageArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderStorageImageArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ClipDistance" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderClipDistance"
                            , checkFeature  = shaderClipDistance :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderClipDistance = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "CullDistance" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderCullDistance"
                            , checkFeature  = shaderCullDistance :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderCullDistance = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ImageCubeArray" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "imageCubeArray"
                            , checkFeature  = imageCubeArray :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { imageCubeArray = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "SampleRateShading" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "sampleRateShading"
                            , checkFeature  = sampleRateShading :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { sampleRateShading = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "SparseResidency" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderResourceResidency"
                            , checkFeature  = shaderResourceResidency :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderResourceResidency = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "MinLod" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderResourceMinLod"
                            , checkFeature  = shaderResourceMinLod :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderResourceMinLod = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "SampledCubeArray" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "imageCubeArray"
                            , checkFeature  = imageCubeArray :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { imageCubeArray = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ImageMSArray" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "shaderStorageImageMultisample"
                            , checkFeature  = shaderStorageImageMultisample :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { shaderStorageImageMultisample = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageExtendedFormats" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 0 0]
   "InterpolationFunction" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "sampleRateShading"
                            , checkFeature  = sampleRateShading :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { sampleRateShading = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageReadWithoutFormat" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderStorageImageReadWithoutFormat"
-        , checkFeature  = shaderStorageImageReadWithoutFormat :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderStorageImageReadWithoutFormat = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderStorageImageReadWithoutFormat"
+      , checkFeature  = shaderStorageImageReadWithoutFormat :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderStorageImageReadWithoutFormat = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageWriteWithoutFormat" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
-        { featureName   = "shaderStorageImageWriteWithoutFormat"
-        , checkFeature  = shaderStorageImageWriteWithoutFormat :: PhysicalDeviceFeatures -> Bool
-        , enableFeature = \f -> f { shaderStorageImageWriteWithoutFormat = True } :: PhysicalDeviceFeatures
-        }
+      { featureName   = "shaderStorageImageWriteWithoutFormat"
+      , checkFeature  = shaderStorageImageWriteWithoutFormat :: PhysicalDeviceFeatures -> Bool
+      , enableFeature = \f -> f { shaderStorageImageWriteWithoutFormat = True } :: PhysicalDeviceFeatures
+      }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "MultiViewport" -> (,)
-    []
+    [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature { featureName   = "multiViewport"
                            , checkFeature  = multiViewport :: PhysicalDeviceFeatures -> Bool
                            , enableFeature = \f -> f { multiViewport = True } :: PhysicalDeviceFeatures
                            }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "DrawParameters" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]

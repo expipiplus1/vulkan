@@ -348,6 +348,7 @@ data Device_T
 -- 'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr',
 -- 'Vulkan.Core10.Queue.getDeviceQueue',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI>,
 -- 'Vulkan.Core10.Event.getEventStatus',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_fd.getFenceFdKHR',
 -- 'Vulkan.Core10.Fence.getFenceStatus',
@@ -367,6 +368,7 @@ data Device_T
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.getMemoryHostPointerPropertiesEXT',
+-- 'Vulkan.Extensions.VK_NV_external_memory_rdma.getMemoryRemoteAddressNV',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandleKHR',
 -- 'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR',
@@ -666,6 +668,7 @@ instance HasObjectType CommandBuffer where
 -- 'Vulkan.Core10.Memory.MappedMemoryRange',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.MemoryGetAndroidHardwareBufferInfoANDROID',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryGetFdInfoKHR',
+-- 'Vulkan.Extensions.VK_NV_external_memory_rdma.MemoryGetRemoteAddressInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryGetWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryGetZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
@@ -1144,8 +1147,8 @@ instance Show Framebuffer where
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.createRenderPass2KHR',
 -- 'Vulkan.Core10.Pass.destroyRenderPass',
--- 'Vulkan.Core10.Pass.getRenderAreaGranularity',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetSubpassShadingMaxWorkgroupSizeHUAWEI vkGetSubpassShadingMaxWorkgroupSizeHUAWEI>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI>,
+-- 'Vulkan.Core10.Pass.getRenderAreaGranularity'
 newtype RenderPass = RenderPass Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

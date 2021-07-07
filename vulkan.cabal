@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.11.1
+version:        3.11.2
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -466,6 +466,7 @@ library
       Vulkan.Extensions.VK_NV_device_generated_commands
       Vulkan.Extensions.VK_NV_external_memory
       Vulkan.Extensions.VK_NV_external_memory_capabilities
+      Vulkan.Extensions.VK_NV_external_memory_rdma
       Vulkan.Extensions.VK_NV_external_memory_win32
       Vulkan.Extensions.VK_NV_fill_rectangle
       Vulkan.Extensions.VK_NV_fragment_coverage_to_color
