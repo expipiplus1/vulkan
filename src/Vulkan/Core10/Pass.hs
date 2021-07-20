@@ -1589,6 +1589,14 @@ instance Zero SubpassDescription where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
+-- -   #VUID-VkSubpassDependency-synchronization2-04984# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @srcStageMask@ /must/ not be @0@
+--
+-- -   #VUID-VkSubpassDependency-synchronization2-04985# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @dstStageMask@ /must/ not be @0@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSubpassDependency-srcStageMask-parameter# @srcStageMask@

@@ -368,8 +368,9 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 --
 -- = Description
 --
--- If this structure is not present, or if the extension is not enabled,
--- the default coverage reduction mode is inferred as follows:
+-- If this structure is not included in the @pNext@ chain, or if the
+-- extension is not enabled, the default coverage reduction mode is
+-- inferred as follows:
 --
 -- -   If the @VK_NV_framebuffer_mixed_samples@ extension is enabled, then
 --     it is as if the @coverageReductionMode@ is

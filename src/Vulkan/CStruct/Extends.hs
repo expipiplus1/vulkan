@@ -412,6 +412,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_index_type_uint8 (PhysicalDeviceI
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (PhysicalDeviceInheritedViewportScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_invocation_mask (PhysicalDeviceInvocationMaskFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceLimits)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationPropertiesEXT)
@@ -436,6 +437,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (P
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PhysicalDevicePointClippingProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetPropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PhysicalDevicePresentIdFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_wait (PhysicalDevicePresentWaitFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (PhysicalDevicePrivateDataFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceProperties2)
@@ -457,6 +460,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (PhysicalDeviceScalarBlockLayoutFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64 (PhysicalDeviceShaderAtomicInt64Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_clock (PhysicalDeviceShaderClockFeaturesKHR)
@@ -552,6 +556,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineViewportStateCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_viewport_swizzle (PipelineViewportSwizzleStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_clip_space_w_scaling (PipelineViewportWScalingStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GGP_frame_token (PresentFrameTokenGGP)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PresentIdKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (PresentInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (PresentRegionKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (PresentRegionsKHR)
@@ -821,6 +826,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceVariablePointersFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceMultiviewFeatures = ()
   Extends DeviceCreateInfo DeviceGroupDeviceCreateInfo = ()
+  Extends DeviceCreateInfo PhysicalDevicePresentIdFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDevicePresentWaitFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDevice16BitStorageFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderSubgroupExtendedTypesFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceSamplerYcbcrConversionFeatures = ()
@@ -841,6 +848,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceVulkanMemoryModelFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderAtomicInt64Features = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderAtomicFloatFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderAtomicFloat2FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceVertexAttributeDivisorFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceASTCDecodeFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceTransformFeedbackFeaturesEXT = ()
@@ -852,6 +860,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderImageFootprintFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceShadingRateImageFeaturesNV = ()
+  Extends DeviceCreateInfo PhysicalDeviceInvocationMaskFeaturesHUAWEI = ()
   Extends DeviceCreateInfo PhysicalDeviceMeshShaderFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceAccelerationStructureFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingPipelineFeaturesKHR = ()
@@ -969,6 +978,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDevicePrivateDataFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVariablePointersFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMultiviewFeatures = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePresentIdFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePresentWaitFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevice16BitStorageFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderSubgroupExtendedTypesFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSamplerYcbcrConversionFeatures = ()
@@ -988,6 +999,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVulkanMemoryModelFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderAtomicInt64Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderAtomicFloatFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderAtomicFloat2FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVertexAttributeDivisorFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceASTCDecodeFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceTransformFeedbackFeaturesEXT = ()
@@ -999,6 +1011,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderImageFootprintFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShadingRateImageFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceInvocationMaskFeaturesHUAWEI = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMeshShaderFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceAccelerationStructureFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingPipelineFeaturesKHR = ()
@@ -1136,6 +1149,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PresentInfoKHR DisplayPresentInfoKHR = ()
   Extends PresentInfoKHR PresentRegionsKHR = ()
   Extends PresentInfoKHR DeviceGroupPresentInfoKHR = ()
+  Extends PresentInfoKHR PresentIdKHR = ()
   Extends PresentInfoKHR PresentTimesInfoGOOGLE = ()
   Extends PresentInfoKHR PresentFrameTokenGGP = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceCreateInfoKHR = ()
@@ -1345,6 +1359,9 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR -> go @DeviceGroupPresentInfoKHR
   STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO -> go @DeviceGroupDeviceCreateInfo
   STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR -> go @DeviceGroupSwapchainCreateInfoKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR -> go @PhysicalDevicePresentIdFeaturesKHR
+  STRUCTURE_TYPE_PRESENT_ID_KHR -> go @PresentIdKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_FEATURES_KHR -> go @PhysicalDevicePresentWaitFeaturesKHR
   STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD -> go @DisplayNativeHdrSurfaceCapabilitiesAMD
   STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD -> go @SwapchainDisplayNativeHdrCreateInfoAMD
   STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE -> go @PresentTimesInfoGOOGLE
@@ -1429,6 +1446,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES -> go @PhysicalDeviceVulkanMemoryModelFeatures
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES -> go @PhysicalDeviceShaderAtomicInt64Features
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT -> go @PhysicalDeviceShaderAtomicFloatFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT -> go @PhysicalDeviceShaderAtomicFloat2FeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT -> go @PhysicalDeviceVertexAttributeDivisorFeaturesEXT
   STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV -> go @QueueFamilyCheckpointPropertiesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES -> go @PhysicalDeviceDepthStencilResolveProperties
@@ -1450,6 +1468,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV -> go @PipelineViewportShadingRateImageStateCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV -> go @PhysicalDeviceShadingRateImageFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV -> go @PhysicalDeviceShadingRateImagePropertiesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_INVOCATION_MASK_FEATURES_HUAWEI -> go @PhysicalDeviceInvocationMaskFeaturesHUAWEI
   STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV -> go @PipelineViewportCoarseSampleOrderStateCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV -> go @PhysicalDeviceMeshShaderFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV -> go @PhysicalDeviceMeshShaderPropertiesNV
@@ -1688,6 +1707,9 @@ infix 6 ::&
 {-# complete (::&) :: DeviceGroupPresentInfoKHR #-}
 {-# complete (::&) :: DeviceGroupDeviceCreateInfo #-}
 {-# complete (::&) :: DeviceGroupSwapchainCreateInfoKHR #-}
+{-# complete (::&) :: PhysicalDevicePresentIdFeaturesKHR #-}
+{-# complete (::&) :: PresentIdKHR #-}
+{-# complete (::&) :: PhysicalDevicePresentWaitFeaturesKHR #-}
 {-# complete (::&) :: DisplayNativeHdrSurfaceCapabilitiesAMD #-}
 {-# complete (::&) :: SwapchainDisplayNativeHdrCreateInfoAMD #-}
 {-# complete (::&) :: PresentTimesInfoGOOGLE #-}
@@ -1772,6 +1794,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceVulkanMemoryModelFeatures #-}
 {-# complete (::&) :: PhysicalDeviceShaderAtomicInt64Features #-}
 {-# complete (::&) :: PhysicalDeviceShaderAtomicFloatFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceVertexAttributeDivisorFeaturesEXT #-}
 {-# complete (::&) :: QueueFamilyCheckpointPropertiesNV #-}
 {-# complete (::&) :: PhysicalDeviceDepthStencilResolveProperties #-}
@@ -1793,6 +1816,7 @@ infix 6 ::&
 {-# complete (::&) :: PipelineViewportShadingRateImageStateCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceShadingRateImageFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceShadingRateImagePropertiesNV #-}
+{-# complete (::&) :: PhysicalDeviceInvocationMaskFeaturesHUAWEI #-}
 {-# complete (::&) :: PipelineViewportCoarseSampleOrderStateCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceMeshShaderFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceMeshShaderPropertiesNV #-}

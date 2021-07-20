@@ -118,18 +118,18 @@
 -- bindings of resources to 'Vulkan.Core10.Handles.DeviceMemory') would
 -- have to intercept all entry points that take a
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' parameter and
--- inject its own @pfnInternalAllocation@ and @pfnInternalFree@. That’s
--- maybe doable for the extensions we know about, but not for ones we
--- don’t. The proposal would work fine in the face of most unknown
--- extensions. But even for ones we know about, since apps can provide a
--- different set of callbacks and userdata and those can be retained by the
--- driver and used later (esp. for pool object, but not just those), we’d
--- have to dynamically allocate the interception trampoline every time.
--- That’s getting to be an unreasonably large amount of complexity and
--- (possibly) overhead.
+-- inject its own @pfnInternalAllocation@ and @pfnInternalFree@. That may
+-- be doable for the extensions we know about, but not for ones we do not.
+-- The proposal would work fine in the face of most unknown extensions. But
+-- even for ones we know about, since apps can provide a different set of
+-- callbacks and userdata and those can be retained by the driver and used
+-- later (esp. for pool object, but not just those), we would have to
+-- dynamically allocate the interception trampoline every time. That is
+-- getting to be an unreasonably large amount of complexity and (possibly)
+-- overhead.
 --
--- We’re interested in both alloc\/free and import\/unimport. The latter is
--- fairly important for tracking (and avoiding double-counting) of
+-- We are interested in both alloc\/free and import\/unimport. The latter
+-- is fairly important for tracking (and avoiding double-counting) of
 -- swapchain images (still true with “native swapchains” based on external
 -- memory) and media\/camera interop. Though we might be able to handle
 -- this with additional
@@ -140,10 +140,10 @@
 -- The internal alloc\/free callbacks are not extensible except via new
 -- 'Vulkan.Core10.Enums.InternalAllocationType.InternalAllocationType'
 -- values. The 'DeviceMemoryReportCallbackDataEXT' in this extension is
--- extensible. That was deliberate: there’s a real possibility we’ll want
--- to get extra information in the future. As one example, currently this
--- reports only physical allocations, but we believe there are interesting
--- cases for tracking how populated that VA region is.
+-- extensible. That was deliberate: there is a real possibility we will
+-- want to get extra information in the future. As one example, currently
+-- this reports only physical allocations, but we believe there are
+-- interesting cases for tracking how populated that VA region is.
 --
 -- The callbacks are clearly specified as only callable within the context
 -- of a call from the app into Vulkan. We believe there are some cases
@@ -159,12 +159,12 @@
 --
 -- 3) Should the callback be reporting which heap is used?
 --
--- __RESOLVED__: Yes. It’s important for non-UMA systems to have all the
+-- __RESOLVED__: Yes. It is important for non-UMA systems to have all the
 -- device memory allocations attributed to the corresponding device memory
 -- heaps. For internally-allocated device memory, @heapIndex@ will always
 -- correspond to an advertised heap, rather than having a magic value
--- indicating a non-advertised heap. Drivers can advertise heaps that don’t
--- have any corresponding memory types if they need to.
+-- indicating a non-advertised heap. Drivers can advertise heaps that do
+-- not have any corresponding memory types if they need to.
 --
 -- 4) Should we use an array of callback for the layers to intercept
 -- instead of chaining multiple of the
@@ -173,9 +173,9 @@
 --
 -- __RESOLVED__ No. The pointer to the
 -- 'DeviceDeviceMemoryReportCreateInfoEXT' structure itself is const and
--- you can’t just cast it away. Thus we can’t update the callback array
--- inside the structure. In addition, we can’t drop this @pNext@ chain
--- either, so making a copy of this whole structure doesn’t work either.
+-- you cannot just cast it away. Thus we cannot update the callback array
+-- inside the structure. In addition, we cannot drop this @pNext@ chain
+-- either, so making a copy of this whole structure does not work either.
 --
 -- 5) Should we track bulk allocations shared among multiple objects?
 --
@@ -197,7 +197,7 @@
 -- __RESOLVED__ No. Some implementations might choose to multiplex work
 -- from multiple application threads into a single backend thread and
 -- perform JIT allocations as a part of that flow. Since this behavior is
--- theoretically legit, we can’t require the callbacks to be always called
+-- theoretically legit, we cannot require the callbacks to be always called
 -- in the same thread with the Vulkan commands, and the note is to remind
 -- the applications to handle this case properly.
 --

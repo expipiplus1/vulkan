@@ -183,7 +183,7 @@
 -- >
 -- > void main()
 -- > {
--- >     // The shader simply computes and writes gl_Layer.  We don't
+-- >     // The shader simply computes and writes gl_Layer.  We do not
 -- >     // loop over three vertices or call EmitVertex().
 -- >     gl_Layer = compute_layer();
 -- > }

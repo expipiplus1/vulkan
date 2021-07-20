@@ -143,7 +143,7 @@
 -- written to transform feedback buffers such that flat-shaded attributes
 -- have the same value when drawing the contents of the transform feedback
 -- buffer as they did in the original drawing when the transform feedback
--- buffer was written (assuming the provoking vertex mode hasn’t changed,
+-- buffer was written (assuming the provoking vertex mode has not changed,
 -- in APIs that support more than one mode).
 --
 -- == Version History
@@ -152,7 +152,7 @@
 --
 --     -   Added
 --         VkPhysicalDeviceProvokingVertexPropertiesEXT::transformFeedbackPreservesTriangleFanProvokingVertex
---         to accommodate implementations that can’t change the transform
+--         to accommodate implementations that cannot change the transform
 --         feedback vertex order for triangle fans.
 --
 -- -   Revision 1(b), 2020-06-14 (Jesse Hall)

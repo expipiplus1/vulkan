@@ -646,9 +646,11 @@ instance Zero ImageSubresourceRange where
 -- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY'   | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' |
 -- +----------------------------------------------------------------+-----------------------------------------------+
 -- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'         | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' |
+-- |                                                                | ,                                             |
 -- |                                                                | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' |
 -- +----------------------------------------------------------------+-----------------------------------------------+
 -- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'   | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' |
+-- |                                                                | ,                                             |
 -- |                                                                | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' |
 -- +----------------------------------------------------------------+-----------------------------------------------+
 -- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE'       | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' |
@@ -661,10 +663,6 @@ instance Zero ImageSubresourceRange where
 -- Image type and image view type compatibility requirements
 --
 -- == Valid Usage
---
--- -   #VUID-VkImageViewCreateInfo-imageViewType-04969# @imageViewType@
---     /must/ be compatible with the type of @image@ as shown in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-compatibility view type compatibility table>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01003# If @image@ was not created
 --     with
@@ -686,13 +684,13 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
 -- -   #VUID-VkImageViewCreateInfo-image-04970# If @image@ was created with
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @imageViewType@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' then
 --     @subresourceRange.levelCount@ /must/ be 1
 --
 -- -   #VUID-VkImageViewCreateInfo-image-04971# If @image@ was created with
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @imageViewType@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' then
 --     @flags@ /must/ not contain any of
@@ -704,7 +702,7 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-image-04972# If @image@ was created with
 --     a @samples@ value not equal to
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' then
---     @imageViewType@ /must/ be either
+--     @viewType@ /must/ be either
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
@@ -913,10 +911,9 @@ instance Zero ImageSubresourceRange where
 --     then it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-VkImageViewCreateInfo-subResourceRange-01021#
---     @subresourceRange@ and @viewType@ /must/ be compatible with the
---     image, as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-compatibility compatibility table>
+-- -   #VUID-VkImageViewCreateInfo-subResourceRange-01021# @viewType@
+--     /must/ be compatible with the type of @image@ as shown in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-compatibility view type compatibility table>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02399# If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
@@ -988,6 +985,12 @@ instance Zero ImageSubresourceRange where
 --     @subresourceRange.layerCount@ /must/ be less than or equal to
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubsampledArrayLayers ::maxSubsampledArrayLayers>
 --
+-- -   #VUID-VkImageViewCreateInfo-invocationMask-04993# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask feature>
+--     is enabled, and if @image@ was created with @usage@ containing
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI',
+--     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
+--
 -- -   #VUID-VkImageViewCreateInfo-flags-04116# If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
 --     and @image@ was created with @usage@ containing
@@ -1017,7 +1020,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 --     structure included in the @pNext@ chain of
 --     'Vulkan.Core10.Image.ImageCreateInfo', and
---     @subResourceRange.aspectMask@ includes
+--     @subresourceRange.aspectMask@ includes
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     the @usage@ member of the
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
@@ -1033,7 +1036,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 --     structure included in the @pNext@ chain of
 --     'Vulkan.Core10.Image.ImageCreateInfo', and
---     @subResourceRange.aspectMask@ includes bits other than
+--     @subresourceRange.aspectMask@ includes bits other than
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     the @usage@ member of the
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
@@ -1041,16 +1044,16 @@ instance Zero ImageSubresourceRange where
 --     @usage@ member of the 'Vulkan.Core10.Image.ImageCreateInfo'
 --     structure used to create @image@
 --
--- -   #VUID-VkImageViewCreateInfo-imageViewType-04973# If @imageViewType@
---     is 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D',
+-- -   #VUID-VkImageViewCreateInfo-imageViewType-04973# If @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D',
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D', or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'; and
 --     @subresourceRange.layerCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', then
 --     @subresourceRange.layerCount@ /must/ be 1
 --
--- -   #VUID-VkImageViewCreateInfo-imageViewType-04974# If @imageViewType@
---     is 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D',
+-- -   #VUID-VkImageViewCreateInfo-imageViewType-04974# If @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D',
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D', or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'; and
 --     @subresourceRange.layerCount@ is
@@ -1085,8 +1088,8 @@ instance Zero ImageSubresourceRange where
 --     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageViewFormatSwizzle@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', all elements of
---     @components@ /must/ be
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'.
+--     @components@ /must/ have the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkImageViewCreateInfo-imageViewFormatReinterpretation-04466#
 --     If the @VK_KHR_portability_subset@ extension is enabled, and

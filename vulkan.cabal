@@ -337,6 +337,7 @@ library
       Vulkan.Extensions.VK_EXT_scalar_block_layout
       Vulkan.Extensions.VK_EXT_separate_stencil_usage
       Vulkan.Extensions.VK_EXT_shader_atomic_float
+      Vulkan.Extensions.VK_EXT_shader_atomic_float2
       Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
       Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
       Vulkan.Extensions.VK_EXT_shader_stencil_export
@@ -365,6 +366,7 @@ library
       Vulkan.Extensions.VK_GOOGLE_display_timing
       Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
       Vulkan.Extensions.VK_GOOGLE_user_type
+      Vulkan.Extensions.VK_HUAWEI_invocation_mask
       Vulkan.Extensions.VK_IMG_filter_cubic
       Vulkan.Extensions.VK_IMG_format_pvrtc
       Vulkan.Extensions.VK_INTEL_performance_query
@@ -415,6 +417,8 @@ library
       Vulkan.Extensions.VK_KHR_pipeline_executable_properties
       Vulkan.Extensions.VK_KHR_pipeline_library
       Vulkan.Extensions.VK_KHR_portability_subset
+      Vulkan.Extensions.VK_KHR_present_id
+      Vulkan.Extensions.VK_KHR_present_wait
       Vulkan.Extensions.VK_KHR_push_descriptor
       Vulkan.Extensions.VK_KHR_ray_query
       Vulkan.Extensions.VK_KHR_ray_tracing_pipeline

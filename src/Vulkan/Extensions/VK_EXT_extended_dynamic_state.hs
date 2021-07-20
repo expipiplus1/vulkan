@@ -756,7 +756,8 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   #VUID-vkCmdBindVertexBuffers2EXT-pBuffers-parameter# @pBuffers@
---     /must/ be a valid pointer to an array of @bindingCount@ valid
+--     /must/ be a valid pointer to an array of @bindingCount@ valid or
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --     'Vulkan.Core10.Handles.Buffer' handles
 --
 -- -   #VUID-vkCmdBindVertexBuffers2EXT-pOffsets-parameter# @pOffsets@
@@ -784,9 +785,9 @@ foreign import ccall
 --     greater than @0@
 --
 -- -   #VUID-vkCmdBindVertexBuffers2EXT-commonparent# Both of
---     @commandBuffer@, and the elements of @pBuffers@ /must/ have been
---     created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
+--     @commandBuffer@, and the elements of @pBuffers@ that are valid
+--     handles of non-ignored parameters /must/ have been created,
+--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --

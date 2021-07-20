@@ -543,14 +543,14 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
--- is not present in the same @pNext@ chain, this structure is ignored.
+-- is not included in the same @pNext@ chain, this structure is ignored.
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
--- is present in the @pNext@ chain of
+-- is included in the @pNext@ chain of
 -- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo' with a Windows
 -- @handleType@, but either 'ExportSemaphoreWin32HandleInfoKHR' is not
--- present in the @pNext@ chain, or if it is but @pAttributes@ is set to
+-- included in the @pNext@ chain, or if it is but @pAttributes@ is set to
 -- @NULL@, default security descriptor values will be used, and child
 -- processes created by the application will not inherit the handle, as
 -- described in the MSDN documentation for “Synchronization Object Security

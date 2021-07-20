@@ -240,7 +240,7 @@
 -- that this same problem also exists for multisampling with single-pixel
 -- fragments, but is less severe because it only affects certain samples of
 -- a pixel and such bright\/dark samples may be averaged with other samples
--- that don’t have a similar problem.
+-- that do not have a similar problem.
 --
 -- == Version History
 --

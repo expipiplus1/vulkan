@@ -105,7 +105,7 @@
 -- __RESOLVED__:
 --
 -- -   'getPhysicalDeviceDisplayProperties2KHR': No. The only current input
---     is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs wouldn’t
+--     is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs would not
 --     make sense.
 --
 -- -   'getPhysicalDeviceDisplayPlaneProperties2KHR': No. The only current

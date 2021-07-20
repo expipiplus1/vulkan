@@ -1297,6 +1297,11 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @mipLevels@ /must/ be @1@
 --
+-- -   #VUID-VkImageCreateInfo-usage-04992# If @usage@ includes
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI',
+--     @tiling@ /must/ be
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
+--
 -- -   #VUID-VkImageCreateInfo-imageView2DOn3DImage-04459# If the
 --     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageView2DOn3DImage@

@@ -97,7 +97,7 @@
 -- The viewport mask expansion (@VK_NV_viewport_array2@) and the viewport
 -- swizzle could potentially be performed before or after transform
 -- feedback, but feeding back several viewports worth of primitives with
--- different swizzles doesn’t seem particularly useful. This specification
+-- different swizzles does not seem particularly useful. This specification
 -- applies the viewport mask and swizzle after transform feedback, and
 -- makes primitive queries only count each primitive once.
 --
@@ -141,7 +141,7 @@
 -- >         positions[i] = rotate(gl_in[i].gl_Position, face);
 -- >     }
 -- >
--- >     // If the primitive doesn't project onto this face, we're done.
+-- >     // If the primitive does not project onto this face, we are done.
 -- >     if (shouldCull(positions)) {
 -- >         return;
 -- >     }
@@ -224,7 +224,7 @@
 --
 -- 2.  On NVIDIA implementations supporting floating-point depth buffers
 --     with values outside [0,1], prevent unwanted near plane clipping by
---     enabling @depthClampEnable@. Ensure that the depth clamp doesn’t
+--     enabling @depthClampEnable@. Ensure that the depth clamp does not
 --     mess up depth testing by programming the depth range to very large
 --     values, such as @minDepthBounds@=-z, @maxDepthBounds@=+z, where z =
 --     2127. It should be possible to use IEEE infinity encodings also

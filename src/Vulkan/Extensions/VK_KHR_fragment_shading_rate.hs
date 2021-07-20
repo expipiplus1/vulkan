@@ -1008,9 +1008,10 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- attachment. @maxFragmentShadingRateAttachmentTexelSizeAspectRatio@
     -- /must/ be a power-of-two value, and /must/ be less than or equal to
     -- max(@maxFragmentShadingRateAttachmentTexelSize.width@ \/
-    -- minFragmentShadingRateAttachmentTexelSize.height,
+    -- @minFragmentShadingRateAttachmentTexelSize.height@,
     -- @maxFragmentShadingRateAttachmentTexelSize.height@ \/
-    -- minFragmentShadingRateAttachmentTexelSize.width). It /must/ be 0 if the
+    -- @minFragmentShadingRateAttachmentTexelSize.width@). It /must/ be 0 if
+    -- the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
     -- feature is not supported.
     maxFragmentShadingRateAttachmentTexelSizeAspectRatio :: Word32
@@ -1082,7 +1083,7 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- and the sample count reported by
     -- @maxFragmentShadingRateRasterizationSamples@.
     -- @maxFragmentShadingRateCoverageSamples@ /must/ be less than or equal to
-    -- @maxSampleMaskWords@ * 32 if @fragmentShadingRateWithShaderSampleMask@
+    -- @maxSampleMaskWords@ × 32 if @fragmentShadingRateWithShaderSampleMask@
     -- is supported. This limit is purely informational, and is not validated.
     maxFragmentShadingRateCoverageSamples :: Word32
   , -- | #limits-maxFragmentShadingRateRasterizationSamples#
@@ -1148,7 +1149,7 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     fragmentShadingRateWithCustomSampleLocations :: Bool
   , -- | #limits-fragmentShadingRateStrictMultiplyCombiner#
     -- @fragmentShadingRateStrictMultiplyCombiner@ specifies whether
-    -- VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR accurately performs a
+    -- 'FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR' accurately performs a
     -- multiplication or not. Implementations where this value is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' will instead combine rates with
     -- an addition. If @fragmentShadingRateNonTrivialCombinerOps@ is

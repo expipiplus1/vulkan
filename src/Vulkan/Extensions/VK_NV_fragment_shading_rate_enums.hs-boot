@@ -135,14 +135,14 @@
 --     VK_NV_shading_rate_image, there are three different ways to specify
 --     shading rate state in a pipeline. How should we handle this?
 --
---     __RESOLVED__: We don’t allow the concurrent use of
+--     __RESOLVED__: We do not allow the concurrent use of
 --     VK_NV_shading_rate_image and VK_KHR_fragment_shading_rate; it is an
 --     error to enable shading rate features from both extensions. But we
 --     do allow applications to enable this extension together with
 --     VK_KHR_fragment_shading_rate together. While we expect that
 --     applications will never attach pipeline CreateInfo structures for
---     both this extension and the KHR extension concurrently, Vulkan
---     doesn’t have any precedent forbidding such behavior and instead
+--     both this extension and the KHR extension concurrently, Vulkan does
+--     not have any precedent forbidding such behavior and instead
 --     typically treats a pipeline created without an extension-specific
 --     CreateInfo structure as equivalent to one containing default values
 --     specified by the extension. Rather than adding such a rule
