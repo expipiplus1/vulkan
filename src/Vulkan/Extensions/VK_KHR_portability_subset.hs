@@ -34,6 +34,8 @@
 --     -   Bill Hollings
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_portability_subset:%20&body=@billhollings%20 >
 --
+-- == Other Extension Metadata
+--
 -- [__Last Modified Date__]
 --     2020-07-21
 --

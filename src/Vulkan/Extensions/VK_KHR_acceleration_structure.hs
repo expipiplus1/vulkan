@@ -788,7 +788,7 @@
 --
 -- __RESOLVED__: It is primarily intended for API layering. In DXR, the
 -- acceleration structure is basically just a buffer in a special layout,
--- and you don’t know at creation time whether it will be used as a top or
+-- and you do not know at creation time whether it will be used as a top or
 -- bottom level acceleration structure. We thus added a generic
 -- acceleration structure type whose type is unknown at creation time, but
 -- is specified at build time instead. Applications which are written

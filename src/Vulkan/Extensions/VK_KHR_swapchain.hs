@@ -678,7 +678,7 @@
 -- -   Revision 13, 2015-06-01 (James Jones)
 --
 --     -   Moved some structures to VK_EXT_KHR_swap_chain to resolve the
---         spec’s issues 1 and 2.
+--         specification’s issues 1 and 2.
 --
 -- -   Revision 14, 2015-06-01 (James Jones)
 --
@@ -1217,6 +1217,7 @@ import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_GGP_frame_token (PresentFrameTokenGGP)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PresentIdKHR)
 import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (PresentRegionsKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PresentTimesInfoGOOGLE)
@@ -1869,6 +1870,9 @@ foreign import ccall
 -- operations are still considered to be enqueued and thus any semaphore
 -- wait operation specified in 'PresentInfoKHR' will execute when the
 -- corresponding queue operation is complete.
+--
+-- Calls to 'queuePresentKHR' /may/ block, but /must/ return in finite
+-- time.
 --
 -- If any @swapchain@ member of @pPresentInfo@ was created with
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
@@ -2840,6 +2844,7 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     'DeviceGroupPresentInfoKHR',
 --     'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
 --     'Vulkan.Extensions.VK_GGP_frame_token.PresentFrameTokenGGP',
+--     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR',
 --     'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR', or
 --     'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE'
 --
@@ -2917,6 +2922,7 @@ instance Extensible PresentInfoKHR where
   extends _ f
     | Just Refl <- eqT @e @PresentFrameTokenGGP = Just f
     | Just Refl <- eqT @e @PresentTimesInfoGOOGLE = Just f
+    | Just Refl <- eqT @e @PresentIdKHR = Just f
     | Just Refl <- eqT @e @DeviceGroupPresentInfoKHR = Just f
     | Just Refl <- eqT @e @PresentRegionsKHR = Just f
     | Just Refl <- eqT @e @DisplayPresentInfoKHR = Just f

@@ -174,7 +174,7 @@
 -- __RESOLVED__: This would be desirable, so that apps converting from
 -- OpenGL ES to Vulkan could get the same output given the same input. But
 -- since sampling and conversion from Y′CBCR images is so loosely defined
--- in OpenGL ES, multiple implementations do it in a way that doesn’t
+-- in OpenGL ES, multiple implementations do it in a way that does not
 -- conform to Vulkan’s requirements. Modifying the OpenGL ES implementation
 -- would be difficult, and would change the output of existing unmodified
 -- applications. Changing the output only for applications that are being

@@ -19,11 +19,11 @@ import Data.Bits (shiftR)
 import Data.Word (Word32)
 
 pattern HEADER_VERSION :: Word32
-pattern HEADER_VERSION = 184
+pattern HEADER_VERSION = 185
 
 
 pattern HEADER_VERSION_COMPLETE :: Word32
-pattern HEADER_VERSION_COMPLETE = MAKE_API_VERSION 1 2 184
+pattern HEADER_VERSION_COMPLETE = MAKE_API_VERSION 1 2 185
 
 
 pattern MAKE_API_VERSION :: Word32 -> Word32 -> Word32 -> Word32

@@ -65,7 +65,7 @@
 -- shader can bulk copy data from another storage class using one type
 -- (e.g. an array of large vectors), and then use the data with a more
 -- specific type. It also enables reducing the amount of workgroup memory
--- consumed by allowing the shader to alias data whose lifetimes don’t
+-- consumed by allowing the shader to alias data whose lifetimes do not
 -- overlap.
 --
 -- The explicit layout support and some form of aliasing is also required

@@ -220,7 +220,7 @@
 -- presentation and swapchain image acquisition operations?
 --
 -- __RESOLVED__: Some implementations may have problems with supporting
--- that directly, thus it’s not allowed in this extension.
+-- that directly, thus it is not allowed in this extension.
 --
 -- 8) Do we want to support external sharing of the new synchronization
 -- primitive type?

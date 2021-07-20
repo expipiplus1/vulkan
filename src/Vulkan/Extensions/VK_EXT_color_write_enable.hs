@@ -352,12 +352,15 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 --
 -- Color Write Enable interacts with the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-color-write-mask Color Write Mask>
--- as follows: * If @colorWriteEnable@ is
--- 'Vulkan.Core10.FundamentalTypes.TRUE', writes to the attachment are
--- determined by the @colorWriteMask@. * If @colorWriteEnable@ is
--- 'Vulkan.Core10.FundamentalTypes.FALSE', the @colorWriteMask@ is ignored
--- and writes to all components of the attachment are disabled. This is
--- equivalent to specifying a @colorWriteMask@ of 0.
+-- as follows:
+--
+-- -   If @colorWriteEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     writes to the attachment are determined by the @colorWriteMask@.
+--
+-- -   If @colorWriteEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE', the
+--     @colorWriteMask@ is ignored and writes to all components of the
+--     attachment are disabled. This is equivalent to specifying a
+--     @colorWriteMask@ of 0.
 --
 -- == Valid Usage
 --

@@ -202,7 +202,10 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     -- Y′CBCR conversion /must/ not be used.
     samplerYcbcrConversion :: Bool
   , -- | #features-shaderDrawParameters# @shaderDrawParameters@ specifies whether
-    -- shader draw parameters are supported.
+    -- the implementation supports the SPIR-V @DrawParameters@ capability. When
+    -- this feature is not enabled, shader modules /must/ not declare the
+    -- @SPV_KHR_shader_draw_parameters@ extension or the @DrawParameters@
+    -- capability.
     shaderDrawParameters :: Bool
   }
   deriving (Typeable, Eq)

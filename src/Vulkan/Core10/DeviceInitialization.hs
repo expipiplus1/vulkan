@@ -507,7 +507,8 @@ foreign import ccall
 -- = Parameters
 --
 -- The table below defines the various use cases for 'getDeviceProcAddr'
--- and expected return value for each case.
+-- and expected return value (“fp” is “function pointer”) for each case. A
+-- valid returned function pointer (“fp”) /must/ not be @NULL@.
 --
 -- = Description
 --
@@ -600,7 +601,8 @@ foreign import ccall
 -- platform-specific APIs.
 --
 -- The table below defines the various use cases for 'getInstanceProcAddr'
--- and expected return value (“fp” is “function pointer”) for each case.
+-- and expected return value (“fp” is “function pointer”) for each case. A
+-- valid returned function pointer (“fp”) /must/ not be @NULL@.
 --
 -- The returned function pointer is of type
 -- 'Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be cast to
@@ -4223,7 +4225,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-storageTexelBufferOffsetAlignmentBytes storageTexelBufferOffsetAlignmentBytes>
     -- members of
     -- 'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT',
-    -- but smaller alignment is optionally: allowed by
+    -- but smaller alignment is /optionally/ allowed by
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-storageTexelBufferOffsetSingleTexelAlignment storageTexelBufferOffsetSingleTexelAlignment>
     -- and
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetSingleTexelAlignment uniformTexelBufferOffsetSingleTexelAlignment>.

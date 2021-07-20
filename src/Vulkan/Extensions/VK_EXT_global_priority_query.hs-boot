@@ -86,13 +86,14 @@
 -- specific global queue priority in this extension?
 --
 -- __RESOLVED__: No. Whether a caller has enough privilege goes with the
--- OS, and the Vulkan driver can’t really guarantee that the privilege
--- won’t change in between this query and the actual queue creation call.
+-- OS, and the Vulkan driver cannot really guarantee that the privilege
+-- will not change in between this query and the actual queue creation
+-- call.
 --
 -- 2) If more than 1 queue using global priority is requested, is there a
 -- good way to know which queue is failing the device creation?
 --
--- __RESOLVED__: No. There isn’t a good way at this moment and it’s also
+-- __RESOLVED__: No. There is not a good way at this moment, and it is also
 -- not quite actionable for the applications to know that because the
 -- information may not be accurate. Queue creation can fail because of
 -- runtime constraints like insufficient privilege or lack of resource, and

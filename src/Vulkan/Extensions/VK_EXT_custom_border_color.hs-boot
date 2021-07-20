@@ -167,8 +167,8 @@
 -- color types be separated or should they be combined into one generic INT
 -- (integer) type?
 --
--- __RESOLVED__: Separating these doesn’t make much sense as the existing
--- fixed border color types don’t have this distinction, and there is no
+-- __RESOLVED__: Separating these does not make much sense as the existing
+-- fixed border color types do not have this distinction, and there is no
 -- reason in hardware to do so. This separation would also create
 -- unnecessary work and considerations for the application.
 --

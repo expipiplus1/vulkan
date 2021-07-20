@@ -320,7 +320,7 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
   pure $ (pMemoryFdProperties)
 
 
--- | VkImportMemoryFdInfoKHR - import memory created on the same physical
+-- | VkImportMemoryFdInfoKHR - Import memory created on the same physical
 -- device from a file descriptor
 --
 -- = Description

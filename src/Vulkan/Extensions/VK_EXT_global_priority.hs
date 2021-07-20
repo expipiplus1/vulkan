@@ -48,8 +48,8 @@
 --
 -- In Vulkan, users can specify device-scope queue priorities. In some
 -- cases it may be useful to extend this concept to a system-wide scope.
--- This extension provides a mechanism for caller’s to set their
--- system-wide priority. The default queue priority is
+-- This extension provides a mechanism for callers to set their system-wide
+-- priority. The default queue priority is
 -- 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
 --
 -- The driver implementation will attempt to skew hardware resource

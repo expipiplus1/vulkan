@@ -266,22 +266,23 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     -- primitives.
     conservativePointAndLineRasterization :: Bool
   , -- | #limits-degenerateTrianglesRasterized# @degenerateTrianglesRasterized@
-    -- is false if the implementation culls primitives generated from triangles
-    -- that become zero area after they are quantized to the fixed-point
-    -- rasterization pixel grid. @degenerateTrianglesRasterized@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if these primitives are not culled
-    -- and the provoking vertex attributes and depth value are used for the
-    -- fragments. The primitive area calculation is done on the primitive
-    -- generated from the clipped triangle if applicable. Zero area primitives
-    -- are backfacing and the application /can/ enable backface culling if
-    -- desired.
-    degenerateTrianglesRasterized :: Bool
-  , -- | #limits-degenerateLinesRasterized# @degenerateLinesRasterized@ is false
-    -- if the implementation culls lines that become zero length after they are
+    -- is 'Vulkan.Core10.FundamentalTypes.FALSE' if the implementation culls
+    -- primitives generated from triangles that become zero area after they are
     -- quantized to the fixed-point rasterization pixel grid.
-    -- @degenerateLinesRasterized@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if
-    -- zero length lines are not culled and the provoking vertex attributes and
-    -- depth value are used for the fragments.
+    -- @degenerateTrianglesRasterized@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
+    -- if these primitives are not culled and the provoking vertex attributes
+    -- and depth value are used for the fragments. The primitive area
+    -- calculation is done on the primitive generated from the clipped triangle
+    -- if applicable. Zero area primitives are backfacing and the application
+    -- /can/ enable backface culling if desired.
+    degenerateTrianglesRasterized :: Bool
+  , -- | #limits-degenerateLinesRasterized# @degenerateLinesRasterized@ is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if the implementation culls lines
+    -- that become zero length after they are quantized to the fixed-point
+    -- rasterization pixel grid. @degenerateLinesRasterized@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if zero length lines are not
+    -- culled and the provoking vertex attributes and depth value are used for
+    -- the fragments.
     degenerateLinesRasterized :: Bool
   , -- | #limits-fullyCoveredFragmentShaderInputVariable#
     -- @fullyCoveredFragmentShaderInputVariable@ is

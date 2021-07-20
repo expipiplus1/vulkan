@@ -159,7 +159,7 @@
 --
 -- __RESOLVED__: The SPIR-V extension for this feature chose to mirror the
 -- behavior of the GLSL extension, which provides two built-in variables.
--- Additionally, it’s not clear that its a good idea (or even legal) to
+-- Additionally, it is not clear that its a good idea (or even legal) to
 -- have two variables using the “same attribute”, but with different
 -- interpolation modifiers.
 --

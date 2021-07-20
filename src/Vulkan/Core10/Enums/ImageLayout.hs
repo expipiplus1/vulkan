@@ -73,6 +73,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.ResolveImageInfo2KHR',
+-- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.cmdBindInvocationMaskHUAWEI',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage',

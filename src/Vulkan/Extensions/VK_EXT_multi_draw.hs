@@ -783,7 +783,7 @@ cmdDrawMultiEXT :: forall io
                    -- recorded.
                    CommandBuffer
                 -> -- | @pVertexInfo@ is a pointer to an array of 'MultiDrawInfoEXT' with vertex
-                   -- info to be drawn.
+                   -- information to be drawn.
                    ("vertexInfo" ::: Vector MultiDrawInfoEXT)
                 -> -- | @instanceCount@ is the number of instances to draw.
                    ("instanceCount" ::: Word32)
@@ -1425,7 +1425,7 @@ cmdDrawMultiIndexedEXT :: forall io
                           -- recorded.
                           CommandBuffer
                        -> -- | @pIndexInfo@ is a pointer to an array of 'MultiDrawIndexedInfoEXT' with
-                          -- index info to be drawn.
+                          -- index information to be drawn.
                           ("indexInfo" ::: Vector MultiDrawIndexedInfoEXT)
                        -> -- | @instanceCount@ is the number of instances to draw.
                           ("instanceCount" ::: Word32)

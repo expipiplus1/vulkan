@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlags
                                                                    , IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
                                                                    , IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
                                                                    , IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+                                                                   , IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI
                                                                    , IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                    , IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
                                                                    , ..
@@ -79,6 +80,8 @@ pattern IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT                 = ImageUsageFlagBit
 -- be read from a shader as an input attachment; and be used as an input
 -- attachment in a framebuffer.
 pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT                     = ImageUsageFlagBits 0x00000080
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI"
+pattern IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI               = ImageUsageFlagBits 0x00040000
 -- | 'IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
 -- the image /can/ be used to create a 'Vulkan.Core10.Handles.ImageView'
 -- suitable for use as a
@@ -108,6 +111,7 @@ showTableImageUsageFlagBits =
   , (IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT            , "DEPTH_STENCIL_ATTACHMENT_BIT")
   , (IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT                , "TRANSIENT_ATTACHMENT_BIT")
   , (IMAGE_USAGE_INPUT_ATTACHMENT_BIT                    , "INPUT_ATTACHMENT_BIT")
+  , (IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI              , "INVOCATION_MASK_BIT_HUAWEI")
   , (IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR, "FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR")
   , (IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT            , "FRAGMENT_DENSITY_MAP_BIT_EXT")
   ]

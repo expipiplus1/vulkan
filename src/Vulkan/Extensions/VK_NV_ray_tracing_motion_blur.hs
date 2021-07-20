@@ -362,8 +362,10 @@ instance Zero PhysicalDeviceRayTracingMotionBlurFeaturesNV where
 --
 -- = Description
 --
--- If 'AccelerationStructureGeometryMotionTrianglesDataNV' is present in a
--- geometry, the basic vertex positions are used for the position of the
+-- If 'AccelerationStructureGeometryMotionTrianglesDataNV' is included in
+-- the @pNext@ chain of a
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR'
+-- structure, the basic vertex positions are used for the position of the
 -- triangles in the geometry at time 0.0 and the @vertexData@ in
 -- 'AccelerationStructureGeometryMotionTrianglesDataNV' is used for the
 -- vertex positions at time 1.0, with positions linearly interpolated at
@@ -651,8 +653,8 @@ instance Zero SRTDataNV where
 --
 -- = Description
 --
--- The C language spec does not define the ordering of bit-fields, but in
--- practice, this struct produces the correct layout with existing
+-- The C language specification does not define the ordering of bit-fields,
+-- but in practice, this struct produces the correct layout with existing
 -- compilers. The intended bit pattern is for the following:
 --
 -- If a compiler produces code that diverges from that pattern,
@@ -788,8 +790,8 @@ instance Zero AccelerationStructureSRTMotionInstanceNV where
 --
 -- = Description
 --
--- The C language spec does not define the ordering of bit-fields, but in
--- practice, this struct produces the correct layout with existing
+-- The C language specification does not define the ordering of bit-fields,
+-- but in practice, this struct produces the correct layout with existing
 -- compilers. The intended bit pattern is for the following:
 --
 -- If a compiler produces code that diverges from that pattern,

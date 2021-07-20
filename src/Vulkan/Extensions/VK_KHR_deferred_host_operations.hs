@@ -158,8 +158,8 @@
 -- >     [ hOp ] ( )
 -- >     {
 -- >         vkDeferredOperationJoinKHR(device, hOp);
--- > 		// in a job system, a return of VK_THREAD_IDLE_KHR should queue another
--- > 		// job, but it's not functionally required
+-- >                 // in a job system, a return of VK_THREAD_IDLE_KHR should queue another
+-- >                 // job, but it is not functionally required
 -- >     }
 -- >   );
 -- > }

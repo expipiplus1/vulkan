@@ -44,7 +44,7 @@
 --
 -- This extension adds more expressive alignment requirements for uniform
 -- and storage texel buffers. Some implementations have single texel
--- alignment requirements that can’t be expressed via
+-- alignment requirements that cannot be expressed via
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
 --
 -- == New Structures

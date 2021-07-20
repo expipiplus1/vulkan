@@ -215,7 +215,6 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
@@ -268,19 +267,23 @@ getMemoryRemoteAddressNV :: forall io
                             -- #VUID-vkGetMemoryRemoteAddressNV-device-parameter# @device@ /must/ be a
                             -- valid 'Vulkan.Core10.Handles.Device' handle
                             Device
-                         -> -- | #VUID-vkGetMemoryRemoteAddressNV-getMemoryRemoteAddressInfo-parameter#
-                            -- @getMemoryRemoteAddressInfo@ /must/ be a valid pointer to a valid
+                         -> -- | @pMemoryGetRemoteAddressInfo@ is a pointer to a
+                            -- 'MemoryGetRemoteAddressInfoNV' structure containing parameters of the
+                            -- export operation.
+                            --
+                            -- #VUID-vkGetMemoryRemoteAddressNV-pMemoryGetRemoteAddressInfo-parameter#
+                            -- @pMemoryGetRemoteAddressInfo@ /must/ be a valid pointer to a valid
                             -- 'MemoryGetRemoteAddressInfoNV' structure
-                            ("getMemoryRemoteAddressInfo" ::: MemoryGetRemoteAddressInfoNV)
+                            MemoryGetRemoteAddressInfoNV
                          -> io (RemoteAddressNV)
-getMemoryRemoteAddressNV device getMemoryRemoteAddressInfo = liftIO . evalContT $ do
+getMemoryRemoteAddressNV device memoryGetRemoteAddressInfo = liftIO . evalContT $ do
   let vkGetMemoryRemoteAddressNVPtr = pVkGetMemoryRemoteAddressNV (deviceCmds (device :: Device))
   lift $ unless (vkGetMemoryRemoteAddressNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryRemoteAddressNV is null" Nothing Nothing
   let vkGetMemoryRemoteAddressNV' = mkVkGetMemoryRemoteAddressNV vkGetMemoryRemoteAddressNVPtr
-  getMemoryRemoteAddressInfo' <- ContT $ withCStruct (getMemoryRemoteAddressInfo)
+  pMemoryGetRemoteAddressInfo <- ContT $ withCStruct (memoryGetRemoteAddressInfo)
   pPAddress <- ContT $ bracket (callocBytes @RemoteAddressNV 8) free
-  r <- lift $ traceAroundEvent "vkGetMemoryRemoteAddressNV" (vkGetMemoryRemoteAddressNV' (deviceHandle (device)) getMemoryRemoteAddressInfo' (pPAddress))
+  r <- lift $ traceAroundEvent "vkGetMemoryRemoteAddressNV" (vkGetMemoryRemoteAddressNV' (deviceHandle (device)) pMemoryGetRemoteAddressInfo (pPAddress))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAddress <- lift $ peek @RemoteAddressNV pPAddress
   pure $ (pAddress)

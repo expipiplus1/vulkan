@@ -103,7 +103,7 @@
 --
 -- __RESOLVED__: No. As specified, we only guarantee that each primitive
 -- with at least one fragment that passes prior tests will have one
--- fragment passing the representative fragment tests. We don’t guarantee
+-- fragment passing the representative fragment tests. We do not guarantee
 -- that any particular fragment will fail the test.
 --
 -- In the initial implementation of this extension, the representative
@@ -126,7 +126,7 @@
 -- __RESOLVED__: If writes to the color or depth buffer are enabled, they
 -- will be performed for any fragments that survive the relevant tests. Any
 -- fragments that fail the representative fragment test will not update
--- color buffers. For the use cases intended for this feature, we don’t
+-- color buffers. For the use cases intended for this feature, we do not
 -- expect color or depth writes to be enabled.
 --
 -- (4) How do derivatives and automatic texture level of detail
@@ -135,7 +135,7 @@
 -- __RESOLVED__: If a fragment shader uses derivative functions or texture
 -- lookups using automatic level of detail computation, derivatives will be
 -- computed identically whether or not the representative fragment test is
--- enabled. For the use cases intended for this feature, we don’t expect
+-- enabled. For the use cases intended for this feature, we do not expect
 -- the use of derivatives in the fragment shader.
 --
 -- == Version History
@@ -267,9 +267,10 @@ instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 --
 -- = Description
 --
--- If this structure is not present, @representativeFragmentTestEnable@ is
--- considered to be 'Vulkan.Core10.FundamentalTypes.FALSE', and the
--- representative fragment test is disabled.
+-- If this structure is not included in the @pNext@ chain,
+-- @representativeFragmentTestEnable@ is considered to be
+-- 'Vulkan.Core10.FundamentalTypes.FALSE', and the representative fragment
+-- test is disabled.
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>

@@ -229,9 +229,9 @@
 --     __RESOLVED__: No. If an application were to be recompiled with
 --     headers that include additional shader stage bits in
 --     VK_SHADER_STAGE_ALL_GRAPHICS, then the previously valid application
---     would no longer be valid on implementations that don’t support mesh
+--     would no longer be valid on implementations that do not support mesh
 --     or task shaders. This means the change would not be backwards
---     compatible. It’s too bad VkShaderStageFlagBits doesn’t have a
+--     compatible. It is too bad VkShaderStageFlagBits does not have a
 --     dedicated “all supported graphics stages” bit like
 --     VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, which would have avoided this
 --     problem.

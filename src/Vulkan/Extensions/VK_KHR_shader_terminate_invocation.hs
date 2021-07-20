@@ -28,6 +28,8 @@
 --     -   Jesse Hall
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_terminate_invocation:%20&body=@critsec%20 >
 --
+-- == Other Extension Metadata
+--
 -- [__Last Modified Date__]
 --     2020-08-11
 --

@@ -468,6 +468,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( cmdSetEvent2KHR
                                                                       , ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR
                                                                       , ACCESS_2_SHADER_STORAGE_READ_BIT_KHR
                                                                       , ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR
+                                                                      , ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI
                                                                       , ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
                                                                       , ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
                                                                       , ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR
@@ -507,6 +508,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( cmdSetEvent2KHR
                                                                              , PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR
                                                                              , PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR
                                                                              , PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR
+                                                                             , PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI
                                                                              , PIPELINE_STAGE_2_MESH_SHADER_BIT_NV
                                                                              , PIPELINE_STAGE_2_TASK_SHADER_BIT_NV
                                                                              , PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT
@@ -884,6 +886,11 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-vkCmdResetEvent2KHR-stageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-vkCmdResetEvent2KHR-synchronization2-03829# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -1724,6 +1731,11 @@ foreign import ccall
 --     feature is not enabled, @stage@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
 --
+-- -   #VUID-vkCmdWriteTimestamp2KHR-stage-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
 -- -   #VUID-vkCmdWriteTimestamp2KHR-synchronization2-03858# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature /must/ be enabled
@@ -1913,6 +1925,11 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-synchronization2-03893# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -2176,6 +2193,11 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
 --
+-- -   #VUID-VkMemoryBarrier2KHR-srcStageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
 -- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-03900# If @srcAccessMask@
 --     includes 'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR', @srcStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR',
@@ -2335,6 +2357,10 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
+-- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-04994# If @srcAccessMask@
+--     includes 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI', @srcStageMask@
+--     /must/ include 'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
 -- -   #VUID-VkMemoryBarrier2KHR-srcAccessMask-03924# If @srcAccessMask@
 --     includes 'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV', @srcStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV' or
@@ -2405,6 +2431,11 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkMemoryBarrier2KHR-dstStageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-03900# If @dstAccessMask@
 --     includes 'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR', @dstStageMask@
@@ -2565,6 +2596,10 @@ pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KH
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
+-- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-04994# If @dstAccessMask@
+--     includes 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI', @dstStageMask@
+--     /must/ include 'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
 -- -   #VUID-VkMemoryBarrier2KHR-dstAccessMask-03924# If @dstAccessMask@
 --     includes 'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV', @dstStageMask@
 --     /must/ include 'PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV' or
@@ -2686,7 +2721,7 @@ instance Zero MemoryBarrier2KHR where
 --
 -- This structure defines a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-memory memory dependency>
--- limited to an image subresource range, and optionally defines a
+-- limited to an image subresource range, and /can/ define a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family transfer operation>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>
@@ -2804,6 +2839,11 @@ instance Zero MemoryBarrier2KHR where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkImageMemoryBarrier2KHR-srcStageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkImageMemoryBarrier2KHR-srcAccessMask-03900# If
 --     @srcAccessMask@ includes 'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR',
@@ -2978,6 +3018,11 @@ instance Zero MemoryBarrier2KHR where
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
+-- -   #VUID-VkImageMemoryBarrier2KHR-srcAccessMask-04994# If
+--     @srcAccessMask@ includes 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI',
+--     @srcStageMask@ /must/ include
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
 -- -   #VUID-VkImageMemoryBarrier2KHR-srcAccessMask-03924# If
 --     @srcAccessMask@ includes 'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV',
 --     @srcStageMask@ /must/ include
@@ -3052,6 +3097,11 @@ instance Zero MemoryBarrier2KHR where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkImageMemoryBarrier2KHR-dstStageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkImageMemoryBarrier2KHR-dstAccessMask-03900# If
 --     @dstAccessMask@ includes 'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR',
@@ -3225,6 +3275,11 @@ instance Zero MemoryBarrier2KHR where
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
+--
+-- -   #VUID-VkImageMemoryBarrier2KHR-dstAccessMask-04994# If
+--     @dstAccessMask@ includes 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI',
+--     @dstStageMask@ /must/ include
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkImageMemoryBarrier2KHR-dstAccessMask-03924# If
 --     @dstAccessMask@ includes 'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV',
@@ -3717,7 +3772,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --
 -- This structure defines a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-memory memory dependency>
--- limited to a range of a buffer, and optionally defines a
+-- limited to a range of a buffer, and /can/ define a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family transfer operation>
 -- for that range.
 --
@@ -3810,6 +3865,11 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkBufferMemoryBarrier2KHR-srcStageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkBufferMemoryBarrier2KHR-srcAccessMask-03900# If
 --     @srcAccessMask@ includes 'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR',
@@ -3984,6 +4044,11 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
 --
+-- -   #VUID-VkBufferMemoryBarrier2KHR-srcAccessMask-04994# If
+--     @srcAccessMask@ includes 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI',
+--     @srcStageMask@ /must/ include
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
 -- -   #VUID-VkBufferMemoryBarrier2KHR-srcAccessMask-03924# If
 --     @srcAccessMask@ includes 'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV',
 --     @srcStageMask@ /must/ include
@@ -4058,6 +4123,11 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkBufferMemoryBarrier2KHR-dstStageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkBufferMemoryBarrier2KHR-dstAccessMask-03900# If
 --     @dstAccessMask@ includes 'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR',
@@ -4231,6 +4301,11 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2KHR es) where
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV',
 --     'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR', or
 --     'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
+--
+-- -   #VUID-VkBufferMemoryBarrier2KHR-dstAccessMask-04994# If
+--     @dstAccessMask@ includes 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI',
+--     @dstStageMask@ /must/ include
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkBufferMemoryBarrier2KHR-dstAccessMask-03924# If
 --     @dstAccessMask@ includes 'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV',
@@ -4614,6 +4689,11 @@ instance Zero DependencyInfoKHR where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkSemaphoreSubmitInfoKHR-stageMask-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-VkSemaphoreSubmitInfoKHR-device-03888# If the @device@ that
 --     @semaphore@ was created on is not a device group, @deviceIndex@
@@ -5319,6 +5399,10 @@ pattern ACCESS_2_SHADER_STORAGE_READ_BIT_KHR            = AccessFlagBits2KHR 0x0
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>
 -- in any shader pipeline stage.
 pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR           = AccessFlagBits2KHR 0x0000000400000000
+-- | 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI' specifies read access to a
+-- invocation mask image in the
+-- 'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI' pipeline stage.
+pattern ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI        = AccessFlagBits2KHR 0x0000008000000000
 -- | 'ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' specifies read
 -- access to
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass color attachments>,
@@ -5415,6 +5499,7 @@ showTableAccessFlagBits2KHR =
   , (ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR           , "SHADER_SAMPLED_READ_BIT_KHR")
   , (ACCESS_2_SHADER_STORAGE_READ_BIT_KHR           , "SHADER_STORAGE_READ_BIT_KHR")
   , (ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR          , "SHADER_STORAGE_WRITE_BIT_KHR")
+  , (ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI       , "INVOCATION_MASK_READ_BIT_HUAWEI")
   , (ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT, "COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT")
   , (ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT     , "FRAGMENT_DENSITY_MAP_READ_BIT_EXT")
   , (ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR  , "ACCELERATION_STRUCTURE_WRITE_BIT_KHR")
@@ -5577,6 +5662,8 @@ pattern PIPELINE_STAGE_2_HOST_BIT_KHR                           = PipelineStageF
 -- -   'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   'PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 pattern PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR                   = PipelineStageFlagBits2KHR 0x0000000000008000
 -- | 'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR' specifies all operations
 -- performed by all commands supported on the queue it is used with.
@@ -5618,6 +5705,10 @@ pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR         = PipelineStageF
 --
 -- -   'PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
 pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR      = PipelineStageFlagBits2KHR 0x0000004000000000
+-- | 'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI' specifies the stage of the
+-- pipeline where the invocation mask image is read by the implementation
+-- to optimize the ray dispatch.
+pattern PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI             = PipelineStageFlagBits2KHR 0x0000010000000000
 -- | 'PIPELINE_STAGE_2_MESH_SHADER_BIT_NV' specifies the mesh shader stage.
 pattern PIPELINE_STAGE_2_MESH_SHADER_BIT_NV                     = PipelineStageFlagBits2KHR 0x0000000000100000
 -- | 'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV' specifies the task shader stage.
@@ -5687,6 +5778,7 @@ showTablePipelineStageFlagBits2KHR =
   , (PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR                   , "INDEX_INPUT_BIT_KHR")
   , (PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR        , "VERTEX_ATTRIBUTE_INPUT_BIT_KHR")
   , (PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR     , "PRE_RASTERIZATION_SHADERS_BIT_KHR")
+  , (PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI            , "INVOCATION_MASK_BIT_HUAWEI")
   , (PIPELINE_STAGE_2_MESH_SHADER_BIT_NV                    , "MESH_SHADER_BIT_NV")
   , (PIPELINE_STAGE_2_TASK_SHADER_BIT_NV                    , "TASK_SHADER_BIT_NV")
   , (PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT      , "FRAGMENT_DENSITY_PROCESS_BIT_EXT")

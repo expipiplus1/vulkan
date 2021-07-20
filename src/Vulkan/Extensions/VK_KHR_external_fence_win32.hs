@@ -100,7 +100,7 @@
 -- 'Vulkan.Core10.Handles.Semaphore' instead of a
 -- 'Vulkan.Core10.Handles.Fence', and applications can check status or wait
 -- on the D3D12 fence using non-Vulkan APIs. The convenience of being able
--- to do these operations on 'Vulkan.Core10.Handles.Fence' objects doesn’t
+-- to do these operations on 'Vulkan.Core10.Handles.Fence' objects does not
 -- justify the extra API complexity.
 --
 -- == Version History
@@ -469,18 +469,18 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'
--- is not present in the same @pNext@ chain, this structure is ignored.
+-- is not inluded in the same @pNext@ chain, this structure is ignored.
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'
--- is present in the @pNext@ chain of 'Vulkan.Core10.Fence.FenceCreateInfo'
--- with a Windows @handleType@, but either 'ExportFenceWin32HandleInfoKHR'
--- is not present in the @pNext@ chain, or if it is but @pAttributes@ is
--- set to @NULL@, default security descriptor values will be used, and
--- child processes created by the application will not inherit the handle,
--- as described in the MSDN documentation for “Synchronization Object
--- Security and Access Rights”1. Further, if the structure is not present,
--- the access rights will be
+-- is included in the @pNext@ chain of
+-- 'Vulkan.Core10.Fence.FenceCreateInfo' with a Windows @handleType@, but
+-- either 'ExportFenceWin32HandleInfoKHR' is not included in the @pNext@
+-- chain, or if it is but @pAttributes@ is set to @NULL@, default security
+-- descriptor values will be used, and child processes created by the
+-- application will not inherit the handle, as described in the MSDN
+-- documentation for “Synchronization Object Security and Access Rights”1.
+-- Further, if the structure is not present, the access rights will be
 --
 -- @DXGI_SHARED_RESOURCE_READ@ | @DXGI_SHARED_RESOURCE_WRITE@
 --

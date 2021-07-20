@@ -112,14 +112,14 @@
 -- 3) Can the application free the host allocation?
 --
 -- __RESOLVED__: No, it violates valid usage conditions. Using the memory
--- object imported from a host allocation that’s already freed thus results
--- in undefined behavior.
+-- object imported from a host allocation that is already freed thus
+-- results in undefined behavior.
 --
 -- 4) Is 'Vulkan.Core10.Memory.mapMemory' expected to return the same host
 -- address which was specified when importing it to the memory object?
 --
 -- __RESOLVED__: No. Implementations are allowed to return the same address
--- but it’s not required. Some implementations might return a different
+-- but it is not required. Some implementations might return a different
 -- virtual mapping of the allocation, although the same physical pages will
 -- be used.
 --

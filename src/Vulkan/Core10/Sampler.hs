@@ -456,7 +456,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     or 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT',
 --     then a
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
---     /must/ be present in the @pNext@ chain
+--     /must/ be included in the @pNext@ chain
 --
 -- -   #VUID-VkSamplerCreateInfo-customBorderColors-04085# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-customBorderColors customBorderColors>

@@ -340,7 +340,7 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
   pure $ (pMemoryWin32HandleProperties)
 
 
--- | VkImportMemoryWin32HandleInfoKHR - import Win32 memory created on the
+-- | VkImportMemoryWin32HandleInfoKHR - Import Win32 memory created on the
 -- same physical device
 --
 -- = Description
@@ -486,13 +486,13 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
--- is not present in the same @pNext@ chain, this structure is ignored.
+-- is not included in the same @pNext@ chain, this structure is ignored.
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
--- is present in the @pNext@ chain of
+-- is included in the @pNext@ chain of
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo' with a Windows @handleType@,
--- but either 'ExportMemoryWin32HandleInfoKHR' is not present in the
+-- but either 'ExportMemoryWin32HandleInfoKHR' is not included in the
 -- @pNext@ chain, or if it is but @pAttributes@ is set to @NULL@, default
 -- security descriptor values will be used, and child processes created by
 -- the application will not inherit the handle, as described in the MSDN

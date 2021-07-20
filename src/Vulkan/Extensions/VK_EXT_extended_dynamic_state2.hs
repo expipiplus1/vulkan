@@ -175,8 +175,8 @@ foreign import ccall
   "dynamic" mkVkCmdSetPatchControlPointsEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> IO ()
 
--- | vkCmdSetPatchControlPointsEXT - specifies the number of control points
--- per patch
+-- | vkCmdSetPatchControlPointsEXT - Specify the number of control points per
+-- patch
 --
 -- = Description
 --
@@ -411,7 +411,7 @@ foreign import ccall
   "dynamic" mkVkCmdSetLogicOpEXT
   :: FunPtr (Ptr CommandBuffer_T -> LogicOp -> IO ()) -> Ptr CommandBuffer_T -> LogicOp -> IO ()
 
--- | vkCmdSetLogicOpEXT - selects which logical operation to apply for blend
+-- | vkCmdSetLogicOpEXT - Select which logical operation to apply for blend
 -- state
 --
 -- = Description
@@ -489,7 +489,7 @@ foreign import ccall
   "dynamic" mkVkCmdSetPrimitiveRestartEnableEXT
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
--- | vkCmdSetPrimitiveRestartEnableEXT - controls whether a special vertex
+-- | vkCmdSetPrimitiveRestartEnableEXT - Control whether a special vertex
 -- index value is treated as restarting the assembly of primitives
 --
 -- = Description

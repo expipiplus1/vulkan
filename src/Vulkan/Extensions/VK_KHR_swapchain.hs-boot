@@ -678,7 +678,7 @@
 -- -   Revision 13, 2015-06-01 (James Jones)
 --
 --     -   Moved some structures to VK_EXT_KHR_swap_chain to resolve the
---         spec’s issues 1 and 2.
+--         specification’s issues 1 and 2.
 --
 -- -   Revision 14, 2015-06-01 (James Jones)
 --

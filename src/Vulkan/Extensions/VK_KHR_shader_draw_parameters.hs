@@ -121,7 +121,7 @@
 --
 -- 1) Is this the same functionality as @GL_ARB_shader_draw_parameters@?
 --
--- __RESOLVED__: It’s actually a superset as it also adds in support for
+-- __RESOLVED__: It is actually a superset, as it also adds in support for
 -- arrayed drawing commands.
 --
 -- In GL for @GL_ARB_shader_draw_parameters@, @gl_BaseVertexARB@ holds the
