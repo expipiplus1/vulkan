@@ -88,7 +88,7 @@
 -- == Description
 --
 -- The use of Y′CBCR sampler conversion is an area in 3D graphics not used
--- by most Vulkan developers. It’s mainly used for processing inputs from
+-- by most Vulkan developers. It is mainly used for processing inputs from
 -- video decoders and cameras. The use of the extension assumes basic
 -- knowledge of Y′CBCR concepts.
 --

@@ -1851,7 +1851,7 @@ data PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = PhysicalDeviceDeviceGen
   , -- No documentation found for Nested "VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV" "minSequencesIndexBufferOffsetAlignment"
     minSequencesIndexBufferOffsetAlignment :: Word32
   , -- | @minIndirectCommandsBufferOffsetAlignment@ is the minimum alignment for
-    -- memory addresses used in 'IndirectCommandsStreamNV' and as preprocess
+    -- memory addresses used in 'IndirectCommandsStreamNV', and as preprocess
     -- buffer in 'GeneratedCommandsInfoNV'.
     minIndirectCommandsBufferOffsetAlignment :: Word32
   }

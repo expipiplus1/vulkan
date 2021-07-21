@@ -181,7 +181,7 @@ foreign import ccall
   "dynamic" mkVkSetHdrMetadataEXT
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr SwapchainKHR -> Ptr HdrMetadataEXT -> IO ()) -> Ptr Device_T -> Word32 -> Ptr SwapchainKHR -> Ptr HdrMetadataEXT -> IO ()
 
--- | vkSetHdrMetadataEXT - function to set Hdr metadata
+-- | vkSetHdrMetadataEXT - Set Hdr metadata
 --
 -- == Valid Usage (Implicit)
 --
@@ -234,7 +234,7 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   pure $ ()
 
 
--- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
+-- | VkXYColorEXT - Specify X,Y chromaticity coordinates
 --
 -- = See Also
 --
@@ -283,7 +283,7 @@ instance Zero XYColorEXT where
            zero
 
 
--- | VkHdrMetadataEXT - structure to specify Hdr metadata
+-- | VkHdrMetadataEXT - Specify Hdr metadata
 --
 -- == Valid Usage (Implicit)
 --

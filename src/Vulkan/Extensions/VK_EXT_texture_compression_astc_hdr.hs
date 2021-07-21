@@ -112,7 +112,7 @@
 -- 2) Should we introduce new format enums for HDR?
 --
 -- Yes. Vulkan 1.0 describes the ASTC format enums as UNORM, e.g.
--- 'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_UNORM_BLOCK', so it’s
+-- 'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_UNORM_BLOCK', so it is
 -- confusing to make these contain HDR data. Note that the OpenGL (ES)
 -- extensions did not make this distinction because a single ASTC HDR
 -- texture may contain both unorm and float blocks. Implementations /may/

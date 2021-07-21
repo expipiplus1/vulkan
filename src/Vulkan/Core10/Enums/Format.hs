@@ -844,7 +844,7 @@ pattern FORMAT_E5B9G9R9_UFLOAT_PACK32             = Format 123
 pattern FORMAT_D16_UNORM                          = Format 124
 -- | 'FORMAT_X8_D24_UNORM_PACK32' specifies a two-component, 32-bit format
 -- that has 24 unsigned normalized bits in the depth component and,
--- optionally:, 8 bits that are unused.
+-- /optionally/, 8 bits that are unused.
 pattern FORMAT_X8_D24_UNORM_PACK32                = Format 125
 -- | 'FORMAT_D32_SFLOAT' specifies a one-component, 32-bit signed
 -- floating-point format that has 32 bits in the depth component.
@@ -862,7 +862,7 @@ pattern FORMAT_D16_UNORM_S8_UINT                  = Format 128
 pattern FORMAT_D24_UNORM_S8_UINT                  = Format 129
 -- | 'FORMAT_D32_SFLOAT_S8_UINT' specifies a two-component format that has 32
 -- signed float bits in the depth component and 8 unsigned integer bits in
--- the stencil component. There are optionally: 24 bits that are unused.
+-- the stencil component. There are /optionally/ 24 bits that are unused.
 pattern FORMAT_D32_SFLOAT_S8_UINT                 = Format 130
 -- | 'FORMAT_BC1_RGB_UNORM_BLOCK' specifies a three-component,
 -- block-compressed format where each 64-bit compressed texel block encodes

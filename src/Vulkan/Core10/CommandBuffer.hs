@@ -728,10 +728,9 @@ data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
     -- If the 'Vulkan.Core10.Handles.CommandBuffer' will not be executed within
     -- a render pass instance, @subpass@ is ignored.
     subpass :: Word32
-  , -- | @framebuffer@ optionally refers to the
-    -- 'Vulkan.Core10.Handles.Framebuffer' object that the
-    -- 'Vulkan.Core10.Handles.CommandBuffer' will be rendering to if it is
-    -- executed within a render pass instance. It /can/ be
+  , -- | @framebuffer@ /can/ refer to the 'Vulkan.Core10.Handles.Framebuffer'
+    -- object that the 'Vulkan.Core10.Handles.CommandBuffer' will be rendering
+    -- to if it is executed within a render pass instance. It /can/ be
     -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' if the framebuffer is not
     -- known, or if the 'Vulkan.Core10.Handles.CommandBuffer' will not be
     -- executed within a render pass instance.

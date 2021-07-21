@@ -100,7 +100,7 @@
 -- 'Vulkan.Core10.Handles.Semaphore' instead of a
 -- 'Vulkan.Core10.Handles.Fence', and applications can check status or wait
 -- on the D3D12 fence using non-Vulkan APIs. The convenience of being able
--- to do these operations on 'Vulkan.Core10.Handles.Fence' objects doesn’t
+-- to do these operations on 'Vulkan.Core10.Handles.Fence' objects does not
 -- justify the extra API complexity.
 --
 -- == Version History

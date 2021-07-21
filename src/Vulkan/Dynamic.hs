@@ -825,7 +825,7 @@ data DeviceCmds = DeviceCmds
   , pVkGetMemoryFdPropertiesKHR :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: CInt) -> ("pMemoryFdProperties" ::: Ptr MemoryFdPropertiesKHR) -> IO Result)
   , pVkGetMemoryZirconHandleFUCHSIA :: FunPtr (Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr MemoryGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result)
   , pVkGetMemoryZirconHandlePropertiesFUCHSIA :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("zirconHandle" ::: Zx_handle_t) -> ("pMemoryZirconHandleProperties" ::: Ptr MemoryZirconHandlePropertiesFUCHSIA) -> IO Result)
-  , pVkGetMemoryRemoteAddressNV :: FunPtr (Ptr Device_T -> ("getMemoryRemoteAddressInfo" ::: Ptr MemoryGetRemoteAddressInfoNV) -> ("pAddress" ::: Ptr RemoteAddressNV) -> IO Result)
+  , pVkGetMemoryRemoteAddressNV :: FunPtr (Ptr Device_T -> ("pMemoryGetRemoteAddressInfo" ::: Ptr MemoryGetRemoteAddressInfoNV) -> ("pAddress" ::: Ptr RemoteAddressNV) -> IO Result)
   , pVkGetSemaphoreWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr SemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result)
   , pVkImportSemaphoreWin32HandleKHR :: FunPtr (Ptr Device_T -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr ImportSemaphoreWin32HandleInfoKHR) -> IO Result)
   , pVkGetSemaphoreFdKHR :: FunPtr (Ptr Device_T -> ("pGetFdInfo" ::: Ptr SemaphoreGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result)
@@ -911,6 +911,7 @@ data DeviceCmds = DeviceCmds
   , pVkCmdDrawMeshTasksIndirectCountNV :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
   , pVkCompileDeferredNV :: FunPtr (Ptr Device_T -> Pipeline -> ("shader" ::: Word32) -> IO Result)
   , pVkCreateAccelerationStructureNV :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr AccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureNV) -> IO Result)
+  , pVkCmdBindInvocationMaskHUAWEI :: FunPtr (Ptr CommandBuffer_T -> ImageView -> ImageLayout -> IO ())
   , pVkDestroyAccelerationStructureKHR :: FunPtr (Ptr Device_T -> AccelerationStructureKHR -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkDestroyAccelerationStructureNV :: FunPtr (Ptr Device_T -> AccelerationStructureNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkGetAccelerationStructureMemoryRequirementsNV :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr AccelerationStructureMemoryRequirementsInfoNV) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2KHR)) -> IO ())
@@ -1016,6 +1017,7 @@ data DeviceCmds = DeviceCmds
   , pVkDestroyCuModuleNVX :: FunPtr (Ptr Device_T -> CuModuleNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkDestroyCuFunctionNVX :: FunPtr (Ptr Device_T -> CuFunctionNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkCmdCuLaunchKernelNVX :: FunPtr (Ptr CommandBuffer_T -> ("pLaunchInfo" ::: Ptr CuLaunchInfoNVX) -> IO ())
+  , pVkWaitForPresentKHR :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("presentId" ::: Word64) -> ("timeout" ::: Word64) -> IO Result)
   }
 
 deriving instance Eq DeviceCmds
@@ -1065,6 +1067,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1323,6 +1326,7 @@ initDeviceCmds instanceCmds handle = do
   vkCmdDrawMeshTasksIndirectCountNV <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksIndirectCountNV"#)
   vkCompileDeferredNV <- getDeviceProcAddr' handle (Ptr "vkCompileDeferredNV"#)
   vkCreateAccelerationStructureNV <- getDeviceProcAddr' handle (Ptr "vkCreateAccelerationStructureNV"#)
+  vkCmdBindInvocationMaskHUAWEI <- getDeviceProcAddr' handle (Ptr "vkCmdBindInvocationMaskHUAWEI"#)
   vkDestroyAccelerationStructureKHR <- getDeviceProcAddr' handle (Ptr "vkDestroyAccelerationStructureKHR"#)
   vkDestroyAccelerationStructureNV <- getDeviceProcAddr' handle (Ptr "vkDestroyAccelerationStructureNV"#)
   vkGetAccelerationStructureMemoryRequirementsNV <- getDeviceProcAddr' handle (Ptr "vkGetAccelerationStructureMemoryRequirementsNV"#)
@@ -1428,6 +1432,7 @@ initDeviceCmds instanceCmds handle = do
   vkDestroyCuModuleNVX <- getDeviceProcAddr' handle (Ptr "vkDestroyCuModuleNVX"#)
   vkDestroyCuFunctionNVX <- getDeviceProcAddr' handle (Ptr "vkDestroyCuFunctionNVX"#)
   vkCmdCuLaunchKernelNVX <- getDeviceProcAddr' handle (Ptr "vkCmdCuLaunchKernelNVX"#)
+  vkWaitForPresentKHR <- getDeviceProcAddr' handle (Ptr "vkWaitForPresentKHR"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1581,7 +1586,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: CInt) -> ("pMemoryFdProperties" ::: Ptr MemoryFdPropertiesKHR) -> IO Result) vkGetMemoryFdPropertiesKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetZirconHandleInfo" ::: Ptr MemoryGetZirconHandleInfoFUCHSIA) -> ("pZirconHandle" ::: Ptr Zx_handle_t) -> IO Result) vkGetMemoryZirconHandleFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> ("zirconHandle" ::: Zx_handle_t) -> ("pMemoryZirconHandleProperties" ::: Ptr MemoryZirconHandlePropertiesFUCHSIA) -> IO Result) vkGetMemoryZirconHandlePropertiesFUCHSIA)
-    (castFunPtr @_ @(Ptr Device_T -> ("getMemoryRemoteAddressInfo" ::: Ptr MemoryGetRemoteAddressInfoNV) -> ("pAddress" ::: Ptr RemoteAddressNV) -> IO Result) vkGetMemoryRemoteAddressNV)
+    (castFunPtr @_ @(Ptr Device_T -> ("pMemoryGetRemoteAddressInfo" ::: Ptr MemoryGetRemoteAddressInfoNV) -> ("pAddress" ::: Ptr RemoteAddressNV) -> IO Result) vkGetMemoryRemoteAddressNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetWin32HandleInfo" ::: Ptr SemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO Result) vkGetSemaphoreWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr ImportSemaphoreWin32HandleInfoKHR) -> IO Result) vkImportSemaphoreWin32HandleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pGetFdInfo" ::: Ptr SemaphoreGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO Result) vkGetSemaphoreFdKHR)
@@ -1667,6 +1672,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawMeshTasksIndirectCountNV)
     (castFunPtr @_ @(Ptr Device_T -> Pipeline -> ("shader" ::: Word32) -> IO Result) vkCompileDeferredNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr AccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureNV) -> IO Result) vkCreateAccelerationStructureNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ImageView -> ImageLayout -> IO ()) vkCmdBindInvocationMaskHUAWEI)
     (castFunPtr @_ @(Ptr Device_T -> AccelerationStructureKHR -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyAccelerationStructureKHR)
     (castFunPtr @_ @(Ptr Device_T -> AccelerationStructureNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyAccelerationStructureNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr AccelerationStructureMemoryRequirementsInfoNV) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2KHR)) -> IO ()) vkGetAccelerationStructureMemoryRequirementsNV)
@@ -1772,4 +1778,5 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> CuModuleNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyCuModuleNVX)
     (castFunPtr @_ @(Ptr Device_T -> CuFunctionNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyCuFunctionNVX)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pLaunchInfo" ::: Ptr CuLaunchInfoNVX) -> IO ()) vkCmdCuLaunchKernelNVX)
+    (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("presentId" ::: Word64) -> ("timeout" ::: Word64) -> IO Result) vkWaitForPresentKHR)
 

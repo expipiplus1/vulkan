@@ -58,7 +58,7 @@
 -- This extension also adds support for “null descriptors”, where
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' /can/ be used instead of a
 -- valid handle. Accesses to null descriptors have well-defined behavior,
--- and don’t rely on robustness.
+-- and do not rely on robustness.
 --
 -- == New Structures
 --
@@ -93,7 +93,7 @@
 --     'PhysicalDeviceRobustness2PropertiesEXT'::@robustStorageBufferAccessSizeAlignment@
 --     exist?
 --
--- __RESOLVED__: Some implementations can’t efficiently tightly
+-- __RESOLVED__: Some implementations cannot efficiently tightly
 -- bounds-check all buffer accesses. Rather, the size of the bound range is
 -- padded to some power of two multiple, up to 256 bytes for uniform
 -- buffers and up to 4 bytes for storage buffers, and that padded size is

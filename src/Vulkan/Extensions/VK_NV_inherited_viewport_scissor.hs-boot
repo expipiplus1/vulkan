@@ -113,7 +113,7 @@
 --
 -- This design also better matches the hardware model. In fact, there is no
 -- need to re-execute a depth-setting command. The graphics device retains
--- the viewport depth state; it’s the CPU-side state of
+-- the viewport depth state; it is the CPU-side state of
 -- 'Vulkan.Core10.Handles.CommandBuffer' that must be re-initialized.
 --
 -- (2) Why are viewport depth values specified as a partial

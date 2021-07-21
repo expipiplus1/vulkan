@@ -174,7 +174,7 @@
 -- 'ExternalBufferPropertiesKHR' structs need to include a list of memory
 -- type bits that support the given handle type?
 --
--- __PROPOSED RESOLUTION__: No. The memory types that don’t support the
+-- __PROPOSED RESOLUTION__: No. The memory types that do not support the
 -- handle types will simply be filtered out of the results returned by
 -- 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements' and
 -- 'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' when a set
@@ -184,7 +184,7 @@
 --
 -- __PROPOSED RESOLUTION__: Perhaps. However, defining the handle type bits
 -- does very little and does not require any platform-specific types on its
--- own, and it’s easier to maintain the bitfield values in a single
+-- own, and it is easier to maintain the bitfield values in a single
 -- extension for now. Presumably more handle types could be added by
 -- separate extensions though, and it would be midly weird to have some
 -- platform-specific ones defined in the core spec and some in extensions

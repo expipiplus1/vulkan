@@ -424,7 +424,8 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.getSwapchainStatusKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.releaseFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_hdr_metadata.setHdrMetadataEXT',
--- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD'
+-- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD',
+-- 'Vulkan.Extensions.VK_KHR_present_wait.waitForPresentKHR'
 newtype SwapchainKHR = SwapchainKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

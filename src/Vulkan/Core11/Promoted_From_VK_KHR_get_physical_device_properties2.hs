@@ -151,6 +151,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_index_type_uint8 (PhysicalDeviceI
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (PhysicalDeviceInheritedViewportScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_invocation_mask (PhysicalDeviceInvocationMaskFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (PhysicalDeviceMaintenance3Properties)
@@ -173,6 +174,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (P
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PhysicalDevicePointClippingProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetPropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PhysicalDevicePresentIdFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_wait (PhysicalDevicePresentWaitFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (PhysicalDevicePrivateDataFeaturesEXT)
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceProperties)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryFeatures)
@@ -193,6 +196,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (PhysicalDeviceScalarBlockLayoutFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64 (PhysicalDeviceShaderAtomicInt64Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_clock (PhysicalDeviceShaderClockFeaturesKHR)
@@ -744,6 +748,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceRayTracingPipelineFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceAccelerationStructureFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMeshShaderFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceInvocationMaskFeaturesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShadingRateImageFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageFootprintFeaturesNV = Just f
@@ -755,6 +760,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceTransformFeedbackFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceASTCDecodeFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVertexAttributeDivisorFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicFloat2FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicFloatFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicInt64Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkanMemoryModelFeatures = Just f
@@ -774,6 +780,8 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceSamplerYcbcrConversionFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderSubgroupExtendedTypesFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDevice16BitStorageFeatures = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePresentWaitFeaturesKHR = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePresentIdFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMultiviewFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVariablePointersFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDevicePrivateDataFeaturesEXT = Just f

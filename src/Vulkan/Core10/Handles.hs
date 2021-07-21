@@ -436,6 +436,7 @@ data Device_T
 -- 'Vulkan.Core10.DescriptorSet.updateDescriptorSets',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkUpdateVideoSessionParametersKHR vkUpdateVideoSessionParametersKHR>,
 -- 'Vulkan.Core10.Fence.waitForFences',
+-- 'Vulkan.Extensions.VK_KHR_present_wait.waitForPresentKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.waitSemaphores',
 -- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.waitSemaphoresKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'
@@ -503,6 +504,7 @@ data CommandBuffer_T
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR vkCmdBeginVideoCodingKHR>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer',
+-- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.cmdBindInvocationMaskHUAWEI',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdBindPipelineShaderGroupNV',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV',
@@ -845,6 +847,7 @@ instance Show Image where
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoPictureResourceKHR VkVideoPictureResourceKHR>,
+-- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.cmdBindInvocationMaskHUAWEI',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV',
 -- 'Vulkan.Core10.ImageView.createImageView',
 -- 'Vulkan.Core10.ImageView.destroyImageView',

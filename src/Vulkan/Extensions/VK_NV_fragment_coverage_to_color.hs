@@ -153,8 +153,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- the sample coverage mask are filled with zeros.
 --
 -- If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
--- these operations are skipped. If this structure is not present, it is as
--- if @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE'.
+-- these operations are skipped. If this structure is not included in the
+-- @pNext@ chain, it is as if @coverageToColorEnable@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage
 --

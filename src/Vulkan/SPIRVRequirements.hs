@@ -40,6 +40,8 @@ import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracing
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
+import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
+import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
@@ -84,6 +86,7 @@ import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDE
 import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_post_depth_coverage (pattern EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (pattern EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (pattern EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME)
@@ -647,6 +650,36 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
+  "SPV_EXT_shader_atomic_float_min_max" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "SPV_EXT_shader_atomic_float16_add" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
@@ -714,6 +747,26 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
+  "AtomicFloat16AddEXT" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderBufferFloat16AtomicAdd"
+      , checkFeature  = shaderBufferFloat16AtomicAdd :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
+      , enableFeature = \f -> f { shaderBufferFloat16AtomicAdd = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
   "AtomicFloat32AddEXT" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
@@ -741,6 +794,69 @@ spirvCapabilityRequirements = \case
       , checkFeature  = shaderBufferFloat64AtomicAdd :: PhysicalDeviceShaderAtomicFloatFeaturesEXT -> Bool
       , enableFeature = \f -> f { shaderBufferFloat64AtomicAdd = True } :: PhysicalDeviceShaderAtomicFloatFeaturesEXT
       }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "AtomicFloat16MinMaxEXT" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderBufferFloat16AtomicMinMax"
+      , checkFeature  = shaderBufferFloat16AtomicMinMax :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
+      , enableFeature = \f ->
+                          f { shaderBufferFloat16AtomicMinMax = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "AtomicFloat32MinMaxEXT" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderBufferFloat32AtomicMinMax"
+      , checkFeature  = shaderBufferFloat32AtomicMinMax :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
+      , enableFeature = \f ->
+                          f { shaderBufferFloat32AtomicMinMax = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "AtomicFloat64MinMaxEXT" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderBufferFloat64AtomicMinMax"
+      , checkFeature  = shaderBufferFloat64AtomicMinMax :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
+      , enableFeature = \f ->
+                          f { shaderBufferFloat64AtomicMinMax = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0

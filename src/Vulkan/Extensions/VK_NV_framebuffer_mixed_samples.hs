@@ -224,8 +224,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- value of R. Which components are modulated is controlled by
 -- @coverageModulationMode@.
 --
--- If this structure is not present, it is as if @coverageModulationMode@
--- is 'COVERAGE_MODULATION_MODE_NONE_NV'.
+-- If this structure is not included in the @pNext@ chain, it is as if
+-- @coverageModulationMode@ is 'COVERAGE_MODULATION_MODE_NONE_NV'.
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction coverage reduction mode>

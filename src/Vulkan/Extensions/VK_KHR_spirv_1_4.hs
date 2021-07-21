@@ -94,7 +94,7 @@
 -- == Issues
 --
 -- 1. Should we have an extension specific to this SPIR-V version, or add a
--- version-generic query for SPIR-V version? SPIR-V 1.4 doesn’t need any
+-- version-generic query for SPIR-V version? SPIR-V 1.4 does not need any
 -- other API changes.
 --
 -- __RESOLVED__: Just expose SPIR-V 1.4.
@@ -107,13 +107,13 @@
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'
 -- to allow querying the supported group operation categories, maximum
 -- supported subgroup size, etc. While we could expose the parts of a new
--- SPIR-V version that don’t need accompanying changes generically, we’ll
--- still end up writing extensions specific to each version for the
--- remaining parts. Thus the generic mechanism won’t reduce future
+-- SPIR-V version that do not need accompanying changes generically, we
+-- will still end up writing extensions specific to each version for the
+-- remaining parts. Thus the generic mechanism will not reduce future
 -- spec-writing effort. In addition, making it clear which parts of a
--- future version are supported by the generic mechanism and which can’t be
--- used without specific support would be difficult to get right ahead of
--- time.
+-- future version are supported by the generic mechanism and which cannot
+-- be used without specific support would be difficult to get right ahead
+-- of time.
 --
 -- 2. Can different stages of the same pipeline use shaders with different
 -- SPIR-V versions?
@@ -145,10 +145,10 @@
 -- though the extension was promoted in SPIR-V 1.4, the capabilities are
 -- still optional in implementations that support @VK_KHR_spirv_1_4@.
 --
--- A SPIR-V 1.4 module doesn’t need to enable @SPV_KHR_float_controls@ in
+-- A SPIR-V 1.4 module does not need to enable @SPV_KHR_float_controls@ in
 -- order to use the capabilities, so if the application has /a priori/
--- knowledge that the implementation supports the capabilities, it doesn’t
--- need to enable @VK_KHR_shader_float_controls@. However, if it doesn’t
+-- knowledge that the implementation supports the capabilities, it does not
+-- need to enable @VK_KHR_shader_float_controls@. However, if it does not
 -- have this knowledge and has to query for support at runtime, it must
 -- enable @VK_KHR_shader_float_controls@ in order to use
 -- 'Vulkan.Extensions.VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsPropertiesKHR'.
