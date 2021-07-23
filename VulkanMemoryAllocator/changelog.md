@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [0.7] - 2021-07-23
+- Bump VMA, adds vkaCreateBufferWithAlignment and fixes aligned_alloc on OS X.
+
 ## [0.6.0.1] - 2021-06-26
 - Bump VMA, no functional change
 - Use allocaBytes over allocaBytesAligned where possible

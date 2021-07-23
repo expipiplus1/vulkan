@@ -200,6 +200,7 @@ vulkanManifest getVar structStyle RenderParams {..} =
                    , "VkDeviceMemory"
                    , "VkDeviceSize"
                    , "VkDevice_T"
+                   , "VkExternalMemoryHandleTypeFlagsKHR"
                    , "VkInstance_T"
                    , "VkMemoryPropertyFlags"
                    , "VkPhysicalDevice_T"
