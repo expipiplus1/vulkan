@@ -142,6 +142,7 @@ marshalParams handles =
     getBespokeScheme :: Marshalable a => CName -> a -> Maybe (MarshalScheme a)
     getBespokeScheme p a = case (p, name a) of
       ("VmaAllocatorCreateInfo", "pHeapSizeLimit") -> Just $ Preserve (type' a)
+      ("VmaAllocatorCreateInfo", "pTypeExternalMemoryHandleTypes") -> Just $ Preserve (type' a)
       ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
         Just $ Returned (Preserve p)
       ("vmaGetPoolName", "ppName") | Ptr _ p <- type' a ->

@@ -59,6 +59,7 @@ module VulkanMemoryAllocator  ( createAllocator
                               , bindImageMemory2
                               , createBuffer
                               , withBuffer
+                              , createBufferWithAlignment
                               , destroyBuffer
                               , createImage
                               , withImage
@@ -155,6 +156,7 @@ import Vulkan (CommandBuffer_T)
 import Vulkan (DeviceMemory)
 import Vulkan (DeviceSize)
 import Vulkan (Device_T)
+import Vulkan (ExternalMemoryHandleTypeFlagsKHR)
 import Vulkan (Flags)
 import Vulkan (Image)
 import Vulkan (ImageCreateInfo)
@@ -2265,6 +2267,44 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
+  "vmaCreateBufferWithAlignment" ffiVmaCreateBufferWithAlignment
+  :: Allocator -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCreateInfo -> DeviceSize -> Ptr Buffer -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
+
+-- | Creates a buffer with additional minimum alignment.
+--
+-- Similar to 'createBuffer' but provides additional parameter
+-- @minAlignment@ which allows to specify custom, minimum alignment to be
+-- used when placing the buffer inside a larger memory block, which may be
+-- needed e.g. for interop with OpenGL.
+createBufferWithAlignment :: forall a io
+                           . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
+                          => -- No documentation found for Nested "vmaCreateBufferWithAlignment" "allocator"
+                             Allocator
+                          -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "pBufferCreateInfo"
+                             (BufferCreateInfo a)
+                          -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "pAllocationCreateInfo"
+                             AllocationCreateInfo
+                          -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "minAlignment"
+                             ("minAlignment" ::: DeviceSize)
+                          -> io (Buffer, Allocation, AllocationInfo)
+createBufferWithAlignment allocator bufferCreateInfo allocationCreateInfo minAlignment = liftIO . evalContT $ do
+  pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
+  pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
+  pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
+  pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
+  pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
+  r <- lift $ traceAroundEvent "vmaCreateBufferWithAlignment" ((ffiVmaCreateBufferWithAlignment) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (minAlignment) (pPBuffer) (pPAllocation) (pPAllocationInfo))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pBuffer <- lift $ peek @Buffer pPBuffer
+  pAllocation <- lift $ peek @Allocation pPAllocation
+  pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
+  pure $ (pBuffer, pAllocation, pAllocationInfo)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
   "vmaDestroyBuffer" ffiVmaDestroyBuffer
   :: Allocator -> Buffer -> Allocation -> IO ()
 
@@ -3052,6 +3092,18 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     -- supported by the current implementation. Leaving it initialized to zero
     -- is equivalent to @VK_API_VERSION_1_0@.
     vulkanApiVersion :: Word32
+  , -- | Either null or a pointer to an array of external memory handle types for
+    -- each Vulkan memory type.
+    --
+    -- If not NULL, it must be a pointer to an array of
+    -- @VkPhysicalDeviceMemoryProperties::memoryTypeCount@ elements, defining
+    -- external memory handle types of particular Vulkan memory type, to be
+    -- passed using @VkExportMemoryAllocateInfoKHR@.
+    --
+    -- Any of the elements may be equal to 0, which means not to use
+    -- @VkExportMemoryAllocateInfoKHR@ on this memory type. This is also the
+    -- default in case of @pTypeExternalMemoryHandleTypes@ = NULL.
+    typeExternalMemoryHandleTypes :: Ptr ExternalMemoryHandleTypeFlagsKHR
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -3060,7 +3112,7 @@ deriving instance Generic (AllocatorCreateInfo)
 deriving instance Show AllocatorCreateInfo
 
 instance ToCStruct AllocatorCreateInfo where
-  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocatorCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr AllocatorCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr PhysicalDevice_T))) (physicalDevice)
@@ -3086,8 +3138,9 @@ instance ToCStruct AllocatorCreateInfo where
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr RecordSettings))) pRecordSettings''
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Instance_T))) (instance')
     lift $ poke ((p `plusPtr` 88 :: Ptr Word32)) (vulkanApiVersion)
+    lift $ poke ((p `plusPtr` 96 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR))) (typeExternalMemoryHandleTypes)
     lift $ f
-  cStructSize = 96
+  cStructSize = 104
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr AllocatorCreateFlags)) (zero)
@@ -3117,8 +3170,9 @@ instance FromCStruct AllocatorCreateInfo where
     pRecordSettings' <- maybePeek (\j -> peekCStruct @RecordSettings (j)) pRecordSettings
     instance' <- peek @(Ptr Instance_T) ((p `plusPtr` 80 :: Ptr (Ptr Instance_T)))
     vulkanApiVersion <- peek @Word32 ((p `plusPtr` 88 :: Ptr Word32))
+    pTypeExternalMemoryHandleTypes <- peek @(Ptr ExternalMemoryHandleTypeFlagsKHR) ((p `plusPtr` 96 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR)))
     pure $ AllocatorCreateInfo
-             flags physicalDevice device preferredLargeHeapBlockSize pAllocationCallbacks' pDeviceMemoryCallbacks' frameInUseCount pHeapSizeLimit pVulkanFunctions' pRecordSettings' instance' vulkanApiVersion
+             flags physicalDevice device preferredLargeHeapBlockSize pAllocationCallbacks' pDeviceMemoryCallbacks' frameInUseCount pHeapSizeLimit pVulkanFunctions' pRecordSettings' instance' vulkanApiVersion pTypeExternalMemoryHandleTypes
 
 instance Zero AllocatorCreateInfo where
   zero = AllocatorCreateInfo
@@ -3132,6 +3186,7 @@ instance Zero AllocatorCreateInfo where
            zero
            Nothing
            Nothing
+           zero
            zero
            zero
 
