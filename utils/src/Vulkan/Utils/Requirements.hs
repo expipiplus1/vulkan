@@ -491,7 +491,7 @@ getLookupExtension
   :: MonadIO m
   => Maybe PhysicalDevice
   -- ^ Pass 'Nothing' for 'Instance' extensions, pass a PhysicalDevice for
-  -- device extensions.
+  -- 'Device' extensions.
   -> ["layerName" ::: Maybe ByteString]
   -> m
        (  ("layerName" ::: Maybe ByteString)
@@ -506,9 +506,9 @@ getLookupExtension mbPhys extensionLayers = do
     (_, props) <- enumerate layer
     pure (layer, props)
   let extensionMap = Map.fromListWith (<>) extensions
-  pure $ \layer name ->
-    let es = Map.lookupDefault mempty layer extensionMap
-    in  find ((== name) . extensionName) es
+  pure $ \layer name -> do
+    es <- Map.lookup layer extensionMap
+    find ((== name) . extensionName) es
 
 ----------------------------------------------------------------
 -- Helpers for extracting the type of chain used by a set of requirements
