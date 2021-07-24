@@ -128,7 +128,8 @@ let
       #
       pandoc = appendPatch super.pandoc
         ../generate-new/patches/pandoc-haddock-tables.patch;
-      language-c = self.language-c_0_9_0_1;
+      polysemy = markUnbroken (dontCheck super.polysemy);
+      polysemy-plugin = markUnbroken (dontCheck super.polysemy-plugin);
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = self.ghc.withPackages;
