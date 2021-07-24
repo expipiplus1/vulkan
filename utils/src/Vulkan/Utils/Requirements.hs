@@ -27,7 +27,7 @@ import           Data.Foldable
 import           Data.Functor.Product           ( Product(..) )
 import qualified Data.HashMap.Strict           as Map
 import           Data.Kind                      ( Type )
-import           Data.List                      ( intercalate )
+import           Data.List                      ( intercalate, intersect )
 import           Data.List.Extra                ( nubOrd )
 import           Data.Proxy
 import           Data.Semigroup                 ( Endo(..) )
@@ -85,6 +85,7 @@ checkInstanceRequirements required optional baseCreateInfo = do
   foundVersion    <- enumerateInstanceVersion
   (_, layerProps) <- enumerateInstanceLayerProperties
   lookupExtension <- getLookupExtension
+    layerProps
     Nothing
     [ instanceExtensionLayerName
     | RequireInstanceExtension { instanceExtensionLayerName } <- allAsList
@@ -206,7 +207,9 @@ checkDeviceRequirements required optional phys baseCreateInfo = do
       --
       feats           <- getPhysicalDeviceFeaturesMaybe @fs phys
       props           <- getPhysicalDevicePropertiesMaybe @ps phys
+      (_, layerProps) <- enumerateDeviceLayerProperties phys
       lookupExtension <- getLookupExtension
+        layerProps
         (Just phys)
         [ deviceExtensionLayerName
         | RequireDeviceExtension { deviceExtensionLayerName } <- allAsList
@@ -486,10 +489,12 @@ getStruct c = ($ getNext c) . fst <$> has (proxy# :: Proxy# s)
 -- Helpers for 'Device' and 'Instance' extensions
 ----------------------------------------------------------------
 
--- | Make a lookup function for extensions in layers
+-- | Make a lookup function for extensions in layers. Ignores layers not
+-- present in the instance/device
 getLookupExtension
   :: MonadIO m
-  => Maybe PhysicalDevice
+  => Vector LayerProperties
+  -> Maybe PhysicalDevice
   -- ^ Pass 'Nothing' for 'Instance' extensions, pass a PhysicalDevice for
   -- 'Device' extensions.
   -> ["layerName" ::: Maybe ByteString]
@@ -498,11 +503,13 @@ getLookupExtension
        -> ByteString
        -> Maybe ExtensionProperties
        )
-getLookupExtension mbPhys extensionLayers = do
+getLookupExtension layerProps mbPhys extensionLayers = do
   let enumerate = maybe enumerateInstanceExtensionProperties
                         enumerateDeviceExtensionProperties
                         mbPhys
-  extensions <- for (nubOrd extensionLayers) $ \layer -> do
+      availableLayers = Nothing : ((Just . layerName) <$> V.toList layerProps)
+      searchedLayers = availableLayers `intersect` extensionLayers
+  extensions <- for searchedLayers $ \layer -> do
     (_, props) <- enumerate layer
     pure (layer, props)
   let extensionMap = Map.fromListWith (<>) extensions

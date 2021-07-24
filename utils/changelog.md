@@ -1,6 +1,9 @@
 # Change Log
 
 ## WIP
+- Fix bug where `createInstanceFromRequirements` and
+  `createDebugInstanceFromRequirements` would fail for missing layers in
+  optional requirements.
 
 ## [0.5.0.2] - 2021-06-22
 - Relax bounds on `vulkan`
