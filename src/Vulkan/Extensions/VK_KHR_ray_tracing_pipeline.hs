@@ -985,9 +985,9 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -1858,9 +1858,9 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -3357,37 +3357,37 @@ instance Zero StridedDeviceAddressRegionKHR where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-width-03638# @width@ /must/ be
+--     less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+--     ×
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[0]
+--
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-height-03639# @height@ /must/ be
+--     less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+--     ×
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[1]
+--
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-depth-03640# @depth@ /must/ be
+--     less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+--     ×
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[2]
+--
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-width-03641# @width@ × @height@
+--     × @depth@ /must/ be less than or equal to
+--     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxRayDispatchInvocationCount@
+--
 -- = See Also
 --
 -- No cross-references are available
 data TraceRaysIndirectCommandKHR = TraceRaysIndirectCommandKHR
   { -- | @width@ is the width of the ray trace query dimensions.
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-width-03638# @width@ /must/ be less
-    -- than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
-    -- ×
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[0]
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-width-03641# @width@ × @height@ ×
-    -- @depth@ /must/ be less than or equal to
-    -- 'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxRayDispatchInvocationCount@
     width :: Word32
   , -- | @height@ is height of the ray trace query dimensions.
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-height-03639# @height@ /must/ be
-    -- less than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
-    -- ×
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[1]
     height :: Word32
   , -- | @depth@ is depth of the ray trace query dimensions.
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-depth-03640# @depth@ /must/ be less
-    -- than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
-    -- ×
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[2]
     depth :: Word32
   }
   deriving (Typeable, Eq)

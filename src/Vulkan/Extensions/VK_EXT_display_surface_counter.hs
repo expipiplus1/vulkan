@@ -196,6 +196,13 @@ foreign import ccall
 -- with the ability to return extended information by adding extending
 -- structures to the @pNext@ chain of its @pSurfaceCapabilities@ parameter.
 --
+-- == Valid Usage
+--
+-- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
+--     @physicalDevice@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-physicalDevice-parameter#

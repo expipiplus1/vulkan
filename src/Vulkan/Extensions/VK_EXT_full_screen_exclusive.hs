@@ -381,6 +381,13 @@ foreign import ccall
 -- with the ability to specify extended inputs via chained input
 -- structures.
 --
+-- == Valid Usage
+--
+-- -   [[VUID-{refpage}-pSurfaceInfo-06210]] @pSurfaceInfo->surface@ /must/
+--     be supported by @physicalDevice@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-physicalDevice-parameter#

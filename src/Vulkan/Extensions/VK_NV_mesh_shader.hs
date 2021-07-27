@@ -429,9 +429,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-None-02859# There /must/ not have been
 --     any calls to dynamic state setting commands for any state not
@@ -1005,9 +1005,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -1629,9 +1629,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02859# There /must/ not
 --     have been any calls to dynamic state setting commands for any state

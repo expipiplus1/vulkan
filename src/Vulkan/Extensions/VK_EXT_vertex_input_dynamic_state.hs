@@ -405,8 +405,8 @@ instance Zero PhysicalDeviceVertexInputDynamicStateFeaturesEXT where
 data VertexInputBindingDescription2EXT = VertexInputBindingDescription2EXT
   { -- | @binding@ is the binding number that this structure describes.
     binding :: Word32
-  , -- | @stride@ is the distance in bytes between two consecutive elements
-    -- within the buffer.
+  , -- | @stride@ is the byte stride between consecutive elements within the
+    -- buffer.
     stride :: Word32
   , -- | @inputRate@ is a 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate'
     -- value specifying whether vertex attribute addressing is a function of

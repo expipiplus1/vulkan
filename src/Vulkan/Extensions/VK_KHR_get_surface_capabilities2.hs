@@ -261,6 +261,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   [[VUID-{refpage}-pSurfaceInfo-06210]] @pSurfaceInfo->surface@ /must/
+--     be supported by @physicalDevice@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
+--
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-02671# If a
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT'
 --     structure is included in the @pNext@ chain of
@@ -354,9 +359,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-02740#
---     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
---     reported by
+-- -   [[VUID-{refpage}-pSurfaceInfo-06210]] @pSurfaceInfo->surface@ /must/
+--     be supported by @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --
