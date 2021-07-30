@@ -2134,15 +2134,20 @@ instance Zero CopyImageInfo2KHR where
 -- -   #VUID-VkBlitImageInfo2KHR-pRegions-04561# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then @srcImage@ and @dstImage@ /must/ not be a
---     block-compressed image.
+--     in its @pNext@ chain, then @srcImage@ and @dstImage@ /must/ not be
+--     block-compressed images
 --
--- -   #VUID-VkBlitImageInfo2KHR-pRegions-04562# If any element of
+-- -   #VUID-VkBlitImageInfo2KHR-pRegions-06207# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @srcImage@ /must/ be of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and /must/ not be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--     in its @pNext@ chain, then @srcImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkBlitImageInfo2KHR-pRegions-06208# If any element of
+--     @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then @srcImage@ /must/ not have a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- == Valid Usage (Implicit)
 --
@@ -2267,31 +2272,31 @@ instance Zero BlitImageInfo2KHR where
 --     region specified by each element of @pRegions@ does not contain
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, it /must/ be a region that is contained within
---     @dstImage@ if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format'
---     is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied to if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format' is
---     a multi-planar format
+--     the specified @imageSubresource@ of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04554# If the image
---     region specified by each element of @pRegions@ does contain
+--     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, the rotated destination region as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
---     /must/ be contained within @dstImage@.
+--     /must/ be contained within @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04555# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @dstImage@ /must/ not be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>.
+--     in its @pNext@ chain, then @dstImage@ /must/ not be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>
 --
--- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04556# If any element of
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06203# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @dstImage@ /must/ be of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and /must/ not be a
+--     in its @pNext@ chain, then @dstImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06204# If any element of
+--     @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then @dstImage@ /must/ not have a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-00171# @srcBuffer@ /must/
@@ -2379,9 +2384,7 @@ instance Zero BlitImageInfo2KHR where
 --     in its @pNext@ chain, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @dstImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00198# For each
 --     element of @pRegions@ not containing
@@ -2389,9 +2392,7 @@ instance Zero BlitImageInfo2KHR where
 --     in its @pNext@ chain, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @dstImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-bufferOffset-01558# If @dstImage@
 --     does not have either a depth\/stencil or a
@@ -2623,33 +2624,33 @@ instance Zero CopyBufferToImageInfo2KHR where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04566# If the image
 --     region specified by each element of @pRegions@ does not contain
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, it /must/ be a region that is contained within
---     @srcImage@ if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format'
---     is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format' is a
---     multi-planar format
+--     in its @pNext@ chain, it /must/ be contained within the specified
+--     @imageSubresource@ of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04557# If the image
---     region specified by each element of @pRegions@ does contain
+--     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, the rotated source region as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
---     /must/ be contained within @srcImage@.
+--     /must/ be contained within @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04558# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @srcImage@ /must/ not be a
+--     in its @pNext@ chain, then @srcImage@ /must/ not be a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>
 --
--- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04559# If any element of
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-06205# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @srcImage@ /must/ be of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and /must/ not be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--     in its @pNext@ chain, then @srcImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-06206# If any element of
+--     @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then @srcImage@ /must/ not have a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-00183# @dstBuffer@ /must/
 --     be large enough to contain all buffer locations that are accessed
@@ -2724,22 +2725,18 @@ instance Zero CopyBufferToImageInfo2KHR where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00197# For each
 --     element of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.x@ and (@imageExtent.width@ +
+--     in its @pNext@ chain, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @srcImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00198# For each
 --     element of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.y@ and (@imageExtent.height@ +
+--     in its @pNext@ chain, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @srcImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-bufferOffset-01558# If
 --     {imageparam} does not have either a depth\/stencil or a

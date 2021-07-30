@@ -2016,6 +2016,14 @@ foreign import ccall
 -- modes /must/ be a subset of the modes returned by
 -- 'getDeviceGroupPresentCapabilitiesKHR'.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModesKHR-surface-06212#
+--     @surface@ /must/ be supported by all physical devices associated
+--     with @device@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetDeviceGroupSurfacePresentModesKHR-device-parameter#
@@ -2212,6 +2220,13 @@ foreign import ccall
 -- in response to the surface being moved, resized, or occluded.
 --
 -- The rectangles returned by this command /must/ not overlap.
+--
+-- == Valid Usage
+--
+-- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
+--     @physicalDevice@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --

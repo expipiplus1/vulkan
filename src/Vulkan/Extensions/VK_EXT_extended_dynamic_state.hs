@@ -686,9 +686,9 @@ foreign import ccall
 --
 -- If the bound pipeline state object was created with the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
--- dynamic state enabled then @pStrides@[i] specifies the distance in bytes
--- between two consecutive elements within the corresponding buffer. In
--- this case the
+-- dynamic state enabled then @pStrides@[i] specifies the byte stride
+-- between consecutive elements within the corresponding buffer. In this
+-- case the
 -- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ state
 -- from the pipeline state object is ignored.
 --
@@ -739,11 +739,11 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindingStride@
 --
--- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-03363# If @pStrides@ is
---     not @NULL@ each element of @pStrides@ /must/ be greater than or
---     equal to the maximum extent of all vertex input attributes fetched
---     from the corresponding binding, where the extent is calculated as
---     the
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-06209# If @pStrides@ is
+--     not @NULL@ each element of @pStrides@ /must/ be either 0 or greater
+--     than or equal to the maximum extent of all vertex input attributes
+--     fetched from the corresponding binding, where the extent is
+--     calculated as the
 --     'Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@offset@
 --     plus
 --     'Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@

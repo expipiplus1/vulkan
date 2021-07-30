@@ -1851,9 +1851,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDraw-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDraw-None-02859# There /must/ not have been any calls to
 --     dynamic state setting commands for any state not specified as
@@ -2467,9 +2467,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndexed-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -3082,9 +3082,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndirect-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -3725,9 +3725,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexedIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -4362,9 +4362,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatch-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDispatch-None-02859# There /must/ not have been any calls
 --     to dynamic state setting commands for any state not specified as
@@ -4690,9 +4690,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited for @commandBuffer@, and done so
---     after any previously bound pipeline with the corresponding state not
---     specified as dynamic
+--     /must/ have been set or inherited (if the @@ extension is enabled)
+--     for @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-02859# There /must/ not have been
 --     any calls to dynamic state setting commands for any state not
@@ -5061,8 +5061,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 -- table. Depth\/stencil formats /must/ match exactly.
 --
--- If the format of @srcImage@ or @dstImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- If either @srcImage@ or @dstImage@ has a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- regions of each plane to be copied /must/ be specified separately using
 -- the @srcSubresource@ and @dstSubresource@ members of the 'ImageCopy'
 -- structure. In this case, the @aspectMask@ of the @srcSubresource@ or
@@ -6046,8 +6046,8 @@ foreign import ccall
 -- Each region in @pRegions@ is copied from the specified region of the
 -- source buffer to the specified region of the destination image.
 --
--- If the format of @dstImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- If @dstImage@ has a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- regions of each plane to be a target of a copy /must/ be specified
 -- separately using the @pRegions@ member of the 'BufferImageCopy'
 -- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
@@ -6078,13 +6078,8 @@ foreign import ccall
 --     unprotected image
 --
 -- -   #VUID-vkCmdCopyBufferToImage-pRegions-00172# The image region
---     specified by each element of @pRegions@ /must/ be a region that is
---     contained within @dstImage@ if the @dstImage@’s
---     'Vulkan.Core10.Enums.Format.Format' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied to if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format' is
---     a multi-planar format
+--     specified by each element of @pRegions@ /must/ be contained within
+--     the specified @imageSubresource@ of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-pRegions-00171# @srcBuffer@ /must/ be
 --     large enough to contain all buffer locations that are accessed
@@ -6168,17 +6163,13 @@ foreign import ccall
 --     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @dstImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-imageOffset-00198# For each element of
 --     @pRegions@, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @dstImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01558# If @dstImage@ does
 --     not have either a depth\/stencil or a
@@ -6402,8 +6393,8 @@ foreign import ccall
 -- Each region in @pRegions@ is copied from the specified region of the
 -- source image to the specified region of the destination buffer.
 --
--- If the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- If @srcImage@ has a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- regions of each plane to be a source of a copy /must/ be specified
 -- separately using the @pRegions@ member of the 'BufferImageCopy'
 -- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
@@ -6434,13 +6425,8 @@ foreign import ccall
 --     unprotected buffer
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-pRegions-00182# The image region
---     specified by each element of @pRegions@ /must/ be a region that is
---     contained within @srcImage@ if the @srcImage@’s
---     'Vulkan.Core10.Enums.Format.Format' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format' is a
---     multi-planar format
+--     specified by each element of @pRegions@ /must/ be contained within
+--     the specified @imageSubresource@ of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-pRegions-00183# @dstBuffer@ /must/ be
 --     large enough to contain all buffer locations that are accessed
@@ -6515,17 +6501,13 @@ foreign import ccall
 --     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @srcImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00198# For each element of
 --     @pRegions@, @imageOffset.y@ and (imageExtent.height +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @srcImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01558# If @srcImage@ does
 --     not have either a depth\/stencil or a

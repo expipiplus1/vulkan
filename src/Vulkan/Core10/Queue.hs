@@ -445,8 +445,12 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- = Description
 --
--- 'queueWaitIdle' is equivalent to submitting a fence to a queue and
--- waiting with an infinite timeout for that fence to signal.
+-- 'queueWaitIdle' is equivalent to having submitted a valid fence to every
+-- previously executed
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission command>
+-- that accepts a fence, then waiting for all of those fences to signal
+-- using 'Vulkan.Core10.Fence.waitForFences' with an infinite timeout and
+-- @waitAll@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- == Valid Usage (Implicit)
 --

@@ -444,6 +444,11 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesEXT where
 -- | VkPipelineRasterizationLineStateCreateInfoEXT - Structure specifying
 -- parameters of a newly created pipeline line rasterization state
 --
+-- = Description
+--
+-- If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE', the
+-- values of @lineStippleFactor@ and @lineStipplePattern@ are ignored.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02768#

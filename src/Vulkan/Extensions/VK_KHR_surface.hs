@@ -669,6 +669,13 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSurfaceCapabilitiesKHR - Query surface capabilities
 --
+-- == Valid Usage
+--
+-- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
+--     @physicalDevice@, as reported by
+--     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
+--     platform-specific mechanism
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-physicalDevice-parameter#
@@ -766,8 +773,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-02739# @surface@
---     /must/ be supported by @physicalDevice@, as reported by
+-- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
+--     @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --
@@ -866,6 +873,13 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
 -- available modes were returned.
+--
+-- == Valid Usage
+--
+-- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
+--     @physicalDevice@, as reported by
+--     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
+--     platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
