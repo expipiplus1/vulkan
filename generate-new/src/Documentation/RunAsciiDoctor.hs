@@ -3,11 +3,14 @@ module Documentation.RunAsciiDoctor
   , main
   ) where
 
+import qualified Data.Attoparsec.Text.Lazy     as A
 import qualified Data.List                     as L
 import qualified Data.Text                     as T
 import qualified Data.Text.Lazy                as T
                                                 ( toStrict )
+import qualified Data.Text.Lazy                as TL
 import           Relude
+import           Replace.Attoparsec.Text.Lazy
 import           Say
 import           Spec.Flavor
 import           System.Directory
@@ -15,7 +18,6 @@ import           System.Environment
 import           System.Exit
 import           System.FilePath
 import           System.Process.Typed
-import qualified Data.Text.Lazy as TL
 
 -- | Convert a man page from the Vulkan-Docs repo into docbook format using
 -- 'asciidoctor'
@@ -130,7 +132,9 @@ fixupDocbookOutput =
     . replaceTag "strong" (Just "class=\"purple\"") "emphasis"
     . TL.replace "<sidebar xml:id=\"resources-image-creation-limits\">"
                  "<sidebar>"
-
+    . streamEdit
+        ("<literal><xref linkend=\"" *> A.takeTill (== '"') <* "\"/></literal>")
+        (\e -> "<literal>" <> e <> "</literal>")
 
 -- | Work around https://github.com/asciidoctor/asciidoctor/issues/4075
 asciidoctor4075 :: TL.Text -> TL.Text
