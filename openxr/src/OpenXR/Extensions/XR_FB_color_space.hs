@@ -144,8 +144,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrEnumerateColorSpacesFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrEnumerateColorSpacesFB-extension-notenabled# The
+--     @XR_FB_color_space@ extension /must/ be enabled prior to calling
 --     'enumerateColorSpacesFB'
 --
 -- -   #VUID-xrEnumerateColorSpacesFB-session-parameter# @session@ /must/
@@ -233,8 +233,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrSetColorSpaceFB-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'setColorSpaceFB'
+-- -   #VUID-xrSetColorSpaceFB-extension-notenabled# The
+--     @XR_FB_color_space@ extension /must/ be enabled prior to calling
+--     'setColorSpaceFB'
 --
 -- -   #VUID-xrSetColorSpaceFB-session-parameter# @session@ /must/ be a
 --     valid 'OpenXR.Core10.Handles.Session' handle
@@ -293,8 +294,8 @@ setColorSpaceFB session colorspace = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSystemColorSpacePropertiesFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSystemColorSpacePropertiesFB-extension-notenabled# The
+--     @XR_FB_color_space@ extension /must/ be enabled prior to using
 --     'SystemColorSpacePropertiesFB'
 --
 -- -   #VUID-XrSystemColorSpacePropertiesFB-type-type# @type@ /must/ be

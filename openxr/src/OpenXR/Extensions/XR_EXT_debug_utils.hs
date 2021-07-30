@@ -174,8 +174,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrSetDebugUtilsObjectNameEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrSetDebugUtilsObjectNameEXT-extension-notenabled# The
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to calling
 --     'setDebugUtilsObjectNameEXT'
 --
 -- -   #VUID-xrSetDebugUtilsObjectNameEXT-instance-parameter# @instance@
@@ -249,8 +249,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateDebugUtilsMessengerEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrCreateDebugUtilsMessengerEXT-extension-notenabled# The
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to calling
 --     'createDebugUtilsMessengerEXT'
 --
 -- -   #VUID-xrCreateDebugUtilsMessengerEXT-instance-parameter# @instance@
@@ -353,8 +353,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrDestroyDebugUtilsMessengerEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrDestroyDebugUtilsMessengerEXT-extension-notenabled# The
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to calling
 --     'destroyDebugUtilsMessengerEXT'
 --
 -- -   #VUID-xrDestroyDebugUtilsMessengerEXT-messenger-parameter#
@@ -424,8 +424,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrSubmitDebugUtilsMessageEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrSubmitDebugUtilsMessageEXT-extension-notenabled# The
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to calling
 --     'submitDebugUtilsMessageEXT'
 --
 -- -   #VUID-xrSubmitDebugUtilsMessageEXT-instance-parameter# @instance@
@@ -517,8 +517,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrSessionBeginDebugUtilsLabelRegionEXT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
---     'sessionBeginDebugUtilsLabelRegionEXT'
+--     The @XR_EXT_debug_utils@ extension /must/ be enabled prior to
+--     calling 'sessionBeginDebugUtilsLabelRegionEXT'
 --
 -- -   #VUID-xrSessionBeginDebugUtilsLabelRegionEXT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -591,7 +591,7 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrSessionEndDebugUtilsLabelRegionEXT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to calling
 --     'sessionEndDebugUtilsLabelRegionEXT'
 --
 -- -   #VUID-xrSessionEndDebugUtilsLabelRegionEXT-session-parameter#
@@ -651,8 +651,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrSessionInsertDebugUtilsLabelEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrSessionInsertDebugUtilsLabelEXT-extension-notenabled# The
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to calling
 --     'sessionInsertDebugUtilsLabelEXT'
 --
 -- -   #VUID-xrSessionInsertDebugUtilsLabelEXT-session-parameter# @session@
@@ -739,8 +739,8 @@ sessionInsertDebugUtilsLabelEXT session labelInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrDebugUtilsObjectNameInfoEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrDebugUtilsObjectNameInfoEXT-extension-notenabled# The
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to using
 --     'DebugUtilsObjectNameInfoEXT'
 --
 -- -   #VUID-XrDebugUtilsObjectNameInfoEXT-type-type# @type@ /must/ be
@@ -821,8 +821,9 @@ instance Zero DebugUtilsObjectNameInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrDebugUtilsLabelEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'DebugUtilsLabelEXT'
+-- -   #VUID-XrDebugUtilsLabelEXT-extension-notenabled# The
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to using
+--     'DebugUtilsLabelEXT'
 --
 -- -   #VUID-XrDebugUtilsLabelEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_DEBUG_UTILS_LABEL_EXT'
@@ -884,7 +885,7 @@ instance Zero DebugUtilsLabelEXT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrDebugUtilsMessengerCallbackDataEXT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to using
 --     'DebugUtilsMessengerCallbackDataEXT'
 --
 -- -   #VUID-XrDebugUtilsMessengerCallbackDataEXT-type-type# @type@ /must/
@@ -1028,7 +1029,7 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrDebugUtilsMessengerCreateInfoEXT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
+--     @XR_EXT_debug_utils@ extension /must/ be enabled prior to using
 --     'DebugUtilsMessengerCreateInfoEXT'
 --
 -- -   #VUID-XrDebugUtilsMessengerCreateInfoEXT-type-type# @type@ /must/ be

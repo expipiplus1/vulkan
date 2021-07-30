@@ -148,8 +148,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanInstanceExtensionsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanInstanceExtensionsKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanInstanceExtensionsKHR'
 --
 -- -   #VUID-xrGetVulkanInstanceExtensionsKHR-instance-parameter#
@@ -250,8 +250,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanDeviceExtensionsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanDeviceExtensionsKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanDeviceExtensionsKHR'
 --
 -- -   #VUID-xrGetVulkanDeviceExtensionsKHR-instance-parameter# @instance@
@@ -338,8 +338,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanGraphicsDeviceKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanGraphicsDeviceKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsDeviceKHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsDeviceKHR-instance-parameter# @instance@
@@ -425,7 +425,7 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirementsKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirementsKHR-instance-parameter#
@@ -508,8 +508,8 @@ getVulkanGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingVulkanKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingVulkanKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingVulkanKHR'
 --
 -- -   #VUID-XrGraphicsBindingVulkanKHR-type-type# @type@ /must/ be
@@ -626,8 +626,9 @@ instance Zero GraphicsBindingVulkanKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageVulkanKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'SwapchainImageVulkanKHR'
+-- -   #VUID-XrSwapchainImageVulkanKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to using
+--     'SwapchainImageVulkanKHR'
 --
 -- -   #VUID-XrSwapchainImageVulkanKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR'
@@ -699,8 +700,8 @@ instance Zero SwapchainImageVulkanKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsVulkanKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsVulkanKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsVulkanKHR'
 --
 -- -   #VUID-XrGraphicsRequirementsVulkanKHR-type-type# @type@ /must/ be

@@ -88,8 +88,9 @@ import OpenXR.Extensions.XR_KHR_opengl_es_enable (EGLDisplay)
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingEGLMNDX-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'GraphicsBindingEGLMNDX'
+-- -   #VUID-XrGraphicsBindingEGLMNDX-extension-notenabled# The
+--     @XR_MNDX_egl_enable@ extension /must/ be enabled prior to using
+--     'GraphicsBindingEGLMNDX'
 --
 -- -   #VUID-XrGraphicsBindingEGLMNDX-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_GRAPHICS_BINDING_EGL_MNDX'

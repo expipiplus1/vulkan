@@ -105,8 +105,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_INTERACTION_PROFILE
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'InteractionProfileAnalogThresholdVALVE'
+--     The @XR_VALVE_analog_threshold@ extension /must/ be enabled prior to
+--     using 'InteractionProfileAnalogThresholdVALVE'
 --
 -- -   #VUID-XrInteractionProfileAnalogThresholdVALVE-type-type# @type@
 --     /must/ be

@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_EXT_hand_tracking@
 --
 -- = See Also
 --
@@ -181,9 +181,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateHandMeshSpaceMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'createHandMeshSpaceMSFT'
+-- -   #VUID-xrCreateHandMeshSpaceMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     calling 'createHandMeshSpaceMSFT'
 --
 -- -   #VUID-xrCreateHandMeshSpaceMSFT-handTracker-parameter# @handTracker@
 --     /must/ be a valid 'OpenXR.Extensions.Handles.HandTrackerEXT' handle
@@ -290,8 +290,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrUpdateHandMeshMSFT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'updateHandMeshMSFT'
+-- -   #VUID-xrUpdateHandMeshMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     calling 'updateHandMeshMSFT'
 --
 -- -   #VUID-xrUpdateHandMeshMSFT-handTracker-parameter# @handTracker@
 --     /must/ be a valid 'OpenXR.Extensions.Handles.HandTrackerEXT' handle
@@ -362,9 +363,9 @@ updateHandMeshMSFT handTracker updateInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshSpaceCreateInfoMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'HandMeshSpaceCreateInfoMSFT'
+-- -   #VUID-XrHandMeshSpaceCreateInfoMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshSpaceCreateInfoMSFT'
 --
 -- -   #VUID-XrHandMeshSpaceCreateInfoMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT'
@@ -457,8 +458,9 @@ instance Zero HandMeshSpaceCreateInfoMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshUpdateInfoMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'HandMeshUpdateInfoMSFT'
+-- -   #VUID-XrHandMeshUpdateInfoMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshUpdateInfoMSFT'
 --
 -- -   #VUID-XrHandMeshUpdateInfoMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_MESH_UPDATE_INFO_MSFT'
@@ -561,8 +563,9 @@ instance Zero HandMeshUpdateInfoMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshMSFT-extension-notenabled# The @@ extension /must/
---     be enabled prior to using 'HandMeshMSFT'
+-- -   #VUID-XrHandMeshMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshMSFT'
 --
 -- -   #VUID-XrHandMeshMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_MESH_MSFT'
@@ -718,8 +721,9 @@ instance Zero HandMeshMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshIndexBufferMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'HandMeshIndexBufferMSFT'
+-- -   #VUID-XrHandMeshIndexBufferMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshIndexBufferMSFT'
 --
 -- -   #VUID-XrHandMeshIndexBufferMSFT-indices-parameter# @indices@ /must/
 --     be a pointer to an array of @indexCapacityInput@ @uint32_t@ values
@@ -841,9 +845,9 @@ instance Zero HandMeshIndexBufferMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshVertexBufferMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'HandMeshVertexBufferMSFT'
+-- -   #VUID-XrHandMeshVertexBufferMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshVertexBufferMSFT'
 --
 -- -   #VUID-XrHandMeshVertexBufferMSFT-vertices-parameter# @vertices@
 --     /must/ be a pointer to an array of @vertexCapacityInput@
@@ -922,8 +926,9 @@ instance Zero HandMeshVertexBufferMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshVertexMSFT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'HandMeshVertexMSFT'
+-- -   #VUID-XrHandMeshVertexMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshVertexMSFT'
 --
 -- = See Also
 --
@@ -1001,8 +1006,8 @@ instance Zero HandMeshVertexMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSystemHandTrackingMeshPropertiesMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SystemHandTrackingMeshPropertiesMSFT'
+--     The @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior
+--     to using 'SystemHandTrackingMeshPropertiesMSFT'
 --
 -- -   #VUID-XrSystemHandTrackingMeshPropertiesMSFT-type-type# @type@
 --     /must/ be
@@ -1079,8 +1084,9 @@ instance Zero SystemHandTrackingMeshPropertiesMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandPoseTypeInfoMSFT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'HandPoseTypeInfoMSFT'
+-- -   #VUID-XrHandPoseTypeInfoMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandPoseTypeInfoMSFT'
 --
 -- -   #VUID-XrHandPoseTypeInfoMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_POSE_TYPE_INFO_MSFT'

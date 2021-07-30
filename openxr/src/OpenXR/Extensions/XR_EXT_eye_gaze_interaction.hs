@@ -70,8 +70,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SYSTEM_EYE_GAZE_INT
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSystemEyeGazeInteractionPropertiesEXT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SystemEyeGazeInteractionPropertiesEXT'
+--     The @XR_EXT_eye_gaze_interaction@ extension /must/ be enabled prior
+--     to using 'SystemEyeGazeInteractionPropertiesEXT'
 --
 -- -   #VUID-XrSystemEyeGazeInteractionPropertiesEXT-type-type# @type@
 --     /must/ be
@@ -134,8 +134,9 @@ instance Zero SystemEyeGazeInteractionPropertiesEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrEyeGazeSampleTimeEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'EyeGazeSampleTimeEXT'
+-- -   #VUID-XrEyeGazeSampleTimeEXT-extension-notenabled# The
+--     @XR_EXT_eye_gaze_interaction@ extension /must/ be enabled prior to
+--     using 'EyeGazeSampleTimeEXT'
 --
 -- -   #VUID-XrEyeGazeSampleTimeEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_EYE_GAZE_SAMPLE_TIME_EXT'

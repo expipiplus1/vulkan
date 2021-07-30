@@ -154,8 +154,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateVulkanInstanceKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrCreateVulkanInstanceKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
 --     'createVulkanInstanceKHR'
 --
 -- -   #VUID-xrCreateVulkanInstanceKHR-instance-parameter# @instance@
@@ -230,8 +230,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateVulkanDeviceKHR-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'createVulkanDeviceKHR'
+-- -   #VUID-xrCreateVulkanDeviceKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
+--     'createVulkanDeviceKHR'
 --
 -- -   #VUID-xrCreateVulkanDeviceKHR-instance-parameter# @instance@ /must/
 --     be a valid 'OpenXR.Core10.Handles.Instance' handle
@@ -305,8 +306,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanGraphicsDevice2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanGraphicsDevice2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsDevice2KHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsDevice2KHR-instance-parameter# @instance@
@@ -409,7 +410,7 @@ pattern TYPE_GRAPHICS_REQUIREMENTS_VULKAN2_KHR = TYPE_GRAPHICS_REQUIREMENTS_VULK
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirements2KHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsRequirements2KHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirements2KHR-instance-parameter#
@@ -453,8 +454,8 @@ getVulkanGraphicsRequirements2KHR = getVulkanGraphicsRequirementsKHR
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVulkanInstanceCreateInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrVulkanInstanceCreateInfoKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'VulkanInstanceCreateInfoKHR'
 --
 -- -   #VUID-XrVulkanInstanceCreateInfoKHR-type-type# @type@ /must/ be
@@ -559,8 +560,8 @@ instance Zero VulkanInstanceCreateInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVulkanDeviceCreateInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrVulkanDeviceCreateInfoKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'VulkanDeviceCreateInfoKHR'
 --
 -- -   #VUID-XrVulkanDeviceCreateInfoKHR-type-type# @type@ /must/ be
@@ -675,8 +676,8 @@ instance Zero VulkanDeviceCreateInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVulkanGraphicsDeviceGetInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrVulkanGraphicsDeviceGetInfoKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'VulkanGraphicsDeviceGetInfoKHR'
 --
 -- -   #VUID-XrVulkanGraphicsDeviceGetInfoKHR-type-type# @type@ /must/ be
@@ -823,8 +824,8 @@ instance Read VulkanDeviceCreateFlagBitsKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingVulkan2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingVulkan2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'GraphicsBindingVulkan2KHR'
 --
 -- -   __Note:__ 'GraphicsBindingVulkan2KHR' is an alias for
@@ -878,8 +879,8 @@ type GraphicsBindingVulkan2KHR = GraphicsBindingVulkanKHR
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageVulkan2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSwapchainImageVulkan2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'SwapchainImageVulkan2KHR'
 --
 -- -   __Note:__ 'SwapchainImageVulkan2KHR' is an alias for
@@ -906,8 +907,8 @@ type SwapchainImageVulkan2KHR = SwapchainImageVulkanKHR
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsVulkan2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsVulkan2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsVulkan2KHR'
 --
 -- -   __Note:__ 'GraphicsRequirementsVulkan2KHR' is an alias for

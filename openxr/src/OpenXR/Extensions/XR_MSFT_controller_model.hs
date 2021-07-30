@@ -141,9 +141,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetControllerModelKeyMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'getControllerModelKeyMSFT'
+-- -   #VUID-xrGetControllerModelKeyMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'getControllerModelKeyMSFT'
 --
 -- -   #VUID-xrGetControllerModelKeyMSFT-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -250,9 +250,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrLoadControllerModelMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'loadControllerModelMSFT'
+-- -   #VUID-xrLoadControllerModelMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'loadControllerModelMSFT'
 --
 -- -   #VUID-xrLoadControllerModelMSFT-session-parameter# @session@ /must/
 --     be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -345,8 +345,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetControllerModelPropertiesMSFT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'getControllerModelPropertiesMSFT'
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'getControllerModelPropertiesMSFT'
 --
 -- -   #VUID-xrGetControllerModelPropertiesMSFT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -427,9 +427,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetControllerModelStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'getControllerModelStateMSFT'
+-- -   #VUID-xrGetControllerModelStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'getControllerModelStateMSFT'
 --
 -- -   #VUID-xrGetControllerModelStateMSFT-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -523,9 +523,9 @@ instance Show ControllerModelKeyMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelKeyStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelKeyStateMSFT'
+-- -   #VUID-XrControllerModelKeyStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelKeyStateMSFT'
 --
 -- -   #VUID-XrControllerModelKeyStateMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_KEY_STATE_MSFT'
@@ -603,8 +603,8 @@ instance Zero ControllerModelKeyStateMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrControllerModelNodePropertiesMSFT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
---     'ControllerModelNodePropertiesMSFT'
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelNodePropertiesMSFT'
 --
 -- -   #VUID-XrControllerModelNodePropertiesMSFT-type-type# @type@ /must/
 --     be
@@ -707,9 +707,9 @@ instance Zero ControllerModelNodePropertiesMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelPropertiesMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelPropertiesMSFT'
+-- -   #VUID-XrControllerModelPropertiesMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelPropertiesMSFT'
 --
 -- -   #VUID-XrControllerModelPropertiesMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_PROPERTIES_MSFT'
@@ -796,9 +796,9 @@ instance Zero ControllerModelPropertiesMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelNodeStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelNodeStateMSFT'
+-- -   #VUID-XrControllerModelNodeStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelNodeStateMSFT'
 --
 -- -   #VUID-XrControllerModelNodeStateMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_NODE_STATE_MSFT'
@@ -882,9 +882,9 @@ instance Zero ControllerModelNodeStateMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelStateMSFT'
+-- -   #VUID-XrControllerModelStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelStateMSFT'
 --
 -- -   #VUID-XrControllerModelStateMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_STATE_MSFT'

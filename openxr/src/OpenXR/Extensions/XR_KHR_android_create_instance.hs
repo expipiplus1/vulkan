@@ -76,9 +76,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_INSTANCE_CREATE_INF
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrInstanceCreateInfoAndroidKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'InstanceCreateInfoAndroidKHR'
+-- -   #VUID-XrInstanceCreateInfoAndroidKHR-extension-notenabled# The
+--     @XR_KHR_android_create_instance@ extension /must/ be enabled prior
+--     to using 'InstanceCreateInfoAndroidKHR'
 --
 -- -   #VUID-XrInstanceCreateInfoAndroidKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_INSTANCE_CREATE_INFO_ANDROID_KHR'

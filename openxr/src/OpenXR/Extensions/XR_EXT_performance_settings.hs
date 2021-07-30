@@ -121,8 +121,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrPerfSettingsSetPerformanceLevelEXT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'perfSettingsSetPerformanceLevelEXT'
+--     @XR_EXT_performance_settings@ extension /must/ be enabled prior to
+--     calling 'perfSettingsSetPerformanceLevelEXT'
 --
 -- -   #VUID-xrPerfSettingsSetPerformanceLevelEXT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -180,9 +180,9 @@ perfSettingsSetPerformanceLevelEXT session domain level = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrEventDataPerfSettingsEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'EventDataPerfSettingsEXT'
+-- -   #VUID-XrEventDataPerfSettingsEXT-extension-notenabled# The
+--     @XR_EXT_performance_settings@ extension /must/ be enabled prior to
+--     using 'EventDataPerfSettingsEXT'
 --
 -- -   #VUID-XrEventDataPerfSettingsEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_EVENT_DATA_PERF_SETTINGS_EXT'

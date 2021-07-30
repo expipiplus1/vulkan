@@ -76,8 +76,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_C
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrCompositionLayerColorScaleBiasKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
---     'CompositionLayerColorScaleBiasKHR'
+--     @XR_KHR_composition_layer_color_scale_bias@ extension /must/ be
+--     enabled prior to using 'CompositionLayerColorScaleBiasKHR'
 --
 -- -   #VUID-XrCompositionLayerColorScaleBiasKHR-type-type# @type@ /must/
 --     be

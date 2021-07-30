@@ -120,8 +120,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetOpenGLESGraphicsRequirementsKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'getOpenGLESGraphicsRequirementsKHR'
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to
+--     calling 'getOpenGLESGraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetOpenGLESGraphicsRequirementsKHR-instance-parameter#
 --     @instance@ /must/ be a valid 'OpenXR.Core10.Handles.Instance' handle
@@ -195,7 +195,7 @@ getOpenGLESGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrGraphicsBindingOpenGLESAndroidKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLESAndroidKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLESAndroidKHR-type-type# @type@ /must/
@@ -301,8 +301,8 @@ instance Zero GraphicsBindingOpenGLESAndroidKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageOpenGLESKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSwapchainImageOpenGLESKHR-extension-notenabled# The
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to using
 --     'SwapchainImageOpenGLESKHR'
 --
 -- -   #VUID-XrSwapchainImageOpenGLESKHR-type-type# @type@ /must/ be
@@ -373,8 +373,8 @@ instance Zero SwapchainImageOpenGLESKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsOpenGLESKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsOpenGLESKHR-extension-notenabled# The
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsOpenGLESKHR'
 --
 -- -   #VUID-XrGraphicsRequirementsOpenGLESKHR-type-type# @type@ /must/ be

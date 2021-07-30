@@ -88,9 +88,9 @@ import OpenXR.Extensions.XR_MSFT_perception_anchor_interop (IUnknown)
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHolographicWindowAttachmentMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'HolographicWindowAttachmentMSFT'
+-- -   #VUID-XrHolographicWindowAttachmentMSFT-extension-notenabled# The
+--     @XR_MSFT_holographic_window_attachment@ extension /must/ be enabled
+--     prior to using 'HolographicWindowAttachmentMSFT'
 --
 -- -   #VUID-XrHolographicWindowAttachmentMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HOLOGRAPHIC_WINDOW_ATTACHMENT_MSFT'

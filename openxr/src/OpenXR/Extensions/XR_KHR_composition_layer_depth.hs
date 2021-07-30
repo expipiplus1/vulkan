@@ -78,9 +78,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_D
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrCompositionLayerDepthInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'CompositionLayerDepthInfoKHR'
+-- -   #VUID-XrCompositionLayerDepthInfoKHR-extension-notenabled# The
+--     @XR_KHR_composition_layer_depth@ extension /must/ be enabled prior
+--     to using 'CompositionLayerDepthInfoKHR'
 --
 -- -   #VUID-XrCompositionLayerDepthInfoKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_DEPTH_INFO_KHR'

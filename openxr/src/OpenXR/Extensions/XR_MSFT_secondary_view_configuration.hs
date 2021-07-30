@@ -116,7 +116,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SECONDARY_VIEW_CONF
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationSessionBeginInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using
 --     'SecondaryViewConfigurationSessionBeginInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationSessionBeginInfoMSFT-type-type#
@@ -226,8 +227,8 @@ instance Zero SecondaryViewConfigurationSessionBeginInfoMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationStateMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationStateMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationStateMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationStateMSFT-type-type# @type@ /must/
 --     be
@@ -320,8 +321,8 @@ instance Zero SecondaryViewConfigurationStateMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameStateMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationFrameStateMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationFrameStateMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameStateMSFT-type-type# @type@
 --     /must/ be
@@ -425,8 +426,8 @@ instance Zero SecondaryViewConfigurationFrameStateMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameEndInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationFrameEndInfoMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationFrameEndInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameEndInfoMSFT-type-type# @type@
 --     /must/ be
@@ -527,8 +528,8 @@ instance Zero SecondaryViewConfigurationFrameEndInfoMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationLayerInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationLayerInfoMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationLayerInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationLayerInfoMSFT-type-type# @type@
 --     /must/ be
@@ -654,7 +655,8 @@ instance Zero SecondaryViewConfigurationLayerInfoMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationSwapchainCreateInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using
 --     'SecondaryViewConfigurationSwapchainCreateInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationSwapchainCreateInfoMSFT-type-type#

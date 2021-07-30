@@ -62,9 +62,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_VIEW_CONFIGURATION_
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrViewConfigurationViewFovEPIC-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ViewConfigurationViewFovEPIC'
+-- -   #VUID-XrViewConfigurationViewFovEPIC-extension-notenabled# The
+--     @XR_EPIC_view_configuration_fov@ extension /must/ be enabled prior
+--     to using 'ViewConfigurationViewFovEPIC'
 --
 -- -   #VUID-XrViewConfigurationViewFovEPIC-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_VIEW_CONFIGURATION_VIEW_FOV_EPIC'

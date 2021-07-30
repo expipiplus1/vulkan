@@ -78,8 +78,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_BINDING_MODIFICATIO
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrBindingModificationsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'BindingModificationsKHR'
+-- -   #VUID-XrBindingModificationsKHR-extension-notenabled# The
+--     @XR_KHR_binding_modification@ extension /must/ be enabled prior to
+--     using 'BindingModificationsKHR'
 --
 -- -   #VUID-XrBindingModificationsKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_BINDING_MODIFICATIONS_KHR'
@@ -172,8 +173,8 @@ instance Zero BindingModificationsKHR where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrBindingModificationBaseHeaderKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
---     'BindingModificationBaseHeaderKHR'
+--     @XR_KHR_binding_modification@ extension /must/ be enabled prior to
+--     using 'BindingModificationBaseHeaderKHR'
 --
 -- -   #VUID-XrBindingModificationBaseHeaderKHR-next-next# @next@ /must/ be
 --     @NULL@ or a valid pointer to the

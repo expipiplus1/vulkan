@@ -138,7 +138,7 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetOpenGLGraphicsRequirementsKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to calling
 --     'getOpenGLGraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetOpenGLGraphicsRequirementsKHR-instance-parameter#
@@ -218,8 +218,8 @@ getOpenGLGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLWin32KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLWin32KHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLWin32KHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLWin32KHR-type-type# @type@ /must/ be
@@ -306,8 +306,8 @@ instance Zero GraphicsBindingOpenGLWin32KHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLXlibKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLXlibKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLXlibKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLXlibKHR-type-type# @type@ /must/ be
@@ -418,8 +418,8 @@ instance Zero GraphicsBindingOpenGLXlibKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLXcbKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLXcbKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLXcbKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLXcbKHR-type-type# @type@ /must/ be
@@ -540,8 +540,8 @@ instance Zero GraphicsBindingOpenGLXcbKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLWaylandKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLWaylandKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLWaylandKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLWaylandKHR-type-type# @type@ /must/ be
@@ -626,8 +626,9 @@ instance Zero GraphicsBindingOpenGLWaylandKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageOpenGLKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'SwapchainImageOpenGLKHR'
+-- -   #VUID-XrSwapchainImageOpenGLKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
+--     'SwapchainImageOpenGLKHR'
 --
 -- -   #VUID-XrSwapchainImageOpenGLKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR'
@@ -697,8 +698,8 @@ instance Zero SwapchainImageOpenGLKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsOpenGLKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsOpenGLKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsOpenGLKHR'
 --
 -- -   #VUID-XrGraphicsRequirementsOpenGLKHR-type-type# @type@ /must/ be

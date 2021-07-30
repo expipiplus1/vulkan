@@ -135,9 +135,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateSpatialAnchorMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'createSpatialAnchorMSFT'
+-- -   #VUID-xrCreateSpatialAnchorMSFT-extension-notenabled# The
+--     @XR_MSFT_spatial_anchor@ extension /must/ be enabled prior to
+--     calling 'createSpatialAnchorMSFT'
 --
 -- -   #VUID-xrCreateSpatialAnchorMSFT-session-parameter# @session@ /must/
 --     be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -243,9 +243,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateSpatialAnchorSpaceMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'createSpatialAnchorSpaceMSFT'
+-- -   #VUID-xrCreateSpatialAnchorSpaceMSFT-extension-notenabled# The
+--     @XR_MSFT_spatial_anchor@ extension /must/ be enabled prior to
+--     calling 'createSpatialAnchorSpaceMSFT'
 --
 -- -   #VUID-xrCreateSpatialAnchorSpaceMSFT-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -341,9 +341,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrDestroySpatialAnchorMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'destroySpatialAnchorMSFT'
+-- -   #VUID-xrDestroySpatialAnchorMSFT-extension-notenabled# The
+--     @XR_MSFT_spatial_anchor@ extension /must/ be enabled prior to
+--     calling 'destroySpatialAnchorMSFT'
 --
 -- -   #VUID-xrDestroySpatialAnchorMSFT-anchor-parameter# @anchor@ /must/
 --     be a valid 'OpenXR.Extensions.Handles.SpatialAnchorMSFT' handle
@@ -382,8 +382,8 @@ destroySpatialAnchorMSFT anchor = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSpatialAnchorCreateInfoMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSpatialAnchorCreateInfoMSFT-extension-notenabled# The
+--     @XR_MSFT_spatial_anchor@ extension /must/ be enabled prior to using
 --     'SpatialAnchorCreateInfoMSFT'
 --
 -- -   #VUID-XrSpatialAnchorCreateInfoMSFT-type-type# @type@ /must/ be
@@ -467,7 +467,7 @@ instance Zero SpatialAnchorCreateInfoMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSpatialAnchorSpaceCreateInfoMSFT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
+--     @XR_MSFT_spatial_anchor@ extension /must/ be enabled prior to using
 --     'SpatialAnchorSpaceCreateInfoMSFT'
 --
 -- -   #VUID-XrSpatialAnchorSpaceCreateInfoMSFT-type-type# @type@ /must/ be

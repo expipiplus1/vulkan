@@ -126,8 +126,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetD3D12GraphicsRequirementsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetD3D12GraphicsRequirementsKHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to calling
 --     'getD3D12GraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetD3D12GraphicsRequirementsKHR-instance-parameter#
@@ -197,8 +197,9 @@ getD3D12GraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingD3D12KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'GraphicsBindingD3D12KHR'
+-- -   #VUID-XrGraphicsBindingD3D12KHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to using
+--     'GraphicsBindingD3D12KHR'
 --
 -- -   #VUID-XrGraphicsBindingD3D12KHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_GRAPHICS_BINDING_D3D12_KHR'
@@ -292,8 +293,9 @@ instance Zero GraphicsBindingD3D12KHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageD3D12KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'SwapchainImageD3D12KHR'
+-- -   #VUID-XrSwapchainImageD3D12KHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to using
+--     'SwapchainImageD3D12KHR'
 --
 -- -   #VUID-XrSwapchainImageD3D12KHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_SWAPCHAIN_IMAGE_D3D12_KHR'
@@ -365,8 +367,8 @@ instance Zero SwapchainImageD3D12KHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsD3D12KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsD3D12KHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsD3D12KHR'
 --
 -- -   #VUID-XrGraphicsRequirementsD3D12KHR-type-type# @type@ /must/ be

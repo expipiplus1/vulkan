@@ -92,8 +92,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrThermalGetTemperatureTrendEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrThermalGetTemperatureTrendEXT-extension-notenabled# The
+--     @XR_EXT_thermal_query@ extension /must/ be enabled prior to calling
 --     'thermalGetTemperatureTrendEXT'
 --
 -- -   #VUID-xrThermalGetTemperatureTrendEXT-session-parameter# @session@

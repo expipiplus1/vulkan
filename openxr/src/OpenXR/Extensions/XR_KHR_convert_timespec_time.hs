@@ -102,9 +102,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrConvertTimeToTimespecTimeKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'convertTimeToTimespecTimeKHR'
+-- -   #VUID-xrConvertTimeToTimespecTimeKHR-extension-notenabled# The
+--     @XR_KHR_convert_timespec_time@ extension /must/ be enabled prior to
+--     calling 'convertTimeToTimespecTimeKHR'
 --
 -- -   #VUID-xrConvertTimeToTimespecTimeKHR-instance-parameter# @instance@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Instance' handle
@@ -180,9 +180,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrConvertTimespecTimeToTimeKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'convertTimespecTimeToTimeKHR'
+-- -   #VUID-xrConvertTimespecTimeToTimeKHR-extension-notenabled# The
+--     @XR_KHR_convert_timespec_time@ extension /must/ be enabled prior to
+--     calling 'convertTimespecTimeToTimeKHR'
 --
 -- -   #VUID-xrConvertTimespecTimeToTimeKHR-instance-parameter# @instance@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Instance' handle
