@@ -90,8 +90,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SESSION_CREATE_INFO
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSessionCreateInfoOverlayEXTX-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSessionCreateInfoOverlayEXTX-extension-notenabled# The
+--     @XR_EXTX_overlay@ extension /must/ be enabled prior to using
 --     'SessionCreateInfoOverlayEXTX'
 --
 -- -   #VUID-XrSessionCreateInfoOverlayEXTX-type-type# @type@ /must/ be
@@ -199,7 +199,7 @@ instance Zero SessionCreateInfoOverlayEXTX where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
+--     The @XR_EXTX_overlay@ extension /must/ be enabled prior to using
 --     'EventDataMainSessionVisibilityChangedEXTX'
 --
 -- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-type-type# @type@

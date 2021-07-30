@@ -143,8 +143,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrCreateSwapchainAndroidSurfaceKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'createSwapchainAndroidSurfaceKHR'
+--     @XR_KHR_android_surface_swapchain@ extension /must/ be enabled prior
+--     to calling 'createSwapchainAndroidSurfaceKHR'
 --
 -- -   #VUID-xrCreateSwapchainAndroidSurfaceKHR-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle

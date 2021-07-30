@@ -102,6 +102,7 @@ dependencies:
 - algebraic-graphs
 - ascii-progress
 - async-pool
+- attoparsec
 - base
 - brittany
 - bytestring
@@ -126,6 +127,7 @@ dependencies:
 - prettyprinter
 - regex-applicative
 - relude
+- replace-attoparsec >= 1.4.5
 - safe
 - say
 - some

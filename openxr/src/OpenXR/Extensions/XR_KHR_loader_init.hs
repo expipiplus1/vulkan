@@ -123,8 +123,8 @@ initializeLoaderKHR loaderInitInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrLoaderInitInfoBaseHeaderKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrLoaderInitInfoBaseHeaderKHR-extension-notenabled# The
+--     @XR_KHR_loader_init@ extension /must/ be enabled prior to using
 --     'LoaderInitInfoBaseHeaderKHR'
 --
 -- -   #VUID-XrLoaderInitInfoBaseHeaderKHR-type-type# @type@ /must/ be

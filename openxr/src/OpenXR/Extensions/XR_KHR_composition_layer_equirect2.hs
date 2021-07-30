@@ -84,9 +84,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_E
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrCompositionLayerEquirect2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'CompositionLayerEquirect2KHR'
+-- -   #VUID-XrCompositionLayerEquirect2KHR-extension-notenabled# The
+--     @XR_KHR_composition_layer_equirect2@ extension /must/ be enabled
+--     prior to using 'CompositionLayerEquirect2KHR'
 --
 -- -   #VUID-XrCompositionLayerEquirect2KHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_EQUIRECT2_KHR'

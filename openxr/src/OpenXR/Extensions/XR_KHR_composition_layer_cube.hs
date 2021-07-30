@@ -80,8 +80,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_C
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrCompositionLayerCubeKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'CompositionLayerCubeKHR'
+-- -   #VUID-XrCompositionLayerCubeKHR-extension-notenabled# The
+--     @XR_KHR_composition_layer_cube@ extension /must/ be enabled prior to
+--     using 'CompositionLayerCubeKHR'
 --
 -- -   #VUID-XrCompositionLayerCubeKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_CUBE_KHR'

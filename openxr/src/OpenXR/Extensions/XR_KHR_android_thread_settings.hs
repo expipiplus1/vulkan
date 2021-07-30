@@ -94,9 +94,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrSetAndroidApplicationThreadKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'setAndroidApplicationThreadKHR'
+-- -   #VUID-xrSetAndroidApplicationThreadKHR-extension-notenabled# The
+--     @XR_KHR_android_thread_settings@ extension /must/ be enabled prior
+--     to calling 'setAndroidApplicationThreadKHR'
 --
 -- -   #VUID-xrSetAndroidApplicationThreadKHR-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle

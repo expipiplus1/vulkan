@@ -141,9 +141,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrEnumerateDisplayRefreshRatesFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'enumerateDisplayRefreshRatesFB'
+-- -   #VUID-xrEnumerateDisplayRefreshRatesFB-extension-notenabled# The
+--     @XR_FB_display_refresh_rate@ extension /must/ be enabled prior to
+--     calling 'enumerateDisplayRefreshRatesFB'
 --
 -- -   #VUID-xrEnumerateDisplayRefreshRatesFB-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -227,9 +227,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetDisplayRefreshRateFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'getDisplayRefreshRateFB'
+-- -   #VUID-xrGetDisplayRefreshRateFB-extension-notenabled# The
+--     @XR_FB_display_refresh_rate@ extension /must/ be enabled prior to
+--     calling 'getDisplayRefreshRateFB'
 --
 -- -   #VUID-xrGetDisplayRefreshRateFB-session-parameter# @session@ /must/
 --     be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -306,9 +306,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrRequestDisplayRefreshRateFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'requestDisplayRefreshRateFB'
+-- -   #VUID-xrRequestDisplayRefreshRateFB-extension-notenabled# The
+--     @XR_FB_display_refresh_rate@ extension /must/ be enabled prior to
+--     calling 'requestDisplayRefreshRateFB'
 --
 -- -   #VUID-xrRequestDisplayRefreshRateFB-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -368,8 +368,8 @@ requestDisplayRefreshRateFB session displayRefreshRate = liftIO $ do
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrEventDataDisplayRefreshRateChangedFB-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'EventDataDisplayRefreshRateChangedFB'
+--     The @XR_FB_display_refresh_rate@ extension /must/ be enabled prior
+--     to using 'EventDataDisplayRefreshRateChangedFB'
 --
 -- -   #VUID-XrEventDataDisplayRefreshRateChangedFB-type-type# @type@
 --     /must/ be

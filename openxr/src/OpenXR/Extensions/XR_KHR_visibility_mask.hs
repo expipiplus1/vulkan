@@ -127,8 +127,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVisibilityMaskKHR-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'getVisibilityMaskKHR'
+-- -   #VUID-xrGetVisibilityMaskKHR-extension-notenabled# The
+--     @XR_KHR_visibility_mask@ extension /must/ be enabled prior to
+--     calling 'getVisibilityMaskKHR'
 --
 -- -   #VUID-xrGetVisibilityMaskKHR-session-parameter# @session@ /must/ be
 --     a valid 'OpenXR.Core10.Handles.Session' handle
@@ -207,7 +208,7 @@ getVisibilityMaskKHR session viewConfigurationType viewIndex visibilityMaskType 
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrEventDataVisibilityMaskChangedKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
+--     @XR_KHR_visibility_mask@ extension /must/ be enabled prior to using
 --     'EventDataVisibilityMaskChangedKHR'
 --
 -- -   #VUID-XrEventDataVisibilityMaskChangedKHR-type-type# @type@ /must/
@@ -330,8 +331,9 @@ instance Zero EventDataVisibilityMaskChangedKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVisibilityMaskKHR-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'VisibilityMaskKHR'
+-- -   #VUID-XrVisibilityMaskKHR-extension-notenabled# The
+--     @XR_KHR_visibility_mask@ extension /must/ be enabled prior to using
+--     'VisibilityMaskKHR'
 --
 -- -   #VUID-XrVisibilityMaskKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_VISIBILITY_MASK_KHR'

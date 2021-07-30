@@ -77,9 +77,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_VIEW_CONFIGURATION_
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrViewConfigurationDepthRangeEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ViewConfigurationDepthRangeEXT'
+-- -   #VUID-XrViewConfigurationDepthRangeEXT-extension-notenabled# The
+--     @XR_EXT_view_configuration_depth_range@ extension /must/ be enabled
+--     prior to using 'ViewConfigurationDepthRangeEXT'
 --
 -- -   #VUID-XrViewConfigurationDepthRangeEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_VIEW_CONFIGURATION_DEPTH_RANGE_EXT'

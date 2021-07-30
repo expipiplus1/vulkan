@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_KHR_vulkan_enable@
 --
 -- = See Also
 --
@@ -73,8 +73,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_VULKAN_SWAPCHAIN_FO
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrVulkanSwapchainFormatListCreateInfoKHR-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'VulkanSwapchainFormatListCreateInfoKHR'
+--     The @XR_KHR_vulkan_swapchain_format_list@ extension /must/ be
+--     enabled prior to using 'VulkanSwapchainFormatListCreateInfoKHR'
 --
 -- -   #VUID-XrVulkanSwapchainFormatListCreateInfoKHR-type-type# @type@
 --     /must/ be

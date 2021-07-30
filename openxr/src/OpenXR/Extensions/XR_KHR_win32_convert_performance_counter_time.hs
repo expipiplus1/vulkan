@@ -100,7 +100,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrConvertTimeToWin32PerformanceCounterKHR-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
+--     The @XR_KHR_win32_convert_performance_counter_time@ extension /must/
+--     be enabled prior to calling
 --     'convertTimeToWin32PerformanceCounterKHR'
 --
 -- -   #VUID-xrConvertTimeToWin32PerformanceCounterKHR-instance-parameter#
@@ -180,7 +181,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrConvertWin32PerformanceCounterToTimeKHR-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
+--     The @XR_KHR_win32_convert_performance_counter_time@ extension /must/
+--     be enabled prior to calling
 --     'convertWin32PerformanceCounterToTimeKHR'
 --
 -- -   #VUID-xrConvertWin32PerformanceCounterToTimeKHR-instance-parameter#

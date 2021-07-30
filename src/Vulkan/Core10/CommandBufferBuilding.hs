@@ -1851,8 +1851,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDraw-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the @@ extension is enabled)
---     for @commandBuffer@, and done so after any previously bound pipeline
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
 --     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDraw-None-02859# There /must/ not have been any calls to
@@ -2203,8 +2204,9 @@ foreign import ccall
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDraw-rasterizationSamples-04740# If rasterization is not
---     disabled in the bound graphics pipeline, and neither the @@ nor the
---     @@ extensions are enabled, then
+--     disabled in the bound graphics pipeline, and neither the
+--     @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -2467,8 +2469,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the @@ extension is enabled)
---     for @commandBuffer@, and done so after any previously bound pipeline
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
 --     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndexed-None-02859# There /must/ not have been any
@@ -2824,8 +2827,9 @@ foreign import ccall
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDrawIndexed-rasterizationSamples-04740# If rasterization
---     is not disabled in the bound graphics pipeline, and neither the @@
---     nor the @@ extensions are enabled, then
+--     is not disabled in the bound graphics pipeline, and neither the
+--     @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -3082,8 +3086,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the @@ extension is enabled)
---     for @commandBuffer@, and done so after any previously bound pipeline
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
 --     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndirect-None-02859# There /must/ not have been any
@@ -3439,8 +3444,9 @@ foreign import ccall
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDrawIndirect-rasterizationSamples-04740# If rasterization
---     is not disabled in the bound graphics pipeline, and neither the @@
---     nor the @@ extensions are enabled, then
+--     is not disabled in the bound graphics pipeline, and neither the
+--     @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -3725,8 +3731,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexedIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the @@ extension is enabled)
---     for @commandBuffer@, and done so after any previously bound pipeline
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
 --     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02859# There /must/ not have
@@ -4084,7 +4091,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-rasterizationSamples-04740# If
 --     rasterization is not disabled in the bound graphics pipeline, and
---     neither the @@ nor the @@ extensions are enabled, then
+--     neither the @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -4362,8 +4370,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatch-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the @@ extension is enabled)
---     for @commandBuffer@, and done so after any previously bound pipeline
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
 --     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDispatch-None-02859# There /must/ not have been any calls
@@ -4690,8 +4699,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the @@ extension is enabled)
---     for @commandBuffer@, and done so after any previously bound pipeline
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
 --     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-02859# There /must/ not have been

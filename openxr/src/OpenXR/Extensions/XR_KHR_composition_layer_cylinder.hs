@@ -84,9 +84,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_C
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrCompositionLayerCylinderKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'CompositionLayerCylinderKHR'
+-- -   #VUID-XrCompositionLayerCylinderKHR-extension-notenabled# The
+--     @XR_KHR_composition_layer_cylinder@ extension /must/ be enabled
+--     prior to using 'CompositionLayerCylinderKHR'
 --
 -- -   #VUID-XrCompositionLayerCylinderKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_CYLINDER_KHR'

@@ -118,9 +118,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateSpatialGraphNodeSpaceMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'createSpatialGraphNodeSpaceMSFT'
+-- -   #VUID-xrCreateSpatialGraphNodeSpaceMSFT-extension-notenabled# The
+--     @XR_MSFT_spatial_graph_bridge@ extension /must/ be enabled prior to
+--     calling 'createSpatialGraphNodeSpaceMSFT'
 --
 -- -   #VUID-xrCreateSpatialGraphNodeSpaceMSFT-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -202,8 +202,8 @@ withSpatialGraphNodeSpaceMSFT session createInfo b =
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSpatialGraphNodeSpaceCreateInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SpatialGraphNodeSpaceCreateInfoMSFT'
+--     The @XR_MSFT_spatial_graph_bridge@ extension /must/ be enabled prior
+--     to using 'SpatialGraphNodeSpaceCreateInfoMSFT'
 --
 -- -   #VUID-XrSpatialGraphNodeSpaceCreateInfoMSFT-type-type# @type@ /must/
 --     be

@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_MSFT_secondary_view_configuration@
 --
 -- = See Also
 --

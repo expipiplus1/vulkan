@@ -130,6 +130,14 @@ let
         ../generate-new/patches/pandoc-haddock-tables.patch;
       polysemy = markUnbroken (dontCheck super.polysemy);
       polysemy-plugin = markUnbroken (dontCheck super.polysemy-plugin);
+      replace-attoparsec = overrideSrc super.replace-attoparsec {
+        src = pkgs.fetchFromGitHub {
+          owner = "expipiplus1";
+          repo = "replace-attoparsec";
+          rev = "ae2dce6a8d3c56ea3b14f497c338a6a98d6bd9e7"; # lazy-text
+          sha256 = "15qmajmfa23sqlq825b2kkc8vnmk0vgbzbfgkny49fx5q1abc8jp";
+        };
+      };
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = self.ghc.withPackages;

@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_MSFT_spatial_anchor@
 --
 -- = See Also
 --
@@ -117,8 +117,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrCreateSpatialAnchorFromPerceptionAnchorMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
---     'createSpatialAnchorFromPerceptionAnchorMSFT'
+--     The @XR_MSFT_perception_anchor_interop@ extension /must/ be enabled
+--     prior to calling 'createSpatialAnchorFromPerceptionAnchorMSFT'
 --
 -- -   #VUID-xrCreateSpatialAnchorFromPerceptionAnchorMSFT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -227,8 +227,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrTryGetPerceptionAnchorFromSpatialAnchorMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
---     'tryGetPerceptionAnchorFromSpatialAnchorMSFT'
+--     The @XR_MSFT_perception_anchor_interop@ extension /must/ be enabled
+--     prior to calling 'tryGetPerceptionAnchorFromSpatialAnchorMSFT'
 --
 -- -   #VUID-xrTryGetPerceptionAnchorFromSpatialAnchorMSFT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle

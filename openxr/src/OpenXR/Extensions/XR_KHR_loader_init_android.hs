@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_KHR_loader_init@
 --
 -- = See Also
 --
@@ -70,9 +70,9 @@ import OpenXR.Extensions.XR_KHR_loader_init (LoaderInitInfoBaseHeaderKHR(..))
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrLoaderInitInfoAndroidKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'LoaderInitInfoAndroidKHR'
+-- -   #VUID-XrLoaderInitInfoAndroidKHR-extension-notenabled# The
+--     @XR_KHR_loader_init_android@ extension /must/ be enabled prior to
+--     using 'LoaderInitInfoAndroidKHR'
 --
 -- -   #VUID-XrLoaderInitInfoAndroidKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_LOADER_INIT_INFO_ANDROID_KHR'

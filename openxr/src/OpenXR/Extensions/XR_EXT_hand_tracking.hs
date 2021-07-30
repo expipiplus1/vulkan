@@ -194,8 +194,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateHandTrackerEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'createHandTrackerEXT'
+-- -   #VUID-xrCreateHandTrackerEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to calling
+--     'createHandTrackerEXT'
 --
 -- -   #VUID-xrCreateHandTrackerEXT-session-parameter# @session@ /must/ be
 --     a valid 'OpenXR.Core10.Handles.Session' handle
@@ -290,8 +291,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrDestroyHandTrackerEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'destroyHandTrackerEXT'
+-- -   #VUID-xrDestroyHandTrackerEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to calling
+--     'destroyHandTrackerEXT'
 --
 -- -   #VUID-xrDestroyHandTrackerEXT-handTracker-parameter# @handTracker@
 --     /must/ be a valid 'OpenXR.Extensions.Handles.HandTrackerEXT' handle
@@ -342,8 +344,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrLocateHandJointsEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'locateHandJointsEXT'
+-- -   #VUID-xrLocateHandJointsEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to calling
+--     'locateHandJointsEXT'
 --
 -- -   #VUID-xrLocateHandJointsEXT-handTracker-parameter# @handTracker@
 --     /must/ be a valid 'OpenXR.Extensions.Handles.HandTrackerEXT' handle
@@ -408,8 +411,8 @@ locateHandJointsEXT handTracker locateInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSystemHandTrackingPropertiesEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSystemHandTrackingPropertiesEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to using
 --     'SystemHandTrackingPropertiesEXT'
 --
 -- -   #VUID-XrSystemHandTrackingPropertiesEXT-type-type# @type@ /must/ be
@@ -475,8 +478,8 @@ instance Zero SystemHandTrackingPropertiesEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandTrackerCreateInfoEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrHandTrackerCreateInfoEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to using
 --     'HandTrackerCreateInfoEXT'
 --
 -- -   #VUID-XrHandTrackerCreateInfoEXT-type-type# @type@ /must/ be
@@ -565,8 +568,9 @@ instance es ~ '[] => Zero (HandTrackerCreateInfoEXT es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandJointsLocateInfoEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'HandJointsLocateInfoEXT'
+-- -   #VUID-XrHandJointsLocateInfoEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to using
+--     'HandJointsLocateInfoEXT'
 --
 -- -   #VUID-XrHandJointsLocateInfoEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_JOINTS_LOCATE_INFO_EXT'
@@ -652,8 +656,9 @@ instance Zero HandJointsLocateInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandJointLocationEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'HandJointLocationEXT'
+-- -   #VUID-XrHandJointLocationEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to using
+--     'HandJointLocationEXT'
 --
 -- -   #VUID-XrHandJointLocationEXT-locationFlags-parameter#
 --     @locationFlags@ /must/ be a valid combination of
@@ -728,8 +733,9 @@ instance Zero HandJointLocationEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandJointVelocityEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'HandJointVelocityEXT'
+-- -   #VUID-XrHandJointVelocityEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to using
+--     'HandJointVelocityEXT'
 --
 -- -   #VUID-XrHandJointVelocityEXT-velocityFlags-parameter#
 --     @velocityFlags@ /must/ be a valid combination of
@@ -854,8 +860,9 @@ instance Zero HandJointVelocityEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandJointLocationsEXT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'HandJointLocationsEXT'
+-- -   #VUID-XrHandJointLocationsEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to using
+--     'HandJointLocationsEXT'
 --
 -- -   #VUID-XrHandJointLocationsEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_JOINT_LOCATIONS_EXT'
@@ -997,8 +1004,9 @@ instance es ~ '[] => Zero (HandJointLocationsEXT es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandJointVelocitiesEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'HandJointVelocitiesEXT'
+-- -   #VUID-XrHandJointVelocitiesEXT-extension-notenabled# The
+--     @XR_EXT_hand_tracking@ extension /must/ be enabled prior to using
+--     'HandJointVelocitiesEXT'
 --
 -- -   #VUID-XrHandJointVelocitiesEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_JOINT_VELOCITIES_EXT'
