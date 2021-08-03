@@ -2187,6 +2187,16 @@ foreign import ccall
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'.
 --
+-- -   If @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR',
+--     then the value written out is the number of bytes required by a
+--     compacted acceleration structure.
+--
+-- -   If @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR',
+--     then the value written out is the number of bytes required by a
+--     serialized acceleration structure.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryPool-02493#

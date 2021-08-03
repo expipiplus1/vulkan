@@ -58,6 +58,8 @@
 --
 --     -   Neil Trevett, NVIDIA
 --
+--     -   Alexey Knyazev, Independent
+--
 -- == Description
 --
 -- The \`VK_KHR_portability_subset extension allows a non-conformant Vulkan

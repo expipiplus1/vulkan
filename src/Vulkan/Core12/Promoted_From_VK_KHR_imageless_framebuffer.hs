@@ -233,7 +233,8 @@ data FramebufferAttachmentImageInfo = FramebufferAttachmentImageInfo
     width :: Word32
   , -- | @height@ is the height of the image view used for rendering.
     height :: Word32
-  , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "layerCount"
+  , -- | @layerCount@ is the number of array layers of the image view used for
+    -- rendering.
     layerCount :: Word32
   , -- | @pViewFormats@ is a pointer to an array of
     -- 'Vulkan.Core10.Enums.Format.Format' values specifying all of the formats

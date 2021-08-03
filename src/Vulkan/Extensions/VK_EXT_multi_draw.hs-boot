@@ -103,7 +103,7 @@
 --
 -- == Version History
 --
--- -   Version 1, 2021-01-20 (Mike Blumenkrantz)
+-- -   Revision 1, 2021-01-20 (Mike Blumenkrantz)
 --
 --     -   Initial version
 --

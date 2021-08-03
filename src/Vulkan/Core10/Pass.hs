@@ -482,13 +482,13 @@ foreign import ccall
 --     member of the returned 'Vulkan.Core10.FundamentalTypes.Extent2D'
 --     (the vertical granularity).
 --
--- -   either the @offset.width@ member in @renderArea@ is a multiple of
---     the horizontal granularity or @offset.x@+@offset.width@ is equal to
+-- -   either the @extent.width@ member in @renderArea@ is a multiple of
+--     the horizontal granularity or @offset.x@+@extent.width@ is equal to
 --     the @width@ of the @framebuffer@ in the
 --     'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'.
 --
--- -   either the @offset.height@ member in @renderArea@ is a multiple of
---     the vertical granularity or @offset.y@+@offset.height@ is equal to
+-- -   either the @extent.height@ member in @renderArea@ is a multiple of
+--     the vertical granularity or @offset.y@+@extent.height@ is equal to
 --     the @height@ of the @framebuffer@ in the
 --     'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'.
 --
