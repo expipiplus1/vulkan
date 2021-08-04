@@ -119,9 +119,10 @@ foreign import ccall
 --     structure
 --
 -- -   #VUID-vkGetDeviceQueue-queueIndex-00385# @queueIndex@ /must/ be less
---     than the number of queues created for the specified queue family
---     index when @device@ was created, via the @queueCount@ member of the
---     'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
+--     than the value of
+--     'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@queueCount@ for the
+--     queue family indicated by @queueFamilyIndex@ when @device@ was
+--     created
 --
 -- -   #VUID-vkGetDeviceQueue-flags-01841#
 --     'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@ /must/ have

@@ -799,12 +799,6 @@ foreign import ccall
 -- representation, m is a function of depth values in the range [0,1], and
 -- o is applied to depth values in the same range.
 --
--- For fixed-point depth buffers, fragment depth values are always limited
--- to the range [0,1] by clamping after depth bias addition is performed.
--- Unless the @VK_EXT_depth_range_unrestricted@ extension is enabled,
--- fragment depth values are clamped even when the depth buffer uses a
--- floating-point representation.
---
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetDepthBias-depthBiasClamp-00790# If the
@@ -6087,7 +6081,7 @@ foreign import ccall
 --     is a protected command buffer, then @dstImage@ /must/ not be an
 --     unprotected image
 --
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-00172# The image region
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-06217# The image region
 --     specified by each element of @pRegions@ /must/ be contained within
 --     the specified @imageSubresource@ of @dstImage@
 --
@@ -6169,13 +6163,13 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageOffset-00197# For each element of
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-06218# For each element of
 --     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
 --     of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageOffset-00198# For each element of
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-06219# For each element of
 --     @pRegions@, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
@@ -6434,7 +6428,7 @@ foreign import ccall
 --     is a protected command buffer, then @dstBuffer@ /must/ not be an
 --     unprotected buffer
 --
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-00182# The image region
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06220# The image region
 --     specified by each element of @pRegions@ /must/ be contained within
 --     the specified @imageSubresource@ of @srcImage@
 --
@@ -6507,13 +6501,13 @@ foreign import ccall
 --     have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00197# For each element of
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06221# For each element of
 --     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
 --     of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00198# For each element of
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06222# For each element of
 --     @pRegions@, @imageOffset.y@ and (imageExtent.height +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
@@ -7434,12 +7428,6 @@ foreign import ccall
 --
 -- = Description
 --
--- 'cmdClearAttachments' /can/ clear multiple regions of each attachment
--- used in the current subpass of a render pass instance. This command
--- /must/ be called only inside a render pass instance, and implicitly
--- selects the images to clear based on the current framebuffer attachments
--- and the command parameters.
---
 -- If the render pass has a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>,
 -- clears follow the
@@ -7466,6 +7454,15 @@ foreign import ccall
 -- and
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'
 -- stages.
+--
+-- 'cmdClearAttachments' is not affected by the bound pipeline state.
+--
+-- Note
+--
+-- It’s generally advised that attachments are cleared by using the
+-- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' load
+-- operation at the start of rendering, which will be more efficient on
+-- some implementations.
 --
 -- == Valid Usage
 --
@@ -7577,9 +7574,8 @@ cmdClearAttachments :: forall io
                        CommandBuffer
                     -> -- | @pAttachments@ is a pointer to an array of 'ClearAttachment' structures
                        -- defining the attachments to clear and the clear values to use. If any
-                       -- attachment to be cleared in the current subpass is
-                       -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the clear has no
-                       -- effect on that attachment.
+                       -- attachment index to be cleared is not backed by an image view, then the
+                       -- clear has no effect.
                        ("attachments" ::: Vector ClearAttachment)
                     -> -- | @pRects@ is a pointer to an array of 'ClearRect' structures defining
                        -- regions within each selected attachment to clear.
@@ -7934,7 +7930,7 @@ foreign import ccall
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdSetEvent-stageMask-4098# Any pipeline stage included in
+-- -   #VUID-vkCmdSetEvent-stageMask-04098# Any pipeline stage included in
 --     @stageMask@ /must/ be supported by the capabilities of the queue
 --     family specified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
@@ -8082,8 +8078,8 @@ foreign import ccall
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdResetEvent-stageMask-4098# Any pipeline stage included in
---     @stageMask@ /must/ be supported by the capabilities of the queue
+-- -   #VUID-vkCmdResetEvent-stageMask-04098# Any pipeline stage included
+--     in @stageMask@ /must/ be supported by the capabilities of the queue
 --     family specified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
@@ -8360,11 +8356,11 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdWaitEvents-srcStageMask-4098# Any pipeline stage included
---     in @srcStageMask@ /must/ be supported by the capabilities of the
---     queue family specified by the @queueFamilyIndex@ member of the
---     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
---     used to create the 'Vulkan.Core10.Handles.CommandPool' that
+-- -   #VUID-vkCmdWaitEvents-srcStageMask-04098# Any pipeline stage
+--     included in @srcStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
@@ -8414,11 +8410,11 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdWaitEvents-dstStageMask-4098# Any pipeline stage included
---     in @dstStageMask@ /must/ be supported by the capabilities of the
---     queue family specified by the @queueFamilyIndex@ member of the
---     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
---     used to create the 'Vulkan.Core10.Handles.CommandPool' that
+-- -   #VUID-vkCmdWaitEvents-dstStageMask-04098# Any pipeline stage
+--     included in @dstStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
@@ -8760,7 +8756,7 @@ foreign import ccall
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdPipelineBarrier-srcStageMask-4098# Any pipeline stage
+-- -   #VUID-vkCmdPipelineBarrier-srcStageMask-04098# Any pipeline stage
 --     included in @srcStageMask@ /must/ be supported by the capabilities
 --     of the queue family specified by the @queueFamilyIndex@ member of
 --     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
@@ -8814,7 +8810,7 @@ foreign import ccall
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdPipelineBarrier-dstStageMask-4098# Any pipeline stage
+-- -   #VUID-vkCmdPipelineBarrier-dstStageMask-04098# Any pipeline stage
 --     included in @dstStageMask@ /must/ be supported by the capabilities
 --     of the queue family specified by the @queueFamilyIndex@ member of
 --     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
@@ -11458,7 +11454,7 @@ instance Zero ImageResolve where
 --     not contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0,
---     @renderArea.offset.x@ + @renderArea.offset.width@ /must/ be less
+--     @renderArea.offset.x@ + @renderArea.extent.width@ /must/ be less
 --     than or equal to 'Vulkan.Core10.Pass.FramebufferCreateInfo'::@width@
 --     the @framebuffer@ was created with
 --
@@ -11466,7 +11462,7 @@ instance Zero ImageResolve where
 --     not contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0,
---     @renderArea.offset.y@ + @renderArea.offset.height@ /must/ be less
+--     @renderArea.offset.y@ + @renderArea.extent.height@ /must/ be less
 --     than or equal to
 --     'Vulkan.Core10.Pass.FramebufferCreateInfo'::@height@ the
 --     @framebuffer@ was created with
@@ -11486,7 +11482,7 @@ instance Zero ImageResolve where
 -- -   #VUID-VkRenderPassBeginInfo-pNext-02856# If the @pNext@ chain
 --     contains
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
---     @offset.x@ + @offset.width@ of each element of @pDeviceRenderAreas@
+--     @offset.x@ + @extent.width@ of each element of @pDeviceRenderAreas@
 --     /must/ be less than or equal to
 --     'Vulkan.Core10.Pass.FramebufferCreateInfo'::@width@ the
 --     @framebuffer@ was created with
@@ -11494,7 +11490,7 @@ instance Zero ImageResolve where
 -- -   #VUID-VkRenderPassBeginInfo-pNext-02857# If the @pNext@ chain
 --     contains
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
---     @offset.y@ + @offset.height@ of each element of @pDeviceRenderAreas@
+--     @offset.y@ + @extent.height@ of each element of @pDeviceRenderAreas@
 --     /must/ be less than or equal to
 --     'Vulkan.Core10.Pass.FramebufferCreateInfo'::@height@ the
 --     @framebuffer@ was created with
@@ -11832,21 +11828,6 @@ instance Zero ClearDepthStencilValue where
 
 -- | VkClearAttachment - Structure specifying a clear attachment
 --
--- = Description
---
--- No memory barriers are needed between 'cmdClearAttachments' and
--- preceding or subsequent draw or attachment clear commands in the same
--- subpass.
---
--- The 'cmdClearAttachments' command is not affected by the bound pipeline
--- state.
---
--- Attachments /can/ also be cleared at the beginning of a render pass
--- instance by setting @loadOp@ (or @stencilLoadOp@) of
--- 'Vulkan.Core10.Pass.AttachmentDescription' to
--- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR', as
--- described for 'Vulkan.Core10.Pass.createRenderPass'.
---
 -- == Valid Usage
 --
 -- -   #VUID-VkClearAttachment-aspectMask-00019# If @aspectMask@ includes
@@ -11885,9 +11866,8 @@ data ClearAttachment = ClearAttachment
     aspectMask :: ImageAspectFlags
   , -- | @colorAttachment@ is only meaningful if
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' is set
-    -- in @aspectMask@, in which case it is an index to the @pColorAttachments@
-    -- array in the 'Vulkan.Core10.Pass.SubpassDescription' structure of the
-    -- current subpass which selects the color attachment to clear.
+    -- in @aspectMask@, in which case it is an index into the currently bound
+    -- color attachments.
     colorAttachment :: Word32
   , -- | @clearValue@ is the color or depth\/stencil value to clear the
     -- attachment to, as described in

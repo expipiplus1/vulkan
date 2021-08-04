@@ -163,7 +163,7 @@
 -- -   A shader binding indirection table to link shader groups with
 --     acceleration structure items
 --
--- -   Trace ray commands which initiates the ray pipeline traversal and
+-- -   Ray tracing commands which initiate the ray pipeline traversal and
 --     invocation of the various new shader domains depending on which
 --     traversal conditions are met
 --
@@ -3063,7 +3063,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- -   #features-rayTracingPipelineTraceRaysIndirect#
 --     @rayTracingPipelineTraceRaysIndirect@ indicates whether the
---     implementation supports indirect trace ray commands, e.g.
+--     implementation supports indirect ray tracing commands, e.g.
 --     'cmdTraceRaysIndirectKHR'.
 --
 -- -   #features-rayTraversalPrimitiveCulling#
@@ -3350,7 +3350,7 @@ instance Zero StridedDeviceAddressRegionKHR where
 
 
 -- | VkTraceRaysIndirectCommandKHR - Structure specifying the parameters of
--- an indirect trace ray command
+-- an indirect ray tracing command
 --
 -- = Description
 --

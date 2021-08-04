@@ -42,8 +42,8 @@
 --
 --     -   This extension requires
 --         <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>,
---         which allow to bind an invocation mask image before the trace
---         ray command
+--         which allow to bind an invocation mask image before the ray
+--         tracing command
 --
 --     -   This extension requires
 --         <VK_KHR_synchronization2.html VK_KHR_synchronization2>, which
@@ -57,9 +57,9 @@
 --
 -- The rays to trace may be sparse in some use cases. For example, the
 -- scene only have a few regions to reflect. Providing an invocation mask
--- image to the trace ray commands could potentially give the hardware the
--- hint to do certain optimization without invoking an additional pass to
--- compact the ray buffer.
+-- image to the ray tracing commands could potentially give the hardware
+-- the hint to do certain optimization without invoking an additional pass
+-- to compact the ray buffer.
 --
 -- == New Commands
 --

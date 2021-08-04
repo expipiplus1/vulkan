@@ -1288,14 +1288,14 @@ foreign import ccall
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
 --     been built prior to the execution of this command
 --
--- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-accelerationStructures-03431#
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-pAccelerationStructures-06215#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
 --     been built with
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
 --     if @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
--- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-queryType-03432#
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-queryType-06216#
 --     @queryType@ /must/ be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
@@ -1843,8 +1843,8 @@ foreign import ccall
 --     not be a protected command buffer
 --
 -- -   #VUID-vkCmdTraceRaysNV-maxRecursionDepth-03625# This command /must/
---     not cause a trace ray instruction to be executed from a shader
---     invocation with a
+--     not cause a pipeline trace ray instruction to be executed from a
+--     shader invocation with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
 --     bound ray tracing pipeline
@@ -2620,7 +2620,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --     or
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
 --
--- -   #VUID-VkRayTracingPipelineCreateInfoNV-stage-03425# The @stage@
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-stage-06232# The @stage@
 --     member of at least one element of @pStages@ /must/ be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_KHR'
 --

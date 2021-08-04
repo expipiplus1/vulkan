@@ -340,6 +340,11 @@ data DeviceQueueInfo2 = DeviceQueueInfo2
     -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
     -- value indicating the flags used to create the device queue.
     --
+    -- #VUID-VkDeviceQueueInfo2-flags-06225# @flags@ /must/ be equal to
+    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@ for a
+    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure for the queue
+    -- family indicated by @queueFamilyIndex@ when @device@ was created
+    --
     -- #VUID-VkDeviceQueueInfo2-flags-parameter# @flags@ /must/ be a valid
     -- combination of
     -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlagBits'
@@ -356,12 +361,9 @@ data DeviceQueueInfo2 = DeviceQueueInfo2
     -- retrieve.
     --
     -- #VUID-VkDeviceQueueInfo2-queueIndex-01843# @queueIndex@ /must/ be less
-    -- than the number of queues created for the specified queue family index
-    -- and
-    -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
-    -- member @flags@ equal to this @flags@ value when @device@ was created,
-    -- via the @queueCount@ member of the
-    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
+    -- than 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@queueCount@ for the
+    -- corresponding queue family and flags indicated by @queueFamilyIndex@ and
+    -- @flags@ when @device@ was created
     queueIndex :: Word32
   }
   deriving (Typeable, Eq)

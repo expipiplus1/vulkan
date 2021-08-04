@@ -2378,16 +2378,16 @@ instance Zero BlitImageInfo2KHR where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
 --
--- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00197# For each
---     element of @pRegions@ not containing
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06223# For each element
+--     of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
 --     of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00198# For each
---     element of @pRegions@ not containing
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06224# For each element
+--     of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and

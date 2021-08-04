@@ -1131,6 +1131,10 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     @zx_vmo_get_size@(@handle@) where @handle@ is the VMO handle to the
 --     imported external memory.
 --
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-06231# @allocationSize@
+--     /must/ be less than
+--     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationSize@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkMemoryAllocateInfo-sType-sType# @sType@ /must/ be

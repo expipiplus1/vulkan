@@ -103,7 +103,7 @@
 --
 -- == Version History
 --
--- -   Version 1, 2021-01-20 (Mike Blumenkrantz)
+-- -   Revision 1, 2021-01-20 (Mike Blumenkrantz)
 --
 --     -   Initial version
 --
@@ -191,9 +191,8 @@ foreign import ccall
 --
 -- = Description
 --
--- This command is equivalent to calling
--- 'Vulkan.Core10.CommandBufferBuilding.cmdDraw' @drawCount@ times. The
--- number of draw commands recorded is @drawCount@, with each command
+-- @drawCount@ draws are executed with parameters taken from @pVertexInfo@.
+-- The number of draw commands recorded is @drawCount@, with each command
 -- reading, sequentially, a @firstVertex@ and a @vertexCount@ from
 -- @pVertexInfo@.
 --
@@ -817,12 +816,11 @@ foreign import ccall
 --
 -- = Description
 --
--- This command is equivalent to calling
--- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexed' @drawCount@ times.
--- The number of draw commands recorded is @drawCount@, with each command
--- reading, sequentially, a @firstIndex@ and an @indexCount@ from
--- @pIndexInfo@. If @pVertexOffset@ is @NULL@, a @vertexOffset@ is also
--- read from @pIndexInfo@, otherwise the value from dereferencing
+-- @drawCount@ indexed draws are executed with parameters taken from
+-- @pIndexInfo@. The number of draw commands recorded is @drawCount@, with
+-- each command reading, sequentially, a @firstIndex@ and an @indexCount@
+-- from @pIndexInfo@. If @pVertexOffset@ is @NULL@, a @vertexOffset@ is
+-- also read from @pIndexInfo@, otherwise the value from dereferencing
 -- @pVertexOffset@ is used.
 --
 -- == Valid Usage

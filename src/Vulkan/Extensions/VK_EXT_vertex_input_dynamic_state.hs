@@ -378,12 +378,12 @@ instance Zero PhysicalDeviceVertexInputDynamicStateFeaturesEXT where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
 --     feature is not enabled, @divisor@ /must/ be @1@
 --
--- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-04800# @divisor@
+-- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-06226# @divisor@
 --     /must/ be a value between @0@ and
 --     'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesEXT'::@maxVertexAttribDivisor@,
 --     inclusive
 --
--- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-04801# If
+-- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-06227# If
 --     @divisor@ is not @1@ then @inputRate@ /must/ be of type
 --     'Vulkan.Core10.Enums.VertexInputRate.VERTEX_INPUT_RATE_INSTANCE'
 --
@@ -482,15 +482,15 @@ instance Zero VertexInputBindingDescription2EXT where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkVertexInputAttributeDescription2EXT-location-04802#
+-- -   #VUID-VkVertexInputAttributeDescription2EXT-location-06228#
 --     @location@ /must/ be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributes@
 --
--- -   #VUID-VkVertexInputAttributeDescription2EXT-binding-04803# @binding@
+-- -   #VUID-VkVertexInputAttributeDescription2EXT-binding-06229# @binding@
 --     /must/ be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
 --
--- -   #VUID-VkVertexInputAttributeDescription2EXT-offset-04804# @offset@
+-- -   #VUID-VkVertexInputAttributeDescription2EXT-offset-06230# @offset@
 --     /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributeOffset@
 --

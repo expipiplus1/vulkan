@@ -281,15 +281,7 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR(..))
 --
 -- = Members
 --
--- This structure describes the following feature: * @sType@ is the type of
--- this structure. * @pNext@ is @NULL@ or a pointer to a structure
--- extending this structure. * #features-rayTracingMotionBlur#
--- @rayTracingMotionBlur@ indicates whether the implementation supports the
--- motion blur feature. *
--- #features-rayTracingMotionBlurPipelineTraceRaysIndirect#
--- @rayTracingMotionBlurPipelineTraceRaysIndirect@ indicates whether the
--- implementation supports indirect trace ray commands with the motion blur
--- feature enabled.
+-- This structure describes the following feature:
 --
 -- = Description
 --
@@ -310,9 +302,13 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingMotionBlurFeaturesNV = PhysicalDeviceRayTracingMotionBlurFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceRayTracingMotionBlurFeaturesNV" "rayTracingMotionBlur"
+  { -- | #features-rayTracingMotionBlur# @rayTracingMotionBlur@ indicates whether
+    -- the implementation supports the motion blur feature.
     rayTracingMotionBlur :: Bool
-  , -- No documentation found for Nested "VkPhysicalDeviceRayTracingMotionBlurFeaturesNV" "rayTracingMotionBlurPipelineTraceRaysIndirect"
+  , -- | #features-rayTracingMotionBlurPipelineTraceRaysIndirect#
+    -- @rayTracingMotionBlurPipelineTraceRaysIndirect@ indicates whether the
+    -- implementation supports indirect ray tracing commands with the motion
+    -- blur feature enabled.
     rayTracingMotionBlurPipelineTraceRaysIndirect :: Bool
   }
   deriving (Typeable, Eq)
