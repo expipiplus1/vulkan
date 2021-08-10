@@ -282,13 +282,13 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 -- -   #VUID-VkMacOSSurfaceCreateInfoMVK-pView-04144# If @pView@ is a
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object, it
 --     /must/ be a valid
---     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+--     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'
 --
 -- -   #VUID-VkMacOSSurfaceCreateInfoMVK-pView-01317# If @pView@ is an
 --     @NSView@ object, it /must/ be a valid @NSView@, /must/ be backed by
 --     a @CALayer@ object of type
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', and
---     'createMacOSSurfaceMVK' /must/ be called on the main thread.
+--     'createMacOSSurfaceMVK' /must/ be called on the main thread
 --
 -- == Valid Usage (Implicit)
 --

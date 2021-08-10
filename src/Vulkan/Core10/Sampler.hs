@@ -109,7 +109,7 @@ foreign import ccall
 --     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerAllocationCount@
 --     'Vulkan.Core10.Handles.Sampler' objects currently created on the
---     device.
+--     device
 --
 -- == Valid Usage (Implicit)
 --
@@ -319,7 +319,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@samplerMipLodBias@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', @mipLodBias@ /must/ be
---     zero.
+--     zero
 --
 -- -   #VUID-VkSamplerCreateInfo-maxLod-01973# @maxLod@ /must/ be greater
 --     than or equal to @minLod@
@@ -471,7 +471,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'::@format@
 --     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'::@customBorderColor@
---     /must/ be within the range of values representable in @format@.
+--     /must/ be within the range of values representable in @format@
 --
 -- -   #VUID-VkSamplerCreateInfo-None-04012# The maximum number of samplers
 --     with custom border colors which /can/ be simultaneously created on a

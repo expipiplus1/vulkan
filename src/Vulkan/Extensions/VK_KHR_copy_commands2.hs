@@ -2069,7 +2069,7 @@ instance Zero CopyImageInfo2KHR where
 --     then for each element of @pRegions@, @srcSubresource.baseArrayLayer@
 --     and @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
 --     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
---     each be @1@.
+--     each be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-aspectMask-00241# For each element of
 --     @pRegions@, @srcSubresource.aspectMask@ /must/ specify aspects
@@ -2297,7 +2297,7 @@ instance Zero BlitImageInfo2KHR where
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, then @dstImage@ /must/ not have a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-00171# @srcBuffer@ /must/
 --     be large enough to contain all buffer locations that are accessed
@@ -2376,7 +2376,7 @@ instance Zero BlitImageInfo2KHR where
 --     element of @pRegions@, the @aspectMask@ member of @imageSubresource@
 --     /must/ not be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06223# For each element
 --     of @pRegions@ not containing

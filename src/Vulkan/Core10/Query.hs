@@ -384,7 +384,7 @@ foreign import ccall
 --     then @stride@ /must/ be large enough to contain
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@counterIndexCount@
 --     used to create @queryPool@ times the size of
---     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'.
+--     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'
 --
 -- -   #VUID-vkGetQueryPoolResults-firstQuery-00816# The sum of
 --     @firstQuery@ and @queryCount@ /must/ be less than or equal to the

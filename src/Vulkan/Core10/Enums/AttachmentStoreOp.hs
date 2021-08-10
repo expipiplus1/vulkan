@@ -2,7 +2,7 @@
 -- No documentation found for Chapter "AttachmentStoreOp"
 module Vulkan.Core10.Enums.AttachmentStoreOp  (AttachmentStoreOp( ATTACHMENT_STORE_OP_STORE
                                                                 , ATTACHMENT_STORE_OP_DONT_CARE
-                                                                , ATTACHMENT_STORE_OP_NONE_QCOM
+                                                                , ATTACHMENT_STORE_OP_NONE_EXT
                                                                 , ..
                                                                 )) where
 
@@ -48,14 +48,14 @@ pattern ATTACHMENT_STORE_OP_STORE     = AttachmentStoreOp 0
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
 pattern ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
--- | 'ATTACHMENT_STORE_OP_NONE_QCOM' specifies that the contents within the
--- render area were not written during rendering, and /may/ not be written
--- to memory. If the attachment was written to during the renderpass, the
--- contents of the attachment will be undefined inside the render area.
-pattern ATTACHMENT_STORE_OP_NONE_QCOM = AttachmentStoreOp 1000301000
+-- | 'ATTACHMENT_STORE_OP_NONE_EXT' specifies the contents within the render
+-- area are not modified after rendering. However, if the attachment was
+-- written to during the render pass, the contents of the attachment will
+-- be undefined inside the render area.
+pattern ATTACHMENT_STORE_OP_NONE_EXT  = AttachmentStoreOp 1000301000
 {-# complete ATTACHMENT_STORE_OP_STORE,
              ATTACHMENT_STORE_OP_DONT_CARE,
-             ATTACHMENT_STORE_OP_NONE_QCOM :: AttachmentStoreOp #-}
+             ATTACHMENT_STORE_OP_NONE_EXT :: AttachmentStoreOp #-}
 
 conNameAttachmentStoreOp :: String
 conNameAttachmentStoreOp = "AttachmentStoreOp"
@@ -67,7 +67,7 @@ showTableAttachmentStoreOp :: [(AttachmentStoreOp, String)]
 showTableAttachmentStoreOp =
   [ (ATTACHMENT_STORE_OP_STORE    , "STORE")
   , (ATTACHMENT_STORE_OP_DONT_CARE, "DONT_CARE")
-  , (ATTACHMENT_STORE_OP_NONE_QCOM, "NONE_QCOM")
+  , (ATTACHMENT_STORE_OP_NONE_EXT , "NONE_EXT")
   ]
 
 instance Show AttachmentStoreOp where

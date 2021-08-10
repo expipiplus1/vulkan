@@ -279,13 +279,13 @@ createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 -- -   #VUID-VkIOSSurfaceCreateInfoMVK-pView-04143# If @pView@ is a
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object, it
 --     /must/ be a valid
---     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+--     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'
 --
 -- -   #VUID-VkIOSSurfaceCreateInfoMVK-pView-01316# If @pView@ is a
 --     @UIView@ object, it /must/ be a valid @UIView@, /must/ be backed by
 --     a @CALayer@ object of type
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', and
---     'createIOSSurfaceMVK' /must/ be called on the main thread.
+--     'createIOSSurfaceMVK' /must/ be called on the main thread
 --
 -- == Valid Usage (Implicit)
 --

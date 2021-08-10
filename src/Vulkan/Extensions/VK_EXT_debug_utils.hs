@@ -2181,7 +2181,7 @@ type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT 
 -- == Valid Usage
 --
 -- -   #VUID-PFN_vkDebugUtilsMessengerCallbackEXT-None-04769# The callback
---     /must/ not make calls to any Vulkan commands.
+--     /must/ not make calls to any Vulkan commands
 --
 -- = See Also
 --

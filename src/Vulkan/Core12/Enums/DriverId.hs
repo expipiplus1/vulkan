@@ -16,6 +16,7 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_MOLTENVK
                                               , DRIVER_ID_COREAVI_PROPRIETARY
                                               , DRIVER_ID_JUICE_PROPRIETARY
+                                              , DRIVER_ID_VERISILICON_PROPRIETARY
                                               , ..
                                               )) where
 
@@ -85,6 +86,8 @@ pattern DRIVER_ID_MOLTENVK                  = DriverId 14
 pattern DRIVER_ID_COREAVI_PROPRIETARY       = DriverId 15
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_JUICE_PROPRIETARY"
 pattern DRIVER_ID_JUICE_PROPRIETARY         = DriverId 16
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_VERISILICON_PROPRIETARY"
+pattern DRIVER_ID_VERISILICON_PROPRIETARY   = DriverId 17
 {-# complete DRIVER_ID_AMD_PROPRIETARY,
              DRIVER_ID_AMD_OPEN_SOURCE,
              DRIVER_ID_MESA_RADV,
@@ -100,7 +103,8 @@ pattern DRIVER_ID_JUICE_PROPRIETARY         = DriverId 16
              DRIVER_ID_MESA_LLVMPIPE,
              DRIVER_ID_MOLTENVK,
              DRIVER_ID_COREAVI_PROPRIETARY,
-             DRIVER_ID_JUICE_PROPRIETARY :: DriverId #-}
+             DRIVER_ID_JUICE_PROPRIETARY,
+             DRIVER_ID_VERISILICON_PROPRIETARY :: DriverId #-}
 
 conNameDriverId :: String
 conNameDriverId = "DriverId"
@@ -126,6 +130,7 @@ showTableDriverId =
   , (DRIVER_ID_MOLTENVK                 , "MOLTENVK")
   , (DRIVER_ID_COREAVI_PROPRIETARY      , "COREAVI_PROPRIETARY")
   , (DRIVER_ID_JUICE_PROPRIETARY        , "JUICE_PROPRIETARY")
+  , (DRIVER_ID_VERISILICON_PROPRIETARY  , "VERISILICON_PROPRIETARY")
   ]
 
 instance Show DriverId where

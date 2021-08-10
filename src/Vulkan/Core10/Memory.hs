@@ -175,7 +175,7 @@ foreign import ccall
 --     as returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Vulkan.Core10.Handles.PhysicalDevice' that @device@ was
---     created from.
+--     created from
 --
 -- -   #VUID-vkAllocateMemory-pAllocateInfo-01714#
 --     @pAllocateInfo->memoryTypeIndex@ /must/ be less than
@@ -183,18 +183,18 @@ foreign import ccall
 --     as returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Vulkan.Core10.Handles.PhysicalDevice' that @device@ was
---     created from.
+--     created from
 --
 -- -   #VUID-vkAllocateMemory-deviceCoherentMemory-02790# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
 --     feature is not enabled, @pAllocateInfo->memoryTypeIndex@ /must/ not
 --     identify a memory type supporting
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'.
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
 --
 -- -   #VUID-vkAllocateMemory-maxMemoryAllocationCount-04101# There /must/
 --     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxMemoryAllocationCount@
---     device memory allocations currently allocated on the device.
+--     device memory allocations currently allocated on the device
 --
 -- == Valid Usage (Implicit)
 --
@@ -877,7 +877,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
 --     structure with either its @image@ or @buffer@ member set to a value
---     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-00640# If the @pNext@ chain
 --     includes a
@@ -900,21 +900,21 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     created by the Vulkan API, and the external handle type is
 --     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the payload being imported was created.
+--     match those specified when the payload being imported was created
 --
 -- -   #VUID-VkMemoryAllocateInfo-None-00643# If the parameters define an
 --     import operation and the external handle specified was created by
 --     the Vulkan API, the device mask specified by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'
 --     /must/ match that specified when the payload being imported was
---     allocated.
+--     allocated
 --
 -- -   #VUID-VkMemoryAllocateInfo-None-00644# If the parameters define an
 --     import operation and the external handle specified was created by
 --     the Vulkan API, the list of physical devices that comprise the
 --     logical device passed to 'allocateMemory' /must/ match the list of
 --     physical devices that comprise the logical device on which the
---     payload was originally allocated.
+--     payload was originally allocated
 --
 -- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-00645# If the parameters
 --     define an import operation and the external handle is an NT handle
@@ -929,13 +929,13 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the payload being imported was created.
+--     match those specified when the payload being imported was created
 --
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-00647# If the parameters
 --     define an import operation and the external handle type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
 --     @allocationSize@ /must/ match the size specified when creating the
---     Direct3D 12 heap from which the payload was extracted.
+--     Direct3D 12 heap from which the payload was extracted
 --
 -- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-00648# If the parameters
 --     define an import operation and the external handle is a POSIX file
@@ -1121,7 +1121,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     memory type from the @memoryTypeBits@ field of the
 --     'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryZirconHandlePropertiesFUCHSIA'
 --     structure populated by a call to
---     'Vulkan.Extensions.VK_FUCHSIA_external_memory.getMemoryZirconHandlePropertiesFUCHSIA'.
+--     'Vulkan.Extensions.VK_FUCHSIA_external_memory.getMemoryZirconHandlePropertiesFUCHSIA'
 --
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-04750# If the parameters
 --     define an import operation and the external handle type is
@@ -1129,11 +1129,11 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     the value of @allocationSize@ /must/ be greater than @0@ and /must/
 --     be less than or equal to the size of the VMO as determined by
 --     @zx_vmo_get_size@(@handle@) where @handle@ is the VMO handle to the
---     imported external memory.
+--     imported external memory
 --
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-06231# @allocationSize@
 --     /must/ be less than
---     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationSize@.
+--     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationSize@
 --
 -- == Valid Usage (Implicit)
 --

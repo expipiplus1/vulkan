@@ -15,7 +15,7 @@
 --     151
 --
 -- [__Revision__]
---     11
+--     12
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -38,6 +38,8 @@
 --     2020-11-12
 --
 -- [__Contributors__]
+--
+--     -   Samuel Bourasseau, Adobe
 --
 --     -   Matthäus Chajdas, AMD
 --
@@ -1080,6 +1082,15 @@
 --     -   define sync for AS build inputs and indirect buffer
 --         (#2407,!4208)
 --
+-- -   Revision 12, 2021-08-06 (Samuel Bourasseau)
+--
+--     -   rename
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR to
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR (keep previous
+--         as alias).
+--
+--     -   Clarify description and add note.
+--
 -- = See Also
 --
 -- 'AabbPositionsKHR', 'AccelerationStructureBuildGeometryInfoKHR',
@@ -1149,6 +1160,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , buildAccelerationStructuresKHR
                                                         , getAccelerationStructureDeviceAddressKHR
                                                         , getAccelerationStructureBuildSizesKHR
+                                                        , pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
                                                         , WriteDescriptorSetAccelerationStructureKHR(..)
                                                         , PhysicalDeviceAccelerationStructureFeaturesKHR(..)
                                                         , PhysicalDeviceAccelerationStructurePropertiesKHR(..)
@@ -1173,7 +1185,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , AccelerationStructureGeometryDataKHR(..)
                                                         , GeometryInstanceFlagsKHR
                                                         , GeometryInstanceFlagBitsKHR( GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
-                                                                                     , GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
+                                                                                     , GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
                                                                                      , ..
@@ -1976,7 +1988,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03742#
 --     @pInfo->src.deviceAddress@ /must/ be a valid device address for a
---     buffer bound to device memory.
+--     buffer bound to device memory
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03743#
 --     @pInfo->src.deviceAddress@ /must/ be aligned to @256@ bytes
@@ -2831,9 +2843,10 @@ foreign import ccall
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03667# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ have been built before with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
---     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
+--     @srcAccelerationStructure@ member /must/ have previously been
+--     constructed with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR'
+--     set in 'AccelerationStructureBuildGeometryInfoKHR'::@flags@ in the
+--     build
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03668# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -3396,9 +3409,10 @@ foreign import ccall
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03667# For
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ have been built before with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
---     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
+--     @srcAccelerationStructure@ member /must/ have previously been
+--     constructed with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR'
+--     set in 'AccelerationStructureBuildGeometryInfoKHR'::@flags@ in the
+--     build
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03668# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -4041,9 +4055,10 @@ foreign import ccall
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03667# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ have been built before with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
---     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
+--     @srcAccelerationStructure@ member /must/ have previously been
+--     constructed with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR'
+--     set in 'AccelerationStructureBuildGeometryInfoKHR'::@flags@ in the
+--     build
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03668# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4622,6 +4637,10 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
   lift $ traceAroundEvent "vkGetAccelerationStructureBuildSizesKHR" (vkGetAccelerationStructureBuildSizesKHR' (deviceHandle (device)) (buildType) pBuildInfo pMaxPrimitiveCounts (pPSizeInfo))
   pSizeInfo <- lift $ peekCStruct @AccelerationStructureBuildSizesInfoKHR pPSizeInfo
   pure $ (pSizeInfo)
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR"
+pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR = GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR
 
 
 -- | VkWriteDescriptorSetAccelerationStructureKHR - Structure specifying
@@ -6259,7 +6278,7 @@ data AccelerationStructureVersionInfoKHR = AccelerationStructureVersionInfoKHR
     --
     -- #VUID-VkAccelerationStructureVersionInfoKHR-pVersionData-parameter#
     -- @pVersionData@ /must/ be a valid pointer to an array of
-    -- @2@*'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values
+    -- \(2 \times \mathtt{VK\_UUID\_SIZE}\) @uint8_t@ values
     versionData :: ByteString }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -6306,13 +6325,13 @@ instance Zero AccelerationStructureVersionInfoKHR where
 --     'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-04963# The source
---     acceleration structure @src@ /must/ have been built prior to the
---     execution of this command
+--     acceleration structure @src@ /must/ have been constructed prior to
+--     the execution of this command
 --
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-03411# If @mode@ is
 --     'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR', @src@ /must/ have
---     been built with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
+--     been constructed with
+--     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' in the build
 --
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-buffer-03718# The @buffer@
 --     used to create @src@ /must/ be bound to device memory
@@ -6411,8 +6430,8 @@ instance Zero CopyAccelerationStructureInfoKHR where
 -- == Valid Usage
 --
 -- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-src-04959# The
---     source acceleration structure @src@ /must/ have been built prior to
---     the execution of this command
+--     source acceleration structure @src@ /must/ have been constructed
+--     prior to the execution of this command
 --
 -- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-dst-03561# The
 --     memory pointed to by @dst@ /must/ be at least as large as the
@@ -6725,23 +6744,23 @@ newtype GeometryInstanceFlagBitsKHR = GeometryInstanceFlagBitsKHR Flags
 
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR' disables face
 -- culling for this instance.
-pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR    = GeometryInstanceFlagBitsKHR 0x00000001
--- | 'GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR' indicates
--- that the front face of the triangle for culling purposes is the face
--- that is counter clockwise in object space relative to the ray origin.
--- Because the facing is determined in object space, an instance transform
--- matrix does not change the winding, but a geometry transform does.
-pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000002
+pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000001
+-- | 'GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR' indicates that the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-traversal-culling-face facing determination>
+-- for geometry in this instance is inverted. Because the facing is
+-- determined in object space, an instance transform does not change the
+-- winding, but a geometry transform does.
+pattern GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR         = GeometryInstanceFlagBitsKHR 0x00000002
 -- | 'GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR' causes this instance to act as
 -- though 'GEOMETRY_OPAQUE_BIT_KHR' were specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @NoOpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                    = GeometryInstanceFlagBitsKHR 0x00000004
+pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                 = GeometryInstanceFlagBitsKHR 0x00000004
 -- | 'GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR' causes this instance to act
 -- as though 'GEOMETRY_OPAQUE_BIT_KHR' were not specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @OpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR                 = GeometryInstanceFlagBitsKHR 0x00000008
+pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR              = GeometryInstanceFlagBitsKHR 0x00000008
 
 conNameGeometryInstanceFlagBitsKHR :: String
 conNameGeometryInstanceFlagBitsKHR = "GeometryInstanceFlagBitsKHR"
@@ -6751,10 +6770,10 @@ enumPrefixGeometryInstanceFlagBitsKHR = "GEOMETRY_INSTANCE_"
 
 showTableGeometryInstanceFlagBitsKHR :: [(GeometryInstanceFlagBitsKHR, String)]
 showTableGeometryInstanceFlagBitsKHR =
-  [ (GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR   , "TRIANGLE_FACING_CULL_DISABLE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR, "TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                   , "FORCE_OPAQUE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR                , "FORCE_NO_OPAQUE_BIT_KHR")
+  [ (GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR, "TRIANGLE_FACING_CULL_DISABLE_BIT_KHR")
+  , (GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR        , "TRIANGLE_FLIP_FACING_BIT_KHR")
+  , (GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                , "FORCE_OPAQUE_BIT_KHR")
+  , (GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR             , "FORCE_NO_OPAQUE_BIT_KHR")
   ]
 
 instance Show GeometryInstanceFlagBitsKHR where
@@ -7246,11 +7265,11 @@ instance Read AccelerationStructureCompatibilityKHR where
                           AccelerationStructureCompatibilityKHR
 
 
-type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 11
+type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 12
 
 -- No documentation found for TopLevel "VK_KHR_ACCELERATION_STRUCTURE_SPEC_VERSION"
 pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 11
+pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 12
 
 
 type KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME = "VK_KHR_acceleration_structure"

@@ -726,7 +726,7 @@ foreign import ccall
 --     member of @pDependencyInfo@ /must/ be @0@
 --
 -- -   #VUID-vkCmdSetEvent2KHR-commandBuffer-03826# The current device mask
---     of @commandBuffer@ /must/ include exactly one physical device.
+--     of @commandBuffer@ /must/ include exactly one physical device
 --
 -- -   #VUID-vkCmdSetEvent2KHR-srcStageMask-03827# The @srcStageMask@
 --     member of any element of the @pMemoryBarriers@,
@@ -1943,7 +1943,7 @@ foreign import ccall
 --     create the command pool that @commandBuffer@ was allocated from
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-dstOffset-03896# @dstOffset@ /must/
---     be less than or equal to the size of @dstBuffer@ minus @4@.
+--     be less than or equal to the size of @dstBuffer@ minus @4@
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-dstBuffer-03897# @dstBuffer@ /must/
 --     have been created with the

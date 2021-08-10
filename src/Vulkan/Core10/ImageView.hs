@@ -1098,7 +1098,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.Format.Format' in @format@ /must/ not contain a
 --     different number of components, or a different number of bits in
 --     each component, than the format of the 'Vulkan.Core10.Handles.Image'
---     in @image@.
+--     in @image@
 --
 -- == Valid Usage (Implicit)
 --

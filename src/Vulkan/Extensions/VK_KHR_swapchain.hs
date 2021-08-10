@@ -2223,8 +2223,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
---     @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-surface-06211#
+--     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --
@@ -2847,6 +2847,13 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --     layout at the time the operation is executed on a
 --     'Vulkan.Core10.Handles.Device'
+--
+-- -   #VUID-VkPresentInfoKHR-pNext-06235# If a
+--     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR' structure is
+--     included in the @pNext@ chain, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-presentId presentId>
+--     feature is not enabled, each @presentIds@ entry in that structure
+--     /must/ be NULL
 --
 -- == Valid Usage (Implicit)
 --

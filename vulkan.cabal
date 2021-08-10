@@ -319,6 +319,7 @@ library
       Vulkan.Extensions.VK_EXT_index_type_uint8
       Vulkan.Extensions.VK_EXT_inline_uniform_block
       Vulkan.Extensions.VK_EXT_line_rasterization
+      Vulkan.Extensions.VK_EXT_load_store_op_none
       Vulkan.Extensions.VK_EXT_memory_budget
       Vulkan.Extensions.VK_EXT_memory_priority
       Vulkan.Extensions.VK_EXT_metal_surface

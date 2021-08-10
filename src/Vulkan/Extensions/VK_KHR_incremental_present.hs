@@ -385,7 +385,7 @@ instance Zero PresentRegionKHR where
 --     structure, /must/ be no greater than the @imageExtent@ member of the
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --     structure passed to
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+--     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
 --
 -- -   #VUID-VkRectLayerKHR-layer-01262# @layer@ /must/ be less than the
 --     @imageArrayLayers@ member of the

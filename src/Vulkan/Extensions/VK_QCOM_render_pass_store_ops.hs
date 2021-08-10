@@ -48,12 +48,11 @@
 --
 -- This extension adds a new
 -- 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
--- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'
--- which specifies that the contents within the render area /may/ not be
--- written to memory, but that the prior contents of the attachment in
--- memory are preserved. However, if any contents were generated within the
--- render area during rendering, the contents of the attachment will be
--- undefined inside the render area.
+-- 'ATTACHMENT_STORE_OP_NONE_QCOM' which specifies that the contents within
+-- the render area /may/ not be written to memory, but that the prior
+-- contents of the attachment in memory are preserved. However, if any
+-- contents were generated within the render area during rendering, the
+-- contents of the attachment will be undefined inside the render area.
 --
 -- Note
 --
@@ -62,9 +61,9 @@
 -- force an implementation to assume that the attachment was written and
 -- force an implementation to flush data to memory or to a higher level
 -- cache. The 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
--- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'
--- /may/ allow an implementation to assume that the attachment was not
--- written and allow an implementation to avoid such a flush..
+-- 'ATTACHMENT_STORE_OP_NONE_QCOM' /may/ allow an implementation to assume
+-- that the attachment was not written and allow an implementation to avoid
+-- such a flush..
 --
 -- == New Enum Constants
 --
@@ -74,7 +73,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
---     -   'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'
+--     -   'ATTACHMENT_STORE_OP_NONE_QCOM'
 --
 -- == Version History
 --
@@ -97,13 +96,18 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION
+module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( pattern ATTACHMENT_STORE_OP_NONE_QCOM
+                                                        , QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION
                                                         , pattern QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION
                                                         , QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
                                                         , pattern QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
                                                         ) where
 
 import Data.String (IsString)
+import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE_EXT))
+-- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_QCOM"
+pattern ATTACHMENT_STORE_OP_NONE_QCOM = ATTACHMENT_STORE_OP_NONE_EXT
+
 
 type QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION = 2
 

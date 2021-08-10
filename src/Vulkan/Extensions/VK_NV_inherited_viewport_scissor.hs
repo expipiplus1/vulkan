@@ -310,14 +310,14 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 -- value for dynamic state that consists of multiple values (e.g. multiple
 -- viewports).
 --
--- -   With \(i\) being the index of the executed command buffer in the
+-- -   With i being the index of the executed command buffer in the
 --     @pCommandBuffers@ array of
---     'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands', if
---     \(i > 0\) and any secondary command buffer from index \(0\) to
---     \(i-1\) modifies the state, the inherited state is provisionally set
---     to the final value set by the last such secondary command buffer.
---     Binding a graphics pipeline that defines the state statically is
---     equivalent to setting the state to an undefined value.
+--     'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands', if i > 0
+--     and any secondary command buffer from index 0 to i-1 modifies the
+--     state, the inherited state is provisionally set to the final value
+--     set by the last such secondary command buffer. Binding a graphics
+--     pipeline that defines the state statically is equivalent to setting
+--     the state to an undefined value.
 --
 -- -   Otherwise, the tentatative inherited state is that of the primary
 --     command buffer at the point the
@@ -328,12 +328,12 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 -- -   If the provisional inherited state is an undefined value, then the
 --     state is not inherited.
 --
--- -   If the provisional inherited state is a viewport, with \(n\) being
---     its viewport index, then if \(n \ge\) @viewportDepthCount@, or if
---     either 'Vulkan.Core10.Pipeline.Viewport'::@minDepth@ or
+-- -   If the provisional inherited state is a viewport, with n being its
+--     viewport index, then if n ≥ @viewportDepthCount@, or if either
+--     'Vulkan.Core10.Pipeline.Viewport'::@minDepth@ or
 --     'Vulkan.Core10.Pipeline.Viewport'::@maxDepth@ are not equal to the
---     respective values of the \(n^{th}\) element of @pViewportDepths@,
---     then the state is not inherited.
+--     respective values of the nth element of @pViewportDepths@, then the
+--     state is not inherited.
 --
 -- -   If the provisional inherited state passes both checks, then it
 --     becomes the actual inherited state.
@@ -368,12 +368,12 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --     then @pViewportDepths@ /must/ be a valid pointer to an array of
 --     @viewportDepthCount@ valid 'Vulkan.Core10.Pipeline.Viewport'
 --     structures, except any requirements on @x@, @y@, @width@, and
---     @height@ do not apply.
+--     @height@ do not apply
 --
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04786#
 --     If @viewportScissor2D@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     then the command buffer /must/ be recorded with the
---     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'.
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
 --
 -- == Valid Usage (Implicit)
 --

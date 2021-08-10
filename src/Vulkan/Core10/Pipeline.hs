@@ -1119,7 +1119,7 @@ instance Zero SpecializationInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
 --     after applying the specializations provided in
 --     @pSpecializationInfo@, if any, and then converting all
---     specialization constants into fixed constants.
+--     specialization constants into fixed constants
 --
 -- == Valid Usage (Implicit)
 --
@@ -1491,7 +1491,7 @@ instance es ~ '[] => Zero (ComputePipelineCreateInfo es) where
 -- -   #VUID-VkVertexInputBindingDescription-stride-04456# If the
 --     @VK_KHR_portability_subset@ extension is enabled, @stride@ /must/ be
 --     a multiple of, and at least as large as,
---     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetPropertiesKHR'::@minVertexInputBindingStrideAlignment@.
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetPropertiesKHR'::@minVertexInputBindingStrideAlignment@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1587,7 +1587,7 @@ instance Zero VertexInputBindingDescription where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', the sum of @offset@ plus
 --     the size of the vertex attribute data described by @format@ /must/
 --     not be greater than @stride@ in the 'VertexInputBindingDescription'
---     referenced in @binding@.
+--     referenced in @binding@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1835,7 +1835,7 @@ instance es ~ '[] => Zero (PipelineVertexInputStateCreateInfo es) where
 --     the @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@triangleFans@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', @topology@ /must/ not be
---     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_FAN'.
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_FAN'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2258,7 +2258,7 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', and
 --     @rasterizerDiscardEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
 --     @polygonMode@ /must/ not be
---     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_POINT'.
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_POINT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2736,7 +2736,7 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', @srcColorBlendFactor@
 --     /must/ not be
 --     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA' or
---     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA'.
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA'
 --
 -- -   #VUID-VkPipelineColorBlendAttachmentState-constantAlphaColorBlendFactors-04455#
 --     If the @VK_KHR_portability_subset@ extension is enabled, and
@@ -2744,7 +2744,7 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', @dstColorBlendFactor@
 --     /must/ not be
 --     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA' or
---     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA'.
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA'
 --
 -- == Valid Usage (Implicit)
 --
@@ -3247,7 +3247,7 @@ instance Zero StencilOpState where
 --     'PipelineRasterizationStateCreateInfo'::@cullMode@ is
 --     'Vulkan.Core10.Enums.CullModeFlagBits.CULL_MODE_NONE', the value of
 --     @reference@ in each of the 'StencilOpState' structs in @front@ and
---     @back@ /must/ be the same.
+--     @back@ /must/ be the same
 --
 -- == Valid Usage (Implicit)
 --
@@ -4399,7 +4399,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     is not enabled,
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::@shadingRateType@
 --     /must/ be equal to
---     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV'.
+--     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04570# If the
 --     pipeline is being created with
@@ -4413,7 +4413,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     is not enabled,
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::@shadingRate@
 --     /must/ be equal to
---     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV'.
+--     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04571# If the
 --     pipeline is being created with
@@ -4473,7 +4473,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV',
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV',
 --     or
---     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV'.
+--     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-04575# If the pipeline is
 --     being created with
@@ -4485,7 +4485,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     is not enabled,
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::@shadingRate@
 --     /must/ not be equal to
---     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV'.
+--     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03578# All
 --     elements of the @pDynamicStates@ member of @pDynamicState@ /must/

@@ -650,7 +650,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     @VK_KHR_portability_subset@ extension is included in @pProperties@
 --     of
 --     'Vulkan.Core10.ExtensionDiscovery.enumerateDeviceExtensionProperties',
---     @ppEnabledExtensions@ /must/ include \"VK_KHR_portability_subset\".
+--     @ppEnabledExtensions@ /must/ include \"VK_KHR_portability_subset\"
 --
 -- -   #VUID-VkDeviceCreateInfo-shadingRateImage-04478# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>

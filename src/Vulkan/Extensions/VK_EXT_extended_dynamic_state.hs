@@ -489,7 +489,7 @@ foreign import ccall
 -- -   #VUID-vkCmdSetViewportWithCountEXT-commandBuffer-04819#
 --     @commandBuffer@ /must/ not have
 --     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
---     enabled.
+--     enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -591,7 +591,7 @@ foreign import ccall
 -- -   #VUID-vkCmdSetScissorWithCountEXT-commandBuffer-04820#
 --     @commandBuffer@ /must/ not have
 --     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
---     enabled.
+--     enabled
 --
 -- == Valid Usage (Implicit)
 --

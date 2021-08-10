@@ -15,7 +15,7 @@
 --     151
 --
 -- [__Revision__]
---     11
+--     12
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -38,6 +38,8 @@
 --     2020-11-12
 --
 -- [__Contributors__]
+--
+--     -   Samuel Bourasseau, Adobe
 --
 --     -   Matthäus Chajdas, AMD
 --
@@ -1079,6 +1081,15 @@
 --
 --     -   define sync for AS build inputs and indirect buffer
 --         (#2407,!4208)
+--
+-- -   Revision 12, 2021-08-06 (Samuel Bourasseau)
+--
+--     -   rename
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR to
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR (keep previous
+--         as alias).
+--
+--     -   Clarify description and add note.
 --
 -- = See Also
 --

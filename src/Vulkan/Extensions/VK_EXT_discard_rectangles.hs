@@ -241,7 +241,7 @@ foreign import ccall
 -- -   #VUID-vkCmdSetDiscardRectangleEXT-viewportScissor2D-04788# If this
 --     command is recorded in a secondary command buffer with
 --     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
---     enabled, then this function /must/ not be called.
+--     enabled, then this function /must/ not be called
 --
 -- == Valid Usage (Implicit)
 --

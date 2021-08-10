@@ -1026,7 +1026,7 @@ instance Zero DescriptorBufferInfo where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @sampler@ /must/
 --     have been created with
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@compareEnable@ set to
---     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2043,7 +2043,7 @@ instance Zero CopyDescriptorSet where
 -- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-04605# If
 --     @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
---     then @pImmutableSamplers@ /must/ be @NULL@.
+--     then @pImmutableSamplers@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
