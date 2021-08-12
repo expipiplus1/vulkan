@@ -181,7 +181,9 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-02651#
 --     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
 --     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it
---     /must/ have a format whose features contain
+--     /must/ have an image format whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03181#

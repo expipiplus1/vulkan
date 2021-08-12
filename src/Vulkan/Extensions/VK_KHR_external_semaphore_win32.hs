@@ -695,13 +695,13 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 --     @waitSemaphoreValuesCount@ /must/ be the same value as
 --     'Vulkan.Core10.Queue.SubmitInfo'::@waitSemaphoreCount@, where
 --     'Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@ chain of this
---     'D3D12FenceSubmitInfoKHR' structure.
+--     'D3D12FenceSubmitInfoKHR' structure
 --
 -- -   #VUID-VkD3D12FenceSubmitInfoKHR-signalSemaphoreValuesCount-00080#
 --     @signalSemaphoreValuesCount@ /must/ be the same value as
 --     'Vulkan.Core10.Queue.SubmitInfo'::@signalSemaphoreCount@, where
 --     'Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@ chain of this
---     'D3D12FenceSubmitInfoKHR' structure.
+--     'D3D12FenceSubmitInfoKHR' structure
 --
 -- == Valid Usage (Implicit)
 --

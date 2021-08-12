@@ -383,8 +383,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-pSurfaceInfo-06210]] @pSurfaceInfo->surface@ /must/
---     be supported by @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pSurfaceInfo-06210#
+--     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
+--     reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --

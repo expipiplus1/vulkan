@@ -202,5 +202,5 @@ library
   if flag(use-vulkan-types)
     cpp-options: -DUSE_VULKAN_TYPES
     build-depends:
-        vulkan >=3.0 && <3.12
+        vulkan >=3.0 && <3.13
   default-language: Haskell2010

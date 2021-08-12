@@ -508,7 +508,7 @@ instance Zero VertexInputBindingDescription2EXT where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', the sum of @offset@ plus
 --     the size of the vertex attribute data described by @format@ /must/
 --     not be greater than @stride@ in the
---     'VertexInputBindingDescription2EXT' referenced in @binding@.
+--     'VertexInputBindingDescription2EXT' referenced in @binding@
 --
 -- == Valid Usage (Implicit)
 --

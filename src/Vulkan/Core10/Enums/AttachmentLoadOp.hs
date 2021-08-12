@@ -3,6 +3,7 @@
 module Vulkan.Core10.Enums.AttachmentLoadOp  (AttachmentLoadOp( ATTACHMENT_LOAD_OP_LOAD
                                                               , ATTACHMENT_LOAD_OP_CLEAR
                                                               , ATTACHMENT_LOAD_OP_DONT_CARE
+                                                              , ATTACHMENT_LOAD_OP_NONE_EXT
                                                               , ..
                                                               )) where
 
@@ -48,9 +49,15 @@ pattern ATTACHMENT_LOAD_OP_CLEAR     = AttachmentLoadOp 1
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
 pattern ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
+-- | 'ATTACHMENT_LOAD_OP_NONE_EXT' specifies that the previous contents of
+-- the image within the render area will be preserved, but the contents of
+-- the attachment will be undefined inside the render pass. No access type
+-- is used as the image is not accessed.
+pattern ATTACHMENT_LOAD_OP_NONE_EXT  = AttachmentLoadOp 1000400000
 {-# complete ATTACHMENT_LOAD_OP_LOAD,
              ATTACHMENT_LOAD_OP_CLEAR,
-             ATTACHMENT_LOAD_OP_DONT_CARE :: AttachmentLoadOp #-}
+             ATTACHMENT_LOAD_OP_DONT_CARE,
+             ATTACHMENT_LOAD_OP_NONE_EXT :: AttachmentLoadOp #-}
 
 conNameAttachmentLoadOp :: String
 conNameAttachmentLoadOp = "AttachmentLoadOp"
@@ -60,7 +67,11 @@ enumPrefixAttachmentLoadOp = "ATTACHMENT_LOAD_OP_"
 
 showTableAttachmentLoadOp :: [(AttachmentLoadOp, String)]
 showTableAttachmentLoadOp =
-  [(ATTACHMENT_LOAD_OP_LOAD, "LOAD"), (ATTACHMENT_LOAD_OP_CLEAR, "CLEAR"), (ATTACHMENT_LOAD_OP_DONT_CARE, "DONT_CARE")]
+  [ (ATTACHMENT_LOAD_OP_LOAD     , "LOAD")
+  , (ATTACHMENT_LOAD_OP_CLEAR    , "CLEAR")
+  , (ATTACHMENT_LOAD_OP_DONT_CARE, "DONT_CARE")
+  , (ATTACHMENT_LOAD_OP_NONE_EXT , "NONE_EXT")
+  ]
 
 instance Show AttachmentLoadOp where
   showsPrec = enumShowsPrec enumPrefixAttachmentLoadOp

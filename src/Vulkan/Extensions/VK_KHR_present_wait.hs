@@ -275,6 +275,10 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId t
 -- -   #VUID-vkWaitForPresentKHR-swapchain-04997# @swapchain@ /must/ not be
 --     in the retired state
 --
+-- -   #VUID-vkWaitForPresentKHR-presentWait-06234# The
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-presentWait presentWait>
+--     feature /must/ be enabled
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkWaitForPresentKHR-device-parameter# @device@ /must/ be a

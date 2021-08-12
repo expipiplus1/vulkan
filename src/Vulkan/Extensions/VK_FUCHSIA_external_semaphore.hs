@@ -332,22 +332,22 @@ importSemaphoreZirconHandleFUCHSIA device importSemaphoreZirconHandleInfo = lift
 -- -   #VUID-VkImportSemaphoreZirconHandleInfoFUCHSIA-handleType-04765#
 --     @handleType@ /must/ be a value included in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphore-handletypes-zircon-handle Handle Types Supported by >
---     table.
+--     table
 --
 -- -   #VUID-VkImportSemaphoreZirconHandleInfoFUCHSIA-zirconHandle-04766#
 --     @zirconHandle@ /must/ obey any requirements listed for @handleType@
 --     in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   #VUID-VkImportSemaphoreZirconHandleInfoFUCHSIA-zirconHandle-04767#
 --     @zirconHandle@ /must/ have @ZX_RIGHTS_BASIC@ and @ZX_RIGHTS_SIGNAL@
---     rights.
+--     rights
 --
 -- -   #VUID-VkImportSemaphoreZirconHandleInfoFUCHSIA-semaphoreType-04768#
 --     The
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
 --     field /must/ not be
---     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'.
+--     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -463,7 +463,7 @@ instance Zero ImportSemaphoreZirconHandleInfoFUCHSIA where
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-handleType-04758#
 --     @handleType@ /must/ have been included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'::@handleTypes@
---     when @semaphore@’s current payload was created.
+--     when @semaphore@’s current payload was created
 --
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-semaphore-04759#
 --     @semaphore@ /must/ not currently have its payload replaced by an
@@ -471,27 +471,27 @@ instance Zero ImportSemaphoreZirconHandleInfoFUCHSIA where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
---     for @handleType@.
+--     for @handleType@
 --
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-handleType-04760# If
 --     @handleType@ refers to a handle type with copy payload transference
 --     semantics, as defined below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
---     there /must/ be no queue waiting on @semaphore@.
+--     there /must/ be no queue waiting on @semaphore@
 --
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-handleType-04761# If
 --     @handleType@ refers to a handle type with copy payload transference
 --     semantics, @semaphore@ /must/ be signaled, or have an associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
---     pending execution.
+--     pending execution
 --
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-handleType-04762#
---     @handleType@ /must/ be defined as a Zircon event handle.
+--     @handleType@ /must/ be defined as a Zircon event handle
 --
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-semaphore-04763#
 --     @semaphore@ /must/ have been created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
---     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
+--     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
 -- == Valid Usage (Implicit)
 --

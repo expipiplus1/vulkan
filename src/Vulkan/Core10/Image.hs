@@ -1307,14 +1307,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageView2DOn3DImage@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', @flags@ /must/ not
 --     contain
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'.
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-multisampleArrayImage-04460# If the
 --     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@multisampleArrayImage@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', and @samples@ is not
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT', then
---     @arrayLayers@ /must/ be @1@.
+--     @arrayLayers@ /must/ be @1@
 --
 -- -   #VUID-VkImageCreateInfo-pNext-04737# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'

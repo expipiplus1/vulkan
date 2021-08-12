@@ -66,6 +66,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_index_type_uint8
                           , module Vulkan.Extensions.VK_EXT_inline_uniform_block
                           , module Vulkan.Extensions.VK_EXT_line_rasterization
+                          , module Vulkan.Extensions.VK_EXT_load_store_op_none
                           , module Vulkan.Extensions.VK_EXT_memory_budget
                           , module Vulkan.Extensions.VK_EXT_memory_priority
                           , module Vulkan.Extensions.VK_EXT_metal_surface
@@ -316,6 +317,7 @@ import Vulkan.Extensions.VK_EXT_image_robustness
 import Vulkan.Extensions.VK_EXT_index_type_uint8
 import Vulkan.Extensions.VK_EXT_inline_uniform_block
 import Vulkan.Extensions.VK_EXT_line_rasterization
+import Vulkan.Extensions.VK_EXT_load_store_op_none
 import Vulkan.Extensions.VK_EXT_memory_budget
 import Vulkan.Extensions.VK_EXT_memory_priority
 import Vulkan.Extensions.VK_EXT_metal_surface

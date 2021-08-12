@@ -271,7 +271,7 @@ getMemoryZirconHandlePropertiesFUCHSIA :: forall io
                                           --
                                           -- #VUID-vkGetMemoryZirconHandlePropertiesFUCHSIA-handleType-04773#
                                           -- @handleType@ /must/ be
-                                          -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'.
+                                          -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'
                                           --
                                           -- #VUID-vkGetMemoryZirconHandlePropertiesFUCHSIA-handleType-parameter#
                                           -- @handleType@ /must/ be a valid
@@ -282,7 +282,7 @@ getMemoryZirconHandlePropertiesFUCHSIA :: forall io
                                           -- resource.
                                           --
                                           -- #VUID-vkGetMemoryZirconHandlePropertiesFUCHSIA-zirconHandle-04774#
-                                          -- @zirconHandle@ must reference a valid VMO.
+                                          -- @zirconHandle@ must reference a valid VMO
                                           ("zirconHandle" ::: Zx_handle_t)
                                        -> io (MemoryZirconHandlePropertiesFUCHSIA)
 getMemoryZirconHandlePropertiesFUCHSIA device handleType zirconHandle = liftIO . evalContT $ do
@@ -304,10 +304,10 @@ getMemoryZirconHandlePropertiesFUCHSIA device handleType zirconHandle = liftIO .
 --
 -- -   #VUID-VkImportMemoryZirconHandleInfoFUCHSIA-handleType-04771#
 --     @handleType@ /must/ be
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'.
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'
 --
 -- -   #VUID-VkImportMemoryZirconHandleInfoFUCHSIA-handle-04772# @handle@
---     must be a valid VMO handle.
+--     must be a valid VMO handle
 --
 -- == Valid Usage (Implicit)
 --
@@ -447,12 +447,12 @@ data MemoryGetZirconHandleInfoFUCHSIA = MemoryGetZirconHandleInfoFUCHSIA
     --
     -- #VUID-VkMemoryGetZirconHandleInfoFUCHSIA-handleType-04775# @handleType@
     -- /must/ be
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'.
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'
     --
     -- #VUID-VkMemoryGetZirconHandleInfoFUCHSIA-handleType-04776# @handleType@
     -- /must/ have been included in the @handleTypes@ field of the
     -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
-    -- structure when the external memory was allocated.
+    -- structure when the external memory was allocated
     --
     -- #VUID-VkMemoryGetZirconHandleInfoFUCHSIA-handleType-parameter#
     -- @handleType@ /must/ be a valid

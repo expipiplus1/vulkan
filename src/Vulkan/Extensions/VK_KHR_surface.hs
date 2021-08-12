@@ -671,8 +671,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
---     @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-surface-06211#
+--     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --
@@ -773,8 +773,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
---     @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-06211# @surface@
+--     /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --
@@ -876,8 +876,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
---     @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-06211#
+--     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --

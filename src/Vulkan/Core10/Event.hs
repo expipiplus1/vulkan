@@ -87,7 +87,7 @@ foreign import ccall
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
 --     does not support
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-events events>,
---     and 'createEvent' /must/ not be used.
+--     and 'createEvent' /must/ not be used
 --
 -- == Valid Usage (Implicit)
 --

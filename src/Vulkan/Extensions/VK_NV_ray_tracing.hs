@@ -564,6 +564,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                             , GeometryTypeKHR(..)
                                             , RayTracingShaderGroupTypeKHR(..)
                                             , MemoryRequirements2KHR
+                                            , pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
                                             , SHADER_UNUSED_KHR
                                             , pattern SHADER_UNUSED_KHR
                                             ) where
@@ -723,8 +724,7 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR))
-import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryFlagsKHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryFlagBitsKHR(GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryFlagsKHR)
@@ -783,6 +783,7 @@ import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (RayTracingShaderGroupTypeKHR(..))
 import Vulkan.Core10.APIConstants (SHADER_UNUSED_KHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR(..))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR)
 import Vulkan.Core10.APIConstants (pattern SHADER_UNUSED_KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1152,13 +1153,14 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-src-04963# The source
---     acceleration structure @src@ /must/ have been built prior to the
---     execution of this command
+--     acceleration structure @src@ /must/ have been constructed prior to
+--     the execution of this command
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-src-03411# If @mode@ is
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR',
---     @src@ /must/ have been built with
+--     @src@ /must/ have been constructed with
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
+--     in the build
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-buffer-03718# The @buffer@
 --     used to create @src@ /must/ be bound to device memory
@@ -1433,9 +1435,10 @@ foreign import ccall
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdBuildAccelerationStructureNV-update-02490# If @update@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @src@ /must/ have been built
---     before with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' set
---     in 'AccelerationStructureInfoNV'::@flags@
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @src@ /must/ have previously
+--     been constructed with
+--     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' set in
+--     'AccelerationStructureInfoNV'::@flags@ in the original build
 --
 -- -   #VUID-vkCmdBuildAccelerationStructureNV-update-02491# If @update@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', the @size@ member of the
@@ -1781,41 +1784,41 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdTraceRaysNV-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     buffer view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     64
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     64
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysNV-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1824,7 +1827,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysNV-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1833,7 +1836,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
