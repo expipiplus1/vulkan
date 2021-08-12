@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Raise upper bound on `vulkan`
 
 ## [0.7] - 2021-07-23
 - Bump VMA, adds vkaCreateBufferWithAlignment and fixes aligned_alloc on OS X.

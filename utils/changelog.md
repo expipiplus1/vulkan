@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Relax bounds on `vulkan`
 
 ## [0.5.1] - 2021-07-24
 - Fix bug where `createInstanceFromRequirements` and

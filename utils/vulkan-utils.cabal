@@ -113,7 +113,7 @@ library
     , typed-process
     , unordered-containers
     , vector
-    , vulkan >=3.6.14 && <3.12
+    , vulkan >=3.6.14 && <3.13
   default-language: Haskell2010
 
 test-suite doctests
