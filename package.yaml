@@ -1,5 +1,5 @@
 name: vulkan
-version: "3.12"
+version: "3.12.1"
 synopsis: Bindings to the Vulkan graphics API.
 description: Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category: Graphics
