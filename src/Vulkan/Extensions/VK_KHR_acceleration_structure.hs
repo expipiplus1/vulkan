@@ -5566,7 +5566,10 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --         'AccelerationStructureGeometryTrianglesDataKHR'::@vertexStride@
 --         × @firstVertex@.
 --
---     -   A single 'TransformMatrixKHR' structure is consumed from
+--     -   If
+--         'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@
+--         is not @NULL@, a single 'TransformMatrixKHR' structure is
+--         consumed from
 --         'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@,
 --         at an offset of @transformOffset@. This transformation matrix is
 --         used by all triangles.

@@ -296,7 +296,7 @@
 -- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, // sType
 -- >         NULL,                                               // pNext
 -- >         VK_OBJECT_TYPE_IMAGE,                               // objectType
--- >         (uint64_t)image,                                    // object
+-- >         (uint64_t)image,                                    // objectHandle
 -- >         "Brick Diffuse Texture",                            // pObjectName
 -- >     };
 -- >
