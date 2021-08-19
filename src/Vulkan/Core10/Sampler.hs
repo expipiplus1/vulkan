@@ -611,7 +611,7 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     -- whether to use unnormalized or normalized texel coordinates to address
     -- texels of the image. When set to 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- the range of the image coordinates used to lookup the texel is in the
-    -- range of zero to the image dimensions for x, y and z. When set to
+    -- range of zero to the image size in each dimension. When set to
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' the range of image coordinates is
     -- zero to one.
     --

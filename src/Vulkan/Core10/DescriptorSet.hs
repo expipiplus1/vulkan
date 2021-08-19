@@ -811,6 +811,59 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06236# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+--     elements of the @pTexelBufferView@ member of @pDescriptorWrites@[i]
+--     /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06237# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
+--     the @buffer@ member of any element of the @pBufferInfo@ member of
+--     @pDescriptorWrites@[i] /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06238# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     and @dstSet@ was not allocated with a layout that included immutable
+--     samplers for @dstBinding@ with @descriptorType@, the @sampler@
+--     member of any element of the @pImageInfo@ member of
+--     @pDescriptorWrites@[i] /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06239# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     the @imageView@ member of any element of @pDescriptorWrites@[i]
+--     /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06240# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
+--     elements of the @pAccelerationStructures@ member of a
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+--     structure in the @pNext@ chain of @pDescriptorWrites@[i] /must/ have
+--     been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06241# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+--     elements of the @pAccelerationStructures@ member of a
+--     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+--     structure in the @pNext@ chain of @pDescriptorWrites@[i] /must/ have
+--     been created on @device@
+--
 -- -   #VUID-vkUpdateDescriptorSets-None-03047# Descriptor bindings updated
 --     by this command which were created without the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
