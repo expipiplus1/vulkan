@@ -1199,6 +1199,9 @@ isForbidden n =
     , "VK_MAKE_API_VERSION"
     , "VK_USE_64_BIT_PTR_DEFINES"
     , "VkPipelineLayoutCreateFlagBits" -- https://github.com/KhronosGroup/Vulkan-Docs/pull/1556
+    , "VkSemaphoreCreateFlagBits"
+    , "VkShaderModuleCreateFlagBits"
+    , "VkImageFormatConstraintsFlagBitsFUCHSIA"
     ]
   xrForbidden =
     [ "openxr_platform_defines"

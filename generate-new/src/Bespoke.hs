@@ -82,7 +82,7 @@ forceDisabledExtensions =
   , "VK_KHR_video_encode_queue"
   , "VK_KHR_video_queue"
     -- Unresolved queries in Vulkan-Docs
-  , "VK_HUAWEI_subpass_shading" -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1564
+  -- , "VK_HUAWEI_subpass_shading" -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1564
   ]
 
 ----------------------------------------------------------------
