@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_push_descriptor:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_push_descriptor] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_push_descriptor extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -313,6 +313,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
@@ -469,6 +470,9 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Vulkan.Core10.Handles.PipelineLayout'
@@ -518,6 +522,7 @@ cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layou
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePushDescriptorPropertiesKHR = PhysicalDevicePushDescriptorPropertiesKHR
   { -- | #limits-maxPushDescriptors# @maxPushDescriptors@ is the maximum number

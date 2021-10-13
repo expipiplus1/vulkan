@@ -153,6 +153,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache',
 -- 'PipelineCacheCreateInfo'
@@ -242,6 +243,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
 destroyPipelineCache :: forall io
@@ -341,6 +343,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
 getPipelineCacheData :: forall io
                       . (MonadIO io)
@@ -429,6 +432,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
 mergePipelineCaches :: forall io
                      . (MonadIO io)
@@ -491,6 +495,7 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createPipelineCache'
 data PipelineCacheCreateInfo = PipelineCacheCreateInfo

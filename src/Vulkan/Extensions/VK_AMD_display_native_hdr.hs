@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_display_native_hdr:%20&body=@anteru%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_display_native_hdr] @anteru%0A<<Here describe the issue or question you have about the VK_AMD_display_native_hdr extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -206,6 +206,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr VK_AMD_display_native_hdr>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setLocalDimmingAMD :: forall io
@@ -234,6 +235,7 @@ setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr VK_AMD_display_native_hdr>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DisplayNativeHdrSurfaceCapabilitiesAMD = DisplayNativeHdrSurfaceCapabilitiesAMD
@@ -309,6 +311,7 @@ instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr VK_AMD_display_native_hdr>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SwapchainDisplayNativeHdrCreateInfoAMD = SwapchainDisplayNativeHdrCreateInfoAMD

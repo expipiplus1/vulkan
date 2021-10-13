@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Alon Or-bach
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_performance_query:%20&body=@alonorbach%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_performance_query] @alonorbach%0A<<Here describe the issue or question you have about the VK_KHR_performance_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -691,6 +691,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io
@@ -748,6 +749,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'QueryPoolPerformanceCreateInfoKHR'
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
@@ -808,6 +810,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'AcquireProfilingLockInfoKHR', 'Vulkan.Core10.Handles.Device'
 acquireProfilingLockKHR :: forall io
                          . (MonadIO io)
@@ -855,6 +858,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Handles.Device'
 releaseProfilingLockKHR :: forall io
                          . (MonadIO io)
@@ -913,6 +917,7 @@ pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PERFORMANCE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryFeaturesKHR
@@ -985,6 +990,7 @@ instance Zero PhysicalDevicePerformanceQueryFeaturesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryPropertiesKHR = PhysicalDevicePerformanceQueryPropertiesKHR
@@ -1037,6 +1043,7 @@ instance Zero PhysicalDevicePerformanceQueryPropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterScopeKHR', 'PerformanceCounterStorageKHR',
 -- 'PerformanceCounterUnitKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1113,6 +1120,7 @@ instance Zero PerformanceCounterKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterDescriptionFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
@@ -1217,6 +1225,7 @@ instance Zero PerformanceCounterDescriptionKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
 data QueryPoolPerformanceCreateInfoKHR = QueryPoolPerformanceCreateInfoKHR
@@ -1279,6 +1288,7 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'AcquireProfilingLockFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'acquireProfilingLockKHR'
@@ -1345,6 +1355,7 @@ instance Zero AcquireProfilingLockInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PerformanceQuerySubmitInfoKHR = PerformanceQuerySubmitInfoKHR
   { -- | @counterPassIndex@ specifies which counter pass index is active.
@@ -1425,6 +1436,7 @@ instance Zero PerformanceCounterResultKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterKHR'
 newtype PerformanceCounterScopeKHR = PerformanceCounterScopeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1475,6 +1487,7 @@ instance Read PerformanceCounterScopeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterKHR'
 newtype PerformanceCounterUnitKHR = PerformanceCounterUnitKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1563,6 +1576,7 @@ instance Read PerformanceCounterUnitKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterKHR'
 newtype PerformanceCounterStorageKHR = PerformanceCounterStorageKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1629,6 +1643,7 @@ type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBi
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterDescriptionFlagsKHR'
 newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescriptionFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1676,6 +1691,7 @@ type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'AcquireProfilingLockFlagsKHR'
 newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

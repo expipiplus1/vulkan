@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Nicolas Caramelli
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_directfb_surface:%20&body=@caramelli%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_directfb_surface] @caramelli%0A<<Here describe the issue or question you have about the VK_EXT_directfb_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -212,6 +212,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DirectFBSurfaceCreateInfoEXT', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -262,6 +263,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDirectFBPresentationSupportEXT :: forall io
                                                  . (MonadIO io)
@@ -301,6 +303,7 @@ getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'DirectFBSurfaceCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDirectFBSurfaceEXT'
@@ -375,6 +378,7 @@ instance Zero DirectFBSurfaceCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'DirectFBSurfaceCreateInfoEXT'
 newtype DirectFBSurfaceCreateFlagsEXT = DirectFBSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

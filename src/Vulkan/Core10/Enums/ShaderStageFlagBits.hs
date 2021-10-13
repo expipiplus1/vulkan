@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlags
                                                                      , SHADER_STAGE_COMPUTE_BIT
                                                                      , SHADER_STAGE_ALL_GRAPHICS
                                                                      , SHADER_STAGE_ALL
+                                                                     , SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI
                                                                      , SHADER_STAGE_MESH_BIT_NV
                                                                      , SHADER_STAGE_TASK_BIT_NV
                                                                      , SHADER_STAGE_CALLABLE_BIT_KHR
@@ -46,6 +47,7 @@ type ShaderStageFlags = ShaderStageFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
 -- 'ShaderStageFlags',
 -- 'Vulkan.Extensions.VK_AMD_shader_info.getShaderInfoAMD'
@@ -74,6 +76,8 @@ pattern SHADER_STAGE_ALL_GRAPHICS                = ShaderStageFlagBits 0x0000001
 -- all shader stages supported by the device, including all additional
 -- stages which are introduced by extensions.
 pattern SHADER_STAGE_ALL                         = ShaderStageFlagBits 0x7fffffff
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI"
+pattern SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI  = ShaderStageFlagBits 0x00004000
 -- | 'SHADER_STAGE_MESH_BIT_NV' specifies the mesh stage.
 pattern SHADER_STAGE_MESH_BIT_NV                 = ShaderStageFlagBits 0x00000080
 -- | 'SHADER_STAGE_TASK_BIT_NV' specifies the task stage.
@@ -107,6 +111,7 @@ showTableShaderStageFlagBits =
   , (SHADER_STAGE_COMPUTE_BIT                , "COMPUTE_BIT")
   , (SHADER_STAGE_ALL_GRAPHICS               , "ALL_GRAPHICS")
   , (SHADER_STAGE_ALL                        , "ALL")
+  , (SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI , "SUBPASS_SHADING_BIT_HUAWEI")
   , (SHADER_STAGE_MESH_BIT_NV                , "MESH_BIT_NV")
   , (SHADER_STAGE_TASK_BIT_NV                , "TASK_BIT_NV")
   , (SHADER_STAGE_CALLABLE_BIT_KHR           , "CALLABLE_BIT_KHR")

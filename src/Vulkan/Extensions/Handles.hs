@@ -5,6 +5,7 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , AccelerationStructureKHR(..)
                                   , AccelerationStructureNV(..)
                                   , PerformanceConfigurationINTEL(..)
+                                  , BufferCollectionFUCHSIA(..)
                                   , DeferredOperationKHR(..)
                                   , PrivateDataSlotEXT(..)
                                   , CuModuleNVX(..)
@@ -52,6 +53,7 @@ import Vulkan.Core10.APIConstants (HasObjectType(..))
 import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_FUNCTION_NVX))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_MODULE_NVX))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT))
@@ -96,6 +98,7 @@ import Vulkan.Core10.Handles (ShaderModule(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.createIndirectCommandsLayoutNV',
@@ -113,6 +116,7 @@ instance Show IndirectCommandsLayoutNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.createValidationCacheEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.destroyValidationCacheEXT',
@@ -132,6 +136,7 @@ instance Show ValidationCacheEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureDeviceAddressInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureInfoKHR',
@@ -156,6 +161,7 @@ instance Show AccelerationStructureKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
@@ -179,6 +185,7 @@ instance Show AccelerationStructureNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.acquirePerformanceConfigurationINTEL',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.queueSetPerformanceConfigurationINTEL',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.releasePerformanceConfigurationINTEL'
@@ -191,6 +198,28 @@ instance Show PerformanceConfigurationINTEL where
   showsPrec p (PerformanceConfigurationINTEL x) = showParen (p >= 11) (showString "PerformanceConfigurationINTEL 0x" . showHex x)
 
 
+-- | VkBufferCollectionFUCHSIA - Opaque handle to a buffer collection object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection VK_FUCHSIA_buffer_collection>,
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.createBufferCollectionFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.destroyBufferCollectionFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.getBufferCollectionPropertiesFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionBufferConstraintsFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionImageConstraintsFUCHSIA'
+newtype BufferCollectionFUCHSIA = BufferCollectionFUCHSIA Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType BufferCollectionFUCHSIA where
+  objectTypeAndHandle (BufferCollectionFUCHSIA h) = (OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA, h)
+instance Show BufferCollectionFUCHSIA where
+  showsPrec p (BufferCollectionFUCHSIA x) = showParen (p >= 11) (showString "BufferCollectionFUCHSIA 0x" . showHex x)
+
+
 -- | VkDeferredOperationKHR - A deferred operation
 --
 -- = Description
@@ -200,6 +229,7 @@ instance Show PerformanceConfigurationINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.buildAccelerationStructuresKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureToMemoryKHR',
@@ -223,6 +253,7 @@ instance Show DeferredOperationKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT',
 -- 'Vulkan.Extensions.VK_EXT_private_data.destroyPrivateDataSlotEXT',
 -- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
@@ -260,6 +291,7 @@ instance Show CuFunctionNVX where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.acquireDrmDisplayEXT',
@@ -288,6 +320,7 @@ instance Show DisplayKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR',
@@ -315,6 +348,7 @@ instance Show DisplayModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',
@@ -407,6 +441,7 @@ instance Show SurfaceKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
@@ -440,6 +475,7 @@ instance Show SwapchainKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_report.destroyDebugReportCallbackEXT'
 newtype DebugReportCallbackEXT = DebugReportCallbackEXT Word64
@@ -465,6 +501,7 @@ instance Show DebugReportCallbackEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.destroyDebugUtilsMessengerEXT'
 newtype DebugUtilsMessengerEXT = DebugUtilsMessengerEXT Word64

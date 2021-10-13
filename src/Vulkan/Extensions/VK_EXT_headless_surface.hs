@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Lisa Wu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_headless_surface:%20&body=@chengtianww%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_headless_surface] @chengtianww%0A<<Here describe the issue or question you have about the VK_EXT_headless_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -212,6 +212,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface VK_EXT_headless_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'HeadlessSurfaceCreateInfoEXT', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -250,6 +251,7 @@ createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ d
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface VK_EXT_headless_surface>,
 -- 'HeadlessSurfaceCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createHeadlessSurfaceEXT'
@@ -305,6 +307,7 @@ instance Zero HeadlessSurfaceCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface VK_EXT_headless_surface>,
 -- 'HeadlessSurfaceCreateInfoEXT'
 newtype HeadlessSurfaceCreateFlagsEXT = HeadlessSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

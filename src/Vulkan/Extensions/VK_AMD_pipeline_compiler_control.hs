@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_pipeline_compiler_control:%20&body=@anteru%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_pipeline_compiler_control] @anteru%0A<<Here describe the issue or question you have about the VK_AMD_pipeline_compiler_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -146,6 +146,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control VK_AMD_pipeline_compiler_control>,
 -- 'PipelineCompilerControlFlagsAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCompilerControlCreateInfoAMD = PipelineCompilerControlCreateInfoAMD
@@ -200,6 +201,7 @@ type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control VK_AMD_pipeline_compiler_control>,
 -- 'PipelineCompilerControlFlagsAMD'
 newtype PipelineCompilerControlFlagBitsAMD = PipelineCompilerControlFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

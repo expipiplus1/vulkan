@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Sharif Elcott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_color_write_enable:%20&body=@selcott%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_color_write_enable] @selcott%0A<<Here describe the issue or question you have about the VK_EXT_color_write_enable extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -57,7 +57,7 @@
 -- that write a superset of the desired data of which subsets are selected
 -- dynamically. The reason for a new state, colorWriteEnable, rather than
 -- making colorWriteMask dynamic is that, on many implementations, the more
--- flexible per-channel semantics of the colorWriteMask state cannot be
+-- flexible per-component semantics of the colorWriteMask state cannot be
 -- made dynamic in a performant manner.
 --
 -- == New Commands

@@ -19,6 +19,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassBeginInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdNextSubpass'

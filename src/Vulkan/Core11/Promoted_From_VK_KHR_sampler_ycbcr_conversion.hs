@@ -170,6 +170,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
@@ -250,6 +251,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion'
@@ -283,6 +285,7 @@ destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalCo
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
@@ -381,7 +384,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN' if
---     the corresponding channels are
+--     the corresponding components are
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-xChromaOffset-01652# If the
@@ -390,7 +393,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT' if the
---     corresponding channels are
+--     corresponding components are
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-02581# If the
@@ -427,18 +430,18 @@ instance Zero SamplerYcbcrConversionInfo where
 --     @ycbcrModel@ is not
 --     'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY',
 --     then @components.r@, @components.g@, and @components.b@ /must/
---     correspond to channels of the @format@; that is, @components.r@,
+--     correspond to components of the @format@; that is, @components.r@,
 --     @components.g@, and @components.b@ /must/ not be
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ZERO' or
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ONE', and
---     /must/ not correspond to a channel which contains zero or one as a
+--     /must/ not correspond to a component which contains zero or one as a
 --     consequence of
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba conversion to RGBA>
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-ycbcrRange-02748# If
 --     @ycbcrRange@ is
 --     'Vulkan.Core11.Enums.SamplerYcbcrRange.SAMPLER_YCBCR_RANGE_ITU_NARROW'
---     then the R, G and B channels obtained by applying the @component@
+--     then the R, G and B components obtained by applying the @component@
 --     swizzle to @format@ /must/ each have a bit-depth greater than or
 --     equal to 8
 --
@@ -499,7 +502,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     value
 --
 -- If @chromaFilter@ is 'Vulkan.Core10.Enums.Filter.FILTER_NEAREST', chroma
--- samples are reconstructed to luma channel resolution using
+-- samples are reconstructed to luma component resolution using
 -- nearest-neighbour sampling. Otherwise, chroma samples are reconstructed
 -- using interpolation. More details can be found in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion the description of sampler Y′CBCR conversion>
@@ -509,6 +512,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation',
 -- 'Vulkan.Core10.ImageView.ComponentMapping',
@@ -537,14 +541,14 @@ data SamplerYcbcrConversionCreateInfo (es :: [Type]) = SamplerYcbcrConversionCre
     components :: ComponentMapping
   , -- | @xChromaOffset@ describes the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>
-    -- associated with downsampled chroma channels in the x dimension.
-    -- @xChromaOffset@ has no effect for formats in which chroma channels are
+    -- associated with downsampled chroma components in the x dimension.
+    -- @xChromaOffset@ has no effect for formats in which chroma components are
     -- not downsampled horizontally.
     xChromaOffset :: ChromaLocation
   , -- | @yChromaOffset@ describes the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>
-    -- associated with downsampled chroma channels in the y dimension.
-    -- @yChromaOffset@ has no effect for formats in which the chroma channels
+    -- associated with downsampled chroma components in the y dimension.
+    -- @yChromaOffset@ has no effect for formats in which the chroma components
     -- are not downsampled vertically.
     yChromaOffset :: ChromaLocation
   , -- | @chromaFilter@ is the filter for chroma reconstruction.
@@ -667,6 +671,7 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BindImagePlaneMemoryInfo = BindImagePlaneMemoryInfo
@@ -754,6 +759,7 @@ instance Zero BindImagePlaneMemoryInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImagePlaneMemoryRequirementsInfo = ImagePlaneMemoryRequirementsInfo
@@ -822,6 +828,8 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrConversionFeatures
@@ -877,6 +885,7 @@ instance Zero PhysicalDeviceSamplerYcbcrConversionFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerYcbcrConversionImageFormatProperties = SamplerYcbcrConversionImageFormatProperties
   { -- | @combinedImageSamplerDescriptorCount@ is the number of combined image

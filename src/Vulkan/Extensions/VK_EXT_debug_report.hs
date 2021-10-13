@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_report:%20&body=@courtney-g%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_report] @courtney-g%0A<<Here describe the issue or question you have about the VK_EXT_debug_report extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -372,6 +372,7 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
@@ -499,6 +500,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DebugReportCallbackCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
@@ -590,6 +592,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Vulkan.Core10.Handles.Instance'
@@ -670,6 +673,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'DebugReportFlagsEXT', 'DebugReportObjectTypeEXT',
 -- 'Vulkan.Core10.Handles.Instance'
 debugReportMessageEXT :: forall io
@@ -747,7 +751,9 @@ pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT = DEBUG_REPORT_OBJECT_TYPE
 --
 -- = See Also
 --
--- 'PFN_vkDebugReportCallbackEXT', 'DebugReportFlagsEXT',
+-- 'PFN_vkDebugReportCallbackEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
+-- 'DebugReportFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDebugReportCallbackEXT'
 data DebugReportCallbackCreateInfoEXT = DebugReportCallbackCreateInfoEXT
@@ -816,6 +822,7 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'DebugReportFlagsEXT'
 newtype DebugReportFlagBitsEXT = DebugReportFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -960,6 +967,8 @@ instance Read DebugReportFlagBitsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectTagInfoEXT',
 -- 'debugReportMessageEXT'
@@ -1030,6 +1039,8 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT                = DebugReportObj
 pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT           = DebugReportObjectTypeEXT 30
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT       = DebugReportObjectTypeEXT 33
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT  = DebugReportObjectTypeEXT 1000366000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT  = DebugReportObjectTypeEXT 1000165000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT"
@@ -1074,6 +1085,7 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObj
              DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT,
              DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT,
              DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT,
+             DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT,
              DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT,
              DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT,
              DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT,
@@ -1121,6 +1133,7 @@ showTableDebugReportObjectTypeEXT =
   , (DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT               , "DISPLAY_KHR_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT          , "DISPLAY_MODE_KHR_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT      , "VALIDATION_CACHE_EXT_EXT")
+  , (DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT , "BUFFER_COLLECTION_FUCHSIA_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT , "ACCELERATION_STRUCTURE_NV_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT  , "SAMPLER_YCBCR_CONVERSION_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT, "ACCELERATION_STRUCTURE_KHR_EXT")
@@ -1167,6 +1180,7 @@ type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeE
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'DebugReportCallbackCreateInfoEXT'
 type PFN_vkDebugReportCallbackEXT = FunPtr FN_vkDebugReportCallbackEXT
 

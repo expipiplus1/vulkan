@@ -190,6 +190,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Framebuffer',
 -- 'FramebufferCreateInfo'
@@ -281,6 +282,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Framebuffer'
 destroyFramebuffer :: forall io
@@ -344,6 +346,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass',
 -- 'RenderPassCreateInfo'
@@ -435,6 +438,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass'
 destroyRenderPass :: forall io
@@ -516,6 +520,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Handles.RenderPass'
@@ -817,6 +822,7 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.AttachmentDescriptionFlags',
 -- 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp',
 -- 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp',
@@ -948,6 +954,7 @@ instance Zero AttachmentDescription where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT',
 -- 'SubpassDescription'
@@ -1110,9 +1117,11 @@ instance Zero AttachmentReference where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkSubpassDescription-pipelineBindPoint-00844#
+-- -   #VUID-VkSubpassDescription-pipelineBindPoint-04952#
 --     @pipelineBindPoint@ /must/ be
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     or
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'
 --
 -- -   #VUID-VkSubpassDescription-colorAttachmentCount-00845#
 --     @colorAttachmentCount@ /must/ be less than or equal to
@@ -1289,6 +1298,7 @@ instance Zero AttachmentReference where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'AttachmentReference',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'RenderPassCreateInfo',
@@ -1623,6 +1633,7 @@ instance Zero SubpassDescription where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags',
@@ -1828,8 +1839,8 @@ instance Zero SubpassDependency where
 -- -   #VUID-VkRenderPassCreateInfo-pNext-02515# If the @pNext@ chain
 --     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'
---     structure, and each element of its @pViewMasks@ member is @0@,
---     @correlatedViewMaskCount@ /must/ be @0@
+--     structure, and each element of its @pViewMasks@ member is @0@, its
+--     @correlationMaskCount@ member /must/ be @0@
 --
 -- -   #VUID-VkRenderPassCreateInfo-pDependencies-00837# For any element of
 --     @pDependencies@, if the @srcSubpass@ is not
@@ -1896,6 +1907,7 @@ instance Zero SubpassDependency where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'AttachmentDescription',
 -- 'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RenderPassCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'SubpassDependency',
@@ -2478,6 +2490,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FramebufferCreateFlags',
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.RenderPass',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createFramebuffer'

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_diagnostics_config:%20&body=@kthangudu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostics_config] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_device_diagnostics_config extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -167,12 +167,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostics_config VK_NV_device_diagnostics_config>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDiagnosticsConfigFeaturesNV = PhysicalDeviceDiagnosticsConfigFeaturesNV
-  { -- | #features-features-diagnosticsConfig# @diagnosticsConfig@ indicates
-    -- whether the implementation supports the ability to configure diagnostic
-    -- tools.
+  { -- | #features-diagnosticsConfig# @diagnosticsConfig@ indicates whether the
+    -- implementation supports the ability to configure diagnostic tools.
     diagnosticsConfig :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -219,6 +219,7 @@ instance Zero PhysicalDeviceDiagnosticsConfigFeaturesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostics_config VK_NV_device_diagnostics_config>,
 -- 'DeviceDiagnosticsConfigFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
@@ -273,6 +274,7 @@ type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostics_config VK_NV_device_diagnostics_config>,
 -- 'DeviceDiagnosticsConfigFlagsNV'
 newtype DeviceDiagnosticsConfigFlagBitsNV = DeviceDiagnosticsConfigFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

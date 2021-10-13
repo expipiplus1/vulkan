@@ -114,6 +114,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
 getBufferOpaqueCaptureAddress :: forall io
                                . (MonadIO io)
@@ -188,6 +190,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
 getBufferDeviceAddress :: forall io
                         . (MonadIO io)
@@ -254,6 +258,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'DeviceMemoryOpaqueCaptureAddressInfo'
 getDeviceMemoryOpaqueCaptureAddress :: forall io
                                      . (MonadIO io)
@@ -304,6 +310,8 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeatures = PhysicalDeviceBufferDeviceAddressFeatures
@@ -399,6 +407,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getBufferDeviceAddress',
@@ -490,6 +499,8 @@ instance Zero BufferDeviceAddressInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BufferOpaqueCaptureAddressCreateInfo = BufferOpaqueCaptureAddressCreateInfo
   { -- | @opaqueCaptureAddress@ is the opaque capture address requested for the
@@ -564,6 +575,8 @@ instance Zero BufferOpaqueCaptureAddressCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryOpaqueCaptureAddressAllocateInfo = MemoryOpaqueCaptureAddressAllocateInfo
   { -- | @opaqueCaptureAddress@ is the opaque capture address requested for the
@@ -614,6 +627,8 @@ instance Zero MemoryOpaqueCaptureAddressAllocateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceMemoryOpaqueCaptureAddress',

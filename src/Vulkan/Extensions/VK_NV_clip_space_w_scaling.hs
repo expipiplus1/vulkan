@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_clip_space_w_scaling:%20&body=@ewerness-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_clip_space_w_scaling] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NV_clip_space_w_scaling extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -269,14 +269,23 @@ foreign import ccall
   "dynamic" mkVkCmdSetViewportWScalingNV
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ViewportWScalingNV -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ViewportWScalingNV -> IO ()
 
--- | vkCmdSetViewportWScalingNV - Set the viewport W scaling on a command
--- buffer
+-- | vkCmdSetViewportWScalingNV - Set the viewport W scaling dynamically for
+-- a command buffer
 --
 -- = Description
 --
 -- The viewport parameters taken from element i of @pViewportWScalings@
 -- replace the current state for the viewport index @firstViewport@ + i,
 -- for i in [0, @viewportCount@).
+--
+-- This command sets the viewport __W__ scaling for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineViewportWScalingStateCreateInfoNV'::@pViewportWScalings@ values
+-- used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -326,6 +335,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ViewportWScalingNV'
 cmdSetViewportWScalingNV :: forall io
                           . (MonadIO io)
@@ -354,6 +364,7 @@ cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>,
 -- 'PipelineViewportWScalingStateCreateInfoNV', 'cmdSetViewportWScalingNV'
 data ViewportWScalingNV = ViewportWScalingNV
   { -- | @xcoeff@ and @ycoeff@ are the viewport’s W scaling factor for x and y
@@ -407,6 +418,7 @@ instance Zero ViewportWScalingNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ViewportWScalingNV'
 data PipelineViewportWScalingStateCreateInfoNV = PipelineViewportWScalingStateCreateInfoNV

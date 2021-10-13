@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shading_rate_image:%20&body=@nvpbrown%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shading_rate_image] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_shading_rate_image extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -473,6 +473,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Handles.ImageView'
@@ -507,7 +508,18 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ShadingRatePaletteNV -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ShadingRatePaletteNV -> IO ()
 
 -- | vkCmdSetViewportShadingRatePaletteNV - Set shading rate image palettes
--- on a command buffer
+-- dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the per-viewport shading rate image palettes for
+-- subsequent drawing commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineViewportShadingRateImageStateCreateInfoNV'::@pShadingRatePalettes@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -571,6 +583,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ShadingRatePaletteNV'
 cmdSetViewportShadingRatePaletteNV :: forall io
                                     . (MonadIO io)
@@ -603,8 +616,8 @@ foreign import ccall
   "dynamic" mkVkCmdSetCoarseSampleOrderNV
   :: FunPtr (Ptr CommandBuffer_T -> CoarseSampleOrderTypeNV -> Word32 -> Ptr CoarseSampleOrderCustomNV -> IO ()) -> Ptr CommandBuffer_T -> CoarseSampleOrderTypeNV -> Word32 -> Ptr CoarseSampleOrderCustomNV -> IO ()
 
--- | vkCmdSetCoarseSampleOrderNV - Set sample order for coarse fragments on a
--- command buffer
+-- | vkCmdSetCoarseSampleOrderNV - Set order of coverage samples for coarse
+-- fragments dynamically for a command buffer
 --
 -- = Description
 --
@@ -612,6 +625,15 @@ foreign import ccall
 -- coverage sample order used for any combination of fragment area and
 -- coverage sample count not enumerated in @pCustomSampleOrders@ will be
 -- identical to that used for 'COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV'.
+--
+-- This command sets the order of coverage samples for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV' values used to
+-- create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -665,6 +687,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV', 'CoarseSampleOrderTypeNV',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoarseSampleOrderNV :: forall io
@@ -715,6 +738,7 @@ pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV = PIPELINE_STAGE_FRAGMENT_SHADI
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'PipelineViewportShadingRateImageStateCreateInfoNV',
 -- 'ShadingRatePaletteEntryNV', 'cmdSetViewportShadingRatePaletteNV'
 data ShadingRatePaletteNV = ShadingRatePaletteNV
@@ -791,6 +815,7 @@ instance Zero ShadingRatePaletteNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'ShadingRatePaletteNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineViewportShadingRateImageStateCreateInfoNV = PipelineViewportShadingRateImageStateCreateInfoNV
@@ -870,6 +895,7 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImageFeaturesNV = PhysicalDeviceShadingRateImageFeaturesNV
@@ -946,6 +972,7 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImagePropertiesNV = PhysicalDeviceShadingRateImagePropertiesNV
@@ -1018,6 +1045,7 @@ instance Zero PhysicalDeviceShadingRateImagePropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV'
 data CoarseSampleLocationNV = CoarseSampleLocationNV
   { -- | @pixelX@ is added to the x coordinate of the upper-leftmost pixel of
@@ -1134,6 +1162,7 @@ instance Zero CoarseSampleLocationNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleLocationNV',
 -- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV',
 -- 'ShadingRatePaletteEntryNV', 'cmdSetCoarseSampleOrderNV'
@@ -1236,6 +1265,7 @@ instance Zero CoarseSampleOrderCustomNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV', 'CoarseSampleOrderTypeNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineViewportCoarseSampleOrderStateCreateInfoNV = PipelineViewportCoarseSampleOrderStateCreateInfoNV
@@ -1329,6 +1359,7 @@ instance Zero PipelineViewportCoarseSampleOrderStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV', 'ShadingRatePaletteNV'
 newtype ShadingRatePaletteEntryNV = ShadingRatePaletteEntryNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1410,6 +1441,7 @@ instance Read ShadingRatePaletteEntryNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV',
 -- 'cmdSetCoarseSampleOrderNV'
 newtype CoarseSampleOrderTypeNV = CoarseSampleOrderTypeNV Int32

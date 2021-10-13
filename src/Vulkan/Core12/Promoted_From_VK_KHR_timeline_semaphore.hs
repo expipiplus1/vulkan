@@ -120,6 +120,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
 getSemaphoreCounterValue :: forall io
                           . (MonadIO io)
@@ -241,6 +243,8 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreWaitInfo'
 waitSemaphores :: forall io
                 . (MonadIO io)
@@ -322,6 +326,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreSignalInfo'
 signalSemaphore :: forall io
                  . (MonadIO io)
@@ -370,6 +376,8 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTimelineSemaphoreFeatures = PhysicalDeviceTimelineSemaphoreFeatures
@@ -434,6 +442,8 @@ instance Zero PhysicalDeviceTimelineSemaphoreFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTimelineSemaphoreProperties = PhysicalDeviceTimelineSemaphoreProperties
   { -- | #extension-limits-maxTimelineSemaphoreValueDifference#
@@ -517,6 +527,8 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SemaphoreTypeCreateInfo = SemaphoreTypeCreateInfo
@@ -601,6 +613,8 @@ instance Zero SemaphoreTypeCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data TimelineSemaphoreSubmitInfo = TimelineSemaphoreSubmitInfo
   { -- | @waitSemaphoreValueCount@ is the number of semaphore wait values
@@ -723,6 +737,8 @@ instance Zero TimelineSemaphoreSubmitInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'waitSemaphores',
@@ -794,6 +810,8 @@ instance Zero SemaphoreWaitInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'signalSemaphore',
 -- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.signalSemaphoreKHR'

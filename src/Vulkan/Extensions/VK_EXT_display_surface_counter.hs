@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_surface_counter:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_display_surface_counter] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_display_surface_counter extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -238,6 +238,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceCapabilities2EXT',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceCapabilities2EXT :: forall io
@@ -276,6 +277,7 @@ pattern SURFACE_COUNTER_VBLANK_EXT = SURFACE_COUNTER_VBLANK_BIT_EXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>,
 -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagsKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
@@ -441,6 +443,7 @@ type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>,
 -- 'SurfaceCounterFlagsEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT'
 newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags

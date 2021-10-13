@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Sharif Elcott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_color_write_enable:%20&body=@selcott%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_color_write_enable] @selcott%0A<<Here describe the issue or question you have about the VK_EXT_color_write_enable extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -57,7 +57,7 @@
 -- that write a superset of the desired data of which subsets are selected
 -- dynamically. The reason for a new state, colorWriteEnable, rather than
 -- making colorWriteMask dynamic is that, on many implementations, the more
--- flexible per-channel semantics of the colorWriteMask state cannot be
+-- flexible per-component semantics of the colorWriteMask state cannot be
 -- made dynamic in a performant manner.
 --
 -- == New Commands
@@ -175,15 +175,18 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Bool32 -> IO ()
 
 -- | vkCmdSetColorWriteEnableEXT - Enable or disable writes to a color
--- attachment
+-- attachment dynamically for a command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the color write enables for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineColorWriteCreateInfoEXT'::@pColorWriteEnables@ values used to
+-- create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -237,6 +240,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_color_write_enable VK_EXT_color_write_enable>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetColorWriteEnableEXT :: forall io
@@ -284,6 +288,7 @@ cmdSetColorWriteEnableEXT commandBuffer colorWriteEnables = liftIO . evalContT $
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_color_write_enable VK_EXT_color_write_enable>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceColorWriteEnableFeaturesEXT = PhysicalDeviceColorWriteEnableFeaturesEXT
@@ -387,6 +392,7 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_color_write_enable VK_EXT_color_write_enable>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineColorWriteCreateInfoEXT = PipelineColorWriteCreateInfoEXT

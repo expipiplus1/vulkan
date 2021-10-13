@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_win32_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_win32_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_win32_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_win32_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -332,6 +332,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'Win32SurfaceCreateInfoKHR'
@@ -370,7 +371,7 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceWin32PresentationSupportKHR
   :: FunPtr (Ptr PhysicalDevice_T -> Word32 -> IO Bool32) -> Ptr PhysicalDevice_T -> Word32 -> IO Bool32
 
--- | vkGetPhysicalDeviceWin32PresentationSupportKHR - query queue family
+-- | vkGetPhysicalDeviceWin32PresentationSupportKHR - Query queue family
 -- support for presentation on a Win32 display
 --
 -- = Description
@@ -382,6 +383,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceWin32PresentationSupportKHR :: forall io
                                               . (MonadIO io)
@@ -416,6 +418,7 @@ getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = l
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Win32SurfaceCreateFlagsKHR', 'createWin32SurfaceKHR'
 data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
@@ -490,6 +493,7 @@ instance Zero Win32SurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Win32SurfaceCreateInfoKHR'
 newtype Win32SurfaceCreateFlagsKHR = Win32SurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

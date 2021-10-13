@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_pipeline_library:%20&body=@pixeljetstream%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_library] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_KHR_pipeline_library extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -36,7 +36,7 @@
 --
 -- [__Contributors__]
 --
---     -   See contributors to @VK_KHR_ray_tracing@
+--     -   See contributors to @VK_KHR_ray_tracing_pipeline@
 --
 -- == Description
 --
@@ -140,6 +140,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_library VK_KHR_pipeline_library>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'

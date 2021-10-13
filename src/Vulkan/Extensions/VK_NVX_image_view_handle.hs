@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_image_view_handle:%20&body=@ewerness%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_image_view_handle] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NVX_image_view_handle extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -164,6 +164,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'
 getImageViewHandleNVX :: forall io
                        . (MonadIO io)
@@ -211,6 +212,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',
 -- 'ImageViewAddressPropertiesNVX'
 getImageViewAddressNVX :: forall io
@@ -298,6 +300,7 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -363,6 +366,7 @@ instance Zero ImageViewHandleInfoNVX where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

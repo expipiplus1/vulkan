@@ -110,6 +110,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore',
 -- 'SemaphoreCreateInfo'
@@ -200,6 +201,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
 destroySemaphore :: forall io
@@ -248,6 +250,7 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.SemaphoreCreateFlags.SemaphoreCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSemaphore'
 data SemaphoreCreateInfo (es :: [Type]) = SemaphoreCreateInfo

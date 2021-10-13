@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Lisa Wu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_headless_surface:%20&body=@chengtianww%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_headless_surface] @chengtianww%0A<<Here describe the issue or question you have about the VK_EXT_headless_surface extension>> >
 --
 -- == Other Extension Metadata
 --

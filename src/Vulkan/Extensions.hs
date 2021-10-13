@@ -29,6 +29,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_acquire_xlib_display
                           , module Vulkan.Extensions.VK_EXT_astc_decode_mode
                           , module Vulkan.Extensions.VK_EXT_blend_operation_advanced
+                          , module Vulkan.Extensions.VK_EXT_border_color_swizzle
                           , module Vulkan.Extensions.VK_EXT_buffer_device_address
                           , module Vulkan.Extensions.VK_EXT_calibrated_timestamps
                           , module Vulkan.Extensions.VK_EXT_color_write_enable
@@ -71,14 +72,17 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_memory_priority
                           , module Vulkan.Extensions.VK_EXT_metal_surface
                           , module Vulkan.Extensions.VK_EXT_multi_draw
+                          , module Vulkan.Extensions.VK_EXT_pageable_device_local_memory
                           , module Vulkan.Extensions.VK_EXT_pci_bus_info
                           , module Vulkan.Extensions.VK_EXT_physical_device_drm
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
+                          , module Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
                           , module Vulkan.Extensions.VK_EXT_private_data
                           , module Vulkan.Extensions.VK_EXT_provoking_vertex
                           , module Vulkan.Extensions.VK_EXT_queue_family_foreign
+                          , module Vulkan.Extensions.VK_EXT_rgba10x6_formats
                           , module Vulkan.Extensions.VK_EXT_robustness2
                           , module Vulkan.Extensions.VK_EXT_sample_locations
                           , module Vulkan.Extensions.VK_EXT_sampler_filter_minmax
@@ -105,6 +109,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
                           , module Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
                           , module Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+                          , module Vulkan.Extensions.VK_FUCHSIA_buffer_collection
                           , module Vulkan.Extensions.VK_FUCHSIA_external_memory
                           , module Vulkan.Extensions.VK_FUCHSIA_external_semaphore
                           , module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
@@ -115,6 +120,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
                           , module Vulkan.Extensions.VK_GOOGLE_user_type
                           , module Vulkan.Extensions.VK_HUAWEI_invocation_mask
+                          , module Vulkan.Extensions.VK_HUAWEI_subpass_shading
                           , module Vulkan.Extensions.VK_IMG_filter_cubic
                           , module Vulkan.Extensions.VK_IMG_format_pvrtc
                           , module Vulkan.Extensions.VK_INTEL_performance_query
@@ -149,6 +155,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_fd
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_win32
+                          , module Vulkan.Extensions.VK_KHR_format_feature_flags2
                           , module Vulkan.Extensions.VK_KHR_fragment_shading_rate
                           , module Vulkan.Extensions.VK_KHR_get_display_properties2
                           , module Vulkan.Extensions.VK_KHR_get_memory_requirements2
@@ -160,6 +167,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_maintenance1
                           , module Vulkan.Extensions.VK_KHR_maintenance2
                           , module Vulkan.Extensions.VK_KHR_maintenance3
+                          , module Vulkan.Extensions.VK_KHR_maintenance4
                           , module Vulkan.Extensions.VK_KHR_multiview
                           , module Vulkan.Extensions.VK_KHR_performance_query
                           , module Vulkan.Extensions.VK_KHR_pipeline_executable_properties
@@ -179,6 +187,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_shader_draw_parameters
                           , module Vulkan.Extensions.VK_KHR_shader_float16_int8
                           , module Vulkan.Extensions.VK_KHR_shader_float_controls
+                          , module Vulkan.Extensions.VK_KHR_shader_integer_dot_product
                           , module Vulkan.Extensions.VK_KHR_shader_non_semantic_info
                           , module Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
                           , module Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
@@ -280,6 +289,7 @@ import Vulkan.Extensions.VK_EXT_acquire_drm_display
 import Vulkan.Extensions.VK_EXT_acquire_xlib_display
 import Vulkan.Extensions.VK_EXT_astc_decode_mode
 import Vulkan.Extensions.VK_EXT_blend_operation_advanced
+import Vulkan.Extensions.VK_EXT_border_color_swizzle
 import Vulkan.Extensions.VK_EXT_buffer_device_address
 import Vulkan.Extensions.VK_EXT_calibrated_timestamps
 import Vulkan.Extensions.VK_EXT_color_write_enable
@@ -322,14 +332,17 @@ import Vulkan.Extensions.VK_EXT_memory_budget
 import Vulkan.Extensions.VK_EXT_memory_priority
 import Vulkan.Extensions.VK_EXT_metal_surface
 import Vulkan.Extensions.VK_EXT_multi_draw
+import Vulkan.Extensions.VK_EXT_pageable_device_local_memory
 import Vulkan.Extensions.VK_EXT_pci_bus_info
 import Vulkan.Extensions.VK_EXT_physical_device_drm
 import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
+import Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
 import Vulkan.Extensions.VK_EXT_private_data
 import Vulkan.Extensions.VK_EXT_provoking_vertex
 import Vulkan.Extensions.VK_EXT_queue_family_foreign
+import Vulkan.Extensions.VK_EXT_rgba10x6_formats
 import Vulkan.Extensions.VK_EXT_robustness2
 import Vulkan.Extensions.VK_EXT_sample_locations
 import Vulkan.Extensions.VK_EXT_sampler_filter_minmax
@@ -356,6 +369,7 @@ import Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
 import Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
 import Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
 import Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+import Vulkan.Extensions.VK_FUCHSIA_buffer_collection
 import Vulkan.Extensions.VK_FUCHSIA_external_memory
 import Vulkan.Extensions.VK_FUCHSIA_external_semaphore
 import Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
@@ -366,6 +380,7 @@ import Vulkan.Extensions.VK_GOOGLE_display_timing
 import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
 import Vulkan.Extensions.VK_GOOGLE_user_type
 import Vulkan.Extensions.VK_HUAWEI_invocation_mask
+import Vulkan.Extensions.VK_HUAWEI_subpass_shading
 import Vulkan.Extensions.VK_IMG_filter_cubic
 import Vulkan.Extensions.VK_IMG_format_pvrtc
 import Vulkan.Extensions.VK_INTEL_performance_query
@@ -400,6 +415,7 @@ import Vulkan.Extensions.VK_KHR_external_semaphore
 import Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
 import Vulkan.Extensions.VK_KHR_external_semaphore_fd
 import Vulkan.Extensions.VK_KHR_external_semaphore_win32
+import Vulkan.Extensions.VK_KHR_format_feature_flags2
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate
 import Vulkan.Extensions.VK_KHR_get_display_properties2
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2
@@ -411,6 +427,7 @@ import Vulkan.Extensions.VK_KHR_incremental_present
 import Vulkan.Extensions.VK_KHR_maintenance1
 import Vulkan.Extensions.VK_KHR_maintenance2
 import Vulkan.Extensions.VK_KHR_maintenance3
+import Vulkan.Extensions.VK_KHR_maintenance4
 import Vulkan.Extensions.VK_KHR_multiview
 import Vulkan.Extensions.VK_KHR_performance_query
 import Vulkan.Extensions.VK_KHR_pipeline_executable_properties
@@ -430,6 +447,7 @@ import Vulkan.Extensions.VK_KHR_shader_clock
 import Vulkan.Extensions.VK_KHR_shader_draw_parameters
 import Vulkan.Extensions.VK_KHR_shader_float16_int8
 import Vulkan.Extensions.VK_KHR_shader_float_controls
+import Vulkan.Extensions.VK_KHR_shader_integer_dot_product
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info
 import Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
 import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow

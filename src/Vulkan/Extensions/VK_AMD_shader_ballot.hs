@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Dominik Witczak
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_ballot:%20&body=@dominikwitczakamd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_ballot] @dominikwitczakamd%0A<<Here describe the issue or question you have about the VK_AMD_shader_ballot extension>> >
 --
 -- == Other Extension Metadata
 --

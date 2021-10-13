@@ -208,6 +208,7 @@ import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.CStruct.Extends (SomeStruct(..))
 import Vulkan.Core10.Enums.StencilOp (StencilOp)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (SubpassShadingPipelineCreateInfoHUAWEI)
 import Vulkan.Core10.Enums.VertexInputRate (VertexInputRate)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO))
@@ -349,6 +350,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
@@ -478,6 +480,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'ComputePipelineCreateInfo', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
@@ -575,6 +578,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
 destroyPipeline :: forall io
@@ -694,6 +698,7 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
 -- 'PipelineViewportStateCreateInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport',
@@ -784,6 +789,7 @@ instance Zero Viewport where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'SpecializationInfo'
 data SpecializationMapEntry = SpecializationMapEntry
   { -- | @constantID@ is the ID of the specialization constant in SPIR-V.
@@ -864,6 +870,7 @@ instance Zero SpecializationMapEntry where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PipelineShaderStageCreateInfo', 'SpecializationMapEntry'
 data SpecializationInfo = SpecializationInfo
   { -- | @pMapEntries@ is a pointer to an array of 'SpecializationMapEntry'
@@ -1154,6 +1161,7 @@ instance Zero SpecializationInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ComputePipelineCreateInfo', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PipelineShaderStageCreateFlags',
@@ -1367,7 +1375,7 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --     'Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
 --     'Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT',
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkSubpassShadingPipelineCreateInfoHUAWEI VkSubpassShadingPipelineCreateInfoHUAWEI>
+--     'Vulkan.Extensions.VK_HUAWEI_subpass_shading.SubpassShadingPipelineCreateInfoHUAWEI'
 --
 -- -   #VUID-VkComputePipelineCreateInfo-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -1390,6 +1398,7 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlags',
 -- 'Vulkan.Core10.Handles.PipelineLayout', 'PipelineShaderStageCreateInfo',
@@ -1427,6 +1436,7 @@ instance Extensible ComputePipelineCreateInfo where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ComputePipelineCreateInfo e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @PipelineCompilerControlCreateInfoAMD = Just f
+    | Just Refl <- eqT @e @SubpassShadingPipelineCreateInfoHUAWEI = Just f
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
     | otherwise = Nothing
 
@@ -1501,6 +1511,7 @@ instance es ~ '[] => Zero (ComputePipelineCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PipelineVertexInputStateCreateInfo',
 -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate'
 data VertexInputBindingDescription = VertexInputBindingDescription
@@ -1596,6 +1607,7 @@ instance Zero VertexInputBindingDescription where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'PipelineVertexInputStateCreateInfo'
 data VertexInputAttributeDescription = VertexInputAttributeDescription
@@ -1713,6 +1725,7 @@ instance Zero VertexInputAttributeDescription where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags.PipelineVertexInputStateCreateFlags',
@@ -1805,17 +1818,26 @@ instance es ~ '[] => Zero (PipelineVertexInputStateCreateInfo es) where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428# If
+-- -   #VUID-VkPipelineInputAssemblyStateCreateInfo-topology-06252# If
 --     @topology@ is
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_POINT_LIST',
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_LINE_LIST',
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST',
---     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY',
---     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY'
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY'
 --     or
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY',
+--     and @primitiveRestartEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveTopologyListRestart primitiveTopologyListRestart>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkPipelineInputAssemblyStateCreateInfo-topology-06253# If
+--     @topology@ is
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST',
---     @primitiveRestartEnable@ /must/ be
---     'Vulkan.Core10.FundamentalTypes.FALSE'
+--     and @primitiveRestartEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveTopologyPatchListRestart primitiveTopologyPatchListRestart>
+--     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00429# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
@@ -1855,6 +1877,7 @@ instance es ~ '[] => Zero (PipelineVertexInputStateCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags.PipelineInputAssemblyStateCreateFlags',
 -- 'Vulkan.Core10.Enums.PrimitiveTopology.PrimitiveTopology',
@@ -1878,7 +1901,13 @@ data PipelineInputAssemblyStateCreateInfo = PipelineInputAssemblyStateCreateInfo
     -- is equal to 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT', or
     -- 0xFFFF when @indexType@ is equal to
     -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16'. Primitive restart is
-    -- not allowed for “list” topologies.
+    -- not allowed for “list” topologies, unless one of the features
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveTopologyPatchListRestart primitiveTopologyPatchListRestart>
+    -- (for
+    -- 'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST')
+    -- or
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveTopologyListRestart primitiveTopologyListRestart>
+    -- (for all other list topologies) is enabled.
     primitiveRestartEnable :: Bool
   }
   deriving (Typeable, Eq)
@@ -1954,6 +1983,7 @@ instance Zero PipelineInputAssemblyStateCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags.PipelineTessellationStateCreateFlags',
@@ -2103,6 +2133,7 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.PipelineViewportStateCreateFlags',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
@@ -2230,7 +2261,7 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 -- 'PipelineRasterizationStateCreateInfo' structure. This structure enables
 -- selecting the rasterization order to use when rendering with the
 -- corresponding graphics pipeline as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primrast-order Rasterization Order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-order Rasterization Order>.
 --
 -- == Valid Usage
 --
@@ -2297,6 +2328,7 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.CullModeFlagBits.CullModeFlags',
 -- 'Vulkan.Core10.Enums.FrontFace.FrontFace', 'GraphicsPipelineCreateInfo',
@@ -2506,6 +2538,7 @@ instance es ~ '[] => Zero (PipelineRasterizationStateCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags.PipelineMultisampleStateCreateFlags',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
@@ -2779,6 +2812,7 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.BlendFactor.BlendFactor',
 -- 'Vulkan.Core10.Enums.BlendOp.BlendOp',
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
@@ -2938,6 +2972,7 @@ instance Zero PipelineColorBlendAttachmentState where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.LogicOp.LogicOp',
 -- 'PipelineColorBlendAttachmentState',
@@ -3070,6 +3105,7 @@ instance es ~ '[] => Zero (PipelineColorBlendStateCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.DynamicState.DynamicState',
 -- 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags.PipelineDynamicStateCreateFlags',
@@ -3129,6 +3165,7 @@ instance Zero PipelineDynamicStateCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp',
 -- 'PipelineDepthStencilStateCreateInfo',
 -- 'Vulkan.Core10.Enums.StencilOp.StencilOp'
@@ -3273,6 +3310,7 @@ instance Zero StencilOpState where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.PipelineDepthStencilStateCreateFlags',
@@ -3640,9 +3678,17 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
 --     it includes both a fragment shader and a geometry shader, and the
 --     fragment shader code reads from an input variable that is decorated
---     with @PrimitiveID@, then the geometry shader code /must/ write to a
---     matching output variable, decorated with @PrimitiveID@, in all
+--     with @PrimitiveId@, then the geometry shader code /must/ write to a
+--     matching output variable, decorated with @PrimitiveId@, in all
 --     execution paths
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-PrimitiveId-06264# If the
+--     pipeline is being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     it includes a mesh shader and the fragment shader code reads from an
+--     input variable that is decorated with @PrimitiveId@, then the mesh
+--     shader code /must/ write to a matching output variable, decorated
+--     with @PrimitiveId@, in all execution paths
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00741# If the pipeline is
 --     being created with
@@ -4321,7 +4367,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
 --     is not enabled,
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::@combinerOps@[0]
 --     /must/ be
@@ -4335,7 +4381,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
 --     is not enabled,
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::@combinerOps@[1]
 --     /must/ be
@@ -4423,7 +4469,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
 --     is not enabled,
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::@combinerOps@[0]
 --     /must/ be
@@ -4437,7 +4483,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
 --     is not enabled,
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::@combinerOps@[1]
 --     /must/ be
@@ -4465,7 +4511,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
 --     and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-supersampleFragmentShadingRates supersampleFragmentShadingRates feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates feature>
 --     is not enabled,
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::@shadingRate@
 --     /must/ not be equal to
@@ -4481,7 +4527,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
 --     and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-noInvocationFragmentShadingRates noInvocationFragmentShadingRates feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates feature>
 --     is not enabled,
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::@shadingRate@
 --     /must/ not be equal to
@@ -4591,6 +4637,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Pipeline', 'PipelineColorBlendStateCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlags',
 -- 'PipelineDepthStencilStateCreateInfo', 'PipelineDynamicStateCreateInfo',

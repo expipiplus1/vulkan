@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Shahbaz Youssefi
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_load_store_op_none:%20&body=@syoussefi%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_load_store_op_none] @syoussefi%0A<<Here describe the issue or question you have about the VK_EXT_load_store_op_none extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -43,9 +43,9 @@
 --
 -- This extension incorporates
 -- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_EXT'
--- from <VK_QCOM_render_pass_store_ops.html VK_QCOM_render_pass_store_ops>,
--- enabling applications to avoid unnecessary synchronization when an
--- attachment is not written during a render pass.
+-- from @VK_QCOM_render_pass_store_ops@, enabling applications to avoid
+-- unnecessary synchronization when an attachment is not written during a
+-- render pass.
 --
 -- Additionally,
 -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_NONE_EXT' is

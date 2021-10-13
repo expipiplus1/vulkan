@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_display_properties2:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_get_display_properties2] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_get_display_properties2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -293,6 +293,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'DisplayProperties2KHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayProperties2KHR :: forall io
                                         . (MonadIO io)
@@ -366,6 +367,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'DisplayPlaneProperties2KHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPlaneProperties2KHR :: forall io
                                              . (MonadIO io)
@@ -444,6 +446,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeProperties2KHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayModeProperties2KHR :: forall io
@@ -503,6 +506,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'DisplayPlaneCapabilities2KHR', 'DisplayPlaneInfo2KHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneCapabilities2KHR :: forall io
@@ -542,6 +546,7 @@ getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalC
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceDisplayProperties2KHR'
@@ -588,6 +593,7 @@ instance Zero DisplayProperties2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceDisplayPlaneProperties2KHR'
@@ -640,6 +646,7 @@ instance Zero DisplayPlaneProperties2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDisplayModeProperties2KHR'
@@ -717,6 +724,7 @@ instance Zero DisplayModeProperties2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDisplayPlaneCapabilities2KHR'
@@ -776,6 +784,7 @@ instance Zero DisplayPlaneInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlaneCapabilitiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDisplayPlaneCapabilities2KHR'

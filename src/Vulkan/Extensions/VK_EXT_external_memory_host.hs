@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_external_memory_host:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_host] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_external_memory_host extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -286,6 +286,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_external_memory_host VK_EXT_external_memory_host>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryHostPointerPropertiesEXT'
@@ -385,6 +386,7 @@ getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalC
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_external_memory_host VK_EXT_external_memory_host>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryHostPointerInfoEXT = ImportMemoryHostPointerInfoEXT
@@ -449,6 +451,7 @@ instance Zero ImportMemoryHostPointerInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_external_memory_host VK_EXT_external_memory_host>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getMemoryHostPointerPropertiesEXT'
 data MemoryHostPointerPropertiesEXT = MemoryHostPointerPropertiesEXT
@@ -511,6 +514,7 @@ instance Zero MemoryHostPointerPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_external_memory_host VK_EXT_external_memory_host>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExternalMemoryHostPropertiesEXT = PhysicalDeviceExternalMemoryHostPropertiesEXT

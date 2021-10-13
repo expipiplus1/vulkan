@@ -50,8 +50,10 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- = Description
 --
--- The following bits /may/ be set in @linearTilingFeatures@,
--- @optimalTilingFeatures@, and
+-- These values all have the same meaning as the equivalently named values
+-- for
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR'
+-- and /may/ be set in @linearTilingFeatures@, @optimalTilingFeatures@, and
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierTilingFeatures@,
 -- specifying that the features are supported by <VkImage.html images> or
 -- <VkImageView.html image views> or
@@ -110,14 +112,13 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     only specifies that the depth aspect (not the stencil aspect) of an
 --     image of this format supports linear filtering, and that linear
 --     filtering of the depth aspect is supported whether depth compare is
---     enabled in the sampler or not. If this bit is not present, linear
---     filtering with depth compare disabled is unsupported and linear
---     filtering with depth compare enabled is supported, but /may/ compute
---     the filtered value in an implementation-dependent manner which
---     differs from the normal rules of linear filtering. The resulting
---     value /must/ be in the range [0,1] and /should/ be proportional to,
---     or a weighted average of, the number of comparison passes or
---     failures.
+--     enabled in the sampler or not. Where depth comparison is supported
+--     it /may/ be linear filtered whether this bit is present or not, but
+--     where this bit is not present the filtered value /may/ be computed
+--     in an implementation-dependent manner which differs from the normal
+--     rules of linear filtering. The resulting value /must/ be in the
+--     range [0,1] and /should/ be proportional to, or a weighted average
+--     of, the number of comparison passes or failures.
 --
 -- -   'FORMAT_FEATURE_TRANSFER_SRC_BIT' specifies that an image /can/ be
 --     used as a source image for
@@ -255,6 +256,7 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'FormatFeatureFlags'
 newtype FormatFeatureFlagBits = FormatFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -325,9 +327,9 @@ pattern FORMAT_FEATURE_BLIT_DST_BIT                             = FormatFeatureF
 -- specifies that the depth aspect (not the stencil aspect) of an image of
 -- this format supports linear filtering, and that linear filtering of the
 -- depth aspect is supported whether depth compare is enabled in the
--- sampler or not. If this bit is not present, linear filtering with depth
--- compare disabled is unsupported and linear filtering with depth compare
--- enabled is supported, but /may/ compute the filtered value in an
+-- sampler or not. Where depth comparison is supported it /may/ be linear
+-- filtered whether this bit is present or not, but where this bit is not
+-- present the filtered value /may/ be computed in an
 -- implementation-dependent manner which differs from the normal rules of
 -- linear filtering. The resulting value /must/ be in the range [0,1] and
 -- /should/ be proportional to, or a weighted average of, the number of

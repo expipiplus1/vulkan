@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Lionel Landwerlin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_performance_query:%20&body=@llandwerlin%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_performance_query] @llandwerlin%0A<<Here describe the issue or question you have about the VK_INTEL_performance_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -473,6 +473,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device', 'InitializePerformanceApiInfoINTEL'
 initializePerformanceApiINTEL :: forall io
                                . (MonadIO io)
@@ -513,6 +514,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device'
 uninitializePerformanceApiINTEL :: forall io
                                  . (MonadIO io)
@@ -597,6 +599,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceMarkerInfoINTEL'
 cmdSetPerformanceMarkerINTEL :: forall io
                               . (MonadIO io)
@@ -676,6 +679,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'PerformanceStreamMarkerInfoINTEL'
 cmdSetPerformanceStreamMarkerINTEL :: forall io
@@ -763,6 +767,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceOverrideInfoINTEL'
 cmdSetPerformanceOverrideINTEL :: forall io
                                 . (MonadIO io)
@@ -806,6 +811,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'PerformanceConfigurationAcquireInfoINTEL',
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
@@ -888,6 +894,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
 releasePerformanceConfigurationINTEL :: forall io
@@ -953,6 +960,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL',
 -- 'Vulkan.Core10.Handles.Queue'
 queueSetPerformanceConfigurationINTEL :: forall io
@@ -995,6 +1003,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device', 'PerformanceParameterTypeINTEL',
 -- 'PerformanceValueINTEL'
 getPerformanceParameterINTEL :: forall io
@@ -1040,6 +1049,7 @@ pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceValueDataINTEL', 'PerformanceValueTypeINTEL',
 -- 'getPerformanceParameterINTEL'
 data PerformanceValueINTEL = PerformanceValueINTEL
@@ -1089,6 +1099,7 @@ instance Zero PerformanceValueINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'initializePerformanceApiINTEL'
 data InitializePerformanceApiInfoINTEL = InitializePerformanceApiInfoINTEL
@@ -1147,6 +1158,7 @@ instance Zero InitializePerformanceApiInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'QueryPoolSamplingModeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateInfoINTEL
@@ -1201,6 +1213,7 @@ instance Zero QueryPoolPerformanceQueryCreateInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceMarkerINTEL'
 data PerformanceMarkerInfoINTEL = PerformanceMarkerInfoINTEL
@@ -1266,6 +1279,7 @@ instance Zero PerformanceMarkerInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceStreamMarkerINTEL'
 data PerformanceStreamMarkerInfoINTEL = PerformanceStreamMarkerInfoINTEL
@@ -1316,6 +1330,7 @@ instance Zero PerformanceStreamMarkerInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'PerformanceOverrideTypeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceOverrideINTEL'
@@ -1383,6 +1398,7 @@ instance Zero PerformanceOverrideInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceConfigurationTypeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'acquirePerformanceConfigurationINTEL'
@@ -1475,6 +1491,7 @@ peekPerformanceValueDataINTEL tag p = case tag of
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceConfigurationAcquireInfoINTEL'
 newtype PerformanceConfigurationTypeINTEL = PerformanceConfigurationTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1514,6 +1531,7 @@ instance Read PerformanceConfigurationTypeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'QueryPoolPerformanceQueryCreateInfoINTEL'
 newtype QueryPoolSamplingModeINTEL = QueryPoolSamplingModeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1552,6 +1570,7 @@ instance Read QueryPoolSamplingModeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceOverrideInfoINTEL'
 newtype PerformanceOverrideTypeINTEL = PerformanceOverrideTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1596,6 +1615,7 @@ instance Read PerformanceOverrideTypeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'getPerformanceParameterINTEL'
 newtype PerformanceParameterTypeINTEL = PerformanceParameterTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1640,6 +1660,7 @@ instance Read PerformanceParameterTypeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceValueINTEL'
 newtype PerformanceValueTypeINTEL = PerformanceValueTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)

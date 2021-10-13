@@ -52,6 +52,8 @@ import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderI
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
 import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV(..))
+import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
+import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR(..))
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL)
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(..))
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
@@ -96,7 +98,7 @@ import Vulkan.Extensions.VK_EXT_shader_subgroup_vote (pattern EXT_SHADER_SUBGROU
 import Vulkan.Extensions.VK_EXT_shader_viewport_index_layer (pattern EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_transform_feedback (pattern EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_GOOGLE_decorate_string (pattern GOOGLE_DECORATE_STRING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1 (pattern GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME)
+import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1 (pattern GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME)
 import Vulkan.Extensions.VK_GOOGLE_user_type (pattern GOOGLE_USER_TYPE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_EXTENSION_NAME)
@@ -107,11 +109,12 @@ import Vulkan.Extensions.VK_KHR_create_renderpass2 (pattern KHR_CREATE_RENDERPAS
 import Vulkan.Extensions.VK_KHR_deferred_host_operations (pattern KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_device_group_creation (pattern KHR_DEVICE_GROUP_CREATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_device_group (pattern KHR_DEVICE_GROUP_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_format_feature_flags2 (pattern KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (pattern KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (pattern KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2 (pattern KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_maintenance2 (pattern KHR_MAINTENANCE2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_maintenance3 (pattern KHR_MAINTENANCE3_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_maintenance2 (pattern KHR_MAINTENANCE_2_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_maintenance3 (pattern KHR_MAINTENANCE_3_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_multiview (pattern KHR_MULTIVIEW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_query (pattern KHR_RAY_QUERY_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (pattern KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME)
@@ -120,6 +123,7 @@ import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION
 import Vulkan.Extensions.VK_KHR_shader_draw_parameters (pattern KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_float16_int8 (pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_float_controls (pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (pattern KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info (pattern KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (pattern KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME)
@@ -142,7 +146,7 @@ import Vulkan.Extensions.VK_NV_shader_image_footprint (pattern NV_SHADER_IMAGE_F
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY2_EXTENSION_NAME)
+import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ARITHMETIC_BIT))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
@@ -313,7 +317,7 @@ spirvExtensionRequirements = \case
   "SPV_NV_viewport_array2" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = NV_VIEWPORT_ARRAY2_EXTENSION_NAME
+                             , deviceExtensionName       = NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -439,7 +443,7 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -478,14 +482,14 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
   "SPV_GOOGLE_hlsl_functionality1" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME
+                             , deviceExtensionName       = GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -586,7 +590,7 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE2_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_2_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -677,6 +681,17 @@ spirvExtensionRequirements = \case
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "SPV_KHR_integer_dot_product" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1189,14 +1204,14 @@ spirvCapabilityRequirements = \case
   "ShaderViewportIndexLayerNV" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = NV_VIEWPORT_ARRAY2_EXTENSION_NAME
+                             , deviceExtensionName       = NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
   "ShaderViewportMaskNV" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = NV_VIEWPORT_ARRAY2_EXTENSION_NAME
+                             , deviceExtensionName       = NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1359,7 +1374,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1381,7 +1396,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1404,7 +1419,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1427,7 +1442,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1449,7 +1464,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1471,7 +1486,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1493,7 +1508,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1515,7 +1530,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1538,7 +1553,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1561,7 +1576,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1584,7 +1599,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1928,7 +1943,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -1971,7 +1986,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -2015,7 +2030,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -2078,7 +2093,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE3_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -2283,7 +2298,7 @@ spirvCapabilityRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_MAINTENANCE2_EXTENSION_NAME
+                             , deviceExtensionName       = KHR_MAINTENANCE_2_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
@@ -2338,6 +2353,70 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "DotProductInputAllKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderIntegerDotProduct"
+      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
+      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "DotProductInput4x8BitKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderIntegerDotProduct"
+      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
+      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "DotProductInput4x8BitPackedKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderIntegerDotProduct"
+      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
+      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "DotProductKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "shaderIntegerDotProduct"
+      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
+      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]

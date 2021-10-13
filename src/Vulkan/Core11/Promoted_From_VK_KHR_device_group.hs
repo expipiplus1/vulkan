@@ -102,6 +102,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
 getDeviceGroupPeerMemoryFeatures :: forall io
@@ -218,6 +219,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDeviceMask :: forall io
                   . (MonadIO io)
@@ -324,6 +326,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDispatchBase-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDispatchBase-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDispatchBase-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -333,7 +351,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatchBase-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDispatchBase-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -431,28 +451,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchBase-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatchBase-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDispatchBase-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatchBase-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -561,6 +581,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDispatchBase :: forall io
                  . (MonadIO io)
@@ -649,6 +670,7 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MemoryAllocateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryAllocateFlagsInfo = MemoryAllocateFlagsInfo
@@ -764,6 +786,7 @@ instance Zero MemoryAllocateFlagsInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupRenderPassBeginInfo = DeviceGroupRenderPassBeginInfo
@@ -830,6 +853,7 @@ instance Zero DeviceGroupRenderPassBeginInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupCommandBufferBeginInfo = DeviceGroupCommandBufferBeginInfo
   { -- | @deviceMask@ is the initial value of the command buffer’s device mask.
@@ -929,6 +953,7 @@ instance Zero DeviceGroupCommandBufferBeginInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupSubmitInfo = DeviceGroupSubmitInfo
   { -- | @pWaitSemaphoreDeviceIndices@ is a pointer to an array of
@@ -1030,6 +1055,7 @@ instance Zero DeviceGroupSubmitInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupBindSparseInfo = DeviceGroupBindSparseInfo
   { -- | @resourceDeviceIndex@ is a device index indicating which instance of the

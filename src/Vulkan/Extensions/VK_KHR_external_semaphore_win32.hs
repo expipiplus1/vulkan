@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_semaphore_win32:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_semaphore_win32] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_semaphore_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -263,6 +263,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetWin32HandleInfoKHR'
 getSemaphoreWin32HandleKHR :: forall io
                             . (MonadIO io)
@@ -328,6 +329,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreWin32HandleInfoKHR'
 importSemaphoreWin32HandleKHR :: forall io
                                . (MonadIO io)
@@ -462,6 +464,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlags',
@@ -600,6 +603,7 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportSemaphoreWin32HandleInfoKHR = ExportSemaphoreWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
@@ -721,6 +725,7 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data D3D12FenceSubmitInfoKHR = D3D12FenceSubmitInfoKHR
   { -- | @waitSemaphoreValuesCount@ is the number of semaphore wait values
@@ -876,6 +881,7 @@ instance Zero D3D12FenceSubmitInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

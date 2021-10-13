@@ -93,6 +93,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BufferMemoryRequirementsInfo2', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements2'
 getBufferMemoryRequirements2 :: forall a io
@@ -135,6 +136,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
 getImageMemoryRequirements2 :: forall a b io
@@ -195,6 +197,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageSparseMemoryRequirementsInfo2',
 -- 'SparseImageMemoryRequirements2'
 getImageSparseMemoryRequirements2 :: forall io
@@ -229,6 +232,7 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getBufferMemoryRequirements2',
@@ -337,6 +341,7 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageMemoryRequirements2',
@@ -399,6 +404,7 @@ instance es ~ '[] => Zero (ImageMemoryRequirementsInfo2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageSparseMemoryRequirements2',
@@ -463,11 +469,14 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoGetMemoryPropertiesKHR VkVideoGetMemoryPropertiesKHR>,
 -- 'getBufferMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceBufferMemoryRequirementsKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageMemoryRequirementsKHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'getImageMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
@@ -531,8 +540,10 @@ instance es ~ '[] => Zero (MemoryRequirements2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageSparseMemoryRequirementsKHR',
 -- 'getImageSparseMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
 data SparseImageMemoryRequirements2 = SparseImageMemoryRequirements2

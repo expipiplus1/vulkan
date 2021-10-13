@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_core_properties2:%20&body=@anteru%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_core_properties2] @anteru%0A<<Here describe the issue or question you have about the VK_AMD_shader_core_properties2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -151,6 +151,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_core_properties2 VK_AMD_shader_core_properties2>,
 -- 'ShaderCorePropertiesFlagsAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderCoreProperties2AMD = PhysicalDeviceShaderCoreProperties2AMD
@@ -212,6 +213,7 @@ type ShaderCorePropertiesFlagsAMD = ShaderCorePropertiesFlagBitsAMD
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_core_properties2 VK_AMD_shader_core_properties2>,
 -- 'PhysicalDeviceShaderCoreProperties2AMD', 'ShaderCorePropertiesFlagsAMD'
 newtype ShaderCorePropertiesFlagBitsAMD = ShaderCorePropertiesFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   John Kessenich
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_relaxed_block_layout:%20&body=@johnkslang%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_relaxed_block_layout] @johnkslang%0A<<Here describe the issue or question you have about the VK_KHR_relaxed_block_layout extension>> >
 --
 -- == Other Extension Metadata
 --

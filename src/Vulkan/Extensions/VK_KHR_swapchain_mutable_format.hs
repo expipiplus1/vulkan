@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_swapchain_mutable_format:%20&body=@drakos-arm%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_swapchain_mutable_format] @drakos-arm%0A<<Here describe the issue or question you have about the VK_KHR_swapchain_mutable_format extension>> >
 --
 -- == Other Extension Metadata
 --

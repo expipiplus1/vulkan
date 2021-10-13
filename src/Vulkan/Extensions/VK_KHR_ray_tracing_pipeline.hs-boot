@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_ray_tracing_pipeline:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_pipeline] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_ray_tracing_pipeline extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -44,21 +44,19 @@
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt GLSL_EXT_ray_tracing>
 --
 --     -   This extension interacts with
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#version-1.2 Vulkan 1.2>
---         and
---         <VK_KHR_vulkan_memory_model.html VK_KHR_vulkan_memory_model>,
---         adding the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan 1.2>
+--         and @VK_KHR_vulkan_memory_model@, adding the
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-call-related shader-call-related>
 --         relation of invocations,
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-call-order shader-call-order>
 --         partial order of dynamic instances of instructions, and the
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-scope-shadercall ShaderCallKHR>
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-shadercall ShaderCallKHR>
 --         scope.
 --
---     -   This extension interacts with
---         <VK_KHR_pipeline_library.html VK_KHR_pipeline_library>, enabling
---         pipeline libraries to be used with ray tracing pipelines and
---         enabling usage of 'RayTracingPipelineInterfaceCreateInfoKHR'.
+--     -   This extension interacts with @VK_KHR_pipeline_library@,
+--         enabling pipeline libraries to be used with ray tracing
+--         pipelines and enabling usage of
+--         'RayTracingPipelineInterfaceCreateInfoKHR'.
 --
 -- [__Contributors__]
 --
@@ -464,8 +462,7 @@
 --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEFER_COMPILE_BIT_NV'
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.compileDeferredNV' command
---         (replaced with
---         <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>)
+--         (replaced with @VK_KHR_deferred_host_operations@)
 --
 -- (3) What are the changes between the public provisional
 -- (VK_KHR_ray_tracing v8) release and the internal provisional
@@ -473,8 +470,7 @@
 --
 -- -   Require Vulkan 1.1 and SPIR-V 1.4
 --
--- -   Added interactions with Vulkan 1.2 and
---     <VK_KHR_vulkan_memory_model.html VK_KHR_vulkan_memory_model>
+-- -   Added interactions with Vulkan 1.2 and @VK_KHR_vulkan_memory_model@
 --
 -- -   added creation time capture and replay flags
 --
@@ -491,16 +487,14 @@
 -- -   require the shader binding table buffers to have the
 --     @VK_BUFFER_USAGE_RAY_TRACING_BIT_KHR@ set
 --
--- -   make <VK_KHR_pipeline_library.html VK_KHR_pipeline_library> an
---     interaction instead of required extension
+-- -   make @VK_KHR_pipeline_library@ an interaction instead of required
+--     extension
 --
 -- -   rename the @libraries@ member of 'RayTracingPipelineCreateInfoKHR'
 --     to @pLibraryInfo@ and make it a pointer
 --
--- -   make
---     <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---     an interaction instead of a required extension (later went back on
---     this)
+-- -   make @VK_KHR_deferred_host_operations@ an interaction instead of a
+--     required extension (later went back on this)
 --
 -- -   added explicit stack size management for ray tracing pipelines
 --
@@ -539,8 +533,7 @@
 --         that the implementation can modify such parameters until the
 --         deferred host operation completes
 --
---     -   <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---         is required again
+--     -   @VK_KHR_deferred_host_operations@ is required again
 --
 -- (4) What are the changes between the internal provisional
 -- (VK_KHR_ray_tracing v9) release and the final
@@ -551,14 +544,13 @@
 --     implementation flexibility and decoupling ray query support from ray
 --     pipelines:
 --
---     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         (for acceleration structure operations)
+--     -   @VK_KHR_acceleration_structure@ (for acceleration structure
+--         operations)
 --
---     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         (for ray tracing pipeline and shader stages)
+--     -   @VK_KHR_ray_tracing_pipeline@ (for ray tracing pipeline and
+--         shader stages)
 --
---     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
---         existing shader stages)
+--     -   @VK_KHR_ray_query@ (for ray queries in existing shader stages)
 --
 -- -   Require @Volatile@ for the following builtins in the ray generation,
 --     closest hit, miss, intersection, and callable shader stages:
@@ -577,9 +569,7 @@
 --         and is required on shader binding table buffers
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
---         is used in
---         <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         for @scratchData@
+--         is used in @VK_KHR_acceleration_structure@ for @scratchData@
 --
 -- -   rename @maxRecursionDepth@ to @maxRayPipelineRecursionDepth@
 --     (pipeline creation) and @maxRayRecursionDepth@ (limit) to reduce

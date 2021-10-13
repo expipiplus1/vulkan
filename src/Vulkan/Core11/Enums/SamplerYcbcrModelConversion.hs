@@ -45,26 +45,26 @@ import GHC.Show (Show(showsPrec))
 -- In the @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_*@ color models, for the
 -- input to the sampler Y′CBCR range expansion and model conversion:
 --
--- -   the Y (Y′ luma) channel corresponds to the G channel of an RGB
+-- -   the Y (Y′ luma) component corresponds to the G component of an RGB
 --     image.
 --
--- -   the CB (CB or “U” blue color difference) channel corresponds to the
---     B channel of an RGB image.
+-- -   the CB (CB or “U” blue color difference) component corresponds to
+--     the B component of an RGB image.
 --
--- -   the CR (CR or “V” red color difference) channel corresponds to the R
---     channel of an RGB image.
+-- -   the CR (CR or “V” red color difference) component corresponds to the
+--     R component of an RGB image.
 --
--- -   the alpha channel, if present, is not modified by color model
+-- -   the alpha component, if present, is not modified by color model
 --     conversion.
 --
--- These rules reflect the mapping of channels after the channel swizzle
--- operation (controlled by
+-- These rules reflect the mapping of components after the component
+-- swizzle operation (controlled by
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@components@).
 --
 -- Note
 --
--- For example, an “YUVA” 32-bit format comprising four 8-bit channels can
--- be implemented as 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM'
+-- For example, an “YUVA” 32-bit format comprising four 8-bit components
+-- can be implemented as 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM'
 -- with a component mapping:
 --
 -- -   @components.a@ =
@@ -81,7 +81,10 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
+-- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatProperties2ANDROID',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionPropertiesFUCHSIA',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
 newtype SamplerYcbcrModelConversion = SamplerYcbcrModelConversion Int32
   deriving newtype (Eq, Ord, Storable, Zero)

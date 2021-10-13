@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Carsten Rohde
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory_rdma:%20&body=@crohde%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_external_memory_rdma] @crohde%0A<<Here describe the issue or question you have about the VK_NV_external_memory_rdma extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -257,6 +257,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_rdma VK_NV_external_memory_rdma>,
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetRemoteAddressInfoNV',
 -- 'RemoteAddressNV'
 getMemoryRemoteAddressNV :: forall io
@@ -312,6 +313,7 @@ getMemoryRemoteAddressNV device memoryGetRemoteAddressInfo = liftIO . evalContT 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_rdma VK_NV_external_memory_rdma>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExternalMemoryRDMAFeaturesNV = PhysicalDeviceExternalMemoryRDMAFeaturesNV
@@ -367,6 +369,7 @@ instance Zero PhysicalDeviceExternalMemoryRDMAFeaturesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_rdma VK_NV_external_memory_rdma>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

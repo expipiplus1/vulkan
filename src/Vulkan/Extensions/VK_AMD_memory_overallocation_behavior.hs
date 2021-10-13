@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Martin Dinkov
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_memory_overallocation_behavior:%20&body=@mdinkov%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_memory_overallocation_behavior] @mdinkov%0A<<Here describe the issue or question you have about the VK_AMD_memory_overallocation_behavior extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -135,6 +135,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_ME
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_memory_overallocation_behavior VK_AMD_memory_overallocation_behavior>,
 -- 'MemoryOverallocationBehaviorAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceMemoryOverallocationCreateInfoAMD = DeviceMemoryOverallocationCreateInfoAMD
@@ -187,6 +188,7 @@ instance Zero DeviceMemoryOverallocationCreateInfoAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_memory_overallocation_behavior VK_AMD_memory_overallocation_behavior>,
 -- 'DeviceMemoryOverallocationCreateInfoAMD'
 newtype MemoryOverallocationBehaviorAMD = MemoryOverallocationBehaviorAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)

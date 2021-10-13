@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_vertex_input_dynamic_state:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_vertex_input_dynamic_state] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_vertex_input_dynamic_state extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -180,12 +180,26 @@ foreign import ccall
   "dynamic" mkVkCmdSetVertexInputEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr VertexInputBindingDescription2EXT -> Word32 -> Ptr VertexInputAttributeDescription2EXT -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr VertexInputBindingDescription2EXT -> Word32 -> Ptr VertexInputAttributeDescription2EXT -> IO ()
 
--- | vkCmdSetVertexInputEXT - Set the dynamic vertex input state
+-- | vkCmdSetVertexInputEXT - Set the vertex input state dynamically for a
+-- command buffer
 --
 -- = Description
 --
 -- This command sets the vertex input attribute and vertex input binding
--- descriptions state for subsequent drawing commands.
+-- descriptions state for subsequent drawing commands when the graphics
+-- pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@
+-- values used to create the currently active pipeline.
+--
+-- If the bound pipeline state object was also created with the
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+-- dynamic state enabled, then
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+-- can be used instead of 'cmdSetVertexInputEXT' to dynamically set the
+-- stride.
 --
 -- == Valid Usage
 --
@@ -260,6 +274,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'VertexInputAttributeDescription2EXT',
 -- 'VertexInputBindingDescription2EXT'
@@ -311,6 +326,7 @@ cmdSetVertexInputEXT commandBuffer vertexBindingDescriptions vertexAttributeDesc
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVertexInputDynamicStateFeaturesEXT = PhysicalDeviceVertexInputDynamicStateFeaturesEXT
@@ -399,6 +415,7 @@ instance Zero PhysicalDeviceVertexInputDynamicStateFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate',
 -- 'cmdSetVertexInputEXT'
@@ -521,6 +538,7 @@ instance Zero VertexInputBindingDescription2EXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetVertexInputEXT'

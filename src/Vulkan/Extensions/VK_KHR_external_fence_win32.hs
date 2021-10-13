@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_fence_win32:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_fence_win32] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_external_fence_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -229,6 +229,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'FenceGetWin32HandleInfoKHR'
 getFenceWin32HandleKHR :: forall io
                         . (MonadIO io)
@@ -292,6 +293,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportFenceWin32HandleInfoKHR'
 importFenceWin32HandleKHR :: forall io
                            . (MonadIO io)
@@ -389,6 +391,7 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlags',
@@ -513,6 +516,7 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportFenceWin32HandleInfoKHR = ExportFenceWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
@@ -630,6 +634,7 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

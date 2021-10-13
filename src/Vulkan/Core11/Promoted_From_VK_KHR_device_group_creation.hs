@@ -133,6 +133,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Instance', 'PhysicalDeviceGroupProperties'
 enumeratePhysicalDeviceGroups :: forall io
                                . (MonadIO io)
@@ -166,6 +167,7 @@ enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -283,6 +285,7 @@ instance Zero PhysicalDeviceGroupProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupDeviceCreateInfo = DeviceGroupDeviceCreateInfo

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_acquire_xlib_display:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_acquire_xlib_display] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_acquire_xlib_display extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -200,6 +200,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_acquire_xlib_display VK_EXT_acquire_xlib_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 acquireXlibDisplayEXT :: forall io
@@ -260,6 +261,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_acquire_xlib_display VK_EXT_acquire_xlib_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getRandROutputDisplayEXT :: forall io

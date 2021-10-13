@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_fill_rectangle:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_fill_rectangle] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_fill_rectangle extension>> >
 --
 -- == Other Extension Metadata
 --

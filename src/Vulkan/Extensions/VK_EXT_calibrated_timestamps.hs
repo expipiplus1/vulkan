@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_calibrated_timestamps:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_calibrated_timestamps] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_calibrated_timestamps extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -307,6 +307,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'TimeDomainEXT'
 getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io
                                               . (MonadIO io)
@@ -374,6 +375,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'CalibratedTimestampInfoEXT', 'Vulkan.Core10.Handles.Device'
 getCalibratedTimestampsEXT :: forall io
                             . (MonadIO io)
@@ -414,6 +416,7 @@ getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'TimeDomainEXT',
 -- 'getCalibratedTimestampsEXT'
 data CalibratedTimestampInfoEXT = CalibratedTimestampInfoEXT
@@ -492,6 +495,7 @@ instance Zero CalibratedTimestampInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'CalibratedTimestampInfoEXT',
 -- 'getPhysicalDeviceCalibrateableTimeDomainsEXT'
 newtype TimeDomainEXT = TimeDomainEXT Int32

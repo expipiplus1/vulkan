@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Mike Gorchak
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QNX_screen_surface:%20&body=@mgorchak-blackberry%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QNX_screen_surface] @mgorchak-blackberry%0A<<Here describe the issue or question you have about the VK_QNX_screen_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -211,6 +211,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QNX_screen_surface VK_QNX_screen_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'ScreenSurfaceCreateInfoQNX',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -261,6 +262,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QNX_screen_surface VK_QNX_screen_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceScreenPresentationSupportQNX :: forall io
                                                . (MonadIO io)
@@ -300,6 +302,7 @@ getPhysicalDeviceScreenPresentationSupportQNX physicalDevice queueFamilyIndex wi
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QNX_screen_surface VK_QNX_screen_surface>,
 -- 'ScreenSurfaceCreateFlagsQNX',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createScreenSurfaceQNX'
@@ -373,6 +376,7 @@ instance Zero ScreenSurfaceCreateInfoQNX where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QNX_screen_surface VK_QNX_screen_surface>,
 -- 'ScreenSurfaceCreateInfoQNX'
 newtype ScreenSurfaceCreateFlagsQNX = ScreenSurfaceCreateFlagsQNX Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

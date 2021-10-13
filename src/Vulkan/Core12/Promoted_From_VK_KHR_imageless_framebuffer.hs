@@ -72,6 +72,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer VK_KHR_imageless_framebuffer>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImagelessFramebufferFeatures = PhysicalDeviceImagelessFramebufferFeatures
@@ -134,6 +136,7 @@ instance Zero PhysicalDeviceImagelessFramebufferFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'FramebufferAttachmentImageInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data FramebufferAttachmentsCreateInfo = FramebufferAttachmentsCreateInfo
@@ -214,6 +217,8 @@ instance Zero FramebufferAttachmentsCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer VK_KHR_imageless_framebuffer>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.Format.Format', 'FramebufferAttachmentsCreateInfo',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
@@ -328,6 +333,8 @@ instance Zero FramebufferAttachmentImageInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer VK_KHR_imageless_framebuffer>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.ImageView',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassAttachmentBeginInfo = RenderPassAttachmentBeginInfo

@@ -63,7 +63,7 @@
 -- -   Motion instances to move existing instances over time
 --
 -- The motion represented here is parameterized across a normalized
--- timestep between 0.0 and 1.0. A motion trace using OpTraceRayMotionNV
+-- timestep between 0.0 and 1.0. A motion trace using @OpTraceRayMotionNV@
 -- provides a time within that normalized range to be used when
 -- intersecting that ray with geometry. The geometry can be provided with
 -- motion by a combination of adding a second vertex position for time of
@@ -299,6 +299,7 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingMotionBlurFeaturesNV = PhysicalDeviceRayTracingMotionBlurFeaturesNV
@@ -374,6 +375,7 @@ instance Zero PhysicalDeviceRayTracingMotionBlurFeaturesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AccelerationStructureGeometryMotionTrianglesDataNV = AccelerationStructureGeometryMotionTrianglesDataNV
@@ -412,6 +414,7 @@ instance Zero AccelerationStructureGeometryMotionTrianglesDataNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'AccelerationStructureMotionInfoFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AccelerationStructureMotionInfoNV = AccelerationStructureMotionInfoNV
@@ -514,6 +517,7 @@ instance Zero AccelerationStructureMotionInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'AccelerationStructureSRTMotionInstanceNV'
 data SRTDataNV = SRTDataNV
   { -- | @sx@ is the x component of the scale of the transform
@@ -667,6 +671,7 @@ instance Zero SRTDataNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'AccelerationStructureMotionInstanceDataNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryInstanceFlagsKHR',
 -- 'SRTDataNV'
@@ -689,7 +694,7 @@ data AccelerationStructureSRTMotionInstanceNV = AccelerationStructureSRTMotionIn
     -- -   @mask@ occupies the 8 most significant bits of that memory
     instanceCustomIndex :: Word32
   , -- | @mask@ is an 8-bit visibility mask for the geometry. The instance /may/
-    -- only be hit if @rayMask & instance.mask != 0@
+    -- only be hit if @Cull Mask & instance.mask != 0@
     mask :: Word32
   , -- | @instanceShaderBindingTableRecordOffset@ is a 24-bit offset used in
     -- calculating the hit shader binding table index.
@@ -804,6 +809,7 @@ instance Zero AccelerationStructureSRTMotionInstanceNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'AccelerationStructureMotionInstanceDataNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryInstanceFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.TransformMatrixKHR'
@@ -830,7 +836,7 @@ data AccelerationStructureMatrixMotionInstanceNV = AccelerationStructureMatrixMo
     -- -   @mask@ occupies the 8 most significant bits of that memory
     instanceCustomIndex :: Word32
   , -- | @mask@ is an 8-bit visibility mask for the geometry. The instance /may/
-    -- only be hit if @rayMask & instance.mask != 0@
+    -- only be hit if @Cull Mask & instance.mask != 0@
     mask :: Word32
   , -- | @instanceShaderBindingTableRecordOffset@ is a 24-bit offset used in
     -- calculating the hit shader binding table index.
@@ -961,6 +967,7 @@ instance Zero AccelerationStructureMatrixMotionInstanceNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'AccelerationStructureMotionInstanceDataNV',
 -- 'AccelerationStructureMotionInstanceFlagsNV',
 -- 'AccelerationStructureMotionInstanceTypeNV'
@@ -1025,7 +1032,17 @@ instance Zero AccelerationStructureMotionInstanceDataNV where
   zero = SrtMotionInstance zero
 
 
--- No documentation found for TopLevel "VkAccelerationStructureMotionInfoFlagsNV"
+-- | VkAccelerationStructureMotionInfoFlagsNV - Reserved for future use
+--
+-- = Description
+--
+-- 'AccelerationStructureMotionInfoFlagsNV' is a bitmask type for setting a
+-- mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
+-- 'AccelerationStructureMotionInfoNV'
 newtype AccelerationStructureMotionInfoFlagsNV = AccelerationStructureMotionInfoFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -1054,7 +1071,17 @@ instance Read AccelerationStructureMotionInfoFlagsNV where
                           AccelerationStructureMotionInfoFlagsNV
 
 
--- No documentation found for TopLevel "VkAccelerationStructureMotionInstanceFlagsNV"
+-- | VkAccelerationStructureMotionInstanceFlagsNV - Reserved for future use
+--
+-- = Description
+--
+-- 'AccelerationStructureMotionInstanceFlagsNV' is a bitmask type for
+-- setting a mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
+-- 'AccelerationStructureMotionInstanceNV'
 newtype AccelerationStructureMotionInstanceFlagsNV = AccelerationStructureMotionInstanceFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -1089,6 +1116,7 @@ instance Read AccelerationStructureMotionInstanceFlagsNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
 -- 'AccelerationStructureMotionInstanceNV'
 newtype AccelerationStructureMotionInstanceTypeNV = AccelerationStructureMotionInstanceTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)

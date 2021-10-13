@@ -54,6 +54,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionImageCreateInfoFUCHSIA)
 import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationImageCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
@@ -118,6 +119,13 @@ foreign import ccall
 --     resources on the device to exceed
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
 --
+-- -   #VUID-vkCreateImage-pNext-06389# If a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
+--     has been chained to @pNext@, @pCreateInfo@ /must/ match the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sysmem-chosen-create-infos Sysmem chosen >
+--     excepting members 'ImageCreateInfo'::@extent@ and
+--     'ImageCreateInfo'::@usage@ in the match criteria
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateImage-device-parameter# @device@ /must/ be a valid
@@ -147,6 +155,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageCreateInfo'
@@ -241,6 +250,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image'
 destroyImage :: forall io
@@ -374,7 +384,7 @@ foreign import ccall
 --     the @image@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then the @aspectMask@ member of @pSubresource@ /must/ be
---     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ and the index @i@ /must/ be
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ and the index /i/ /must/ be
 --     less than the
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
 --     associated with the image’s @format@ and
@@ -401,6 +411,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource',
 -- 'SubresourceLayout'
@@ -457,8 +468,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     and\/or
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
--- Images created with a @format@ from one of those listed in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
+-- Images created with one of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 -- have further restrictions on their limits and capabilities compared to
 -- images created with other formats. Creation of images with a format
 -- requiring
@@ -587,6 +598,15 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --         obtained by
 --         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
 --         with a matching @externalFormat@ value.
+--
+--     -   If the @pNext@ chain includes a
+--         'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
+--         structure, then @imageCreateFormatFeatures@ is the value of
+--         'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionPropertiesFUCHSIA'::@formatFeatures@
+--         found by calling
+--         'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.getBufferCollectionPropertiesFUCHSIA'
+--         with a parameter @collection@ equal to
+--         'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'::@collection@
 --
 --     -   If @tiling@ is
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -1053,11 +1073,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- -   #VUID-VkImageCreateInfo-flags-01572# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
 --     then @format@ /must/ be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-bc block-compressed image format>,
---     an
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-etc2 ETC compressed image format>,
---     or an
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC compressed image format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compressed_image_formats compressed image format>
 --
 -- -   #VUID-VkImageCreateInfo-flags-01573# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
@@ -1075,25 +1091,25 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     structure whose @handleTypes@ member is not @0@, @initialLayout@
 --     /must/ be 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
--- -   #VUID-VkImageCreateInfo-format-02561# If the image @format@ is one
---     of those listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
---     then @mipLevels@ /must/ be 1
+-- -   #VUID-VkImageCreateInfo-format-06410# If the image @format@ is one
+--     of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     @mipLevels@ /must/ be 1
 --
--- -   #VUID-VkImageCreateInfo-format-02562# If the image @format@ is one
---     of those listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
+-- -   #VUID-VkImageCreateInfo-format-06411# If the image @format@ is one
+--     of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   #VUID-VkImageCreateInfo-format-02563# If the image @format@ is one
---     of those listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
+-- -   #VUID-VkImageCreateInfo-format-06412# If the image @format@ is one
+--     of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   #VUID-VkImageCreateInfo-format-02653# If the image @format@ is one
---     of those listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
+-- -   #VUID-VkImageCreateInfo-format-06413# If the image @format@ is one
+--     of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     and the @ycbcrImageArrays@ feature is not enabled, @arrayLayers@
 --     /must/ be 1
 --
@@ -1333,6 +1349,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     /must/ be @0@ or @1@
 --
+-- -   #VUID-VkImageCreateInfo-pNext-06390# If the
+--     'Vulkan.Core10.Handles.Image' is to be used to import memory from a
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA', a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
+--     structure /must/ be chained to @pNext@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageCreateInfo-sType-sType# @sType@ /must/ be
@@ -1341,6 +1363,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- -   #VUID-VkImageCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo',
@@ -1390,9 +1413,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.DeviceImageMemoryRequirementsKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImageFormatConstraintsInfoFUCHSIA',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.ImageTiling.ImageTiling',
 -- 'Vulkan.Core10.Enums.ImageType.ImageType',
@@ -1460,6 +1486,7 @@ instance Extensible ImageCreateInfo where
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @BufferCollectionImageCreateInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @ImageStencilUsageCreateInfo = Just f
     | Just Refl <- eqT @e @ImageDrmFormatModifierExplicitCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageDrmFormatModifierListCreateInfoEXT = Just f
@@ -1619,7 +1646,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- then the @aspectMask@ member of
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource' /must/
 -- be one of @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@, where the maximum
--- allowed plane index @i@ is defined by the
+-- allowed plane index /i/ is defined by the
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
 -- associated with the image’s 'ImageCreateInfo'::@format@ and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier modifier>.
@@ -1634,6 +1661,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
 -- 'getImageSubresourceLayout'

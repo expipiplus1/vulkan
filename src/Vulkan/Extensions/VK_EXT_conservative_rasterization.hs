@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_conservative_rasterization:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_conservative_rasterization] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_conservative_rasterization extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -222,6 +222,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConservativeRasterizationPropertiesEXT
@@ -294,16 +295,9 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
   , -- | #limits-conservativeRasterizationPostDepthCoverage#
     -- @conservativeRasterizationPostDepthCoverage@ is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
-    -- conservative rasterization with the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-    -- execution mode enabled. When supported the
-    -- 'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable will
-    -- reflect the coverage after the early per-fragment depth and stencil
-    -- tests are applied even when conservative rasterization is enabled.
-    -- Otherwise
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-    -- execution mode /must/ not be used when conservative rasterization is
-    -- enabled.
+    -- conservative rasterization with the @PostDepthCoverage@ execution mode
+    -- enabled. Otherwise the @PostDepthCoverage@ execution mode /must/ not be
+    -- used when conservative rasterization is enabled.
     conservativeRasterizationPostDepthCoverage :: Bool
   }
   deriving (Typeable, Eq)
@@ -383,6 +377,7 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'ConservativeRasterizationModeEXT',
 -- 'PipelineRasterizationConservativeStateCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -466,6 +461,7 @@ instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'
 newtype PipelineRasterizationConservativeStateCreateFlagsEXT = PipelineRasterizationConservativeStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -501,6 +497,7 @@ instance Read PipelineRasterizationConservativeStateCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'
 newtype ConservativeRasterizationModeEXT = ConservativeRasterizationModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

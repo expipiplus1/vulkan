@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_cooperative_matrix:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_cooperative_matrix] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_cooperative_matrix extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -292,6 +292,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'CooperativeMatrixPropertiesNV', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceCooperativeMatrixPropertiesNV :: forall io
                                                 . (MonadIO io)
@@ -340,6 +341,7 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
@@ -411,6 +413,7 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatrixPropertiesNV
@@ -477,6 +480,7 @@ instance Zero PhysicalDeviceCooperativeMatrixPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'ComponentTypeNV', 'ScopeNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceCooperativeMatrixPropertiesNV'
@@ -587,6 +591,7 @@ instance Zero CooperativeMatrixPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'CooperativeMatrixPropertiesNV'
 newtype ScopeNV = ScopeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -631,6 +636,7 @@ instance Read ScopeNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'CooperativeMatrixPropertiesNV'
 newtype ComponentTypeNV = ComponentTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)

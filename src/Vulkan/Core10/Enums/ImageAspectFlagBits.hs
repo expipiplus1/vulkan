@@ -34,7 +34,9 @@ type ImageAspectFlags = ImageAspectFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.DeviceImageMemoryRequirementsKHR',
 -- 'ImageAspectFlags',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 newtype ImageAspectFlagBits = ImageAspectFlagBits Flags

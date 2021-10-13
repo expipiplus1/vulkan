@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_ios_surface:%20&body=@billhollings%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_MVK_ios_surface] @billhollings%0A<<Here describe the issue or question you have about the VK_MVK_ios_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -243,6 +243,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface VK_MVK_ios_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'IOSSurfaceCreateInfoMVK', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -300,6 +301,7 @@ createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface VK_MVK_ios_surface>,
 -- 'IOSSurfaceCreateFlagsMVK',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createIOSSurfaceMVK'
 data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
@@ -360,6 +362,7 @@ instance Zero IOSSurfaceCreateInfoMVK where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface VK_MVK_ios_surface>,
 -- 'IOSSurfaceCreateInfoMVK'
 newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

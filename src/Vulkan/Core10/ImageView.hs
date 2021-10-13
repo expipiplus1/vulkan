@@ -126,6 +126,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',
 -- 'ImageViewCreateInfo'
@@ -216,6 +217,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView'
 destroyImageView :: forall io
@@ -247,9 +249,13 @@ destroyImageView device imageView allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatProperties2ANDROID',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionPropertiesFUCHSIA',
 -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle',
 -- 'ImageViewCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
 data ComponentMapping = ComponentMapping
   { -- | @r@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
@@ -423,7 +429,7 @@ instance Zero ComponentMapping where
 --
 -- -   #VUID-VkImageSubresourceRange-aspectMask-02278# @aspectMask@ /must/
 --     not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index
---     @i@
+--     /i/
 --
 -- == Valid Usage (Implicit)
 --
@@ -436,6 +442,7 @@ instance Zero ComponentMapping where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR',
@@ -626,7 +633,7 @@ instance Zero ImageSubresourceRange where
 -- for the plane.
 --
 -- Any view of an image plane will have the same mapping between texel
--- coordinates and memory locations as used by the channels of the color
+-- coordinates and memory locations as used by the components of the color
 -- aspect, subject to the formulae relating texel coordinates to
 -- lower-resolution planes as described in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction Chroma Reconstruction>.
@@ -672,7 +679,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
 -- -   #VUID-VkImageViewCreateInfo-viewType-01004# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-imageCubeArray image cubemap arrays>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-imageCubeArray image cube map arrays>
 --     feature is not enabled, @viewType@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
@@ -884,9 +891,9 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
 --     @format@ /must/ be identical to the @format@ used to create @image@
 --
--- -   #VUID-VkImageViewCreateInfo-format-04724# If @format@ is one of
---     those listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
+-- -   #VUID-VkImageViewCreateInfo-format-06415# If the image @format@ is
+--     one of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     then the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a conversion value other than VK_NULL_HANDLE
@@ -1141,6 +1148,7 @@ instance Zero ImageSubresourceRange where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ComponentMapping', 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Handles.Image', 'ImageSubresourceRange',
 -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlags',

@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Andres Rodriguez
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_global_priority:%20&body=@lostgoat%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority] @lostgoat%0A<<Here describe the issue or question you have about the VK_EXT_global_priority extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -171,6 +171,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QU
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority VK_EXT_global_priority>,
 -- 'QueueGlobalPriorityEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInfoEXT
@@ -228,6 +229,7 @@ instance Zero DeviceQueueGlobalPriorityCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority VK_EXT_global_priority>,
 -- 'DeviceQueueGlobalPriorityCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_global_priority_query.QueueFamilyGlobalPriorityPropertiesEXT'
 newtype QueueGlobalPriorityEXT = QueueGlobalPriorityEXT Int32

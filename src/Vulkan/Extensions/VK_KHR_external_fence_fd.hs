@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_fence_fd:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_fence_fd] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_external_fence_fd extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -218,6 +218,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'FenceGetFdInfoKHR'
 getFenceFdKHR :: forall io
                . (MonadIO io)
@@ -280,6 +281,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportFenceFdInfoKHR'
 importFenceFdKHR :: forall io
                   . (MonadIO io)
@@ -378,6 +380,7 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlags',
@@ -497,6 +500,7 @@ instance Zero ImportFenceFdInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getFenceFdKHR'

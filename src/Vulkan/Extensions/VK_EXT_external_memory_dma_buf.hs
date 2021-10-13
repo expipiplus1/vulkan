@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_external_memory_dma_buf:%20&body=@chadversary%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_dma_buf] @chadversary%0A<<Here describe the issue or question you have about the VK_EXT_external_memory_dma_buf extension>> >
 --
 -- == Other Extension Metadata
 --

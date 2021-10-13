@@ -64,7 +64,7 @@ import Vulkan.Core10.Enums.PipelineCacheHeaderVersion (PipelineCacheHeaderVersio
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern LOD_CLAMP_NONE :: Float
 pattern LOD_CLAMP_NONE = 1000.0
 
@@ -123,7 +123,7 @@ type LUID_SIZE = 8
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>
 pattern LUID_SIZE :: forall a . Integral a => a
 pattern LUID_SIZE = 8
 
@@ -179,7 +179,7 @@ type REMAINING_MIP_LEVELS = 0xffffffff
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern REMAINING_MIP_LEVELS :: Word32
 pattern REMAINING_MIP_LEVELS = 0xffffffff
 
@@ -190,7 +190,7 @@ type REMAINING_ARRAY_LAYERS = 0xffffffff
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern REMAINING_ARRAY_LAYERS :: Word32
 pattern REMAINING_ARRAY_LAYERS = 0xffffffff
 
@@ -201,7 +201,7 @@ type WHOLE_SIZE = 0xffffffffffffffff
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern WHOLE_SIZE :: Word64
 pattern WHOLE_SIZE = 0xffffffffffffffff
 
@@ -212,7 +212,7 @@ type ATTACHMENT_UNUSED = 0xffffffff
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern ATTACHMENT_UNUSED :: Word32
 pattern ATTACHMENT_UNUSED = 0xffffffff
 
@@ -223,7 +223,7 @@ type QUEUE_FAMILY_IGNORED = 0xffffffff
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern QUEUE_FAMILY_IGNORED :: Word32
 pattern QUEUE_FAMILY_IGNORED = 0xffffffff
 
@@ -234,7 +234,8 @@ type QUEUE_FAMILY_EXTERNAL = 0xfffffffe
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>
 pattern QUEUE_FAMILY_EXTERNAL :: Word32
 pattern QUEUE_FAMILY_EXTERNAL = 0xfffffffe
 
@@ -245,7 +246,7 @@ type QUEUE_FAMILY_FOREIGN_EXT = 0xfffffffd
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
 pattern QUEUE_FAMILY_FOREIGN_EXT :: Word32
 pattern QUEUE_FAMILY_FOREIGN_EXT = 0xfffffffd
 
@@ -257,7 +258,7 @@ type SUBPASS_EXTERNAL = 0xffffffff
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern SUBPASS_EXTERNAL :: Word32
 pattern SUBPASS_EXTERNAL = 0xffffffff
 
@@ -268,7 +269,7 @@ type MAX_DEVICE_GROUP_SIZE = 32
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>
 pattern MAX_DEVICE_GROUP_SIZE :: forall a . Integral a => a
 pattern MAX_DEVICE_GROUP_SIZE = 32
 
@@ -280,7 +281,7 @@ type MAX_DRIVER_NAME_SIZE = 256
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>
 pattern MAX_DRIVER_NAME_SIZE :: forall a . Integral a => a
 pattern MAX_DRIVER_NAME_SIZE = 256
 
@@ -292,7 +293,7 @@ type MAX_DRIVER_INFO_SIZE = 256
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>
 pattern MAX_DRIVER_INFO_SIZE :: forall a . Integral a => a
 pattern MAX_DRIVER_INFO_SIZE = 256
 
@@ -303,7 +304,8 @@ type SHADER_UNUSED_KHR = 0xffffffff
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 pattern SHADER_UNUSED_KHR :: Word32
 pattern SHADER_UNUSED_KHR = 0xffffffff
 
@@ -319,7 +321,7 @@ pattern MAX_GLOBAL_PRIORITY_SIZE_EXT = 16
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern NULL_HANDLE :: IsHandle a => a
 pattern NULL_HANDLE <- ((== zero) -> True)
   where NULL_HANDLE = zero

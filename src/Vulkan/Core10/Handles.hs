@@ -76,6 +76,7 @@ data Instance_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT',
@@ -122,6 +123,7 @@ data PhysicalDevice_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.PhysicalDeviceGroupProperties',
 -- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.acquireDrmDisplayEXT',
@@ -216,6 +218,7 @@ data Device_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.acquireFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImage2KHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR',
@@ -240,6 +243,7 @@ data Device_T
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.createAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV',
 -- 'Vulkan.Core10.Buffer.createBuffer',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.createBufferCollectionFUCHSIA',
 -- 'Vulkan.Core10.BufferView.createBufferView',
 -- 'Vulkan.Core10.CommandPool.createCommandPool',
 -- 'Vulkan.Core10.Pipeline.createComputePipelines',
@@ -282,6 +286,7 @@ data Device_T
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.destroyAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.destroyAccelerationStructureNV',
 -- 'Vulkan.Core10.Buffer.destroyBuffer',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.destroyBufferCollectionFUCHSIA',
 -- 'Vulkan.Core10.BufferView.destroyBufferView',
 -- 'Vulkan.Core10.CommandPool.destroyCommandPool',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.destroyCuFunctionNVX',
@@ -323,6 +328,7 @@ data Device_T
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureHandleNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureMemoryRequirementsNV',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.getBufferCollectionPropertiesFUCHSIA',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress',
 -- 'Vulkan.Extensions.VK_EXT_buffer_device_address.getBufferDeviceAddressEXT',
 -- 'Vulkan.Extensions.VK_KHR_buffer_device_address.getBufferDeviceAddressKHR',
@@ -337,18 +343,21 @@ data Device_T
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport',
 -- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.getDeviceAccelerationStructureCompatibilityKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceBufferMemoryRequirementsKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.getDeviceGroupPeerMemoryFeatures',
 -- 'Vulkan.Extensions.VK_KHR_device_group.getDeviceGroupPeerMemoryFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getDeviceGroupPresentCapabilitiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getDeviceGroupSurfacePresentModes2EXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getDeviceGroupSurfacePresentModesKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageMemoryRequirementsKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageSparseMemoryRequirementsKHR',
 -- 'Vulkan.Core10.Memory.getDeviceMemoryCommitment',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getDeviceMemoryOpaqueCaptureAddress',
 -- 'Vulkan.Extensions.VK_KHR_buffer_device_address.getDeviceMemoryOpaqueCaptureAddressKHR',
 -- 'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr',
 -- 'Vulkan.Core10.Queue.getDeviceQueue',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI>,
+-- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI',
 -- 'Vulkan.Core10.Event.getEventStatus',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_fd.getFenceFdKHR',
 -- 'Vulkan.Core10.Fence.getFenceStatus',
@@ -419,8 +428,11 @@ data Device_T
 -- 'Vulkan.Core10.Event.resetEvent', 'Vulkan.Core10.Fence.resetFences',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.resetQueryPool',
 -- 'Vulkan.Extensions.VK_EXT_host_query_reset.resetQueryPoolEXT',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionBufferConstraintsFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionImageConstraintsFUCHSIA',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.setDebugUtilsObjectNameEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.setDebugUtilsObjectTagEXT',
+-- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.setDeviceMemoryPriorityEXT',
 -- 'Vulkan.Core10.Event.setEvent',
 -- 'Vulkan.Extensions.VK_EXT_hdr_metadata.setHdrMetadataEXT',
 -- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD',
@@ -458,6 +470,7 @@ data Queue_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Queue.getDeviceQueue',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.getQueueCheckpointData2NV',
@@ -489,6 +502,7 @@ data CommandBuffer_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.CommandBufferSubmitInfoKHR',
 -- 'Vulkan.Core10.Queue.SubmitInfo',
 -- 'Vulkan.Core10.CommandBuffer.allocateCommandBuffers',
@@ -631,7 +645,7 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV',
 -- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdSubpassShadingHUAWEI vkCmdSubpassShadingHUAWEI>,
+-- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.cmdSubpassShadingHUAWEI',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
@@ -663,6 +677,7 @@ instance HasObjectType CommandBuffer where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
@@ -684,7 +699,9 @@ instance HasObjectType CommandBuffer where
 -- 'Vulkan.Core10.Memory.freeMemory',
 -- 'Vulkan.Core10.Memory.getDeviceMemoryCommitment',
 -- 'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV',
--- 'Vulkan.Core10.Memory.mapMemory', 'Vulkan.Core10.Memory.unmapMemory'
+-- 'Vulkan.Core10.Memory.mapMemory',
+-- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.setDeviceMemoryPriorityEXT',
+-- 'Vulkan.Core10.Memory.unmapMemory'
 newtype DeviceMemory = DeviceMemory Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -698,6 +715,7 @@ instance Show DeviceMemory where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferAllocateInfo',
 -- 'Vulkan.Core10.CommandPool.createCommandPool',
 -- 'Vulkan.Core10.CommandPool.destroyCommandPool',
@@ -718,6 +736,7 @@ instance Show CommandPool where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferDeviceAddressInfo',
@@ -784,6 +803,7 @@ instance Show Buffer where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet',
 -- 'Vulkan.Core10.BufferView.createBufferView',
 -- 'Vulkan.Core10.BufferView.destroyBufferView'
@@ -800,6 +820,7 @@ instance Show BufferView where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.BlitImageInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.CopyBufferToImageInfo2KHR',
@@ -842,6 +863,7 @@ instance Show Image where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 -- 'Vulkan.Core10.Pass.FramebufferCreateInfo',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
@@ -865,6 +887,7 @@ instance Show ImageView where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
 -- 'Vulkan.Core10.Shader.createShaderModule',
 -- 'Vulkan.Core10.Shader.destroyShaderModule'
@@ -881,6 +904,7 @@ instance Show ShaderModule where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
@@ -917,6 +941,7 @@ instance Show Pipeline where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
@@ -942,6 +967,7 @@ instance Show PipelineLayout where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
@@ -960,6 +986,7 @@ instance Show Sampler where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.CopyDescriptorSet',
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet',
 -- 'Vulkan.Core10.DescriptorSet.allocateDescriptorSets',
@@ -980,6 +1007,7 @@ instance Show DescriptorSet where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
 -- 'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo',
@@ -998,6 +1026,7 @@ instance Show DescriptorSetLayout where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
 -- 'Vulkan.Core10.DescriptorSet.createDescriptorPool',
 -- 'Vulkan.Core10.DescriptorSet.destroyDescriptorPool',
@@ -1016,6 +1045,7 @@ instance Show DescriptorPool where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_fd.FenceGetFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_win32.FenceGetWin32HandleInfoKHR',
@@ -1043,6 +1073,7 @@ instance Show Fence where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.ImportSemaphoreFdInfoKHR',
@@ -1074,6 +1105,7 @@ instance Show Semaphore where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdResetEvent2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent',
@@ -1096,6 +1128,7 @@ instance Show Event where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBeginQueryIndexedEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults',
@@ -1124,6 +1157,7 @@ instance Show QueryPool where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'Vulkan.Core10.Pass.createFramebuffer',
@@ -1141,16 +1175,17 @@ instance Show Framebuffer where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Core10.Pass.FramebufferCreateInfo',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkSubpassShadingPipelineCreateInfoHUAWEI VkSubpassShadingPipelineCreateInfoHUAWEI>,
+-- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.SubpassShadingPipelineCreateInfoHUAWEI',
 -- 'Vulkan.Core10.Pass.createRenderPass',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.createRenderPass2KHR',
 -- 'Vulkan.Core10.Pass.destroyRenderPass',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI>,
+-- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI',
 -- 'Vulkan.Core10.Pass.getRenderAreaGranularity'
 newtype RenderPass = RenderPass Word64
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1165,6 +1200,7 @@ instance Show RenderPass where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.createComputePipelines',
 -- 'Vulkan.Core10.Pipeline.createGraphicsPipelines',
 -- 'Vulkan.Core10.PipelineCache.createPipelineCache',

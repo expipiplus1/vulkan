@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_geometry_shader_passthrough:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_geometry_shader_passthrough] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_geometry_shader_passthrough extension>> >
 --
 -- == Other Extension Metadata
 --

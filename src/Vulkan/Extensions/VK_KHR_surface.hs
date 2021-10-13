@@ -24,10 +24,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -168,10 +168,10 @@
 -- resolved by a Valid Usage statement, and\/or by a separate @pNext@ chain
 -- version of the query struct specific to a given extension or parameters,
 -- via extensible versions of the queries:
--- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR',
--- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceFormats2KHR'.
--- and
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
+-- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR',
+-- and
+-- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceFormats2KHR'.
 --
 -- 3) Should Vulkan support Xlib or XCB as the API for accessing the X
 -- Window System platform?
@@ -559,6 +559,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'Vulkan.Extensions.Handles.SurfaceKHR'
 destroySurfaceKHR :: forall io
@@ -636,6 +637,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -711,6 +713,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceCapabilitiesKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io
@@ -820,6 +823,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceFormatKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceFormatsKHR :: forall io
@@ -922,6 +926,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PresentModeKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfacePresentModesKHR :: forall io
@@ -975,6 +980,7 @@ pattern COLORSPACE_SRGB_NONLINEAR_KHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'CompositeAlphaFlagsKHR', 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR',
@@ -1115,6 +1121,7 @@ instance Zero SurfaceCapabilitiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'ColorSpaceKHR', 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
 -- 'getPhysicalDeviceSurfaceFormatsKHR'
@@ -1164,7 +1171,7 @@ instance Zero SurfaceFormatKHR where
            zero
 
 
--- | VkPresentModeKHR - presentation mode supported for a surface
+-- | VkPresentModeKHR - Presentation mode supported for a surface
 --
 -- = Description
 --
@@ -1203,6 +1210,7 @@ instance Zero SurfaceFormatKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'getPhysicalDeviceSurfacePresentModesKHR'
@@ -1304,7 +1312,7 @@ instance Read PresentModeKHR where
   readPrec = enumReadPrec enumPrefixPresentModeKHR showTablePresentModeKHR conNamePresentModeKHR PresentModeKHR
 
 
--- | VkColorSpaceKHR - supported color space of the presentation engine
+-- | VkColorSpaceKHR - Supported color space of the presentation engine
 --
 -- = Description
 --
@@ -1391,7 +1399,7 @@ instance Read PresentModeKHR where
 --   \end{cases}
 -- \end{aligned}\]
 --
--- where L is the linear value of a color channel and E is the encoded
+-- where L is the linear value of a color component and E is the encoded
 -- value (as stored in the image in memory).
 --
 -- Note
@@ -1400,6 +1408,7 @@ instance Read PresentModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'SurfaceFormatKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 newtype ColorSpaceKHR = ColorSpaceKHR Int32
@@ -1516,7 +1525,7 @@ instance Read ColorSpaceKHR where
 
 type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 
--- | VkCompositeAlphaFlagBitsKHR - alpha compositing modes supported on a
+-- | VkCompositeAlphaFlagBitsKHR - Alpha compositing modes supported on a
 -- device
 --
 -- = Description
@@ -1525,29 +1534,30 @@ type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'CompositeAlphaFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 newtype CompositeAlphaFlagBitsKHR = CompositeAlphaFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha channel, if it exists, of
+-- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha component, if it exists, of
 -- the images is ignored in the compositing process. Instead, the image is
 -- treated as if it has a constant alpha of 1.0.
 pattern COMPOSITE_ALPHA_OPAQUE_BIT_KHR          = CompositeAlphaFlagBitsKHR 0x00000001
--- | 'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha channel, if it
+-- | 'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha component, if it
 -- exists, of the images is respected in the compositing process. The
--- non-alpha channels of the image are expected to already be multiplied by
--- the alpha channel by the application.
+-- non-alpha components of the image are expected to already be multiplied
+-- by the alpha component by the application.
 pattern COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  = CompositeAlphaFlagBitsKHR 0x00000002
--- | 'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha channel, if it
+-- | 'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha component, if it
 -- exists, of the images is respected in the compositing process. The
--- non-alpha channels of the image are not expected to already be
--- multiplied by the alpha channel by the application; instead, the
--- compositor will multiply the non-alpha channels of the image by the
--- alpha channel during compositing.
+-- non-alpha components of the image are not expected to already be
+-- multiplied by the alpha component by the application; instead, the
+-- compositor will multiply the non-alpha components of the image by the
+-- alpha component during compositing.
 pattern COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000004
 -- | 'COMPOSITE_ALPHA_INHERIT_BIT_KHR': The way in which the presentation
--- engine treats the alpha channel in the images is unknown to the Vulkan
+-- engine treats the alpha component in the images is unknown to the Vulkan
 -- API. Instead, the application is responsible for setting the composite
 -- alpha blending mode using native window system commands. If the
 -- application does not set the blending mode using native window system
@@ -1584,11 +1594,12 @@ instance Read CompositeAlphaFlagBitsKHR where
 
 type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 
--- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
+-- | VkSurfaceTransformFlagBitsKHR - Presentation transforms supported on a
 -- device
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
 -- 'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR',

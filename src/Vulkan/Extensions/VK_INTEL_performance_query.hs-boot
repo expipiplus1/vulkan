@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Lionel Landwerlin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_performance_query:%20&body=@llandwerlin%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_performance_query] @llandwerlin%0A<<Here describe the issue or question you have about the VK_INTEL_performance_query extension>> >
 --
 -- == Other Extension Metadata
 --

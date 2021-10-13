@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Mark Young
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_utils:%20&body=@marky-lunarg%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_utils] @marky-lunarg%0A<<Here describe the issue or question you have about the VK_EXT_debug_utils extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -677,6 +677,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
 setDebugUtilsObjectNameEXT :: forall io
                             . (MonadIO io)
@@ -733,6 +734,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
 setDebugUtilsObjectTagEXT :: forall io
                            . (MonadIO io)
@@ -773,6 +775,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
 queueBeginDebugUtilsLabelEXT :: forall io
                               . (MonadIO io)
@@ -835,6 +838,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.Queue'
 queueEndDebugUtilsLabelEXT :: forall io
                             . (MonadIO io)
@@ -871,6 +875,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
 queueInsertDebugUtilsLabelEXT :: forall io
                                . (MonadIO io)
@@ -943,6 +948,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
 cmdBeginDebugUtilsLabelEXT :: forall io
                             . (MonadIO io)
@@ -989,6 +995,17 @@ foreign import ccall
 -- the linear series of submissions to a single queue, the calls to
 -- 'cmdBeginDebugUtilsLabelEXT' and 'cmdEndDebugUtilsLabelEXT' /must/ be
 -- matched and balanced.
+--
+-- There /can/ be problems reporting command buffer debug labels during the
+-- recording process because command buffers /may/ be recorded out of
+-- sequence with the resulting execution order. Since the recording order
+-- /may/ be different, a solitary command buffer /may/ have an inconsistent
+-- view of the debug label regions by itself. Therefore, if an issue occurs
+-- during the recording of a command buffer, and the environment requires
+-- returning debug labels, the implementation /may/ return only those
+-- labels it is aware of. This is true even if the implementation is aware
+-- of only the debug labels within the command buffer being actively
+-- recorded.
 --
 -- == Valid Usage
 --
@@ -1037,6 +1054,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndDebugUtilsLabelEXT :: forall io
                           . (MonadIO io)
@@ -1100,6 +1118,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
 cmdInsertDebugUtilsLabelEXT :: forall io
                              . (MonadIO io)
@@ -1162,6 +1181,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DebugUtilsMessengerCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
@@ -1257,6 +1277,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Vulkan.Core10.Handles.Instance'
@@ -1331,6 +1352,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagBitsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCallbackDataEXT', 'Vulkan.Core10.Handles.Instance'
 submitDebugUtilsMessageEXT :: forall io
@@ -1400,6 +1422,7 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCallbackDataEXT',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1470,6 +1493,7 @@ instance Zero DebugUtilsObjectNameInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setDebugUtilsObjectTagEXT'
@@ -1565,6 +1589,7 @@ instance Zero DebugUtilsObjectTagInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCallbackDataEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdBeginDebugUtilsLabelEXT', 'cmdInsertDebugUtilsLabelEXT',
@@ -1681,6 +1706,7 @@ instance Zero DebugUtilsLabelEXT where
 -- = See Also
 --
 -- 'PFN_vkDebugUtilsMessengerCallbackEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1848,6 +1874,7 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsLabelEXT', 'DebugUtilsMessengerCallbackDataFlagsEXT',
 -- 'DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1968,6 +1995,7 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCreateInfoEXT'
 newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2006,6 +2034,7 @@ instance Read DebugUtilsMessengerCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCallbackDataEXT'
 newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDataFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2060,6 +2089,7 @@ type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagsEXT', 'submitDebugUtilsMessageEXT'
 newtype DebugUtilsMessageSeverityFlagBitsEXT = DebugUtilsMessageSeverityFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2119,6 +2149,7 @@ type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageTypeFlagsEXT'
 newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2185,6 +2216,7 @@ type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCreateInfoEXT'
 type PFN_vkDebugUtilsMessengerCallbackEXT = FunPtr FN_vkDebugUtilsMessengerCallbackEXT
 

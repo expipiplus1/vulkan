@@ -115,6 +115,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
@@ -220,6 +221,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
 destroyCommandPool :: forall io
@@ -308,6 +310,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandPool',
 -- 'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlags',
 -- 'Vulkan.Core10.Handles.Device'
@@ -355,6 +358,7 @@ resetCommandPool device commandPool flags = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createCommandPool'
 data CommandPoolCreateInfo = CommandPoolCreateInfo

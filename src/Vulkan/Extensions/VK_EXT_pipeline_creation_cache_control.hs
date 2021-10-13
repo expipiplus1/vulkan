@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Gregory Grebe
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_cache_control:%20&body=@grgrebe_amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_creation_cache_control] @grgrebe_amd%0A<<Here describe the issue or question you have about the VK_EXT_pipeline_creation_cache_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -145,6 +145,10 @@
 --
 --     -   'PhysicalDevicePipelineCreationCacheControlFeaturesEXT'
 --
+-- == New Enums
+--
+-- -   'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
+--
 -- == New Enum Constants
 --
 -- -   'EXT_PIPELINE_CREATION_CACHE_CONTROL_EXTENSION_NAME'
@@ -191,7 +195,8 @@
 --
 -- = See Also
 --
--- 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT'
+-- 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT',
+-- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
 --
 -- = Document Notes
 --
@@ -260,6 +265,7 @@ pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED_EXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control VK_EXT_pipeline_creation_cache_control>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePipelineCreationCacheControlFeaturesEXT = PhysicalDevicePipelineCreationCacheControlFeaturesEXT

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_sample_locations:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_sample_locations] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_sample_locations extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -253,7 +253,23 @@ foreign import ccall
   "dynamic" mkVkCmdSetSampleLocationsEXT
   :: FunPtr (Ptr CommandBuffer_T -> Ptr SampleLocationsInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr SampleLocationsInfoEXT -> IO ()
 
--- | vkCmdSetSampleLocationsEXT - Set the dynamic sample locations state
+-- | vkCmdSetSampleLocationsEXT - Set sample locations dynamically for a
+-- command buffer
+--
+-- = Description
+--
+-- This command sets the custom sample locations for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+-- and when the
+-- 'PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+-- property of the bound graphics pipeline is
+-- 'Vulkan.Core10.FundamentalTypes.TRUE'. Otherwise, this state is
+-- specified by the
+-- 'PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsInfo@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -311,6 +327,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SampleLocationsInfoEXT'
 cmdSetSampleLocationsEXT :: forall io
                           . (MonadIO io)
@@ -344,6 +361,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'MultisamplePropertiesEXT', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
 getPhysicalDeviceMultisamplePropertiesEXT :: forall io
@@ -391,6 +409,7 @@ getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . eval
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'SampleLocationsInfoEXT'
 data SampleLocationEXT = SampleLocationEXT
   { -- | @x@ is the horizontal coordinate of the sample’s location.
@@ -480,6 +499,7 @@ instance Zero SampleLocationEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'AttachmentSampleLocationsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'PipelineSampleLocationsStateCreateInfoEXT',
@@ -556,6 +576,7 @@ instance Zero SampleLocationsInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
 data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
   { -- | @attachmentIndex@ is the index of the attachment for which the sample
@@ -627,6 +648,7 @@ instance Zero AttachmentSampleLocationsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
 data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
   { -- | @subpassIndex@ is the index of the subpass for which the sample
@@ -704,6 +726,7 @@ instance Zero SubpassSampleLocationsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'AttachmentSampleLocationsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'SubpassSampleLocationsEXT'
@@ -788,6 +811,7 @@ instance Zero RenderPassSampleLocationsBeginInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'SampleLocationsInfoEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCreateInfoEXT
@@ -860,6 +884,7 @@ instance Zero PipelineSampleLocationsStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
@@ -960,6 +985,7 @@ instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceMultisamplePropertiesEXT'

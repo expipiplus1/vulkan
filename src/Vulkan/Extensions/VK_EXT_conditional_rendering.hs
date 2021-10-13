@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_conditional_rendering:%20&body=@vkushwaha%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_conditional_rendering] @vkushwaha%0A<<Here describe the issue or question you have about the VK_EXT_conditional_rendering extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -283,6 +283,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'ConditionalRenderingBeginInfoEXT'
 cmdBeginConditionalRenderingEXT :: forall io
@@ -379,6 +380,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndConditionalRenderingEXT :: forall io
                                . (MonadIO io)
@@ -443,6 +445,7 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>,
 -- 'Vulkan.Core10.Handles.Buffer', 'ConditionalRenderingFlagsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -526,6 +529,7 @@ instance Zero ConditionalRenderingBeginInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data CommandBufferInheritanceConditionalRenderingInfoEXT = CommandBufferInheritanceConditionalRenderingInfoEXT
@@ -599,6 +603,7 @@ instance Zero CommandBufferInheritanceConditionalRenderingInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceConditionalRenderingFeaturesEXT = PhysicalDeviceConditionalRenderingFeaturesEXT
@@ -659,6 +664,7 @@ type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>,
 -- 'ConditionalRenderingFlagsEXT'
 newtype ConditionalRenderingFlagBitsEXT = ConditionalRenderingFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

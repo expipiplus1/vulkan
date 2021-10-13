@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory_win32:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_external_memory_win32] @cubanismo%0A<<Here describe the issue or question you have about the VK_NV_external_memory_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -347,7 +347,7 @@ foreign import ccall
   "dynamic" mkVkGetMemoryWin32HandleNV
   :: FunPtr (Ptr Device_T -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> Ptr HANDLE -> IO Result) -> Ptr Device_T -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> Ptr HANDLE -> IO Result
 
--- | vkGetMemoryWin32HandleNV - retrieve Win32 handle to a device memory
+-- | vkGetMemoryWin32HandleNV - Retrieve Win32 handle to a device memory
 -- object
 --
 -- == Return Codes
@@ -364,6 +364,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_win32 VK_NV_external_memory_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV'
 getMemoryWin32HandleNV :: forall io
@@ -411,7 +412,7 @@ getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
   pure $ (pHandle)
 
 
--- | VkImportMemoryWin32HandleInfoNV - import Win32 memory created on the
+-- | VkImportMemoryWin32HandleInfoNV - Import Win32 memory created on the
 -- same physical device
 --
 -- = Description
@@ -423,6 +424,7 @@ getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_win32 VK_NV_external_memory_win32>,
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
@@ -484,7 +486,7 @@ instance Zero ImportMemoryWin32HandleInfoNV where
            zero
 
 
--- | VkExportMemoryWin32HandleInfoNV - specify security attributes and access
+-- | VkExportMemoryWin32HandleInfoNV - Specify security attributes and access
 -- rights for Win32 memory handles
 --
 -- = Description
@@ -512,6 +514,7 @@ instance Zero ImportMemoryWin32HandleInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_win32 VK_NV_external_memory_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryWin32HandleInfoNV = ExportMemoryWin32HandleInfoNV
   { -- | @pAttributes@ is a pointer to a Windows 'SECURITY_ATTRIBUTES' structure

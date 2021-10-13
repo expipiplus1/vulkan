@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Tony Zlatinski
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_ycbcr_2plane_444_formats:%20&body=@tzlatinski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_ycbcr_2plane_444_formats] @tzlatinski%0A<<Here describe the issue or question you have about the VK_EXT_ycbcr_2plane_444_formats extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -46,8 +46,7 @@
 --
 -- This extension adds some Y′CBCR formats that are in common use for video
 -- encode and decode, but were not part of the
--- <VK_KHR_sampler_ycbcr_conversion.html VK_KHR_sampler_ycbcr_conversion>
--- extension.
+-- @VK_KHR_sampler_ycbcr_conversion@ extension.
 --
 -- == New Structures
 --

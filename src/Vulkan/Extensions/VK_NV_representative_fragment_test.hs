@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_representative_fragment_test:%20&body=@kthangudu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_representative_fragment_test] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_representative_fragment_test extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -216,6 +216,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRepresentativeFragmentTestFeaturesNV = PhysicalDeviceRepresentativeFragmentTestFeaturesNV
@@ -272,15 +273,15 @@ instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 -- 'Vulkan.Core10.FundamentalTypes.FALSE', and the representative fragment
 -- test is disabled.
 --
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>
--- are not enabled in the active fragment shader, the representative
--- fragment shader test has no effect, even if enabled.
+-- If the active fragment shader specifies the @EarlyFragmentTests@
+-- execution mode, the representative fragment shader test has no effect,
+-- even if enabled.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRepresentativeFragmentTestStateCreateInfoNV = PipelineRepresentativeFragmentTestStateCreateInfoNV

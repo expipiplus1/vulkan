@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_depth_clip_enable:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_depth_clip_enable] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_depth_clip_enable extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -172,6 +172,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFeaturesEXT
@@ -227,6 +228,7 @@ instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'PipelineRasterizationDepthClipStateCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -292,6 +294,7 @@ instance Zero PipelineRasterizationDepthClipStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>,
 -- 'PipelineRasterizationDepthClipStateCreateInfoEXT'
 newtype PipelineRasterizationDepthClipStateCreateFlagsEXT = PipelineRasterizationDepthClipStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

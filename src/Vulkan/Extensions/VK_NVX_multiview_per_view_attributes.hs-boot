@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_multiview_per_view_attributes:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_multiview_per_view_attributes] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NVX_multiview_per_view_attributes extension>> >
 --
 -- == Other Extension Metadata
 --

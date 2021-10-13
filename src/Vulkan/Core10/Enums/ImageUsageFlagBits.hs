@@ -33,6 +33,7 @@ type ImageUsageFlags = ImageUsageFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ImageUsageFlags'
 newtype ImageUsageFlagBits = ImageUsageFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -64,14 +65,15 @@ pattern IMAGE_USAGE_COLOR_ATTACHMENT_BIT                     = ImageUsageFlagBit
 -- use as a depth\/stencil or depth\/stencil resolve attachment in a
 -- 'Vulkan.Core10.Handles.Framebuffer'.
 pattern IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT             = ImageUsageFlagBits 0x00000020
--- | 'IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT' specifies that the memory bound
--- to this image will be allocated with the
+-- | 'IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT' specifies that implementations
+-- /may/ support using
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory memory allocations>
+-- with the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
--- (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory>
--- for more detail). This bit /can/ be set for any image that /can/ be used
--- to create a 'Vulkan.Core10.Handles.ImageView' suitable for use as a
--- color, resolve, depth\/stencil, or input attachment.
+-- to back an image with this usage. This bit /can/ be set for any image
+-- that /can/ be used to create a 'Vulkan.Core10.Handles.ImageView'
+-- suitable for use as a color, resolve, depth\/stencil, or input
+-- attachment.
 pattern IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT                 = ImageUsageFlagBits 0x00000040
 -- | 'IMAGE_USAGE_INPUT_ATTACHMENT_BIT' specifies that the image /can/ be
 -- used to create a 'Vulkan.Core10.Handles.ImageView' suitable for

@@ -105,6 +105,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'PipelineLayoutCreateInfo'
@@ -200,6 +201,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineLayout'
 destroyPipelineLayout :: forall io
@@ -231,6 +233,7 @@ destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PipelineLayoutCreateInfo',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
 data PushConstantRange = PushConstantRange
@@ -693,6 +696,7 @@ instance Zero PushConstantRange where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlags.PipelineLayoutCreateFlags',
 -- 'PushConstantRange', 'Vulkan.Core10.Enums.StructureType.StructureType',

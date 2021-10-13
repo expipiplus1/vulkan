@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_extended_dynamic_state:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_extended_dynamic_state] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_extended_dynamic_state extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -256,7 +256,17 @@ foreign import ccall
   "dynamic" mkVkCmdSetCullModeEXT
   :: FunPtr (Ptr CommandBuffer_T -> CullModeFlags -> IO ()) -> Ptr CommandBuffer_T -> CullModeFlags -> IO ()
 
--- | vkCmdSetCullModeEXT - Set the cull mode property
+-- | vkCmdSetCullModeEXT - Set cull mode dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the cull mode for subsequent drawing commands when the
+-- graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE_EXT' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@cullMode@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -301,6 +311,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.CullModeFlagBits.CullModeFlags'
 cmdSetCullModeEXT :: forall io
@@ -327,7 +338,18 @@ foreign import ccall
   "dynamic" mkVkCmdSetFrontFaceEXT
   :: FunPtr (Ptr CommandBuffer_T -> FrontFace -> IO ()) -> Ptr CommandBuffer_T -> FrontFace -> IO ()
 
--- | vkCmdSetFrontFaceEXT - Set the front face property
+-- | vkCmdSetFrontFaceEXT - Set front face orientation dynamically for a
+-- command buffer
+--
+-- = Description
+--
+-- This command sets the front face orientation for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRONT_FACE_EXT' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@frontFace@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -371,6 +393,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.FrontFace.FrontFace'
 cmdSetFrontFaceEXT :: forall io
@@ -378,7 +401,8 @@ cmdSetFrontFaceEXT :: forall io
                    => -- | @commandBuffer@ is the command buffer into which the command will be
                       -- recorded.
                       CommandBuffer
-                   -> -- | @frontFace@ specifies the front face property to use for drawing.
+                   -> -- | @frontFace@ is a 'Vulkan.Core10.Enums.FrontFace.FrontFace' value
+                      -- specifying the front-facing triangle orientation to be used for culling.
                       FrontFace
                    -> io ()
 cmdSetFrontFaceEXT commandBuffer frontFace = liftIO $ do
@@ -397,7 +421,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetPrimitiveTopologyEXT
   :: FunPtr (Ptr CommandBuffer_T -> PrimitiveTopology -> IO ()) -> Ptr CommandBuffer_T -> PrimitiveTopology -> IO ()
 
--- | vkCmdSetPrimitiveTopologyEXT - Set the primitive topology state
+-- | vkCmdSetPrimitiveTopologyEXT - Set primitive topology state dynamically
+-- for a command buffer
+--
+-- = Description
+--
+-- This command sets the primitive topology for subsequent drawing commands
+-- when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -443,6 +479,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.PrimitiveTopology.PrimitiveTopology'
 cmdSetPrimitiveTopologyEXT :: forall io
@@ -450,7 +487,7 @@ cmdSetPrimitiveTopologyEXT :: forall io
                            => -- | @commandBuffer@ is the command buffer into which the command will be
                               -- recorded.
                               CommandBuffer
-                           -> -- No documentation found for Nested "vkCmdSetPrimitiveTopologyEXT" "primitiveTopology"
+                           -> -- | @primitiveTopology@ specifies the primitive topology to use for drawing.
                               PrimitiveTopology
                            -> io ()
 cmdSetPrimitiveTopologyEXT commandBuffer primitiveTopology = liftIO $ do
@@ -470,6 +507,18 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Viewport -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Viewport -> IO ()
 
 -- | vkCmdSetViewportWithCountEXT - Set the viewport count and viewports
+-- dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the viewport count and viewports state for subsequent
+-- drawing commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the corresponding
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
+-- and @pViewports@ values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -532,6 +581,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Pipeline.Viewport'
 cmdSetViewportWithCountEXT :: forall io
                             . (MonadIO io)
@@ -559,7 +609,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetScissorWithCountEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Rect2D -> IO ()
 
--- | vkCmdSetScissorWithCountEXT - Set the scissor count and scissors
+-- | vkCmdSetScissorWithCountEXT - Set the scissor count and scissor
+-- rectangular bounds dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the scissor count and scissor rectangular bounds state
+-- for subsequence drawing commands when the graphics pipeline is created
+-- with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the corresponding
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
+-- and @pScissors@ values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -634,6 +697,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetScissorWithCountEXT :: forall io
@@ -662,7 +726,8 @@ foreign import ccall
   "dynamic" mkVkCmdBindVertexBuffers2EXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Buffer -> Ptr DeviceSize -> Ptr DeviceSize -> Ptr DeviceSize -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Buffer -> Ptr DeviceSize -> Ptr DeviceSize -> Ptr DeviceSize -> IO ()
 
--- | vkCmdBindVertexBuffers2EXT - Bind vertex buffers to a command buffer
+-- | vkCmdBindVertexBuffers2EXT - Bind vertex buffers to a command buffer and
+-- dynamically set strides
 --
 -- = Description
 --
@@ -684,13 +749,16 @@ foreign import ccall
 -- components are
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
 --
--- If the bound pipeline state object was created with the
+-- This command also \<pipelines-dynamic-state, dynamically sets>> the byte
+-- strides between consecutive elements within buffer @pBuffers@[i] to the
+-- corresponding @pStrides@[i] value when the graphics pipeline is created
+-- with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
--- dynamic state enabled then @pStrides@[i] specifies the byte stride
--- between consecutive elements within the corresponding buffer. In this
--- case the
--- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ state
--- from the pipeline state object is ignored.
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, strides are specified by the
+-- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ values
+-- used to create the currently active pipeline.
 --
 -- If the bound pipeline state object was also created with the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
@@ -809,6 +877,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBindVertexBuffers2EXT :: forall io
@@ -870,16 +939,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthTestEnableEXT
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
--- | vkCmdSetDepthTestEnableEXT - Set the depth test enable for a command
--- buffer
+-- | vkCmdSetDepthTestEnableEXT - Set depth test enable dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the depth test enable for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthTestEnable@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -921,6 +993,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthTestEnableEXT :: forall io
@@ -947,16 +1020,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthWriteEnableEXT
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
--- | vkCmdSetDepthWriteEnableEXT - Set the depth write enable for the command
--- buffer
+-- | vkCmdSetDepthWriteEnableEXT - Set depth write enable dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the depth write enable for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthWriteEnable@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -998,6 +1074,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthWriteEnableEXT :: forall io
@@ -1024,16 +1101,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthCompareOpEXT
   :: FunPtr (Ptr CommandBuffer_T -> CompareOp -> IO ()) -> Ptr CommandBuffer_T -> CompareOp -> IO ()
 
--- | vkCmdSetDepthCompareOpEXT - Set the depth comparison operator for the
--- command buffer
+-- | vkCmdSetDepthCompareOpEXT - Set depth comparison operator dynamically
+-- for a command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the depth comparison operator for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthCompareOp@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -1079,6 +1159,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp'
 cmdSetDepthCompareOpEXT :: forall io
@@ -1105,16 +1186,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthBoundsTestEnableEXT
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
--- | vkCmdSetDepthBoundsTestEnableEXT - Set the depth bounds test enable for
--- a command buffer
+-- | vkCmdSetDepthBoundsTestEnableEXT - Set depth bounds test enable
+-- dynamically for a command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the depth bounds enable for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthBoundsTestEnable@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -1156,6 +1240,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBoundsTestEnableEXT :: forall io
@@ -1182,16 +1267,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilTestEnableEXT
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
--- | vkCmdSetStencilTestEnableEXT - Set the stencil test enable for the
+-- | vkCmdSetStencilTestEnableEXT - Set stencil test enable dynamically for a
 -- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil test enable for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@stencilTestEnable@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -1233,6 +1321,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetStencilTestEnableEXT :: forall io
@@ -1259,14 +1348,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilOpEXT
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> StencilOp -> StencilOp -> StencilOp -> CompareOp -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> StencilOp -> StencilOp -> StencilOp -> CompareOp -> IO ()
 
--- | vkCmdSetStencilOpEXT - Set the stencil operation for the command buffer
+-- | vkCmdSetStencilOpEXT - Set stencil operation dynamically for a command
+-- buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil operation for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP_EXT' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the corresponding
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@failOp@,
+-- @passOp@, @depthFailOp@, and @compareOp@ values used to create the
+-- currently active pipeline, for both front and back faces.
 --
 -- == Valid Usage
 --
@@ -1326,6 +1420,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags',
@@ -1386,6 +1481,7 @@ cmdSetStencilOpEXT commandBuffer faceMask failOp passOp depthFailOp compareOp = 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExtendedDynamicStateFeaturesEXT = PhysicalDeviceExtendedDynamicStateFeaturesEXT

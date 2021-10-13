@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_memory_budget:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_memory_budget] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_memory_budget extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -63,9 +63,8 @@
 -- @heapUsage@. From here the application can notice if it is over budget
 -- and decide how it wants to handle the memory situation (free it, move to
 -- host memory, changing mipmap levels, etc). This extension is designed to
--- be used in concert with
--- <VK_EXT_memory_priority.html VK_EXT_memory_priority> to help with this
--- part of memory management.
+-- be used in concert with @VK_EXT_memory_priority@ to help with this part
+-- of memory management.
 --
 -- == New Structures
 --

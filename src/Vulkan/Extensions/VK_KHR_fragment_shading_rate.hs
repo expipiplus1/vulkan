@@ -15,7 +15,7 @@
 --     227
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -28,12 +28,12 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_fragment_shading_rate:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_fragment_shading_rate] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_fragment_shading_rate extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-05-06
+--     2021-09-30
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -175,11 +175,24 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
 -- == Version History
 --
 -- -   Revision 1, 2020-05-06 (Tobias Hector)
 --
 --     -   Initial revision
+--
+-- -   Revision 2, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
 -- = See Also
 --
@@ -217,6 +230,9 @@ module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( cmdSetFragmentShadingRa
                                                        , pattern KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION
                                                        , KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME
                                                        , pattern KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME
+                                                       , FormatFeatureFlagBits2KHR(..)
+                                                       , FormatFeatureFlags2KHR
+                                                       , Flags64
                                                        ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
@@ -297,6 +313,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.FundamentalTypes (Flags64)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlagBits2KHR(..))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -304,8 +323,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetFragmentShadingRateKHR
   :: FunPtr (Ptr CommandBuffer_T -> Ptr Extent2D -> Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR) -> IO ()) -> Ptr CommandBuffer_T -> Ptr Extent2D -> Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR) -> IO ()
 
--- | vkCmdSetFragmentShadingRateKHR - Set pipeline fragment shading rate
--- dynamically
+-- | vkCmdSetFragmentShadingRateKHR - Set pipeline fragment shading rate and
+-- combiner operation dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the pipeline fragment shading rate and combiner
+-- operation for subsequent drawing commands when the graphics pipeline is
+-- created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineFragmentShadingRateStateCreateInfoKHR' values used to create
+-- the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -329,13 +360,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-primitiveFragmentShadingRate-04510#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
 --     is not enabled, @combinerOps@[0] /must/ be
 --     'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-attachmentFragmentShadingRate-04511#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
 --     is not enabled, @combinerOps@[1] /must/ be
 --     'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
@@ -406,6 +437,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'FragmentShadingRateCombinerOpKHR'
@@ -578,6 +610,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceFragmentShadingRateKHR'
 getPhysicalDeviceFragmentShadingRatesKHR :: forall io
@@ -704,6 +737,7 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -784,6 +818,7 @@ instance Zero FragmentShadingRateAttachmentInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'FragmentShadingRateCombinerOpKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -878,6 +913,7 @@ instance Zero PipelineFragmentShadingRateStateCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShadingRateFeaturesKHR = PhysicalDeviceFragmentShadingRateFeaturesKHR
@@ -970,12 +1006,13 @@ instance Zero PhysicalDeviceFragmentShadingRateFeaturesKHR where
 -- property.
 --
 -- These properties are related to
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-primsrast-fragment-shading-rate fragment shading rates>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate fragment shading rates>.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
@@ -1025,9 +1062,7 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- @ViewportIndex@ built-in when setting @PrimitiveShadingRateKHR@. It
     -- /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE' if the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
-    -- feature, the
-    -- <VK_EXT_shader_viewport_index_layer.html VK_EXT_shader_viewport_index_layer>
-    -- extension, or the
+    -- feature, the @VK_EXT_shader_viewport_index_layer@ extension, or the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
     -- feature is not supported, or if the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
@@ -1044,9 +1079,7 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiview multiview>
     -- feature, the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
-    -- feature, the
-    -- <VK_EXT_shader_viewport_index_layer.html VK_EXT_shader_viewport_index_layer>
-    -- extension, or the
+    -- feature, the @VK_EXT_shader_viewport_index_layer@ extension, or the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
     -- feature is not supported, or if the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -1120,31 +1153,29 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-conservativeraster conservative rasterization>
     -- is supported for multi-pixel fragments. It /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' if
-    -- <VK_EXT_conservative_rasterization.html VK_EXT_conservative_rasterization>
-    -- is not supported. If this value is
+    -- @VK_EXT_conservative_rasterization@ is not supported. If this value is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', using
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-conservativeraster conservative rasterization>
     -- will clamp the fragment shading rate to (1,1).
     fragmentShadingRateWithConservativeRasterization :: Bool
   , -- | #limits-fragmentShadingRateWithFragmentShaderInterlock#
     -- @fragmentShadingRateWithFragmentShaderInterlock@ specifies whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-shader-interlock fragment shader interlock>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-shader-interlock fragment shader interlock>
     -- is supported for multi-pixel fragments. It /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' if
-    -- <VK_EXT_fragment_shader_interlock.html VK_EXT_fragment_shader_interlock>
-    -- is not supported. If this value is
+    -- @VK_EXT_fragment_shader_interlock@ is not supported. If this value is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-shader-interlock fragment shader interlock>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-shader-interlock fragment shader interlock>
     -- will clamp the fragment shading rate to (1,1).
     fragmentShadingRateWithFragmentShaderInterlock :: Bool
   , -- | #limits-fragmentShadingRateWithCustomSampleLocations#
     -- @fragmentShadingRateWithCustomSampleLocations@ specifies whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primrast-samplelocations custom sample locations>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-samplelocations custom sample locations>
     -- are supported for multi-pixel fragments. It /must/ be
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if
-    -- <VK_EXT_sample_locations.html VK_EXT_sample_locations> is not supported.
-    -- If this value is 'Vulkan.Core10.FundamentalTypes.FALSE', using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primrast-samplelocations custom sample locations>
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if @VK_EXT_sample_locations@ is
+    -- not supported. If this value is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- using
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-samplelocations custom sample locations>
     -- will clamp the fragment shading rate to (1,1).
     fragmentShadingRateWithCustomSampleLocations :: Bool
   , -- | #limits-fragmentShadingRateStrictMultiplyCombiner#
@@ -1269,6 +1300,7 @@ instance Zero PhysicalDeviceFragmentShadingRatePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1344,6 +1376,7 @@ instance Zero PhysicalDeviceFragmentShadingRateKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
 -- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV',
 -- 'PipelineFragmentShadingRateStateCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.cmdSetFragmentShadingRateEnumNV',
@@ -1401,11 +1434,11 @@ instance Read FragmentShadingRateCombinerOpKHR where
                           FragmentShadingRateCombinerOpKHR
 
 
-type KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 1
+type KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION"
 pattern KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 1
+pattern KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 2
 
 
 type KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME = "VK_KHR_fragment_shading_rate"

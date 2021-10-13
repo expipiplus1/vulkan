@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_incremental_present:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_incremental_present] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_incremental_present extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -231,6 +231,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_R
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present VK_KHR_incremental_present>,
 -- 'PresentRegionKHR', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentRegionsKHR = PresentRegionsKHR
   { -- | @swapchainCount@ is the number of swapchains being presented to by this
@@ -305,6 +306,7 @@ instance Zero PresentRegionsKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present VK_KHR_incremental_present>,
 -- 'PresentRegionsKHR', 'RectLayerKHR'
 data PresentRegionKHR = PresentRegionKHR
   { -- | @rectangleCount@ is the number of rectangles in @pRectangles@, or zero
@@ -395,6 +397,7 @@ instance Zero PresentRegionKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present VK_KHR_incremental_present>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.FundamentalTypes.Offset2D', 'PresentRegionKHR'
 data RectLayerKHR = RectLayerKHR

@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_maintenance3:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_maintenance3] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_maintenance3 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -84,9 +84,9 @@
 --
 -- == New Enum Constants
 --
--- -   'KHR_MAINTENANCE3_EXTENSION_NAME'
+-- -   'KHR_MAINTENANCE_3_EXTENSION_NAME'
 --
--- -   'KHR_MAINTENANCE3_SPEC_VERSION'
+-- -   'KHR_MAINTENANCE_3_SPEC_VERSION'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -111,15 +111,17 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_maintenance3  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES_KHR
+module Vulkan.Extensions.VK_KHR_maintenance3  ( pattern KHR_MAINTENANCE3_SPEC_VERSION
+                                              , pattern KHR_MAINTENANCE3_EXTENSION_NAME
+                                              , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES_KHR
                                               , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT_KHR
                                               , getDescriptorSetLayoutSupportKHR
                                               , PhysicalDeviceMaintenance3PropertiesKHR
                                               , DescriptorSetLayoutSupportKHR
-                                              , KHR_MAINTENANCE3_SPEC_VERSION
-                                              , pattern KHR_MAINTENANCE3_SPEC_VERSION
-                                              , KHR_MAINTENANCE3_EXTENSION_NAME
-                                              , pattern KHR_MAINTENANCE3_EXTENSION_NAME
+                                              , KHR_MAINTENANCE_3_SPEC_VERSION
+                                              , pattern KHR_MAINTENANCE_3_SPEC_VERSION
+                                              , KHR_MAINTENANCE_3_EXTENSION_NAME
+                                              , pattern KHR_MAINTENANCE_3_EXTENSION_NAME
                                               ) where
 
 import Data.String (IsString)
@@ -128,6 +130,14 @@ import Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (DescriptorSetLayoutSuppo
 import Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (PhysicalDeviceMaintenance3Properties)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES))
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE3_SPEC_VERSION"
+pattern KHR_MAINTENANCE3_SPEC_VERSION = KHR_MAINTENANCE_3_SPEC_VERSION
+
+
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE3_EXTENSION_NAME"
+pattern KHR_MAINTENANCE3_EXTENSION_NAME = KHR_MAINTENANCE_3_EXTENSION_NAME
+
+
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
 
@@ -148,16 +158,16 @@ type PhysicalDeviceMaintenance3PropertiesKHR = PhysicalDeviceMaintenance3Propert
 type DescriptorSetLayoutSupportKHR = DescriptorSetLayoutSupport
 
 
-type KHR_MAINTENANCE3_SPEC_VERSION = 1
+type KHR_MAINTENANCE_3_SPEC_VERSION = 1
 
--- No documentation found for TopLevel "VK_KHR_MAINTENANCE3_SPEC_VERSION"
-pattern KHR_MAINTENANCE3_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_MAINTENANCE3_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE_3_SPEC_VERSION"
+pattern KHR_MAINTENANCE_3_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_MAINTENANCE_3_SPEC_VERSION = 1
 
 
-type KHR_MAINTENANCE3_EXTENSION_NAME = "VK_KHR_maintenance3"
+type KHR_MAINTENANCE_3_EXTENSION_NAME = "VK_KHR_maintenance3"
 
--- No documentation found for TopLevel "VK_KHR_MAINTENANCE3_EXTENSION_NAME"
-pattern KHR_MAINTENANCE3_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern KHR_MAINTENANCE3_EXTENSION_NAME = "VK_KHR_maintenance3"
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE_3_EXTENSION_NAME"
+pattern KHR_MAINTENANCE_3_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_MAINTENANCE_3_EXTENSION_NAME = "VK_KHR_maintenance3"
 

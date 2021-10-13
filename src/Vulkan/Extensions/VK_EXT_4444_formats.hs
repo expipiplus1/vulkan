@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_4444_formats:%20&body=@Joshua-Ashton%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_4444_formats] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_EXT_4444_formats extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -150,6 +150,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_4444_formats VK_EXT_4444_formats>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice4444FormatsFeaturesEXT = PhysicalDevice4444FormatsFeaturesEXT

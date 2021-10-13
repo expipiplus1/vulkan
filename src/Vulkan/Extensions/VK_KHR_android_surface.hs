@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_android_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_android_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_android_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -298,6 +298,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface VK_KHR_android_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'AndroidSurfaceCreateInfoKHR', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -336,6 +337,7 @@ createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface VK_KHR_android_surface>,
 -- 'AndroidSurfaceCreateFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAndroidSurfaceKHR'
@@ -402,6 +404,7 @@ instance Zero AndroidSurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface VK_KHR_android_surface>,
 -- 'AndroidSurfaceCreateInfoKHR'
 newtype AndroidSurfaceCreateFlagsKHR = AndroidSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

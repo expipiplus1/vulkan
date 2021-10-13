@@ -58,6 +58,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_separate_depth_stencil_layouts VK_KHR_separate_depth_stencil_layouts>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSeparateDepthStencilLayoutsFeatures = PhysicalDeviceSeparateDepthStencilLayoutsFeatures
@@ -120,6 +122,8 @@ instance Zero PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_separate_depth_stencil_layouts VK_KHR_separate_depth_stencil_layouts>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AttachmentReferenceStencilLayout = AttachmentReferenceStencilLayout
@@ -189,6 +193,8 @@ instance Zero AttachmentReferenceStencilLayout where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_separate_depth_stencil_layouts VK_KHR_separate_depth_stencil_layouts>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout

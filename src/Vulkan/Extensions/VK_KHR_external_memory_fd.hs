@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_memory_fd:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory_fd] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_memory_fd extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -226,6 +226,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetFdInfoKHR'
 getMemoryFdKHR :: forall io
                 . (MonadIO io)
@@ -279,6 +280,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryFdPropertiesKHR'
@@ -379,6 +381,7 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryFdInfoKHR = ImportMemoryFdInfoKHR
@@ -436,6 +439,7 @@ instance Zero ImportMemoryFdInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getMemoryFdPropertiesKHR'
 data MemoryFdPropertiesKHR = MemoryFdPropertiesKHR
@@ -498,12 +502,13 @@ instance Zero MemoryFdPropertiesKHR where
 -- @handleType@ is
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT',
 -- then the application /can/ query the file’s actual size with
--- <man:lseek(2) lseek(2)>.
+-- <https://man7.org/linux/man-pages/man2/lseek.2.html lseek>.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getMemoryFdKHR'

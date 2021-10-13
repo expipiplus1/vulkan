@@ -34,7 +34,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_transform_feedback:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_transform_feedback] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_transform_feedback extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -440,6 +440,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBindTransformFeedbackBuffersEXT :: forall io
@@ -606,6 +607,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBeginTransformFeedbackEXT :: forall io
@@ -768,6 +770,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdEndTransformFeedbackEXT :: forall io
@@ -1012,6 +1015,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Vulkan.Core10.Handles.QueryPool'
@@ -1142,6 +1146,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdEndQueryIndexedEXT :: forall io
                        . (MonadIO io)
@@ -1261,6 +1266,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02697# For each set /n/
 --     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
 --     bound to the pipeline bind point used by this command, a descriptor
@@ -1270,11 +1291,12 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02698# For each push
---     constant that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a push constant value /must/ have been set for
---     the same pipeline bind point, with a
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
@@ -1370,28 +1392,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -1781,6 +1803,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndirectByteCountEXT :: forall io
@@ -1840,6 +1863,7 @@ cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuf
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTransformFeedbackFeaturesEXT = PhysicalDeviceTransformFeedbackFeaturesEXT
@@ -1910,6 +1934,7 @@ instance Zero PhysicalDeviceTransformFeedbackFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -1947,8 +1972,9 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
   , -- | #limits-transformFeedbackQueries# @transformFeedbackQueries@ is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
     -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
-    -- query type. @transformFeedbackQueries@ is false if queries of this type
-    -- /cannot/ be created.
+    -- query type. @transformFeedbackQueries@ is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if queries of this type /cannot/
+    -- be created.
     transformFeedbackQueries :: Bool
   , -- | #limits-transformFeedbackStreamsLinesTriangles#
     -- @transformFeedbackStreamsLinesTriangles@ is
@@ -1956,9 +1982,9 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     -- geometry shader @OpExecutionMode@ of @OutputLineStrip@ and
     -- @OutputTriangleStrip@ in addition to @OutputPoints@ when more than one
     -- vertex stream is output. If @transformFeedbackStreamsLinesTriangles@ is
-    -- false the implementation only supports an @OpExecutionMode@ of
-    -- @OutputPoints@ when more than one vertex stream is output from the
-    -- geometry shader.
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' the implementation only supports
+    -- an @OpExecutionMode@ of @OutputPoints@ when more than one vertex stream
+    -- is output from the geometry shader.
     transformFeedbackStreamsLinesTriangles :: Bool
   , -- | #limits-transformFeedbackRasterizationStreamSelect#
     -- @transformFeedbackRasterizationStreamSelect@ is
@@ -2060,6 +2086,7 @@ instance Zero PhysicalDeviceTransformFeedbackPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'PipelineRasterizationStateStreamCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateStreamCreateInfoEXT = PipelineRasterizationStateStreamCreateInfoEXT
@@ -2131,6 +2158,7 @@ instance Zero PipelineRasterizationStateStreamCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'PipelineRasterizationStateStreamCreateInfoEXT'
 newtype PipelineRasterizationStateStreamCreateFlagsEXT = PipelineRasterizationStateStreamCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

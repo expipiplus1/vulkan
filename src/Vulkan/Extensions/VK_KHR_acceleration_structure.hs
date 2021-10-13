@@ -15,7 +15,7 @@
 --     151
 --
 -- [__Revision__]
---     12
+--     13
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -30,12 +30,12 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_acceleration_structure:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_acceleration_structure] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_acceleration_structure extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-11-12
+--     2021-09-30
 --
 -- [__Contributors__]
 --
@@ -351,6 +351,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'FormatFeatureFlagBits2KHR':
+--
+--     -   'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--
 -- == Issues
 --
 -- (1) How does this extension differ from VK_NV_ray_tracing?
@@ -611,10 +619,8 @@
 -- -   change 'cmdBuildAccelerationStructuresIndirectKHR' to use buffer
 --     device address for indirect parameter
 --
--- -   make
---     <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---     an interaction instead of a required extension (later went back on
---     this)
+-- -   make @VK_KHR_deferred_host_operations@ an interaction instead of a
+--     required extension (later went back on this)
 --
 -- -   renamed @VkAccelerationStructureBuildOffsetInfoKHR@ to
 --     'AccelerationStructureBuildRangeInfoKHR'
@@ -671,14 +677,13 @@
 --         that the implementation can modify such parameters until the
 --         deferred host operation completes
 --
---     -   <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---         is required again
+--     -   @VK_KHR_deferred_host_operations@ is required again
 --
 -- -   Change acceleration structure build to always be sized
 --
 --     -   de-alias
 --         'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsTypeNV'
---         and @VkAccelerationStructureMemoryRequirementsTypeKHR@ and
+--         and @VkAccelerationStructureMemoryRequirementsTypeKHR@, and
 --         remove @VkAccelerationStructureMemoryRequirementsTypeKHR@
 --
 --     -   add 'getAccelerationStructureBuildSizesKHR' command and
@@ -707,33 +712,30 @@
 --     implementation flexibility and decoupling ray query support from ray
 --     pipelines:
 --
---     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         (for acceleration structure operations)
+--     -   @VK_KHR_acceleration_structure@ (for acceleration structure
+--         operations)
 --
---     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         (for ray tracing pipeline and shader stages)
+--     -   @VK_KHR_ray_tracing_pipeline@ (for ray tracing pipeline and
+--         shader stages)
 --
---     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
---         existing shader stages)
+--     -   @VK_KHR_ray_query@ (for ray queries in existing shader stages)
 --
 -- -   clarify buffer usage flags for ray tracing
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         is left alone in <VK_NV_ray_tracing.html VK_NV_ray_tracing>
---         (required on @scratch@ and @instanceData@)
+--         is left alone in @VK_NV_ray_tracing@ (required on @scratch@ and
+--         @instanceData@)
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR'
 --         is added as an alias of
 --         'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         in
---         <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         and is required on shader binding table buffers
+--         in @VK_KHR_ray_tracing_pipeline@ and is required on shader
+--         binding table buffers
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
---         is added in
---         <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         for all vertex, index, transform, aabb, and instance buffer data
---         referenced by device build commands
+--         is added in @VK_KHR_acceleration_structure@ for all vertex,
+--         index, transform, aabb, and instance buffer data referenced by
+--         device build commands
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
 --         is used for @scratchData@
@@ -745,7 +747,8 @@
 --     constrain the device address
 --
 --     -   de-alias
---         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+--         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV'
+--         and
 --         'Vulkan.Extensions.VK_NV_ray_tracing.bindAccelerationStructureMemoryNV',
 --         and remove @VkBindAccelerationStructureMemoryInfoKHR@,
 --         @VkAccelerationStructureMemoryRequirementsInfoKHR@, and
@@ -1091,6 +1094,10 @@
 --
 --     -   Clarify description and add note.
 --
+-- -   Revision 13, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
 -- = See Also
 --
 -- 'AabbPositionsKHR', 'AccelerationStructureBuildGeometryInfoKHR',
@@ -1238,6 +1245,39 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                                , ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR
                                                                                                , ..
                                                                                                )
+                                                        , FormatFeatureFlags2KHR
+                                                        , FormatFeatureFlagBits2KHR( FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_BLIT_DST_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT
+                                                                                   , FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_DISJOINT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT
+                                                                                   , FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
+                                                                                   , ..
+                                                                                   )
                                                         , KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
                                                         , pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
                                                         , KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
@@ -1245,6 +1285,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , AccelerationStructureKHR(..)
                                                         , DeferredOperationKHR(..)
                                                         , DebugReportObjectTypeEXT(..)
+                                                        , Flags64
                                                         ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
@@ -1365,6 +1406,7 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags64)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.IndexType (IndexType)
 import Vulkan.CStruct.Extends (PeekChain)
@@ -1401,6 +1443,7 @@ import Vulkan.Core10.APIConstants (pattern UUID_SIZE)
 import Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
 import Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(..))
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
+import Vulkan.Core10.FundamentalTypes (Flags64)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -1454,6 +1497,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
@@ -1557,6 +1601,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyAccelerationStructureInfoKHR'
 cmdCopyAccelerationStructureKHR :: forall io
@@ -1659,6 +1704,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'CopyAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -1810,6 +1856,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyAccelerationStructureToMemoryInfoKHR'
 cmdCopyAccelerationStructureToMemoryKHR :: forall io
@@ -1920,6 +1967,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'CopyAccelerationStructureToMemoryInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -2043,6 +2091,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyMemoryToAccelerationStructureInfoKHR'
 cmdCopyMemoryToAccelerationStructureKHR :: forall io
@@ -2149,6 +2198,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'CopyMemoryToAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -2302,6 +2352,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.QueryPool',
@@ -2453,6 +2504,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.QueryType.QueryType'
@@ -2521,6 +2573,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCompatibilityKHR',
 -- 'AccelerationStructureVersionInfoKHR', 'Vulkan.Core10.Handles.Device'
 getDeviceAccelerationStructureCompatibilityKHR :: forall io
@@ -2624,6 +2677,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
@@ -3230,6 +3284,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildRangeInfoKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
@@ -3858,6 +3913,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress'
@@ -4353,6 +4409,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildRangeInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
@@ -4453,6 +4510,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureDeviceAddressInfoKHR',
 -- 'Vulkan.Core10.Handles.Device'
 getAccelerationStructureDeviceAddressKHR :: forall io
@@ -4601,6 +4659,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildSizesInfoKHR',
 -- 'AccelerationStructureBuildTypeKHR', 'Vulkan.Core10.Handles.Device'
@@ -4681,6 +4740,7 @@ pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR = GEOMETRY_INS
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetAccelerationStructureKHR = WriteDescriptorSetAccelerationStructureKHR
@@ -4748,6 +4808,7 @@ instance Zero WriteDescriptorSetAccelerationStructureKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceAccelerationStructureFeaturesKHR = PhysicalDeviceAccelerationStructureFeaturesKHR
@@ -4858,6 +4919,7 @@ instance Zero PhysicalDeviceAccelerationStructureFeaturesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceAccelerationStructurePropertiesKHR = PhysicalDeviceAccelerationStructurePropertiesKHR
   { -- | @maxGeometryCount@ is the maximum number of geometries in the bottom
@@ -5037,6 +5099,7 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryDataKHR', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.Format.Format',
@@ -5063,8 +5126,9 @@ data AccelerationStructureGeometryTrianglesDataKHR (es :: [Type]) = Acceleration
     -- for this geometry.
     indexData :: DeviceOrHostAddressConstKHR
   , -- | @transformData@ is a device or host address to memory containing an
-    -- optional reference to a 'TransformMatrixKHR' structure defining a
-    -- transformation that should be applied to vertices in this geometry.
+    -- optional reference to a 'TransformMatrixKHR' structure that describes a
+    -- transformation from the space in which the vertices in this geometry are
+    -- described to the space in which the acceleration structure is defined.
     transformData :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
@@ -5131,6 +5195,7 @@ instance es ~ '[] => Zero (AccelerationStructureGeometryTrianglesDataKHR es) whe
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryDataKHR', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -5185,6 +5250,7 @@ instance Zero AccelerationStructureGeometryAabbsDataKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryDataKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -5202,7 +5268,7 @@ data AccelerationStructureGeometryInstancesDataKHR = AccelerationStructureGeomet
     -- structures. Addresses and 'AccelerationStructureInstanceKHR' structures
     -- are tightly packed.
     -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
-    -- have a stride of 160 bytes.
+    -- structures have a stride of 160 bytes.
     data' :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
@@ -5269,6 +5335,7 @@ instance Zero AccelerationStructureGeometryInstancesDataKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureGeometryDataKHR', 'GeometryFlagsKHR',
 -- 'GeometryTypeKHR', 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -5462,6 +5529,7 @@ instance Zero AccelerationStructureGeometryKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryKHR',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'AccelerationStructureTypeKHR', 'BuildAccelerationStructureFlagsKHR',
@@ -5571,8 +5639,10 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --         is not @NULL@, a single 'TransformMatrixKHR' structure is
 --         consumed from
 --         'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@,
---         at an offset of @transformOffset@. This transformation matrix is
---         used by all triangles.
+--         at an offset of @transformOffset@. This matrix describes a
+--         transformation from the space in which the vertices for all
+--         triangles in this geometry are described to the space in which
+--         the acceleration structure is defined.
 --
 -- -   For geometries of type 'GEOMETRY_TYPE_AABBS_KHR', @primitiveCount@
 --     is the number of axis-aligned bounding boxes. @primitiveCount@
@@ -5624,6 +5694,7 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'buildAccelerationStructuresKHR', 'cmdBuildAccelerationStructuresKHR'
 data AccelerationStructureBuildRangeInfoKHR = AccelerationStructureBuildRangeInfoKHR
   { -- | @primitiveCount@ defines the number of primitives for a corresponding
@@ -5713,10 +5784,14 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 -- and will add
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 -- to all buffers used as storage for an acceleration structure where
--- @deviceAddress@ is not zero. During capture the tool will save the
--- queried opaque device addresses in the trace. During replay, the buffers
--- will be created specifying the original address so any address values
--- stored in the trace data will remain valid.
+-- @deviceAddress@ is not zero. This also means that the tool will need to
+-- add
+-- 'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+-- to memory allocations to allow the flag to be set where the application
+-- may not have otherwise required it. During capture the tool will save
+-- the queried opaque device addresses in the trace. During replay, the
+-- buffers will be created specifying the original address so any address
+-- values stored in the trace data will remain valid.
 --
 -- Implementations are expected to separate such buffers in the GPU address
 -- space so normal allocations will avoid using these addresses.
@@ -5807,6 +5882,7 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCreateFlagsKHR', 'AccelerationStructureTypeKHR',
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
@@ -5908,7 +5984,8 @@ instance es ~ '[] => Zero (AccelerationStructureCreateInfoKHR es) where
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 data AabbPositionsKHR = AabbPositionsKHR
   { -- | @minX@ is the x position of one opposing corner of a bounding box.
     --
@@ -5996,6 +6073,8 @@ instance Zero AabbPositionsKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureInstanceKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMatrixMotionInstanceNV'
 data TransformMatrixKHR = TransformMatrixKHR
@@ -6096,6 +6175,8 @@ instance Zero TransformMatrixKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceDataNV',
 -- 'GeometryInstanceFlagsKHR', 'TransformMatrixKHR'
 data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
@@ -6114,7 +6195,7 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
     -- -   @mask@ occupies the 8 most significant bits of that memory
     instanceCustomIndex :: Word32
   , -- | @mask@ is an 8-bit visibility mask for the geometry. The instance /may/
-    -- only be hit if @rayMask & instance.mask != 0@
+    -- only be hit if @Cull Mask & instance.mask != 0@
     mask :: Word32
   , -- | @instanceShaderBindingTableRecordOffset@ is a 24-bit offset used in
     -- calculating the hit shader binding table index.
@@ -6204,6 +6285,7 @@ instance Zero AccelerationStructureInstanceKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAccelerationStructureDeviceAddressKHR'
@@ -6273,6 +6355,7 @@ instance Zero AccelerationStructureDeviceAddressInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceAccelerationStructureCompatibilityKHR'
 data AccelerationStructureVersionInfoKHR = AccelerationStructureVersionInfoKHR
@@ -6368,6 +6451,7 @@ instance Zero AccelerationStructureVersionInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'CopyAccelerationStructureModeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -6464,6 +6548,7 @@ instance Zero CopyAccelerationStructureInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'CopyAccelerationStructureModeKHR', 'DeviceOrHostAddressKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -6552,6 +6637,7 @@ instance Zero CopyAccelerationStructureToMemoryInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'CopyAccelerationStructureModeKHR', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -6606,6 +6692,7 @@ instance Zero CopyMemoryToAccelerationStructureInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAccelerationStructureBuildSizesKHR'
@@ -6741,6 +6828,8 @@ type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'GeometryInstanceFlagsKHR'
 newtype GeometryInstanceFlagBitsKHR = GeometryInstanceFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -6800,6 +6889,8 @@ type GeometryFlagsKHR = GeometryFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'GeometryFlagsKHR'
 newtype GeometryFlagBitsKHR = GeometryFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -6855,6 +6946,8 @@ type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'BuildAccelerationStructureFlagsKHR'
 newtype BuildAccelerationStructureFlagBitsKHR = BuildAccelerationStructureFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -6924,6 +7017,7 @@ type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKH
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCreateFlagsKHR'
 newtype AccelerationStructureCreateFlagBitsKHR = AccelerationStructureCreateFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -6966,6 +7060,8 @@ instance Read AccelerationStructureCreateFlagBitsKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'CopyAccelerationStructureInfoKHR',
 -- 'CopyAccelerationStructureToMemoryInfoKHR',
 -- 'CopyMemoryToAccelerationStructureInfoKHR',
@@ -7035,6 +7131,7 @@ instance Read CopyAccelerationStructureModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR'
 newtype BuildAccelerationStructureModeKHR = BuildAccelerationStructureModeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -7080,8 +7177,11 @@ instance Read BuildAccelerationStructureModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
--- 'AccelerationStructureCreateInfoKHR'
+-- 'AccelerationStructureCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureInfoNV'
 newtype AccelerationStructureTypeKHR = AccelerationStructureTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -7131,6 +7231,8 @@ instance Read AccelerationStructureTypeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureGeometryKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryNV'
 newtype GeometryTypeKHR = GeometryTypeKHR Int32
@@ -7177,6 +7279,7 @@ instance Read GeometryTypeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'getAccelerationStructureBuildSizesKHR'
 newtype AccelerationStructureBuildTypeKHR = AccelerationStructureBuildTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -7227,6 +7330,7 @@ instance Read AccelerationStructureBuildTypeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'getDeviceAccelerationStructureCompatibilityKHR'
 newtype AccelerationStructureCompatibilityKHR = AccelerationStructureCompatibilityKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -7268,11 +7372,507 @@ instance Read AccelerationStructureCompatibilityKHR where
                           AccelerationStructureCompatibilityKHR
 
 
-type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 12
+type FormatFeatureFlags2KHR = FormatFeatureFlagBits2KHR
+
+-- | VkFormatFeatureFlagBits2KHR - Bitmask specifying features supported by a
+-- buffer
+--
+-- = Description
+--
+-- The following bits /may/ be set in @linearTilingFeatures@ and
+-- @optimalTilingFeatures@, specifying that the features are supported by
+-- <VkImage.html images> or <VkImageView.html image views> or
+-- <VkSamplerYcbcrConversion.html sampler Y′CBCR conversion objects>
+-- created with the queried
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'::@format@:
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' specifies that an image
+--     view /can/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR' specifies that an image
+--     view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR' specifies that an
+--     image view /can/ be used as storage image that supports atomic
+--     operations.
+--
+-- -   'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR' specifies that an image
+--     view /can/ be used as a framebuffer color attachment and as an input
+--     attachment.
+--
+-- -   'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR' specifies that an
+--     image view /can/ be used as a framebuffer color attachment that
+--     supports blending and as an input attachment.
+--
+-- -   'FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR' specifies that
+--     an image view /can/ be used as a framebuffer depth\/stencil
+--     attachment and as an input attachment.
+--
+-- -   'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' specifies that an image /can/ be
+--     used as @srcImage@ for the
+--     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--
+-- -   'FORMAT_FEATURE_2_BLIT_DST_BIT_KHR' specifies that an image /can/ be
+--     used as @dstImage@ for the
+--     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR' specifies
+--     that if 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' is also set, an
+--     image view /can/ be used with a sampler that has either of
+--     @magFilter@ or @minFilter@ set to
+--     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR', or @mipmapMode@ set to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'.
+--     If 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' is also set, an image can be
+--     used as the @srcImage@ to
+--     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@
+--     of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only
+--     be exposed for formats that also support the
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' or
+--     'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR'.
+--
+--     If the format being queried is a depth\/stencil format, this bit
+--     only specifies that the depth aspect (not the stencil aspect) of an
+--     image of this format supports linear filtering. Where depth
+--     comparison is supported it /may/ be linear filtered whether this bit
+--     is present or not, but where this bit is not present the filtered
+--     value /may/ be computed in an implementation-dependent manner which
+--     differs from the normal rules of linear filtering. The resulting
+--     value /must/ be in the range [0,1] and /should/ be proportional to,
+--     or a weighted average of, the number of comparison passes or
+--     failures.
+--
+-- -   'FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR' specifies that an image
+--     /can/ be used as a source image for
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>.
+--
+-- -   'FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR' specifies that an image
+--     /can/ be used as a destination image for
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR' specifies
+--     'Vulkan.Core10.Handles.Image' /can/ be used as a sampled image with
+--     a min or max
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode'.
+--     This bit /must/ only be exposed for formats that also support the
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT' specifies that
+--     'Vulkan.Core10.Handles.Image' /can/ be used with a sampler that has
+--     either of @magFilter@ or @minFilter@ set to
+--     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', or be the
+--     source image for a blit with @filter@ set to
+--     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT'. This bit
+--     /must/ only be exposed for formats that also support the
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'. If the format being
+--     queried is a depth\/stencil format, this only specifies that the
+--     depth aspect is cubic filterable.
+--
+-- -   'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' specifies that an
+--     application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source, and that an image of this format
+--     /can/ be used with a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+--     @xChromaOffset@ and\/or @yChromaOffset@ of
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'.
+--     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'.
+--     If a format does not incorporate chroma downsampling (it is not a
+--     “422” or “420” format) but the implementation supports sampler
+--     Y′CBCR conversion for this format, the implementation /must/ set
+--     'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR'.
+--
+-- -   'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' specifies that an
+--     application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source, and that an image of this format
+--     /can/ be used with a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+--     @xChromaOffset@ and\/or @yChromaOffset@ of
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'.
+--     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'. If
+--     neither 'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' nor
+--     'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' is set, the
+--     application /must/ not define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR'
+--     specifies that an application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source with @chromaFilter@ set to
+--     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR'
+--     specifies that the format can have different chroma, min, and mag
+--     filters.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+--     specifies that reconstruction is explicit, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction>.
+--     If this bit is not present, reconstruction is implicit by default.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'
+--     specifies that reconstruction /can/ be forcibly made explicit by
+--     setting
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
+--     to 'Vulkan.Core10.FundamentalTypes.TRUE'. If the format being
+--     queried supports
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+--     it /must/ also support
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'.
+--
+-- -   'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' specifies that a multi-planar
+--     image /can/ have the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
+--     set during image creation. An implementation /must/ not set
+--     'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' for /single-plane formats/.
+--
+-- -   'FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an
+--     image view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+--
+-- -   'FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     specifies that an image view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+--     An implementation /must/ not set this feature for formats with
+--     numeric type other than @*UINT@, or set it as a buffer feature.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR' specifies
+--     that image views created with this format /can/ be used as
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+--     for read operations without specifying a format.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR' specifies
+--     that image views created with this format /can/ be used as
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+--     for write operations without specifying a format.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR' specifies
+--     that image views created with this format /can/ be used for depth
+--     comparison performed by @OpImage*Dref@ instructions.
+--
+-- The following bits /may/ be set in @bufferFeatures@, specifying that the
+-- features are supported by <VkBuffer.html buffers> or
+-- <VkBufferView.html buffer views> created with the queried
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'::@format@:
+--
+-- -   'FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR' specifies that the
+--     format /can/ be used to create a buffer view that /can/ be bound to
+--     a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     descriptor.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR' specifies that the
+--     format /can/ be used to create a buffer view that /can/ be bound to
+--     a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR' specifies
+--     that atomic operations are supported on
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     with this format.
+--
+-- -   'FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR' specifies that the format
+--     /can/ be used as a vertex attribute format
+--     ('Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@).
+--
+-- -   'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--     specifies that the format /can/ be used as the vertex format when
+--     creating an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+--     ('AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@).
+--     This format /can/ also be used as the vertex format in host memory
+--     when doing
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     builds.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+newtype FormatFeatureFlagBits2KHR = FormatFeatureFlagBits2KHR Flags64
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' specifies that an image view
+-- /can/ be
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000000001
+-- | 'FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR' specifies that an image view
+-- /can/ be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
+pattern FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000000002
+-- | 'FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR' specifies that an image
+-- view /can/ be used as storage image that supports atomic operations.
+pattern FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR        = FormatFeatureFlagBits2KHR 0x0000000000000004
+-- | 'FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR' specifies that the
+-- format /can/ be used to create a buffer view that /can/ be bound to a
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+-- descriptor.
+pattern FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR        = FormatFeatureFlagBits2KHR 0x0000000000000008
+-- | 'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR' specifies that the
+-- format /can/ be used to create a buffer view that /can/ be bound to a
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+-- descriptor.
+pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR        = FormatFeatureFlagBits2KHR 0x0000000000000010
+-- | 'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR' specifies that
+-- atomic operations are supported on
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+-- with this format.
+pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000000000020
+-- | 'FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR' specifies that the format /can/
+-- be used as a vertex attribute format
+-- ('Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@).
+pattern FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000000040
+-- | 'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR' specifies that an image view
+-- /can/ be used as a framebuffer color attachment and as an input
+-- attachment.
+pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR            = FormatFeatureFlagBits2KHR 0x0000000000000080
+-- | 'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR' specifies that an
+-- image view /can/ be used as a framebuffer color attachment that supports
+-- blending and as an input attachment.
+pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR      = FormatFeatureFlagBits2KHR 0x0000000000000100
+-- | 'FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR' specifies that an
+-- image view /can/ be used as a framebuffer depth\/stencil attachment and
+-- as an input attachment.
+pattern FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR    = FormatFeatureFlagBits2KHR 0x0000000000000200
+-- | 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' specifies that an image /can/ be
+-- used as @srcImage@ for the
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+pattern FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR                    = FormatFeatureFlagBits2KHR 0x0000000000000400
+-- | 'FORMAT_FEATURE_2_BLIT_DST_BIT_KHR' specifies that an image /can/ be
+-- used as @dstImage@ for the
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+pattern FORMAT_FEATURE_2_BLIT_DST_BIT_KHR                    = FormatFeatureFlagBits2KHR 0x0000000000000800
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR' specifies that if
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' is also set, an image view
+-- /can/ be used with a sampler that has either of @magFilter@ or
+-- @minFilter@ set to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR', or
+-- @mipmapMode@ set to
+-- 'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'. If
+-- 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' is also set, an image can be used as
+-- the @srcImage@ to
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@ of
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only be
+-- exposed for formats that also support the
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' or
+-- 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR'.
+--
+-- If the format being queried is a depth\/stencil format, this bit only
+-- specifies that the depth aspect (not the stencil aspect) of an image of
+-- this format supports linear filtering. Where depth comparison is
+-- supported it /may/ be linear filtered whether this bit is present or
+-- not, but where this bit is not present the filtered value /may/ be
+-- computed in an implementation-dependent manner which differs from the
+-- normal rules of linear filtering. The resulting value /must/ be in the
+-- range [0,1] and /should/ be proportional to, or a weighted average of,
+-- the number of comparison passes or failures.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000000001000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT' specifies that
+-- 'Vulkan.Core10.Handles.Image' /can/ be used with a sampler that has
+-- either of @magFilter@ or @minFilter@ set to
+-- 'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', or be the
+-- source image for a blit with @filter@ set to
+-- 'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT'. This bit
+-- /must/ only be exposed for formats that also support the
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'. If the format being queried is
+-- a depth\/stencil format, this only specifies that the depth aspect is
+-- cubic filterable.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT  = FormatFeatureFlagBits2KHR 0x0000000000002000
+-- | 'FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR' specifies that an image /can/ be
+-- used as a source image for
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>.
+pattern FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR                = FormatFeatureFlagBits2KHR 0x0000000000004000
+-- | 'FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR' specifies that an image /can/ be
+-- used as a destination image for
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>
+-- and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>.
+pattern FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR                = FormatFeatureFlagBits2KHR 0x0000000000008000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR' specifies
+-- 'Vulkan.Core10.Handles.Image' /can/ be used as a sampled image with a
+-- min or max
+-- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode'. This
+-- bit /must/ only be exposed for formats that also support the
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000000010000
+-- | 'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' specifies that an
+-- application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source, and that an image of this format /can/ be
+-- used with a
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+-- @xChromaOffset@ and\/or @yChromaOffset@ of
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'. Otherwise
+-- both @xChromaOffset@ and @yChromaOffset@ /must/ be
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'. If a
+-- format does not incorporate chroma downsampling (it is not a “422” or
+-- “420” format) but the implementation supports sampler Y′CBCR conversion
+-- for this format, the implementation /must/ set
+-- 'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR'.
+pattern FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR     = FormatFeatureFlagBits2KHR 0x0000000000020000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR'
+-- specifies that an application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source with @chromaFilter@ set to
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000040000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR'
+-- specifies that the format can have different chroma, min, and mag
+-- filters.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000080000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+-- specifies that reconstruction is explicit, as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction>.
+-- If this bit is not present, reconstruction is implicit by default.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000100000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'
+-- specifies that reconstruction /can/ be forcibly made explicit by setting
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
+-- to 'Vulkan.Core10.FundamentalTypes.TRUE'. If the format being queried
+-- supports
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+-- it /must/ also support
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000200000
+-- | 'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' specifies that a multi-planar image
+-- /can/ have the
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT' set
+-- during image creation. An implementation /must/ not set
+-- 'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' for /single-plane formats/.
+pattern FORMAT_FEATURE_2_DISJOINT_BIT_KHR                             = FormatFeatureFlagBits2KHR 0x0000000000400000
+-- | 'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' specifies that an
+-- application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source, and that an image of this format /can/ be
+-- used with a
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+-- @xChromaOffset@ and\/or @yChromaOffset@ of
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'.
+-- Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'. If
+-- neither 'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' nor
+-- 'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' is set, the
+-- application /must/ not define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source.
+pattern FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000800000
+-- | 'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR' specifies that
+-- image views created with this format /can/ be used as
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+-- for read operations without specifying a format.
+pattern FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR          = FormatFeatureFlagBits2KHR 0x0000000080000000
+-- | 'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR' specifies that
+-- image views created with this format /can/ be used as
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+-- for write operations without specifying a format.
+pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR         = FormatFeatureFlagBits2KHR 0x0000000100000000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR' specifies that
+-- image views created with this format /can/ be used for depth comparison
+-- performed by @OpImage*Dref@ instructions.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR       = FormatFeatureFlagBits2KHR 0x0000000200000000
+-- | 'FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
+-- that an image view /can/ be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+-- An implementation /must/ not set this feature for formats with numeric
+-- type other than @*UINT@, or set it as a buffer feature.
+pattern FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR     = FormatFeatureFlagBits2KHR 0x0000000040000000
+-- | 'FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image
+-- view /can/ be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+pattern FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT                 = FormatFeatureFlagBits2KHR 0x0000000001000000
+-- | 'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+-- specifies that the format /can/ be used as the vertex format when
+-- creating an
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+-- ('AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@). This
+-- format /can/ also be used as the vertex format in host memory when doing
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+-- builds.
+pattern FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000020000000
+
+conNameFormatFeatureFlagBits2KHR :: String
+conNameFormatFeatureFlagBits2KHR = "FormatFeatureFlagBits2KHR"
+
+enumPrefixFormatFeatureFlagBits2KHR :: String
+enumPrefixFormatFeatureFlagBits2KHR = "FORMAT_FEATURE_2_"
+
+showTableFormatFeatureFlagBits2KHR :: [(FormatFeatureFlagBits2KHR, String)]
+showTableFormatFeatureFlagBits2KHR =
+  [ (FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR              , "SAMPLED_IMAGE_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR              , "STORAGE_IMAGE_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR       , "STORAGE_IMAGE_ATOMIC_BIT_KHR")
+  , (FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR       , "UNIFORM_TEXEL_BUFFER_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR       , "STORAGE_TEXEL_BUFFER_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR, "STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR")
+  , (FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR              , "VERTEX_BUFFER_BIT_KHR")
+  , (FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR           , "COLOR_ATTACHMENT_BIT_KHR")
+  , (FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR     , "COLOR_ATTACHMENT_BLEND_BIT_KHR")
+  , (FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR   , "DEPTH_STENCIL_ATTACHMENT_BIT_KHR")
+  , (FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR                   , "BLIT_SRC_BIT_KHR")
+  , (FORMAT_FEATURE_2_BLIT_DST_BIT_KHR                   , "BLIT_DST_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR, "SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT , "SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT")
+  , (FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR               , "TRANSFER_SRC_BIT_KHR")
+  , (FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR               , "TRANSFER_DST_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR, "SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR")
+  , (FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR    , "MIDPOINT_CHROMA_SAMPLES_BIT_KHR")
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR"
+    )
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR"
+    )
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR"
+    )
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR"
+    )
+  , (FORMAT_FEATURE_2_DISJOINT_BIT_KHR                            , "DISJOINT_BIT_KHR")
+  , (FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR              , "COSITED_CHROMA_SAMPLES_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR         , "STORAGE_READ_WITHOUT_FORMAT_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR        , "STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR      , "SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR")
+  , (FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR    , "FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR")
+  , (FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT                , "FRAGMENT_DENSITY_MAP_BIT_EXT")
+  , (FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR, "ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR")
+  ]
+
+instance Show FormatFeatureFlagBits2KHR where
+  showsPrec = enumShowsPrec enumPrefixFormatFeatureFlagBits2KHR
+                            showTableFormatFeatureFlagBits2KHR
+                            conNameFormatFeatureFlagBits2KHR
+                            (\(FormatFeatureFlagBits2KHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read FormatFeatureFlagBits2KHR where
+  readPrec = enumReadPrec enumPrefixFormatFeatureFlagBits2KHR
+                          showTableFormatFeatureFlagBits2KHR
+                          conNameFormatFeatureFlagBits2KHR
+                          FormatFeatureFlagBits2KHR
+
+
+type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 13
 
 -- No documentation found for TopLevel "VK_KHR_ACCELERATION_STRUCTURE_SPEC_VERSION"
 pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 12
+pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 13
 
 
 type KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME = "VK_KHR_acceleration_structure"

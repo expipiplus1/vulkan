@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GOOGLE_display_timing:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_display_timing] @ianelliottus%0A<<Here describe the issue or question you have about the VK_GOOGLE_display_timing extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -238,6 +238,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'Vulkan.Core10.Handles.Device', 'RefreshCycleDurationGOOGLE',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getRefreshCycleDurationGOOGLE :: forall io
@@ -331,6 +332,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'Vulkan.Core10.Handles.Device', 'PastPresentationTimingGOOGLE',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getPastPresentationTimingGOOGLE :: forall io
@@ -365,6 +367,7 @@ getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'getRefreshCycleDurationGOOGLE'
 data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
   { -- | @refreshDuration@ is the number of nanoseconds from the start of one
@@ -432,6 +435,7 @@ instance Zero RefreshCycleDurationGOOGLE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'getPastPresentationTimingGOOGLE'
 data PastPresentationTimingGOOGLE = PastPresentationTimingGOOGLE
   { -- | @presentID@ is an application-provided value that was given to a
@@ -536,6 +540,7 @@ instance Zero PastPresentationTimingGOOGLE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'PresentTimeGOOGLE', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
   { -- | @swapchainCount@ is the number of swapchains being presented to by this
@@ -606,6 +611,7 @@ instance Zero PresentTimesInfoGOOGLE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'PresentTimesInfoGOOGLE'
 data PresentTimeGOOGLE = PresentTimeGOOGLE
   { -- | @presentID@ is an application-provided identification value, that /can/

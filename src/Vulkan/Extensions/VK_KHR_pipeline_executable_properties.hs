@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_pipeline_executable_properties:%20&body=@jekstrand%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_executable_properties] @jekstrand%0A<<Here describe the issue or question you have about the VK_KHR_pipeline_executable_properties extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -352,6 +352,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.Handles.Device', 'PipelineExecutablePropertiesKHR',
 -- 'PipelineInfoKHR'
 getPipelineExecutablePropertiesKHR :: forall io
@@ -453,6 +454,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
 -- 'PipelineExecutableStatisticKHR'
 getPipelineExecutableStatisticsKHR :: forall io
@@ -563,6 +565,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
 -- 'PipelineExecutableInternalRepresentationKHR'
 getPipelineExecutableInternalRepresentationsKHR :: forall io
@@ -616,6 +619,7 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR = PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
@@ -667,6 +671,7 @@ instance Zero PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutablePropertiesKHR'
@@ -733,6 +738,7 @@ instance Zero PipelineInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutablePropertiesKHR'
@@ -812,6 +818,7 @@ instance Zero PipelineExecutablePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutableInternalRepresentationsKHR',
@@ -881,6 +888,7 @@ instance Zero PipelineExecutableInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'PipelineExecutableStatisticFormatKHR',
 -- 'PipelineExecutableStatisticValueKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -969,6 +977,7 @@ instance Zero PipelineExecutableStatisticKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutableInternalRepresentationsKHR'
@@ -1087,6 +1096,7 @@ peekPipelineExecutableStatisticValueKHR tag p = case tag of
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'PipelineExecutableStatisticKHR'
 newtype PipelineExecutableStatisticFormatKHR = PipelineExecutableStatisticFormatKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)

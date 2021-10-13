@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_blend_operation_advanced:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_blend_operation_advanced] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_blend_operation_advanced extension>> >
 --
 -- == Other Extension Metadata
 --

@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Alon Or-bach
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shared_presentable_image:%20&body=@alonorbach%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shared_presentable_image] @alonorbach%0A<<Here describe the issue or question you have about the VK_KHR_shared_presentable_image extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -317,6 +317,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shared_presentable_image VK_KHR_shared_presentable_image>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 getSwapchainStatusKHR :: forall io
                        . (MonadIO io)
@@ -335,13 +336,14 @@ getSwapchainStatusKHR device swapchain = liftIO $ do
   pure $ (r)
 
 
--- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
+-- | VkSharedPresentSurfaceCapabilitiesKHR - Structure describing
 -- capabilities of a surface for shared presentation
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shared_presentable_image VK_KHR_shared_presentable_image>,
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SharedPresentSurfaceCapabilitiesKHR = SharedPresentSurfaceCapabilitiesKHR

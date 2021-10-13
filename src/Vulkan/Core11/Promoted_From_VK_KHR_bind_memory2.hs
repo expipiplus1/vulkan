@@ -107,6 +107,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BindBufferMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindBufferMemory2 :: forall io
                    . (MonadIO io)
@@ -185,6 +186,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BindImageMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindImageMemory2 :: forall io
                   . (MonadIO io)
@@ -316,6 +318,14 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
+-- -   #VUID-VkBindBufferMemoryInfo-buffer-06408# If @buffer@ was created
+--     with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     chained to 'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@,
+--     @memory@ /must/ be allocated with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
+--     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
+--
 -- -   #VUID-VkBindBufferMemoryInfo-pNext-01605# If the @pNext@ chain
 --     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
@@ -347,6 +357,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindBufferMemory2',
@@ -684,6 +695,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.Image',

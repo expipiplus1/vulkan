@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_maintenance1:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_maintenance1] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_KHR_maintenance1 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -135,9 +135,9 @@
 --
 -- == New Enum Constants
 --
--- -   'KHR_MAINTENANCE1_EXTENSION_NAME'
+-- -   'KHR_MAINTENANCE_1_EXTENSION_NAME'
 --
--- -   'KHR_MAINTENANCE1_SPEC_VERSION'
+-- -   'KHR_MAINTENANCE_1_SPEC_VERSION'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
@@ -182,16 +182,18 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_maintenance1  ( pattern ERROR_OUT_OF_POOL_MEMORY_KHR
+module Vulkan.Extensions.VK_KHR_maintenance1  ( pattern KHR_MAINTENANCE1_SPEC_VERSION
+                                              , pattern KHR_MAINTENANCE1_EXTENSION_NAME
+                                              , pattern ERROR_OUT_OF_POOL_MEMORY_KHR
                                               , pattern FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR
                                               , pattern FORMAT_FEATURE_TRANSFER_DST_BIT_KHR
                                               , pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR
                                               , trimCommandPoolKHR
                                               , CommandPoolTrimFlagsKHR
-                                              , KHR_MAINTENANCE1_SPEC_VERSION
-                                              , pattern KHR_MAINTENANCE1_SPEC_VERSION
-                                              , KHR_MAINTENANCE1_EXTENSION_NAME
-                                              , pattern KHR_MAINTENANCE1_EXTENSION_NAME
+                                              , KHR_MAINTENANCE_1_SPEC_VERSION
+                                              , pattern KHR_MAINTENANCE_1_SPEC_VERSION
+                                              , KHR_MAINTENANCE_1_EXTENSION_NAME
+                                              , pattern KHR_MAINTENANCE_1_EXTENSION_NAME
                                               ) where
 
 import Data.String (IsString)
@@ -204,6 +206,14 @@ import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlagBits(FORMAT_FEATURE_TRANSFER_SRC_BIT))
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT))
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE1_SPEC_VERSION"
+pattern KHR_MAINTENANCE1_SPEC_VERSION = KHR_MAINTENANCE_1_SPEC_VERSION
+
+
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE1_EXTENSION_NAME"
+pattern KHR_MAINTENANCE1_EXTENSION_NAME = KHR_MAINTENANCE_1_EXTENSION_NAME
+
+
 -- No documentation found for TopLevel "VK_ERROR_OUT_OF_POOL_MEMORY_KHR"
 pattern ERROR_OUT_OF_POOL_MEMORY_KHR = ERROR_OUT_OF_POOL_MEMORY
 
@@ -228,16 +238,16 @@ trimCommandPoolKHR = trimCommandPool
 type CommandPoolTrimFlagsKHR = CommandPoolTrimFlags
 
 
-type KHR_MAINTENANCE1_SPEC_VERSION = 2
+type KHR_MAINTENANCE_1_SPEC_VERSION = 2
 
--- No documentation found for TopLevel "VK_KHR_MAINTENANCE1_SPEC_VERSION"
-pattern KHR_MAINTENANCE1_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_MAINTENANCE1_SPEC_VERSION = 2
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE_1_SPEC_VERSION"
+pattern KHR_MAINTENANCE_1_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_MAINTENANCE_1_SPEC_VERSION = 2
 
 
-type KHR_MAINTENANCE1_EXTENSION_NAME = "VK_KHR_maintenance1"
+type KHR_MAINTENANCE_1_EXTENSION_NAME = "VK_KHR_maintenance1"
 
--- No documentation found for TopLevel "VK_KHR_MAINTENANCE1_EXTENSION_NAME"
-pattern KHR_MAINTENANCE1_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern KHR_MAINTENANCE1_EXTENSION_NAME = "VK_KHR_maintenance1"
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE_1_EXTENSION_NAME"
+pattern KHR_MAINTENANCE_1_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_MAINTENANCE_1_EXTENSION_NAME = "VK_KHR_maintenance1"
 

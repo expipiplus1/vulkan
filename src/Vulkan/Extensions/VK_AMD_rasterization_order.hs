@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_rasterization_order:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_rasterization_order] @drakos-amd%0A<<Here describe the issue or question you have about the VK_AMD_rasterization_order extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -214,6 +214,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order VK_AMD_rasterization_order>,
 -- 'RasterizationOrderAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateRasterizationOrderAMD = PipelineRasterizationStateRasterizationOrderAMD
@@ -266,6 +267,7 @@ instance Zero PipelineRasterizationStateRasterizationOrderAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order VK_AMD_rasterization_order>,
 -- 'PipelineRasterizationStateRasterizationOrderAMD'
 newtype RasterizationOrderAMD = RasterizationOrderAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)

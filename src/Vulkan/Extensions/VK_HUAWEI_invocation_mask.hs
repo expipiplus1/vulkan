@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Yunpeng Zhu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_HUAWEI_invocation_mask:%20&body=@yunxingzhu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @yunxingzhu%0A<<Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension>> >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_HUAWEI_invocation_mask.asciidoc VK_HUAWEI_invocation_mask>
@@ -40,14 +40,12 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   This extension requires
---         <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>,
---         which allow to bind an invocation mask image before the ray
---         tracing command
+--     -   This extension requires @VK_KHR_ray_tracing_pipeline@, which
+--         allow to bind an invocation mask image before the ray tracing
+--         command
 --
---     -   This extension requires
---         <VK_KHR_synchronization2.html VK_KHR_synchronization2>, which
---         allows new pipeline stage for the invocation mask image
+--     -   This extension requires @VK_KHR_synchronization2@, which allows
+--         new pipeline stage for the invocation mask image
 --
 -- [__Contributors__]
 --
@@ -302,6 +300,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask VK_HUAWEI_invocation_mask>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Handles.ImageView'
@@ -351,6 +350,7 @@ cmdBindInvocationMaskHUAWEI commandBuffer imageView imageLayout = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask VK_HUAWEI_invocation_mask>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInvocationMaskFeaturesHUAWEI = PhysicalDeviceInvocationMaskFeaturesHUAWEI

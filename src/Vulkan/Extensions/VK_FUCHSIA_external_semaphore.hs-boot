@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   John Rosasco
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_FUCHSIA_external_semaphore:%20&body=@rosasco%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_FUCHSIA_external_semaphore] @rosasco%0A<<Here describe the issue or question you have about the VK_FUCHSIA_external_semaphore extension>> >
 --
 -- == Other Extension Metadata
 --

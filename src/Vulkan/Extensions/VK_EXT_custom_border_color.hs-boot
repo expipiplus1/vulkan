@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Liam Middlebrook
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_custom_border_color:%20&body=@liam-middlebrook%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_custom_border_color] @liam-middlebrook%0A<<Here describe the issue or question you have about the VK_EXT_custom_border_color extension>> >
 --
 -- == Other Extension Metadata
 --

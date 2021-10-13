@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_wayland_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_wayland_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_wayland_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_wayland_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -307,6 +307,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'WaylandSurfaceCreateInfoKHR'
@@ -357,6 +358,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                 . (MonadIO io)
@@ -397,6 +399,7 @@ getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex d
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'WaylandSurfaceCreateFlagsKHR', 'createWaylandSurfaceKHR'
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
@@ -469,6 +472,7 @@ instance Zero WaylandSurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'WaylandSurfaceCreateInfoKHR'
 newtype WaylandSurfaceCreateFlagsKHR = WaylandSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

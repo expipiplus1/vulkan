@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_control:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_display_control] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_display_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -288,6 +288,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'DisplayPowerInfoEXT'
 displayPowerControlEXT :: forall io
@@ -347,6 +348,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DeviceEventInfoEXT',
 -- 'Vulkan.Core10.Handles.Fence'
@@ -423,6 +425,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DisplayEventInfoEXT',
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'Vulkan.Core10.Handles.Fence'
@@ -513,6 +516,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
@@ -546,6 +550,7 @@ getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayPowerStateEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'displayPowerControlEXT'
@@ -600,6 +605,7 @@ instance Zero DisplayPowerInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DeviceEventTypeEXT', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'registerDeviceEventEXT'
 data DeviceEventInfoEXT = DeviceEventInfoEXT
@@ -650,6 +656,7 @@ instance Zero DeviceEventInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayEventTypeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'registerDisplayEventEXT'
@@ -720,6 +727,7 @@ instance Zero DisplayEventInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagsEXT'
 data SwapchainCounterCreateInfoEXT = SwapchainCounterCreateInfoEXT
@@ -768,6 +776,7 @@ instance Zero SwapchainCounterCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayPowerInfoEXT'
 newtype DisplayPowerStateEXT = DisplayPowerStateEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -818,6 +827,7 @@ instance Read DisplayPowerStateEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DeviceEventInfoEXT'
 newtype DeviceEventTypeEXT = DeviceEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -854,6 +864,7 @@ instance Read DeviceEventTypeEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayEventInfoEXT'
 newtype DisplayEventTypeEXT = DisplayEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

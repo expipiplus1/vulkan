@@ -128,6 +128,7 @@ pattern API_VERSION_1_2 = MAKE_API_VERSION 1 2 0
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
@@ -319,6 +320,7 @@ instance Zero PhysicalDeviceVulkan11Features where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
@@ -931,6 +933,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan12Features = PhysicalDeviceVulkan12Features
@@ -1280,6 +1283,7 @@ instance Zero PhysicalDeviceVulkan12Features where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion',
 -- 'Vulkan.Core12.Enums.DriverId.DriverId',

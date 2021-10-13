@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_atomic_float2:%20&body=@jekstrand%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_atomic_float2] @jekstrand%0A<<Here describe the issue or question you have about the VK_EXT_shader_atomic_float2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -174,6 +174,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_atomic_float2 VK_EXT_shader_atomic_float2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderAtomicFloat2FeaturesEXT = PhysicalDeviceShaderAtomicFloat2FeaturesEXT

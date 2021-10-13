@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_corner_sampled_image:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_corner_sampled_image] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_corner_sampled_image extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -111,7 +111,7 @@
 --     support corner-sampling?
 --
 --     __DISCUSSION__: Currently NVIDIA supports this for all 2D and 3D
---     formats, but not for cubemaps or depth-stencil formats. A format
+--     formats, but not for cube maps or depth-stencil formats. A format
 --     feature might be useful if other vendors would only support this on
 --     some formats.
 --

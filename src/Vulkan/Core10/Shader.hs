@@ -5,8 +5,7 @@ module Vulkan.Core10.Shader  ( createShaderModule
                              , destroyShaderModule
                              , ShaderModuleCreateInfo(..)
                              , ShaderModule(..)
-                             , ShaderModuleCreateFlagBits(..)
-                             , ShaderModuleCreateFlags
+                             , ShaderModuleCreateFlags(..)
                              ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -75,7 +74,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (ShaderModule)
 import Vulkan.Core10.Handles (ShaderModule(..))
-import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits (ShaderModuleCreateFlags)
+import Vulkan.Core10.Enums.ShaderModuleCreateFlags (ShaderModuleCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ShaderModuleValidationCacheCreateInfoEXT)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -83,8 +82,7 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Handles (ShaderModule(..))
-import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits (ShaderModuleCreateFlagBits(..))
-import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits (ShaderModuleCreateFlags)
+import Vulkan.Core10.Enums.ShaderModuleCreateFlags (ShaderModuleCreateFlags(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -135,6 +133,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule',
 -- 'ShaderModuleCreateInfo'
@@ -228,6 +227,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule'
 destroyShaderModule :: forall io
@@ -332,7 +332,8 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.ShaderModuleCreateFlags',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Core10.Enums.ShaderModuleCreateFlags.ShaderModuleCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createShaderModule'
 data ShaderModuleCreateInfo (es :: [Type]) = ShaderModuleCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.

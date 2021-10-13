@@ -91,6 +91,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalBufferProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalBufferInfo'
 getPhysicalDeviceExternalBufferProperties :: forall io
@@ -140,6 +141,7 @@ getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = li
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalBufferProperties', 'ExternalImageFormatProperties',
 -- 'Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits.ExternalMemoryFeatureFlags',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags'
@@ -230,6 +232,7 @@ instance Zero ExternalMemoryProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExternalImageFormatInfo = PhysicalDeviceExternalImageFormatInfo
@@ -282,6 +285,7 @@ instance Zero PhysicalDeviceExternalImageFormatInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryProperties',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalImageFormatProperties = ExternalImageFormatProperties
@@ -334,6 +338,7 @@ instance Zero ExternalImageFormatProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
@@ -425,6 +430,7 @@ instance Zero PhysicalDeviceExternalBufferInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryProperties',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalBufferProperties',
@@ -594,6 +600,7 @@ instance Zero ExternalBufferProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceIDProperties = PhysicalDeviceIDProperties

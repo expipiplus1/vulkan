@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Dzmitry Malyshau
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_metal_surface:%20&body=@kvark%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_metal_surface] @kvark%0A<<Here describe the issue or question you have about the VK_EXT_metal_surface extension>> >
 --
 -- == Other Extension Metadata
 --

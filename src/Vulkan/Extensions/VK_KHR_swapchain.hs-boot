@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_swapchain:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_swapchain] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_swapchain extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_swapchain:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_swapchain] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_swapchain extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -532,7 +532,7 @@
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' owns the binding of the native
 -- window to the Vulkan driver.
 --
--- 26) How can the client control the way the alpha channel of swapchain
+-- 26) How can the client control the way the alpha component of swapchain
 -- images is treated by the presentation engine during compositing?
 --
 -- __RESOLVED__: We should add new enum values to allow the client to

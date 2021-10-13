@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_full_screen_exclusive:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_full_screen_exclusive] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_full_screen_exclusive extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -427,6 +427,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
@@ -495,6 +496,9 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
@@ -601,6 +605,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 acquireFullScreenExclusiveModeEXT :: forall io
                                    . (MonadIO io)
@@ -642,6 +647,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 releaseFullScreenExclusiveModeEXT :: forall io
                                    . (MonadIO io)
@@ -680,6 +686,7 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'FullScreenExclusiveEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
@@ -751,6 +758,8 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
   { -- | @hmonitor@ is the Win32 'HMONITOR' handle identifying the display to
@@ -818,6 +827,7 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
@@ -866,6 +876,7 @@ instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'SurfaceFullScreenExclusiveInfoEXT'
 newtype FullScreenExclusiveEXT = FullScreenExclusiveEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

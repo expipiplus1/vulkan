@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_semaphore_fd:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_semaphore_fd] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_semaphore_fd extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -217,6 +217,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetFdInfoKHR'
 getSemaphoreFdKHR :: forall io
                    . (MonadIO io)
@@ -280,6 +281,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreFdInfoKHR'
 importSemaphoreFdKHR :: forall io
                       . (MonadIO io)
@@ -403,6 +405,7 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlags',
@@ -543,6 +546,7 @@ instance Zero ImportSemaphoreFdInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getSemaphoreFdKHR'

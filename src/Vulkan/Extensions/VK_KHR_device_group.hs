@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_device_group:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_device_group] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_device_group extension>> >
 --
 -- == Other Extension Metadata
 --

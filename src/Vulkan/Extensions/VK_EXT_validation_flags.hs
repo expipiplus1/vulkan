@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Tobin Ehlis
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_flags:%20&body=@tobine%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_flags] @tobine%0A<<Here describe the issue or question you have about the VK_EXT_validation_flags extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -156,6 +156,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags VK_EXT_validation_flags>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ValidationCheckEXT'
 data ValidationFlagsEXT = ValidationFlagsEXT
   { -- | @pDisabledValidationChecks@ is a pointer to an array of
@@ -206,6 +207,7 @@ instance Zero ValidationFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags VK_EXT_validation_flags>,
 -- 'ValidationFlagsEXT'
 newtype ValidationCheckEXT = ValidationCheckEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

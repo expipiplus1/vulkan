@@ -15,7 +15,7 @@
 --     151
 --
 -- [__Revision__]
---     12
+--     13
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -30,12 +30,12 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_acceleration_structure:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_acceleration_structure] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_acceleration_structure extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-11-12
+--     2021-09-30
 --
 -- [__Contributors__]
 --
@@ -351,6 +351,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'FormatFeatureFlagBits2KHR':
+--
+--     -   'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--
 -- == Issues
 --
 -- (1) How does this extension differ from VK_NV_ray_tracing?
@@ -611,10 +619,8 @@
 -- -   change 'cmdBuildAccelerationStructuresIndirectKHR' to use buffer
 --     device address for indirect parameter
 --
--- -   make
---     <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---     an interaction instead of a required extension (later went back on
---     this)
+-- -   make @VK_KHR_deferred_host_operations@ an interaction instead of a
+--     required extension (later went back on this)
 --
 -- -   renamed @VkAccelerationStructureBuildOffsetInfoKHR@ to
 --     'AccelerationStructureBuildRangeInfoKHR'
@@ -671,14 +677,13 @@
 --         that the implementation can modify such parameters until the
 --         deferred host operation completes
 --
---     -   <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---         is required again
+--     -   @VK_KHR_deferred_host_operations@ is required again
 --
 -- -   Change acceleration structure build to always be sized
 --
 --     -   de-alias
 --         'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsTypeNV'
---         and @VkAccelerationStructureMemoryRequirementsTypeKHR@ and
+--         and @VkAccelerationStructureMemoryRequirementsTypeKHR@, and
 --         remove @VkAccelerationStructureMemoryRequirementsTypeKHR@
 --
 --     -   add 'getAccelerationStructureBuildSizesKHR' command and
@@ -707,33 +712,30 @@
 --     implementation flexibility and decoupling ray query support from ray
 --     pipelines:
 --
---     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         (for acceleration structure operations)
+--     -   @VK_KHR_acceleration_structure@ (for acceleration structure
+--         operations)
 --
---     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         (for ray tracing pipeline and shader stages)
+--     -   @VK_KHR_ray_tracing_pipeline@ (for ray tracing pipeline and
+--         shader stages)
 --
---     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
---         existing shader stages)
+--     -   @VK_KHR_ray_query@ (for ray queries in existing shader stages)
 --
 -- -   clarify buffer usage flags for ray tracing
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         is left alone in <VK_NV_ray_tracing.html VK_NV_ray_tracing>
---         (required on @scratch@ and @instanceData@)
+--         is left alone in @VK_NV_ray_tracing@ (required on @scratch@ and
+--         @instanceData@)
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR'
 --         is added as an alias of
 --         'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         in
---         <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         and is required on shader binding table buffers
+--         in @VK_KHR_ray_tracing_pipeline@ and is required on shader
+--         binding table buffers
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
---         is added in
---         <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         for all vertex, index, transform, aabb, and instance buffer data
---         referenced by device build commands
+--         is added in @VK_KHR_acceleration_structure@ for all vertex,
+--         index, transform, aabb, and instance buffer data referenced by
+--         device build commands
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
 --         is used for @scratchData@
@@ -745,7 +747,8 @@
 --     constrain the device address
 --
 --     -   de-alias
---         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+--         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV'
+--         and
 --         'Vulkan.Extensions.VK_NV_ray_tracing.bindAccelerationStructureMemoryNV',
 --         and remove @VkBindAccelerationStructureMemoryInfoKHR@,
 --         @VkAccelerationStructureMemoryRequirementsInfoKHR@, and
@@ -1090,6 +1093,10 @@
 --         as alias).
 --
 --     -   Clarify description and add note.
+--
+-- -   Revision 13, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
 -- = See Also
 --

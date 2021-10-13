@@ -52,8 +52,8 @@ type AccessFlags = AccessFlagBits
 --
 -- = Description
 --
--- These values all have the same value\/meaning as the equivalently named
--- values for 'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlags2KHR'.
+-- These values all have the same meaning as the equivalently named values
+-- for 'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlags2KHR'.
 --
 -- Certain access types are only performed by a subset of pipeline stages.
 -- Any synchronization command that takes both stage masks and access masks
@@ -107,7 +107,8 @@ type AccessFlags = AccessFlagBits
 -- |                                                                                      | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or                  |
 -- |                                                                                      | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                       |
 -- +--------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
--- | 'ACCESS_INPUT_ATTACHMENT_READ_BIT'                                                   | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT'                      |
+-- | 'ACCESS_INPUT_ATTACHMENT_READ_BIT'                                                   | 'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI', or         |
+-- |                                                                                      | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT'                      |
 -- +--------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 -- | 'ACCESS_COLOR_ATTACHMENT_READ_BIT'                                                   | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'              |
 -- +--------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
@@ -172,6 +173,7 @@ type AccessFlags = AccessFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'AccessFlags'
 newtype AccessFlagBits = AccessFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -202,7 +204,10 @@ pattern ACCESS_VERTEX_ATTRIBUTE_READ_BIT            = AccessFlagBits 0x00000004
 pattern ACCESS_UNIFORM_READ_BIT                     = AccessFlagBits 0x00000008
 -- | 'ACCESS_INPUT_ATTACHMENT_READ_BIT' specifies read access to an
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass input attachment>
--- within a render pass during fragment shading. Such access occurs in the
+-- within a render pass during subpass shading or fragment shading. Such
+-- access occurs in the
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+-- or
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT'
 -- pipeline stage.
 pattern ACCESS_INPUT_ATTACHMENT_READ_BIT            = AccessFlagBits 0x00000010

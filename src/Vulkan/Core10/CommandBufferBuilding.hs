@@ -261,6 +261,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR' and
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'.
 --
+-- -   The pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'
+--     controls the behavior of
+--     'Vulkan.Extensions.VK_HUAWEI_subpass_shading.cmdSubpassShadingHUAWEI'.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-00777# If
@@ -366,6 +371,17 @@ foreign import ccall
 --     to this bind point within the current renderpass instance, including
 --     any pipeline already bound when beginning the renderpass instance
 --
+-- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-04949# If
+--     @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI',
+--     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support compute operations
+--
+-- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-04950# If
+--     @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI',
+--     @pipeline@ /must/ be a subpass shading pipeline
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdBindPipeline-commandBuffer-parameter# @commandBuffer@
@@ -410,6 +426,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 cmdBindPipeline :: forall io
@@ -441,9 +458,17 @@ foreign import ccall
   "dynamic" mkVkCmdSetViewport
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Viewport -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Viewport -> IO ()
 
--- | vkCmdSetViewport - Set the viewport on a command buffer
+-- | vkCmdSetViewport - Set the viewport dynamically for a command buffer
 --
 -- = Description
+--
+-- This command sets the viewport transformation parameters state for
+-- subsequent drawing commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pViewports@
+-- values used to create the currently active pipeline.
 --
 -- The viewport parameters taken from element i of @pViewports@ replace the
 -- current state for the viewport index @firstViewport@ + i, for i in [0,
@@ -509,6 +534,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Pipeline.Viewport'
 cmdSetViewport :: forall io
                 . (MonadIO io)
@@ -541,7 +567,8 @@ foreign import ccall
   "dynamic" mkVkCmdSetScissor
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
--- | vkCmdSetScissor - Set the dynamic scissor rectangles on a command buffer
+-- | vkCmdSetScissor - Set scissor rectangles dynamically for a command
+-- buffer
 --
 -- = Description
 --
@@ -549,10 +576,13 @@ foreign import ccall
 -- current state for the scissor index @firstScissor@ + i, for i in [0,
 -- @scissorCount@).
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR'
--- set in
+-- This command sets the scissor rectangles for subsequent drawing commands
+-- when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pScissors@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -626,6 +656,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetScissor :: forall io
@@ -659,7 +690,17 @@ foreign import ccall
   "dynamic" mkVkCmdSetLineWidth
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> IO ()
 
--- | vkCmdSetLineWidth - Set the dynamic line width state
+-- | vkCmdSetLineWidth - Set line width dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the line width for subsequent drawing commands when
+-- the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_WIDTH' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@lineWidth@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -700,6 +741,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLineWidth :: forall io
                  . (MonadIO io)
@@ -725,79 +767,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthBias
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> CFloat -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> CFloat -> CFloat -> IO ()
 
--- | vkCmdSetDepthBias - Set the depth bias dynamic state
+-- | vkCmdSetDepthBias - Set depth bias factors and clamp dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- If @depthBiasEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE' at draw
--- time, no depth bias is applied and the fragment’s depth values are
--- unchanged.
---
--- @depthBiasSlopeFactor@ scales the maximum depth slope of the polygon,
--- and @depthBiasConstantFactor@ scales the minimum resolvable difference
--- of the depth buffer. The resulting values are summed to produce the
--- depth bias value which is then clamped to a minimum or maximum value
--- specified by @depthBiasClamp@. @depthBiasSlopeFactor@,
--- @depthBiasConstantFactor@, and @depthBiasClamp@ /can/ each be positive,
--- negative, or zero.
---
--- The maximum depth slope m of a triangle is
---
--- \[m = \sqrt{ \left({{\partial z_f} \over {\partial x_f}}\right)^2
---         +  \left({{\partial z_f} \over {\partial y_f}}\right)^2}\]
---
--- where (xf, yf, zf) is a point on the triangle. m /may/ be approximated
--- as
---
--- \[m = \max\left( \left| { {\partial z_f} \over {\partial x_f} } \right|,
---                \left| { {\partial z_f} \over {\partial y_f} } \right|
---        \right).\]
---
--- The minimum resolvable difference r is a parameter that depends on the
--- depth buffer representation. It is the smallest difference in
--- framebuffer coordinate z values that is guaranteed to remain distinct
--- throughout polygon rasterization and in the depth buffer. All pairs of
--- fragments generated by the rasterization of two polygons with otherwise
--- identical vertices, but @z@f values that differ by r, will have distinct
--- depth values.
---
--- For fixed-point depth buffer representations, r is constant throughout
--- the range of the entire depth buffer. Its value is
--- implementation-dependent but /must/ be at most
---
--- -   r = 2 × 2-n
---
--- for an n-bit buffer. For floating-point depth buffers, there is no
--- single minimum resolvable difference. In this case, the minimum
--- resolvable difference for a given polygon is dependent on the maximum
--- exponent, e, in the range of z values spanned by the primitive. If n is
--- the number of bits in the floating-point mantissa, the minimum
--- resolvable difference, r, for the given primitive is defined as
---
--- -   r = 2e-n
---
--- If a triangle is rasterized using the
--- 'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL_RECTANGLE_NV' polygon
--- mode, then this minimum resolvable difference /may/ not be resolvable
--- for samples outside of the triangle, where the depth is extrapolated.
---
--- If no depth buffer is present, r is undefined.
---
--- The bias value o for a polygon is
---
--- \[\begin{aligned}
--- o &= \mathrm{dbclamp}( m \times \mathtt{depthBiasSlopeFactor} + r \times \mathtt{depthBiasConstantFactor} ) \\
--- \text{where} &\quad \mathrm{dbclamp}(x) =
--- \begin{cases}
---     x                                 & \mathtt{depthBiasClamp} = 0 \ \text{or}\ \texttt{NaN} \\
---     \min(x, \mathtt{depthBiasClamp})  & \mathtt{depthBiasClamp} > 0 \\
---     \max(x, \mathtt{depthBiasClamp})  & \mathtt{depthBiasClamp} < 0 \\
--- \end{cases}
--- \end{aligned}\]
---
--- m is computed as described above. If the depth buffer uses a fixed-point
--- representation, m is a function of depth values in the range [0,1], and
--- o is applied to depth values in the same range.
+-- This command sets the depth bias parameters for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the corresponding
+-- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@depthBiasConstantFactor@,
+-- @depthBiasClamp@, and @depthBiasSlopeFactor@ values used to create the
+-- currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -838,6 +820,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBias :: forall io
                  . (MonadIO io)
@@ -870,6 +853,16 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()
 
 -- | vkCmdSetBlendConstants - Set the values of blend constants
+--
+-- = Description
+--
+-- This command sets blend constants for subsequent drawing commands when
+-- the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_BLEND_CONSTANTS' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@blendConstants@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage (Implicit)
 --
@@ -905,6 +898,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetBlendConstants :: forall io
                       . (MonadIO io)
@@ -912,8 +906,8 @@ cmdSetBlendConstants :: forall io
                         -- recorded.
                         CommandBuffer
                      -> -- | @blendConstants@ is a pointer to an array of four values specifying the
-                        -- R, G, B, and A components of the blend constant color used in blending,
-                        -- depending on the
+                        -- Rc, Gc, Bc, and Ac components of the blend constant color used in
+                        -- blending, depending on the
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendfactors blend factor>.
                         ("blendConstants" ::: (Float, Float, Float, Float))
                      -> io ()
@@ -941,15 +935,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthBounds
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> CFloat -> IO ()
 
--- | vkCmdSetDepthBounds - Set the depth bounds test values for a command
+-- | vkCmdSetDepthBounds - Set depth bounds range dynamically for a command
 -- buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the depth bounds range for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@minDepthBounds@
+-- and
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@maxDepthBounds@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -994,6 +993,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBounds :: forall io
                    . (MonadIO io)
@@ -1021,15 +1021,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilCompareMask
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
--- | vkCmdSetStencilCompareMask - Set the stencil compare mask dynamic state
+-- | vkCmdSetStencilCompareMask - Set stencil compare mask dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil compare mask for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_COMPARE_MASK'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@compareMask@
+-- value used to create the currently active pipeline, for both front and
+-- back faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1072,6 +1077,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilCompareMask :: forall io
@@ -1102,15 +1108,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilWriteMask
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
--- | vkCmdSetStencilWriteMask - Set the stencil write mask dynamic state
+-- | vkCmdSetStencilWriteMask - Set stencil write mask dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil write mask for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@writeMask@
+-- value used to create the currently active pipeline, for both front and
+-- back faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1153,6 +1164,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilWriteMask :: forall io
@@ -1184,15 +1196,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilReference
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
--- | vkCmdSetStencilReference - Set the stencil reference dynamic state
+-- | vkCmdSetStencilReference - Set stencil reference value dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil reference value for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@reference@
+-- value used to create the currently active pipeline, for both front and
+-- back faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1235,6 +1252,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilReference :: forall io
@@ -1441,6 +1459,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
@@ -1561,6 +1580,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType'
@@ -1575,7 +1595,7 @@ cmdBindIndexBuffer :: forall io
                       -- buffer address calculations.
                       ("offset" ::: DeviceSize)
                    -> -- | @indexType@ is a 'Vulkan.Core10.Enums.IndexType.IndexType' value
-                      -- specifying whether indices are treated as 16 bits or 32 bits.
+                      -- specifying the size of the indices.
                       IndexType
                    -> io ()
 cmdBindIndexBuffer commandBuffer buffer offset indexType = liftIO $ do
@@ -1697,6 +1717,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBindVertexBuffers :: forall io
@@ -1816,6 +1837,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDraw-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDraw-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDraw-None-02697# For each set /n/ that is statically used
 --     by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
 --     point used by this command, a descriptor set /must/ have been bound
@@ -1825,7 +1862,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDraw-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDraw-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -1919,28 +1958,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDraw-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDraw-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDraw-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDraw-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -2305,6 +2344,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDraw :: forall io
          . (MonadIO io)
@@ -2433,6 +2473,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndexed-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndexed-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndexed-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -2442,7 +2498,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexed-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDrawIndexed-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -2539,28 +2597,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -2934,6 +2992,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDrawIndexed :: forall io
                 . (MonadIO io)
@@ -3050,6 +3109,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndirect-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndirect-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndirect-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -3059,7 +3134,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndirect-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDrawIndirect-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -3156,28 +3233,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -3578,6 +3655,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndirect :: forall io
@@ -3694,6 +3772,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -3703,14 +3797,15 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02698# For each push constant
---     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command, a push
---     constant value /must/ have been set for the same pipeline bind
---     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
---     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
---     'Vulkan.Core10.Handles.Pipeline', as described in
+-- -   #VUID-vkCmdDrawIndexedIndirect-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
+--     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
+--     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02699# Descriptors in each bound
@@ -3802,28 +3897,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -4225,6 +4320,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndexedIndirect :: forall io
@@ -4335,6 +4431,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDispatch-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDispatch-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDispatch-None-02697# For each set /n/ that is statically
 --     used by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
 --     bind point used by this command, a descriptor set /must/ have been
@@ -4344,7 +4456,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatch-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDispatch-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -4440,28 +4554,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -4550,6 +4664,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDispatch :: forall io
              . (MonadIO io)
@@ -4663,6 +4778,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDispatchIndirect-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDispatchIndirect-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDispatchIndirect-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -4672,9 +4803,11 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02698# For each push constant that
---     is statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
---     the pipeline bind point used by this command, a push constant value
+-- -   #VUID-vkCmdDispatchIndirect-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
@@ -4769,28 +4902,28 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32
@@ -4875,6 +5008,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDispatchIndirect :: forall io
@@ -5019,6 +5153,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdCopyBuffer :: forall io
@@ -5559,6 +5694,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'ImageCopy', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 cmdCopyImage :: forall io
@@ -5748,9 +5884,8 @@ foreign import ccall
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
--- -   #VUID-vkCmdBlitImage-srcImage-01561# @srcImage@ /must/ not use a
---     format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-vkCmdBlitImage-srcImage-06421# @srcImage@ /must/ not use a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-vkCmdBlitImage-srcImage-00219# @srcImage@ /must/ have been
 --     created with
@@ -5777,9 +5912,8 @@ foreign import ccall
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
--- -   #VUID-vkCmdBlitImage-dstImage-01562# @dstImage@ /must/ not use a
---     format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-vkCmdBlitImage-dstImage-06422# @dstImage@ /must/ not use a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-vkCmdBlitImage-dstImage-00224# @dstImage@ /must/ have been
 --     created with
@@ -6000,6 +6134,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.Filter.Filter', 'Vulkan.Core10.Handles.Image',
 -- 'ImageBlit', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
@@ -6353,6 +6488,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
@@ -6691,6 +6827,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
@@ -6849,6 +6986,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdUpdateBuffer :: forall io
@@ -6977,6 +7115,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdFillBuffer :: forall io
@@ -7036,9 +7175,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     usage flag
 --
--- -   #VUID-vkCmdClearColorImage-image-01545# @image@ /must/ not use a
---     format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
+-- -   #VUID-vkCmdClearColorImage-image-01545# @image@ /must/ not use any
+--     of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>
 --
 -- -   #VUID-vkCmdClearColorImage-image-00003# If @image@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single
@@ -7157,6 +7296,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearColorValue', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -7375,6 +7515,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearDepthStencilValue', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -7441,7 +7582,7 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>,
 -- 'cmdClearAttachments' executes as a drawing command, rather than a
 -- transfer command, with writes performed by it executing in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primrast-order rasterization order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-order rasterization order>.
 -- Clears to color attachments are executed as color attachment writes, by
 -- the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
@@ -7566,6 +7707,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearAttachment', 'ClearRect', 'Vulkan.Core10.Handles.CommandBuffer'
 cmdClearAttachments :: forall io
                      . (MonadIO io)
@@ -7837,6 +7979,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve'
 cmdResolveImage :: forall io
@@ -7996,6 +8139,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdSetEvent :: forall io
@@ -8154,6 +8298,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdResetEvent :: forall io
@@ -8567,6 +8712,7 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
@@ -8974,6 +9120,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags',
@@ -9217,6 +9364,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Vulkan.Core10.Handles.QueryPool'
@@ -9351,6 +9499,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdEndQuery :: forall io
              . (MonadIO io)
@@ -9468,6 +9617,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdResetQueryPool :: forall io
                    . (MonadIO io)
@@ -9659,6 +9809,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
 -- 'Vulkan.Core10.Handles.QueryPool'
@@ -9879,6 +10030,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.QueryPool',
@@ -9932,7 +10084,8 @@ foreign import ccall
 -- = Description
 --
 -- When a command buffer begins recording, all push constant values are
--- undefined.
+-- undefined. Reads of undefined push constant values by the executing
+-- shader return undefined values.
 --
 -- Push constant values /can/ be updated incrementally, causing shader
 -- stages in @stageFlags@ to read the new data from @pValues@ for push
@@ -10033,6 +10186,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
@@ -10251,6 +10405,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'RenderPassBeginInfo',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
 cmdBeginRenderPass :: forall a io
@@ -10366,6 +10521,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
 cmdNextSubpass :: forall io
@@ -10447,6 +10603,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndRenderPass :: forall io
                   . (MonadIO io)
@@ -10680,6 +10837,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdExecuteCommands :: forall io
                     . (MonadIO io)
@@ -10711,6 +10869,7 @@ cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D', 'cmdClearAttachments'
 data ClearRect = ClearRect
   { -- | @rect@ is the two-dimensional region to be cleared.
@@ -10780,7 +10939,7 @@ instance Zero ClearRect where
 --
 -- -   #VUID-VkImageSubresourceLayers-aspectMask-02247# @aspectMask@ /must/
 --     not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index
---     @i@
+--     /i/
 --
 -- -   #VUID-VkImageSubresourceLayers-layerCount-01700# @layerCount@ /must/
 --     be greater than 0
@@ -10796,6 +10955,7 @@ instance Zero ClearRect where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BufferImageCopy',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', 'ImageBlit',
@@ -10869,6 +11029,7 @@ instance Zero ImageSubresourceLayers where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'cmdCopyBuffer'
 data BufferCopy = BufferCopy
   { -- | @srcOffset@ is the starting offset in bytes from the start of
@@ -10964,6 +11125,7 @@ instance Zero BufferCopy where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdCopyImage'
 data ImageCopy = ImageCopy
@@ -11057,6 +11219,7 @@ instance Zero ImageCopy where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ImageSubresourceLayers', 'Vulkan.Core10.FundamentalTypes.Offset3D',
 -- 'cmdBlitImage'
 data ImageBlit = ImageBlit
@@ -11218,6 +11381,7 @@ instance Zero ImageBlit where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdCopyBufferToImage',
@@ -11320,6 +11484,7 @@ instance Zero BufferImageCopy where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdResolveImage'
 data ImageResolve = ImageResolve
@@ -11410,6 +11575,10 @@ instance Zero ImageResolve where
 -- pre-transformed dimensions. After @renderArea@ has been transformed by
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM'::@transform@,
 -- the resulting render area /must/ be equal to the framebuffer dimensions.
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpass shading>
+-- is enabled, then @renderArea@ /must/ equal the framebuffer dimensions.
 --
 -- When multiview is enabled, the resolve operation at the end of a subpass
 -- applies to all views in the view mask.
@@ -11684,6 +11853,7 @@ instance Zero ImageResolve where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearValue', 'Vulkan.Core10.Handles.Framebuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Handles.RenderPass',
@@ -11776,6 +11946,7 @@ instance es ~ '[] => Zero (RenderPassBeginInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearValue', 'cmdClearDepthStencilImage'
 data ClearDepthStencilValue = ClearDepthStencilValue
   { -- | @depth@ is the clear value for the depth aspect of the depth\/stencil
@@ -11841,7 +12012,7 @@ instance Zero ClearDepthStencilValue where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
 --
 -- -   #VUID-VkClearAttachment-aspectMask-02246# @aspectMask@ /must/ not
---     include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+--     include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index /i/
 --
 -- -   #VUID-VkClearAttachment-clearValue-00021# @clearValue@ /must/ be a
 --     valid 'ClearValue' union
@@ -11857,6 +12028,7 @@ instance Zero ClearDepthStencilValue where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearValue',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'cmdClearAttachments'

@@ -49,6 +49,8 @@ import Vulkan.Core10.APIConstants (pattern MAX_DRIVER_NAME_SIZE)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties VK_KHR_driver_properties>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'PhysicalDeviceDriverProperties',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
 data ConformanceVersion = ConformanceVersion
@@ -129,6 +131,8 @@ instance Zero ConformanceVersion where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties VK_KHR_driver_properties>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'ConformanceVersion', 'Vulkan.Core12.Enums.DriverId.DriverId',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties

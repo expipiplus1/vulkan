@@ -69,6 +69,7 @@ import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'RenderPassInputAttachmentAspectCreateInfo'
 data InputAttachmentAspectReference = InputAttachmentAspectReference
@@ -87,7 +88,7 @@ data InputAttachmentAspectReference = InputAttachmentAspectReference
     --
     -- #VUID-VkInputAttachmentAspectReference-aspectMask-02250# @aspectMask@
     -- /must/ not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any
-    -- index @i@
+    -- index /i/
     --
     -- #VUID-VkInputAttachmentAspectReference-aspectMask-parameter#
     -- @aspectMask@ /must/ be a valid combination of
@@ -157,6 +158,7 @@ instance Zero InputAttachmentAspectReference where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'InputAttachmentAspectReference',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassInputAttachmentAspectCreateInfo = RenderPassInputAttachmentAspectCreateInfo
@@ -222,6 +224,7 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperties
@@ -281,6 +284,7 @@ instance Zero PhysicalDevicePointClippingProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
@@ -349,6 +353,7 @@ instance Zero ImageViewUsageCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
 data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomainOriginStateCreateInfo

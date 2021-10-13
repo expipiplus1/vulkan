@@ -87,6 +87,7 @@ import Vulkan.Core10.Enums.VendorId (VendorId(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
@@ -248,6 +249,7 @@ instance Zero MemoryBarrier where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
@@ -712,6 +714,7 @@ instance Zero BufferMemoryBarrier where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -843,6 +846,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
 data PipelineCacheHeaderVersionOne = PipelineCacheHeaderVersionOne
   { -- | @headerSize@ is the length in bytes of the pipeline cache header.
@@ -949,6 +953,7 @@ instance Zero PipelineCacheHeaderVersionOne where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndirect'
 data DrawIndirectCommand = DrawIndirectCommand
   { -- | @vertexCount@ is the number of vertices to draw.
@@ -1036,6 +1041,7 @@ instance Zero DrawIndirectCommand where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect'
 data DrawIndexedIndirectCommand = DrawIndexedIndirectCommand
   { -- | @indexCount@ is the number of vertices to draw.
@@ -1113,6 +1119,7 @@ instance Zero DrawIndexedIndirectCommand where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'
 data DispatchIndirectCommand = DispatchIndirectCommand
   { -- | @x@ is the number of local workgroups to dispatch in the X dimension.

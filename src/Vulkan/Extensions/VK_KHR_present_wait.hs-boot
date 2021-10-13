@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Keith Packard
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_present_wait:%20&body=@keithp%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_present_wait] @keithp%0A<<Here describe the issue or question you have about the VK_KHR_present_wait extension>> >
 --
 -- == Other Extension Metadata
 --

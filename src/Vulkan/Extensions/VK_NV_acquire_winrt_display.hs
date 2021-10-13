@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Juliano
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_acquire_winrt_display:%20&body=@jjuliano%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_acquire_winrt_display] @jjuliano%0A<<Here describe the issue or question you have about the VK_NV_acquire_winrt_display extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -272,6 +272,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_acquire_winrt_display VK_NV_acquire_winrt_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 acquireWinrtDisplayNV :: forall io
@@ -332,6 +333,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_acquire_winrt_display VK_NV_acquire_winrt_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getWinrtDisplayNV :: forall io

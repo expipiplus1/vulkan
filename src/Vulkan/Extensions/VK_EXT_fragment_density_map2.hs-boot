@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Matthew Netsch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_fragment_density_map2:%20&body=@mnetsch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_fragment_density_map2] @mnetsch%0A<<Here describe the issue or question you have about the VK_EXT_fragment_density_map2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -125,6 +125,15 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT'
 --
 -- == Version History
 --
