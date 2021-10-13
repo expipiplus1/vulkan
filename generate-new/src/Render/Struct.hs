@@ -5,7 +5,7 @@ module Render.Struct where
 
 import qualified Data.Map                      as Map
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector.Extra             as V
 import           Polysemy
 import           Polysemy.Input

@@ -22,7 +22,7 @@ module Render.Stmts.Poke
 import           Data.Char                      ( isUpper )
 import           Data.List                      ( (!!) )
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector.Extra              ( pattern Empty
                                                 , Vector
                                                 )

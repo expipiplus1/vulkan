@@ -21,7 +21,7 @@ module Bespoke
 import qualified Data.List.Extra               as List
 import qualified Data.Map                      as Map
 import qualified Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector.Extra             as V
 import           Foreign.C.Types

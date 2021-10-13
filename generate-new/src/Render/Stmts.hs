@@ -42,7 +42,7 @@ import           Data.Some                      ( Some(..) )
 import           Data.Text.Extra                ( lowerCaseFirst
                                                 , snoc
                                                 )
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Type.Equality
 import           Data.Typeable
 import           Polysemy

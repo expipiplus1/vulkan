@@ -5,7 +5,7 @@ import           Data.List.Extra                ( elemIndex
                                                 , nubOrd
                                                 )
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
                                          hiding ( brackets
                                                 , plural
                                                 )

@@ -1,7 +1,7 @@
 module Render.Union
   where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Polysemy
 import           Polysemy.Input
 import           Polysemy.NonDet

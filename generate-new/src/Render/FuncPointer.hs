@@ -2,7 +2,7 @@
 module Render.FuncPointer
   where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Foreign.Ptr
 import           Language.Haskell.TH.Syntax
 import           Polysemy

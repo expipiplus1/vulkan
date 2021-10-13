@@ -19,7 +19,7 @@ import           Data.Char                      ( isLower )
 import           Data.Generics.Uniplate.Data
 import qualified Data.List.Extra               as List
 import qualified Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector                   as V
 import           Language.Haskell.TH
 import           Polysemy

@@ -2,7 +2,7 @@
 {-# language QuasiQuotes #-}
 module Render.Enum where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector                   as V
 import           Polysemy
 import           Polysemy.Input

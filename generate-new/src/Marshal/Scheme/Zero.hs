@@ -1,6 +1,6 @@
 module Marshal.Scheme.Zero where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Polysemy
 import           Polysemy.NonDet
 import           Relude

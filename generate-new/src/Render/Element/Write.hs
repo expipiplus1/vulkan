@@ -11,8 +11,8 @@ import qualified Data.Set                      as Set
 import           Data.Set                       ( unions )
 import           Data.Text                     as T
 import           Data.Text.IO                  as T
-import           Data.Text.Prettyprint.Doc
-import           Data.Text.Prettyprint.Doc.Render.Text
+import           Prettyprinter
+import           Prettyprinter.Render.Text
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( Vector )
 import           Foreign.Ptr

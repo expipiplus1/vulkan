@@ -15,7 +15,7 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 )
 import           Data.Text.Extra               as T
                                                 ( (<+>) )
-import           Data.Text.Prettyprint.Doc      ( pretty )
+import           Prettyprinter                  ( pretty )
 import           Data.Vector                    ( Vector
                                                 , generateM
                                                 )

@@ -5,7 +5,7 @@ module Render.Stmts.Alloc
   ) where
 
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Polysemy
 import           Relude                  hiding ( Const
                                                 , Type
