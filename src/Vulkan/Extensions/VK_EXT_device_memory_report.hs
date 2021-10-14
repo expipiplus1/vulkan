@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Yiwei Zhang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_device_memory_report:%20&body=@zhangyiwei%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_device_memory_report] @zhangyiwei%0A<<Here describe the issue or question you have about the VK_EXT_device_memory_report extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -323,6 +323,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceMemoryReportFeaturesEXT = PhysicalDeviceDeviceMemoryReportFeaturesEXT
@@ -387,7 +388,9 @@ instance Zero PhysicalDeviceDeviceMemoryReportFeaturesEXT where
 --
 -- = See Also
 --
--- 'PFN_vkDeviceMemoryReportCallbackEXT', 'DeviceMemoryReportFlagsEXT',
+-- 'PFN_vkDeviceMemoryReportCallbackEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
+-- 'DeviceMemoryReportFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceDeviceMemoryReportCreateInfoEXT = DeviceDeviceMemoryReportCreateInfoEXT
   { -- | @flags@ is 0 and reserved for future use.
@@ -489,6 +492,7 @@ instance Zero DeviceDeviceMemoryReportCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceMemoryReportEventTypeEXT', 'DeviceMemoryReportFlagsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
@@ -601,7 +605,18 @@ instance Zero DeviceMemoryReportCallbackDataEXT where
            zero
 
 
--- No documentation found for TopLevel "VkDeviceMemoryReportFlagsEXT"
+-- | VkDeviceMemoryReportFlagsEXT - Reserved for future use
+--
+-- = Description
+--
+-- 'DeviceMemoryReportFlagsEXT' is a bitmask type for setting a mask, but
+-- is currently reserved for future use.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
+-- 'DeviceDeviceMemoryReportCreateInfoEXT',
+-- 'DeviceMemoryReportCallbackDataEXT'
 newtype DeviceMemoryReportFlagsEXT = DeviceMemoryReportFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -635,6 +650,7 @@ instance Read DeviceMemoryReportFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceMemoryReportCallbackDataEXT'
 newtype DeviceMemoryReportEventTypeEXT = DeviceMemoryReportEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -702,6 +718,7 @@ type FN_vkDeviceMemoryReportCallbackEXT = ("pCallbackData" ::: Ptr DeviceMemoryR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceDeviceMemoryReportCreateInfoEXT'
 type PFN_vkDeviceMemoryReportCallbackEXT = FunPtr FN_vkDeviceMemoryReportCallbackEXT
 

@@ -15,7 +15,7 @@
 --     130
 --
 -- [__Revision__]
---     3
+--     4
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,12 +32,12 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_ANDROID_external_memory_android_hardware_buffer:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ANDROID_external_memory_android_hardware_buffer] @critsec%0A<<Here describe the issue or question you have about the VK_ANDROID_external_memory_android_hardware_buffer extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2019-08-27
+--     2021-09-30
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -110,6 +110,14 @@
 --
 --     -   'ImportAndroidHardwareBufferInfoANDROID'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'AndroidHardwareBufferPropertiesANDROID':
+--
+--     -   'AndroidHardwareBufferFormatProperties2ANDROID'
+--
 -- == New Enum Constants
 --
 -- -   'ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME'
@@ -134,6 +142,14 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_2_ANDROID'
 --
 -- == Issues
 --
@@ -226,6 +242,10 @@
 --
 -- == Version History
 --
+-- -   Revision 4, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
 -- -   Revision 3, 2019-08-27 (Jon Leech)
 --
 --     -   Update revision history to correspond to XML version number
@@ -255,7 +275,8 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( AndroidHardwareBufferFormatPropertiesANDROID
+module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( AndroidHardwareBufferFormatProperties2ANDROID
+                                                                             , AndroidHardwareBufferFormatPropertiesANDROID
                                                                              , AndroidHardwareBufferPropertiesANDROID
                                                                              , AndroidHardwareBufferUsageANDROID
                                                                              , ExternalFormatANDROID
@@ -271,6 +292,14 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+data AndroidHardwareBufferFormatProperties2ANDROID
+
+instance ToCStruct AndroidHardwareBufferFormatProperties2ANDROID
+instance Show AndroidHardwareBufferFormatProperties2ANDROID
+
+instance FromCStruct AndroidHardwareBufferFormatProperties2ANDROID
+
+
 data AndroidHardwareBufferFormatPropertiesANDROID
 
 instance ToCStruct AndroidHardwareBufferFormatPropertiesANDROID

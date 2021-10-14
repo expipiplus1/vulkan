@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Keith Packard
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_present_wait:%20&body=@keithp%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_present_wait] @keithp%0A<<Here describe the issue or question you have about the VK_KHR_present_wait extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -313,6 +313,7 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId t
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_present_wait VK_KHR_present_wait>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 waitForPresentKHR :: forall io
                    . (MonadIO io)
@@ -373,6 +374,7 @@ waitForPresentKHRSafe = waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHRSafe
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_present_wait VK_KHR_present_wait>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePresentWaitFeaturesKHR = PhysicalDevicePresentWaitFeaturesKHR

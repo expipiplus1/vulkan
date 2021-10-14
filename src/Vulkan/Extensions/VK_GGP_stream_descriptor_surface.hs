@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jean-Francois Roy
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GGP_stream_descriptor_surface:%20&body=@jfroy%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GGP_stream_descriptor_surface] @jfroy%0A<<Here describe the issue or question you have about the VK_GGP_stream_descriptor_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -232,6 +232,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface VK_GGP_stream_descriptor_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'StreamDescriptorSurfaceCreateInfoGGP',
@@ -272,6 +273,7 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalC
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface VK_GGP_stream_descriptor_surface>,
 -- 'StreamDescriptorSurfaceCreateFlagsGGP',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createStreamDescriptorSurfaceGGP'
@@ -338,6 +340,7 @@ instance Zero StreamDescriptorSurfaceCreateInfoGGP where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface VK_GGP_stream_descriptor_surface>,
 -- 'StreamDescriptorSurfaceCreateInfoGGP'
 newtype StreamDescriptorSurfaceCreateFlagsGGP = StreamDescriptorSurfaceCreateFlagsGGP Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

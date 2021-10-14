@@ -5,7 +5,7 @@ module Render.VkException
   ) where
 
 import           Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector                   as V
 import           Polysemy.Input
 import           Relude                  hiding ( ask )

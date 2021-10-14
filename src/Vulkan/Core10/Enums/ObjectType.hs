@@ -26,6 +26,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_DESCRIPTOR_SET
                                                   , OBJECT_TYPE_FRAMEBUFFER
                                                   , OBJECT_TYPE_COMMAND_POOL
+                                                  , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
                                                   , OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
                                                   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
@@ -151,6 +152,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
@@ -211,6 +213,8 @@ pattern OBJECT_TYPE_DESCRIPTOR_SET                  = ObjectType 23
 pattern OBJECT_TYPE_FRAMEBUFFER                     = ObjectType 24
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern OBJECT_TYPE_COMMAND_POOL                    = ObjectType 25
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA"
+pattern OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA       = ObjectType 1000366000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT"
 pattern OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT           = ObjectType 1000295000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
@@ -271,6 +275,7 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION        = ObjectType 1000156000
              OBJECT_TYPE_DESCRIPTOR_SET,
              OBJECT_TYPE_FRAMEBUFFER,
              OBJECT_TYPE_COMMAND_POOL,
+             OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA,
              OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT,
              OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV,
              OBJECT_TYPE_DEFERRED_OPERATION_KHR,
@@ -323,6 +328,7 @@ showTableObjectType =
   , (OBJECT_TYPE_DESCRIPTOR_SET                 , "DESCRIPTOR_SET")
   , (OBJECT_TYPE_FRAMEBUFFER                    , "FRAMEBUFFER")
   , (OBJECT_TYPE_COMMAND_POOL                   , "COMMAND_POOL")
+  , (OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA      , "BUFFER_COLLECTION_FUCHSIA")
   , (OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT          , "PRIVATE_DATA_SLOT_EXT")
   , (OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV    , "INDIRECT_COMMANDS_LAYOUT_NV")
   , (OBJECT_TYPE_DEFERRED_OPERATION_KHR         , "DEFERRED_OPERATION_KHR")

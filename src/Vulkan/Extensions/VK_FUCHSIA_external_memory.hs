@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   John Rosasco
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_FUCHSIA_external_memory:%20&body=@rosasco%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_FUCHSIA_external_memory] @rosasco%0A<<Here describe the issue or question you have about the VK_FUCHSIA_external_memory extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -204,6 +204,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>,
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetZirconHandleInfoFUCHSIA'
 getMemoryZirconHandleFUCHSIA :: forall io
                               . (MonadIO io)
@@ -255,6 +256,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryZirconHandlePropertiesFUCHSIA'
@@ -322,6 +324,7 @@ getMemoryZirconHandlePropertiesFUCHSIA device handleType zirconHandle = liftIO .
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryZirconHandleInfoFUCHSIA = ImportMemoryZirconHandleInfoFUCHSIA
@@ -379,6 +382,7 @@ instance Zero ImportMemoryZirconHandleInfoFUCHSIA where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getMemoryZirconHandlePropertiesFUCHSIA'
 data MemoryZirconHandlePropertiesFUCHSIA = MemoryZirconHandlePropertiesFUCHSIA
@@ -430,6 +434,7 @@ instance Zero MemoryZirconHandlePropertiesFUCHSIA where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

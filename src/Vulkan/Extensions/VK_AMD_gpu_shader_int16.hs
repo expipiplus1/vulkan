@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Qun Lin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_gpu_shader_int16:%20&body=@linqun%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_gpu_shader_int16] @linqun%0A<<Here describe the issue or question you have about the VK_AMD_gpu_shader_int16 extension>> >
 --
 -- == Other Extension Metadata
 --

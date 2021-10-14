@@ -9,7 +9,7 @@ import           Data.List.Extra                ( nubOrd )
 import qualified Data.Map                      as Map
 import qualified Data.Text                     as T
 import           Data.Text.Extra                ( upperCaseFirst )
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Data.Vector.Extra              ( pattern (:<|)

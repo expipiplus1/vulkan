@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Rex Xu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_texture_gather_bias_lod:%20&body=@amdrexu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_texture_gather_bias_lod] @amdrexu%0A<<Here describe the issue or question you have about the VK_AMD_texture_gather_bias_lod extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -186,6 +186,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_TEXTURE_L
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod VK_AMD_texture_gather_bias_lod>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data TextureLODGatherFormatPropertiesAMD = TextureLODGatherFormatPropertiesAMD

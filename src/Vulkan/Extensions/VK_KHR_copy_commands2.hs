@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_copy_commands2:%20&body=@jackohound%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_copy_commands2] @jackohound%0A<<Here describe the issue or question you have about the VK_KHR_copy_commands2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -328,6 +328,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyBufferInfo2KHR'
 cmdCopyBuffer2KHR :: forall io
                    . (MonadIO io)
@@ -419,6 +420,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyImageInfo2KHR'
 cmdCopyImage2KHR :: forall io
                   . (MonadIO io)
@@ -509,6 +511,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'BlitImageInfo2KHR', 'Vulkan.Core10.Handles.CommandBuffer'
 cmdBlitImage2KHR :: forall io
                   . (MonadIO io)
@@ -602,6 +605,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyBufferToImageInfo2KHR'
 cmdCopyBufferToImage2KHR :: forall io
                           . (MonadIO io)
@@ -695,6 +699,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyImageToBufferInfo2KHR'
 cmdCopyImageToBuffer2KHR :: forall io
                           . (MonadIO io)
@@ -785,6 +790,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ResolveImageInfo2KHR'
 cmdResolveImage2KHR :: forall io
                      . (MonadIO io)
@@ -821,6 +827,7 @@ cmdResolveImage2KHR commandBuffer resolveImageInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'CopyBufferInfo2KHR', 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BufferCopy2KHR = BufferCopy2KHR
@@ -907,6 +914,7 @@ instance Zero BufferCopy2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'CopyImageInfo2KHR', 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
@@ -1021,6 +1029,7 @@ instance Zero ImageCopy2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'BlitImageInfo2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
@@ -1160,6 +1169,7 @@ instance es ~ '[] => Zero (ImageBlit2KHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'CopyBufferToImageInfo2KHR', 'CopyImageToBufferInfo2KHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
@@ -1288,6 +1298,7 @@ instance es ~ '[] => Zero (BufferImageCopy2KHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'ResolveImageInfo2KHR',
@@ -1441,6 +1452,7 @@ instance Zero ImageResolve2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCopy2KHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdCopyBuffer2KHR'
 data CopyBufferInfo2KHR = CopyBufferInfo2KHR
@@ -1851,6 +1863,7 @@ instance Zero CopyBufferInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Image', 'ImageCopy2KHR',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdCopyImage2KHR'
@@ -1943,9 +1956,9 @@ instance Zero CopyImageInfo2KHR where
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
--- -   #VUID-VkBlitImageInfo2KHR-srcImage-01561# @srcImage@ /must/ not use
---     a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-06421# @srcImage@ /must/ not use
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcImage-00219# @srcImage@ /must/ have
 --     been created with
@@ -1972,9 +1985,9 @@ instance Zero CopyImageInfo2KHR where
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
--- -   #VUID-VkBlitImageInfo2KHR-dstImage-01562# @dstImage@ /must/ not use
---     a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-06422# @dstImage@ /must/ not use
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstImage-00224# @dstImage@ /must/ have
 --     been created with
@@ -2186,6 +2199,7 @@ instance Zero CopyImageInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Enums.Filter.Filter', 'Vulkan.Core10.Handles.Image',
 -- 'ImageBlit2KHR', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdBlitImage2KHR'
@@ -2551,6 +2565,7 @@ instance Zero BlitImageInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy2KHR',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -2898,6 +2913,7 @@ instance Zero CopyBufferToImageInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy2KHR',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -3142,6 +3158,7 @@ instance Zero CopyImageToBufferInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve2KHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdResolveImage2KHR'

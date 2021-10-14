@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Graeme Leese
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_image_robustness:%20&body=@gnl21%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_robustness] @gnl21%0A<<Here describe the issue or question you have about the VK_EXT_image_robustness extension>> >
 --
 -- == Other Extension Metadata
 --

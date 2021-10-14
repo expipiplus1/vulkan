@@ -56,6 +56,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionBufferCreateInfoFUCHSIA)
 import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (BufferDeviceAddressCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
@@ -109,6 +110,15 @@ foreign import ccall
 --     resources on the device to exceed
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
 --
+-- -   #VUID-vkCreateBuffer-pNext-06387# If using the
+--     'Vulkan.Core10.Handles.Buffer' for an import operation from a
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA' where a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     has been chained to @pNext@, @pCreateInfo@ /must/ match the
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferConstraintsInfoFUCHSIA'::@createInfo@
+--     used when setting the constraints on the buffer collection with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionBufferConstraintsFUCHSIA'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateBuffer-device-parameter# @device@ /must/ be a valid
@@ -140,6 +150,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
@@ -230,6 +241,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device'
 destroyBuffer :: forall io
@@ -357,6 +369,10 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT ::bufferDeviceAddressCaptureReplay>
 --     feature /must/ be enabled
 --
+-- -   #VUID-VkBufferCreateInfo-size-06409# @size@ /must/ be less than or
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_maintenance4.PhysicalDeviceMaintenance4PropertiesKHR'::@maxBufferSize@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBufferCreateInfo-sType-sType# @sType@ /must/ be
@@ -365,6 +381,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
@@ -393,8 +410,11 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferConstraintsInfoFUCHSIA',
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.DeviceBufferMemoryRequirementsKHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createBuffer'
@@ -432,6 +452,7 @@ instance Extensible BufferCreateInfo where
   getNext BufferCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @BufferCollectionBufferCreateInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @BufferDeviceAddressCreateInfoEXT = Just f
     | Just Refl <- eqT @e @BufferOpaqueCaptureAddressCreateInfo = Just f
     | Just Refl <- eqT @e @ExternalMemoryBufferCreateInfo = Just f

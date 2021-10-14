@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_viewport_swizzle:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_viewport_swizzle] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_NV_viewport_swizzle extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -51,13 +51,13 @@
 -- components of the original position vector.
 --
 -- This new viewport swizzle is useful for a number of algorithms,
--- including single-pass cubemap rendering (broadcasting a primitive to
+-- including single-pass cube map rendering (broadcasting a primitive to
 -- multiple faces and reorienting the vertex position for each face) and
 -- voxel rasterization. The per-viewport component remapping and negation
 -- provided by the swizzle allows application code to re-orient
 -- three-dimensional geometry with a view along any of the __X__, __Y__, or
 -- __Z__ axes. If a perspective projection and depth buffering is required,
--- 1\/W buffering should be used, as described in the single-pass cubemap
+-- 1\/W buffering should be used, as described in the single-pass cube map
 -- rendering example in the “Issues” section below.
 --
 -- == New Structures
@@ -106,11 +106,11 @@
 -- used together in practice?
 --
 -- __RESOLVED__: One interesting use case for this extension is for
--- single-pass rendering to a cubemap. In this example, the application
--- would attach a cubemap texture to a layered FBO where the six cube faces
--- are treated as layers. Vertices are sent through the vertex shader
+-- single-pass rendering to a cube map. In this example, the application
+-- would attach a cube map texture to a layered FBO where the six cube
+-- faces are treated as layers. Vertices are sent through the vertex shader
 -- without applying a projection matrix, where the @gl_Position@ output is
--- (x,y,z,1) and the center of the cubemap is at (0,0,0). With unextended
+-- (x,y,z,1) and the center of the cube map is at (0,0,0). With unextended
 -- Vulkan, one could have a conventional instanced geometry shader that
 -- looks something like the following:
 --

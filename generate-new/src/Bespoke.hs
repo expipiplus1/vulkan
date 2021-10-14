@@ -21,7 +21,7 @@ module Bespoke
 import qualified Data.List.Extra               as List
 import qualified Data.Map                      as Map
 import qualified Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector.Extra             as V
 import           Foreign.C.Types
@@ -82,7 +82,7 @@ forceDisabledExtensions =
   , "VK_KHR_video_encode_queue"
   , "VK_KHR_video_queue"
     -- Unresolved queries in Vulkan-Docs
-  , "VK_HUAWEI_subpass_shading" -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1564
+  -- , "VK_HUAWEI_subpass_shading" -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1564
   ]
 
 ----------------------------------------------------------------

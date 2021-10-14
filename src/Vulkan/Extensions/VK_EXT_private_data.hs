@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Matthew Rusch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_private_data:%20&body=@mattruschnv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_private_data] @mattruschnv%0A<<Here describe the issue or question you have about the VK_EXT_private_data extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -268,6 +268,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'PrivateDataSlotCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -358,6 +359,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -406,6 +408,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -477,6 +480,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -527,6 +531,7 @@ getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . eval
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DevicePrivateDataCreateInfoEXT = DevicePrivateDataCreateInfoEXT
   { -- | @privateDataSlotRequestCount@ is the amount of slots to reserve.
@@ -576,6 +581,7 @@ instance Zero DevicePrivateDataCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'PrivateDataSlotCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPrivateDataSlotEXT'
@@ -647,6 +653,7 @@ instance Zero PrivateDataSlotCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePrivateDataFeaturesEXT = PhysicalDevicePrivateDataFeaturesEXT
@@ -699,6 +706,7 @@ type PrivateDataSlotCreateFlagsEXT = PrivateDataSlotCreateFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'PrivateDataSlotCreateFlagsEXT'
 newtype PrivateDataSlotCreateFlagBitsEXT = PrivateDataSlotCreateFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

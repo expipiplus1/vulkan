@@ -182,6 +182,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'DescriptorSetLayoutCreateInfo', 'Vulkan.Core10.Handles.Device'
@@ -273,6 +274,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core10.Handles.Device'
@@ -345,6 +347,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'DescriptorPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
@@ -445,6 +448,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'Vulkan.Core10.Handles.Device'
 destroyDescriptorPool :: forall io
@@ -520,6 +524,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Enums.DescriptorPoolResetFlags.DescriptorPoolResetFlags',
 -- 'Vulkan.Core10.Handles.Device'
@@ -649,6 +654,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'DescriptorSetAllocateInfo',
 -- 'Vulkan.Core10.Handles.Device'
 allocateDescriptorSets :: forall a io
@@ -750,6 +756,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'Vulkan.Core10.Handles.Device'
 freeDescriptorSets :: forall io
@@ -898,6 +905,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'CopyDescriptorSet', 'Vulkan.Core10.Handles.Device',
 -- 'WriteDescriptorSet'
 updateDescriptorSets :: forall io
@@ -980,6 +988,7 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'WriteDescriptorSet'
 data DescriptorBufferInfo = DescriptorBufferInfo
@@ -1090,6 +1099,7 @@ instance Zero DescriptorBufferInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
 -- 'WriteDescriptorSet'
@@ -1205,7 +1215,8 @@ instance Zero DescriptorImageInfo where
 -- skipped. This behavior applies recursively, with the update affecting
 -- consecutive bindings as needed to update all @descriptorCount@
 -- descriptors. Consecutive bindings /must/ have identical
--- elink::VkDescriptorType, elink::VkShaderStageFlags,
+-- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
+-- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits',
 -- and immutable samplers references.
 --
@@ -1580,6 +1591,7 @@ instance Zero DescriptorImageInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.BufferView', 'DescriptorBufferInfo',
 -- 'DescriptorImageInfo', 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
@@ -1906,6 +1918,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'updateDescriptorSets'
@@ -2106,6 +2119,7 @@ instance Zero CopyDescriptorSet where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'DescriptorSetLayoutCreateInfo',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'Vulkan.Core10.Handles.Sampler',
@@ -2315,6 +2329,7 @@ instance Zero DescriptorSetLayoutBinding where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'DescriptorSetLayoutBinding',
 -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -2414,6 +2429,7 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'DescriptorPoolCreateInfo',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType'
 data DescriptorPoolSize = DescriptorPoolSize
@@ -2608,6 +2624,7 @@ instance Zero DescriptorPoolSize where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlags',
 -- 'DescriptorPoolSize', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDescriptorPool'
@@ -2739,6 +2756,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

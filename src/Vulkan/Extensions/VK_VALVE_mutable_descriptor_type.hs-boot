@@ -30,10 +30,10 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@Joshua-Ashton%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 --     -   Hans-Kristian Arntzen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@HansKristian-Work%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @HansKristian-Work%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 -- == Other Extension Metadata
 --

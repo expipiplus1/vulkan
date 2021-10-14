@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Josh Barczak
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_deferred_host_operations:%20&body=@jbarczak%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_deferred_host_operations] @jbarczak%0A<<Here describe the issue or question you have about the VK_KHR_deferred_host_operations extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -59,14 +59,12 @@
 --
 -- == Description
 --
--- The
--- <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
--- extension defines the infrastructure and usage patterns for deferrable
--- commands, but does not specify any commands as deferrable. This is left
--- to additional dependent extensions. Commands /must/ not be deferred
--- unless the deferral is specifically allowed by another extension which
--- depends on
--- <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>.
+-- The @VK_KHR_deferred_host_operations@ extension defines the
+-- infrastructure and usage patterns for deferrable commands, but does not
+-- specify any commands as deferrable. This is left to additional dependent
+-- extensions. Commands /must/ not be deferred unless the deferral is
+-- specifically allowed by another extension which depends on
+-- @VK_KHR_deferred_host_operations@.
 --
 -- == New Object Types
 --
@@ -357,6 +355,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -445,6 +444,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -523,6 +523,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
 getDeferredOperationMaxConcurrencyKHR :: forall io
@@ -586,6 +587,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
 getDeferredOperationResultKHR :: forall io
@@ -696,6 +698,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
 deferredOperationJoinKHR :: forall io

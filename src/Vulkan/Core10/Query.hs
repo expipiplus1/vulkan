@@ -131,6 +131,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool',
 -- 'QueryPoolCreateInfo'
@@ -198,6 +199,14 @@ foreign import ccall
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @queryPool@ was created, @pAllocator@ /must/ be @NULL@
 --
+-- Note
+--
+-- Applications /can/ verify that @queryPool@ /can/ be destroyed by
+-- checking that 'getQueryPoolResults'() without the
+-- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' flag
+-- returns 'Vulkan.Core10.Enums.Result.SUCCESS' for all queries that are
+-- used in command buffers submitted for execution.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkDestroyQueryPool-device-parameter# @device@ /must/ be a
@@ -221,6 +230,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'
 destroyQueryPool :: forall io
@@ -454,6 +464,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.QueryPool',
@@ -545,6 +556,7 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlags',
 -- 'Vulkan.Core10.Enums.QueryPoolCreateFlags.QueryPoolCreateFlags',
 -- 'Vulkan.Core10.Enums.QueryType.QueryType',

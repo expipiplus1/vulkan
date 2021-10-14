@@ -1,7 +1,7 @@
 module Render.Stmts.Utils where
 
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Language.Haskell.TH            ( nameBase )
 import           Polysemy
 import           Relude                  hiding ( Const

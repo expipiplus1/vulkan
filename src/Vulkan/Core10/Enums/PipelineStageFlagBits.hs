@@ -49,12 +49,12 @@ type PipelineStageFlags = PipelineStageFlagBits
 --
 -- = Description
 --
--- These values all have the same value\/meaning as the equivalently named
--- values for
--- 'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlags2KHR'.
+-- These values all have the same meaning as the equivalently named values
+-- for 'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlags2KHR'.
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.CheckpointDataNV',
 -- 'PipelineStageFlags',
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',

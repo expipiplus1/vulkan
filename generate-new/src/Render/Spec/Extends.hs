@@ -3,7 +3,7 @@ module Render.Spec.Extends
   ( structExtends
   ) where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector.Extra             as V
 import           Polysemy
 import           Polysemy.Input

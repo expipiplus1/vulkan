@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Mike Blumenkrantz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_multi_draw:%20&body=@zmike%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_multi_draw] @zmike%0A<<Here describe the issue or question you have about the VK_EXT_multi_draw extension>> >
 --
 -- == Other Extension Metadata
 --

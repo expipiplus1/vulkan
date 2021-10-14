@@ -17,6 +17,9 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_COREAVI_PROPRIETARY
                                               , DRIVER_ID_JUICE_PROPRIETARY
                                               , DRIVER_ID_VERISILICON_PROPRIETARY
+                                              , DRIVER_ID_MESA_TURNIP
+                                              , DRIVER_ID_MESA_V3DV
+                                              , DRIVER_ID_MESA_PANVK
                                               , ..
                                               )) where
 
@@ -48,6 +51,8 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties VK_KHR_driver_properties>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
 newtype DriverId = DriverId Int32
@@ -88,6 +93,12 @@ pattern DRIVER_ID_COREAVI_PROPRIETARY       = DriverId 15
 pattern DRIVER_ID_JUICE_PROPRIETARY         = DriverId 16
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_VERISILICON_PROPRIETARY"
 pattern DRIVER_ID_VERISILICON_PROPRIETARY   = DriverId 17
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_TURNIP"
+pattern DRIVER_ID_MESA_TURNIP               = DriverId 18
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_V3DV"
+pattern DRIVER_ID_MESA_V3DV                 = DriverId 19
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_PANVK"
+pattern DRIVER_ID_MESA_PANVK                = DriverId 20
 {-# complete DRIVER_ID_AMD_PROPRIETARY,
              DRIVER_ID_AMD_OPEN_SOURCE,
              DRIVER_ID_MESA_RADV,
@@ -104,7 +115,10 @@ pattern DRIVER_ID_VERISILICON_PROPRIETARY   = DriverId 17
              DRIVER_ID_MOLTENVK,
              DRIVER_ID_COREAVI_PROPRIETARY,
              DRIVER_ID_JUICE_PROPRIETARY,
-             DRIVER_ID_VERISILICON_PROPRIETARY :: DriverId #-}
+             DRIVER_ID_VERISILICON_PROPRIETARY,
+             DRIVER_ID_MESA_TURNIP,
+             DRIVER_ID_MESA_V3DV,
+             DRIVER_ID_MESA_PANVK :: DriverId #-}
 
 conNameDriverId :: String
 conNameDriverId = "DriverId"
@@ -131,6 +145,9 @@ showTableDriverId =
   , (DRIVER_ID_COREAVI_PROPRIETARY      , "COREAVI_PROPRIETARY")
   , (DRIVER_ID_JUICE_PROPRIETARY        , "JUICE_PROPRIETARY")
   , (DRIVER_ID_VERISILICON_PROPRIETARY  , "VERISILICON_PROPRIETARY")
+  , (DRIVER_ID_MESA_TURNIP              , "MESA_TURNIP")
+  , (DRIVER_ID_MESA_V3DV                , "MESA_V3DV")
+  , (DRIVER_ID_MESA_PANVK               , "MESA_PANVK")
   ]
 
 instance Show DriverId where

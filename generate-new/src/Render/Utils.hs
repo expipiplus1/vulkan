@@ -2,7 +2,7 @@ module Render.Utils
   where
 
 import qualified Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Foreign.Marshal.Alloc          ( allocaBytes
                                                 , allocaBytesAligned
                                                 )

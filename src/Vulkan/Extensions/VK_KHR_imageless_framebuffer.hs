@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_imageless_framebuffer:%20&body=@tobias%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_imageless_framebuffer] @tobias%0A<<Here describe the issue or question you have about the VK_KHR_imageless_framebuffer extension>> >
 --
 -- == Other Extension Metadata
 --

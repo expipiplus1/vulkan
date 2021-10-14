@@ -24,10 +24,10 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_binary_import:%20&body=@ewerness%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NVX_binary_import extension>> >
 --
 --     -   Liam Middlebrook
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_binary_import:%20&body=@liam-middlebrook%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @liam-middlebrook%0A<<Here describe the issue or question you have about the VK_NVX_binary_import extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -45,58 +45,11 @@
 -- This extension allows applications to import CuBIN binaries and execute
 -- them.
 --
--- == New Object Types
+-- Note
 --
--- -   'Vulkan.Extensions.Handles.CuFunctionNVX'
---
--- -   'Vulkan.Extensions.Handles.CuModuleNVX'
---
--- == New Commands
---
--- -   'cmdCuLaunchKernelNVX'
---
--- -   'createCuFunctionNVX'
---
--- -   'createCuModuleNVX'
---
--- -   'destroyCuFunctionNVX'
---
--- -   'destroyCuModuleNVX'
---
--- == New Structures
---
--- -   'CuFunctionCreateInfoNVX'
---
--- -   'CuLaunchInfoNVX'
---
--- -   'CuModuleCreateInfoNVX'
---
--- == New Enum Constants
---
--- -   'NVX_BINARY_IMPORT_EXTENSION_NAME'
---
--- -   'NVX_BINARY_IMPORT_SPEC_VERSION'
---
--- -   Extending
---     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT'
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT'
---
--- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
---
---     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_CU_FUNCTION_NVX'
---
---     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_CU_MODULE_NVX'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_FUNCTION_CREATE_INFO_NVX'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
+-- There is currently no specification language written for this extension,
+-- so although it appears in the Vulkan headers, its interfaces are not
+-- summarized here.
 --
 -- == Version History
 --

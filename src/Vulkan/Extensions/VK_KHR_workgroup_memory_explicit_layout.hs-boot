@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Caio Marcelo de Oliveira Filho
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_workgroup_memory_explicit_layout:%20&body=@cmarcelo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_workgroup_memory_explicit_layout] @cmarcelo%0A<<Here describe the issue or question you have about the VK_KHR_workgroup_memory_explicit_layout extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -91,11 +91,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-workgroup-memory-explicit-layout WorkgroupMemoryExplicitLayoutKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayoutKHR WorkgroupMemoryExplicitLayoutKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-workgroup-memory-explicit-layout-8-bit-access WorkgroupMemoryExplicitLayout8BitAccessKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout8BitAccessKHR WorkgroupMemoryExplicitLayout8BitAccessKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-workgroup-memory-explicit-layout-16-bit-access WorkgroupMemoryExplicitLayout16BitAccessKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout16BitAccessKHR WorkgroupMemoryExplicitLayout16BitAccessKHR>
 --
 -- == Version History
 --

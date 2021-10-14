@@ -19,6 +19,7 @@ while [[ "$#" -gt 0 ]]; do
     requested_version="$2"
     shift
     ;;
+  --force) force=1 ;;
   *)
     echo "Unknown parameter passed: $1" >&2
     exit 1
@@ -56,7 +57,9 @@ git -C generate-new/Vulkan-Docs fetch --tags
 
 if git -C generate-new/Vulkan-Docs describe --tags | grep "$version"; then
   echo "Vulkan-Docs is already at $version"
-  exit 0
+  if ! [ $force ]; then
+    exit 0
+  fi
 fi
 
 before=

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Tony Zlatinski
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_ycbcr_2plane_444_formats:%20&body=@tzlatinski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_ycbcr_2plane_444_formats] @tzlatinski%0A<<Here describe the issue or question you have about the VK_EXT_ycbcr_2plane_444_formats extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -46,8 +46,7 @@
 --
 -- This extension adds some Y′CBCR formats that are in common use for video
 -- encode and decode, but were not part of the
--- <VK_KHR_sampler_ycbcr_conversion.html VK_KHR_sampler_ycbcr_conversion>
--- extension.
+-- @VK_KHR_sampler_ycbcr_conversion@ extension.
 --
 -- == New Structures
 --
@@ -147,6 +146,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_ycbcr_2plane_444_formats VK_EXT_ycbcr_2plane_444_formats>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT

@@ -15,7 +15,7 @@
 --     159
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,12 +32,12 @@
 -- [__Contact__]
 --
 --     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_image_drm_format_modifier:%20&body=@chadversary%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @chadversary%0A<<Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-08-29
+--     2021-09-30
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -304,6 +304,17 @@
 --
 --     -   'PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   'DrmFormatModifierProperties2EXT'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2':
+--
+--     -   'DrmFormatModifierPropertiesList2EXT'
+--
 -- == New Enum Constants
 --
 -- -   'EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME'
@@ -340,6 +351,14 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT'
 --
 -- == Issues
 --
@@ -510,6 +529,10 @@
 --
 --     -   First stable revision
 --
+-- -   Revision 2, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
 -- = See Also
 --
 -- 'DrmFormatModifierPropertiesEXT', 'DrmFormatModifierPropertiesListEXT',
@@ -533,10 +556,15 @@ module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDrmFormatMo
                                                            , ImageDrmFormatModifierListCreateInfoEXT(..)
                                                            , ImageDrmFormatModifierExplicitCreateInfoEXT(..)
                                                            , ImageDrmFormatModifierPropertiesEXT(..)
+                                                           , DrmFormatModifierPropertiesList2EXT(..)
+                                                           , DrmFormatModifierProperties2EXT(..)
                                                            , EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
                                                            , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
                                                            , EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
                                                            , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
+                                                           , FormatFeatureFlagBits2KHR(..)
+                                                           , FormatFeatureFlags2KHR
+                                                           , Flags64
                                                            ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -581,6 +609,7 @@ import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageDrmFormatModifierPropertiesEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.Result (Result)
@@ -589,12 +618,16 @@ import Vulkan.Core10.Enums.SharingMode (SharingMode)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Image (SubresourceLayout)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.FundamentalTypes (Flags64)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlagBits2KHR(..))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -617,6 +650,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageDrmFormatModifierPropertiesEXT'
 getImageDrmFormatModifierPropertiesEXT :: forall io
@@ -671,6 +705,7 @@ getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'DrmFormatModifierPropertiesEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DrmFormatModifierPropertiesListEXT = DrmFormatModifierPropertiesListEXT
@@ -738,23 +773,23 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- Y′CBCR formats). In
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', each
--- @VK_IMAGE_ASPECT_MEMORY_PLANE@//i/_BIT_EXT represents a _memory plane/
--- and each @VK_IMAGE_ASPECT_PLANE@//i/_BIT a _format plane/.
+-- @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ represents a /memory plane/ and
+-- each @VK_IMAGE_ASPECT_PLANE_i_BIT@ a /format plane/.
 --
 -- An image’s set of /format planes/ is an ordered partition of the image’s
--- __content__ into separable groups of format channels. The ordered
+-- __content__ into separable groups of format components. The ordered
 -- partition is encoded in the name of each
 -- 'Vulkan.Core10.Enums.Format.Format'. For example,
 -- 'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_420_UNORM' contains
--- two /format planes/; the first plane contains the green channel and the
--- second plane contains the blue channel and red channel. If the format
--- name does not contain @PLANE@, then the format contains a single plane;
--- for example, 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM'. Some
--- commands, such as
+-- two /format planes/; the first plane contains the green component and
+-- the second plane contains the blue component and red component. If the
+-- format name does not contain @PLANE@, then the format contains a single
+-- plane; for example, 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM'.
+-- Some commands, such as
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage', do not
--- operate on all format channels in the image, but instead operate only on
--- the /format planes/ explicitly chosen by the application and operate on
--- each /format plane/ independently.
+-- operate on all format components in the image, but instead operate only
+-- on the /format planes/ explicitly chosen by the application and operate
+-- on each /format plane/ independently.
 --
 -- An image’s set of /memory planes/ is an ordered partition of the image’s
 -- __memory__ rather than the image’s __content__. Each /memory plane/ is a
@@ -790,9 +825,9 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- implementation, the implementation /may/ store the image’s content in 3
 -- adjacent /memory planes/ where each /memory plane/ corresponds exactly
 -- to a /format plane/. However, the implementation /may/ also store the
--- image’s content in a single /memory plane/ where all format channels are
--- combined using an implementation-private block-compressed format; or the
--- implementation /may/ store the image’s content in a collection of 7
+-- image’s content in a single /memory plane/ where all format components
+-- are combined using an implementation-private block-compressed format; or
+-- the implementation /may/ store the image’s content in a collection of 7
 -- adjacent /memory planes/ using an implementation-private sharding
 -- technique. Because the image is non-linear and non-disjoint, the
 -- implementation has much freedom when choosing the image’s placement in
@@ -805,6 +840,7 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'DrmFormatModifierPropertiesListEXT',
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlags'
 data DrmFormatModifierPropertiesEXT = DrmFormatModifierPropertiesEXT
@@ -910,6 +946,7 @@ instance Zero DrmFormatModifierPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageDrmFormatModifierInfoEXT = PhysicalDeviceImageDrmFormatModifierInfoEXT
@@ -997,6 +1034,7 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageDrmFormatModifierListCreateInfoEXT = ImageDrmFormatModifierListCreateInfoEXT
   { -- | @pDrmFormatModifiers@ is a pointer to an array of /Linux DRM format
@@ -1102,6 +1140,7 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.Image.SubresourceLayout'
 data ImageDrmFormatModifierExplicitCreateInfoEXT = ImageDrmFormatModifierExplicitCreateInfoEXT
@@ -1172,6 +1211,7 @@ instance Zero ImageDrmFormatModifierExplicitCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageDrmFormatModifierPropertiesEXT'
 data ImageDrmFormatModifierPropertiesEXT = ImageDrmFormatModifierPropertiesEXT
@@ -1216,11 +1256,148 @@ instance Zero ImageDrmFormatModifierPropertiesEXT where
            zero
 
 
-type EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 1
+-- | VkDrmFormatModifierPropertiesList2EXT - Structure specifying the list of
+-- DRM format modifiers supported for a format
+--
+-- = Description
+--
+-- If @pDrmFormatModifierProperties@ is @NULL@, the number of modifiers
+-- compatible with the queried @format@ is returned in
+-- @drmFormatModifierCount@. Otherwise, the application /must/ set
+-- @drmFormatModifierCount@ to the length of the array
+-- @pDrmFormatModifierProperties@; the function will write at most
+-- @drmFormatModifierCount@ elements to the array, and will return in
+-- @drmFormatModifierCount@ the number of elements written.
+--
+-- Among the elements in array @pDrmFormatModifierProperties@, each
+-- returned @drmFormatModifier@ /must/ be unique.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
+-- 'DrmFormatModifierProperties2EXT',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data DrmFormatModifierPropertiesList2EXT = DrmFormatModifierPropertiesList2EXT
+  { -- | @drmFormatModifierCount@ is an inout parameter related to the number of
+    -- modifiers compatible with the @format@, as described below.
+    drmFormatModifierCount :: Word32
+  , -- | @pDrmFormatModifierProperties@ is either @NULL@ or a pointer to an array
+    -- of 'DrmFormatModifierProperties2EXT' structures.
+    drmFormatModifierProperties :: Ptr DrmFormatModifierProperties2EXT
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrmFormatModifierPropertiesList2EXT)
+#endif
+deriving instance Show DrmFormatModifierPropertiesList2EXT
+
+instance ToCStruct DrmFormatModifierPropertiesList2EXT where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DrmFormatModifierPropertiesList2EXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (drmFormatModifierCount)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr DrmFormatModifierProperties2EXT))) (drmFormatModifierProperties)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct DrmFormatModifierPropertiesList2EXT where
+  peekCStruct p = do
+    drmFormatModifierCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pDrmFormatModifierProperties <- peek @(Ptr DrmFormatModifierProperties2EXT) ((p `plusPtr` 24 :: Ptr (Ptr DrmFormatModifierProperties2EXT)))
+    pure $ DrmFormatModifierPropertiesList2EXT
+             drmFormatModifierCount pDrmFormatModifierProperties
+
+instance Storable DrmFormatModifierPropertiesList2EXT where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DrmFormatModifierPropertiesList2EXT where
+  zero = DrmFormatModifierPropertiesList2EXT
+           zero
+           zero
+
+
+-- | VkDrmFormatModifierProperties2EXT - Structure specifying properties of a
+-- format when combined with a DRM format modifier
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
+-- 'DrmFormatModifierPropertiesList2EXT',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR'
+data DrmFormatModifierProperties2EXT = DrmFormatModifierProperties2EXT
+  { -- | @drmFormatModifier@ is a /Linux DRM format modifier/.
+    drmFormatModifier :: Word64
+  , -- | @drmFormatModifierPlaneCount@ is the number of /memory planes/ in any
+    -- image created with @format@ and @drmFormatModifier@. An image’s /memory
+    -- planecount/ is distinct from its /format planecount/, as explained
+    -- below.
+    drmFormatModifierPlaneCount :: Word32
+  , -- | @drmFormatModifierTilingFeatures@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR'
+    -- that are supported by any image created with @format@ and
+    -- @drmFormatModifier@.
+    drmFormatModifierTilingFeatures :: FormatFeatureFlags2KHR
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrmFormatModifierProperties2EXT)
+#endif
+deriving instance Show DrmFormatModifierProperties2EXT
+
+instance ToCStruct DrmFormatModifierProperties2EXT where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DrmFormatModifierProperties2EXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word64)) (drmFormatModifier)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (drmFormatModifierPlaneCount)
+    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR)) (drmFormatModifierTilingFeatures)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR)) (zero)
+    f
+
+instance FromCStruct DrmFormatModifierProperties2EXT where
+  peekCStruct p = do
+    drmFormatModifier <- peek @Word64 ((p `plusPtr` 0 :: Ptr Word64))
+    drmFormatModifierPlaneCount <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    drmFormatModifierTilingFeatures <- peek @FormatFeatureFlags2KHR ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR))
+    pure $ DrmFormatModifierProperties2EXT
+             drmFormatModifier drmFormatModifierPlaneCount drmFormatModifierTilingFeatures
+
+instance Storable DrmFormatModifierProperties2EXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DrmFormatModifierProperties2EXT where
+  zero = DrmFormatModifierProperties2EXT
+           zero
+           zero
+           zero
+
+
+type EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION"
 pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 1
+pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 2
 
 
 type EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME = "VK_EXT_image_drm_format_modifier"

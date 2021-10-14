@@ -1,6 +1,6 @@
 module Render.Handle where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Language.Haskell.TH            ( mkName )
 import           Polysemy
 import           Polysemy.Input

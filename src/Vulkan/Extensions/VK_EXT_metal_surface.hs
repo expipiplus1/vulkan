@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Dzmitry Malyshau
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_metal_surface:%20&body=@kvark%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_metal_surface] @kvark%0A<<Here describe the issue or question you have about the VK_EXT_metal_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -202,6 +202,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_surface VK_EXT_metal_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'MetalSurfaceCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -240,6 +241,7 @@ createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_surface VK_EXT_metal_surface>,
 -- 'MetalSurfaceCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createMetalSurfaceEXT'
@@ -303,6 +305,7 @@ instance Zero MetalSurfaceCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_surface VK_EXT_metal_surface>,
 -- 'MetalSurfaceCreateInfoEXT'
 newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

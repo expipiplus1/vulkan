@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Craig Stout
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_FUCHSIA_imagepipe_surface:%20&body=@cdotstout%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_FUCHSIA_imagepipe_surface] @cdotstout%0A<<Here describe the issue or question you have about the VK_FUCHSIA_imagepipe_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -203,6 +203,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface VK_FUCHSIA_imagepipe_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -242,6 +243,7 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalCont
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface VK_FUCHSIA_imagepipe_surface>,
 -- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createImagePipeSurfaceFUCHSIA'
@@ -308,6 +310,7 @@ instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface VK_FUCHSIA_imagepipe_surface>,
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA'
 newtype ImagePipeSurfaceCreateFlagsFUCHSIA = ImagePipeSurfaceCreateFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

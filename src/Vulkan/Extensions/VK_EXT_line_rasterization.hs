@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_line_rasterization:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_line_rasterization] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_line_rasterization extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -201,7 +201,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetLineStippleEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word16 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word16 -> IO ()
 
--- | vkCmdSetLineStippleEXT - Set the dynamic line width state
+-- | vkCmdSetLineStippleEXT - Set line stipple dynamically for a command
+-- buffer
+--
+-- = Description
+--
+-- This command sets the line stipple state for subsequent drawing commands
+-- when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineRasterizationLineStateCreateInfoEXT'::@lineStippleFactor@ and
+-- 'PipelineRasterizationLineStateCreateInfoEXT'::@lineStipplePattern@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -242,6 +254,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLineStippleEXT :: forall io
                       . (MonadIO io)
@@ -287,6 +300,7 @@ cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizationFeaturesEXT
@@ -396,6 +410,7 @@ instance Zero PhysicalDeviceLineRasterizationFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizationPropertiesEXT
   { -- | #limits-lineSubPixelPrecisionBits# @lineSubPixelPrecisionBits@ is the
@@ -511,6 +526,7 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'LineRasterizationModeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStateCreateInfoEXT
@@ -581,6 +597,7 @@ instance Zero PipelineRasterizationLineStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'PipelineRasterizationLineStateCreateInfoEXT'
 newtype LineRasterizationModeEXT = LineRasterizationModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [3.13] - 2021-10-14
+- Bump API version to v1.2.196
+
 ## [3.12.2] - 2021-08-18
 - Bump API version to v1.2.189
 

@@ -71,6 +71,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements'
 getBufferMemoryRequirements :: forall io
@@ -215,6 +216,13 @@ foreign import ccall
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
+-- -   #VUID-vkBindBufferMemory-buffer-06408# If @buffer@ was created with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     chained to 'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@,
+--     @memory@ /must/ be allocated with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
+--     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkBindBufferMemory-device-parameter# @device@ /must/ be a
@@ -252,6 +260,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
@@ -318,6 +327,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'MemoryRequirements'
 getImageMemoryRequirements :: forall io
@@ -470,6 +480,13 @@ foreign import ccall
 --     @size@ member of the 'MemoryRequirements' structure returned from a
 --     call to 'getImageMemoryRequirements' with the same @image@
 --
+-- -   #VUID-vkBindImageMemory-image-06392# If @image@ was created with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
+--     chained to 'Vulkan.Core10.Image.ImageCreateInfo'::@pNext@, @memory@
+--     /must/ be allocated with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
+--     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkBindImageMemory-device-parameter# @device@ /must/ be a valid
@@ -505,6 +522,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.Image'
@@ -536,6 +554,7 @@ bindImageMemory device image memory memoryOffset = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2',
 -- 'getBufferMemoryRequirements', 'getImageMemoryRequirements'

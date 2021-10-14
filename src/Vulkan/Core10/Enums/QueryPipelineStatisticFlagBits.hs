@@ -59,6 +59,7 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'QueryPipelineStatisticFlags'
 newtype QueryPipelineStatisticFlagBits = QueryPipelineStatisticFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -128,7 +129,7 @@ pattern QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT                 = Query
 -- that queries managed by the pool will count the number of fragment
 -- shader invocations. The counter’s value is incremented each time the
 -- fragment shader is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-execution invoked>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-shader invoked>.
 pattern QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT         = QueryPipelineStatisticFlagBits 0x00000080
 -- | 'QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT'
 -- specifies that queries managed by the pool will count the number of

@@ -107,6 +107,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewFeatures = PhysicalDeviceMultiviewFeatures
@@ -180,6 +181,7 @@ instance Zero PhysicalDeviceMultiviewFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewProperties = PhysicalDeviceMultiviewProperties
   { -- | #extension-limits-maxMultiviewViewCount# @maxMultiviewViewCount@ is one
@@ -348,6 +350,7 @@ instance Zero PhysicalDeviceMultiviewProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassMultiviewCreateInfo = RenderPassMultiviewCreateInfo
   { -- | @pViewMasks@ is a pointer to an array of @subpassCount@ view masks,

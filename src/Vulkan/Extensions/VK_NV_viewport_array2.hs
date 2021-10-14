@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_viewport_array2:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_viewport_array2] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_viewport_array2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -89,9 +89,9 @@
 --
 -- == New Enum Constants
 --
--- -   'NV_VIEWPORT_ARRAY2_EXTENSION_NAME'
+-- -   'NV_VIEWPORT_ARRAY_2_EXTENSION_NAME'
 --
--- -   'NV_VIEWPORT_ARRAY2_SPEC_VERSION'
+-- -   'NV_VIEWPORT_ARRAY_2_SPEC_VERSION'
 --
 -- == New or Modified Built-In Variables
 --
@@ -130,24 +130,34 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_viewport_array2  ( NV_VIEWPORT_ARRAY2_SPEC_VERSION
-                                                , pattern NV_VIEWPORT_ARRAY2_SPEC_VERSION
-                                                , NV_VIEWPORT_ARRAY2_EXTENSION_NAME
+module Vulkan.Extensions.VK_NV_viewport_array2  ( pattern NV_VIEWPORT_ARRAY2_SPEC_VERSION
                                                 , pattern NV_VIEWPORT_ARRAY2_EXTENSION_NAME
+                                                , NV_VIEWPORT_ARRAY_2_SPEC_VERSION
+                                                , pattern NV_VIEWPORT_ARRAY_2_SPEC_VERSION
+                                                , NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
+                                                , pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
                                                 ) where
 
 import Data.String (IsString)
 
-type NV_VIEWPORT_ARRAY2_SPEC_VERSION = 1
-
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_ARRAY2_SPEC_VERSION"
-pattern NV_VIEWPORT_ARRAY2_SPEC_VERSION :: forall a . Integral a => a
-pattern NV_VIEWPORT_ARRAY2_SPEC_VERSION = 1
+pattern NV_VIEWPORT_ARRAY2_SPEC_VERSION = NV_VIEWPORT_ARRAY_2_SPEC_VERSION
 
-
-type NV_VIEWPORT_ARRAY2_EXTENSION_NAME = "VK_NV_viewport_array2"
 
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_ARRAY2_EXTENSION_NAME"
-pattern NV_VIEWPORT_ARRAY2_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern NV_VIEWPORT_ARRAY2_EXTENSION_NAME = "VK_NV_viewport_array2"
+pattern NV_VIEWPORT_ARRAY2_EXTENSION_NAME = NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
+
+
+type NV_VIEWPORT_ARRAY_2_SPEC_VERSION = 1
+
+-- No documentation found for TopLevel "VK_NV_VIEWPORT_ARRAY_2_SPEC_VERSION"
+pattern NV_VIEWPORT_ARRAY_2_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_VIEWPORT_ARRAY_2_SPEC_VERSION = 1
+
+
+type NV_VIEWPORT_ARRAY_2_EXTENSION_NAME = "VK_NV_viewport_array2"
+
+-- No documentation found for TopLevel "VK_NV_VIEWPORT_ARRAY_2_EXTENSION_NAME"
+pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME = "VK_NV_viewport_array2"
 

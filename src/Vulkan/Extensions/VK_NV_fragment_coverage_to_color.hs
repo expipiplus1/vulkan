@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_fragment_coverage_to_color:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_fragment_coverage_to_color] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_fragment_coverage_to_color extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -185,6 +185,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'PipelineCoverageToColorStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -251,6 +252,7 @@ instance Zero PipelineCoverageToColorStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>,
 -- 'PipelineCoverageToColorStateCreateInfoNV'
 newtype PipelineCoverageToColorStateCreateFlagsNV = PipelineCoverageToColorStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

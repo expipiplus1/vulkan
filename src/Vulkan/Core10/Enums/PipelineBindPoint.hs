@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "PipelineBindPoint"
 module Vulkan.Core10.Enums.PipelineBindPoint  (PipelineBindPoint( PIPELINE_BIND_POINT_GRAPHICS
                                                                 , PIPELINE_BIND_POINT_COMPUTE
+                                                                , PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI
                                                                 , PIPELINE_BIND_POINT_RAY_TRACING_KHR
                                                                 , ..
                                                                 )) where
@@ -20,6 +21,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
@@ -34,14 +36,18 @@ newtype PipelineBindPoint = PipelineBindPoint Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'PIPELINE_BIND_POINT_GRAPHICS' specifies binding as a graphics pipeline.
-pattern PIPELINE_BIND_POINT_GRAPHICS        = PipelineBindPoint 0
+pattern PIPELINE_BIND_POINT_GRAPHICS               = PipelineBindPoint 0
 -- | 'PIPELINE_BIND_POINT_COMPUTE' specifies binding as a compute pipeline.
-pattern PIPELINE_BIND_POINT_COMPUTE         = PipelineBindPoint 1
+pattern PIPELINE_BIND_POINT_COMPUTE                = PipelineBindPoint 1
+-- | 'PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI' specifies binding as a
+-- subpass shading pipeline.
+pattern PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI = PipelineBindPoint 1000369003
 -- | 'PIPELINE_BIND_POINT_RAY_TRACING_KHR' specifies binding as a ray tracing
 -- pipeline.
-pattern PIPELINE_BIND_POINT_RAY_TRACING_KHR = PipelineBindPoint 1000165000
+pattern PIPELINE_BIND_POINT_RAY_TRACING_KHR        = PipelineBindPoint 1000165000
 {-# complete PIPELINE_BIND_POINT_GRAPHICS,
              PIPELINE_BIND_POINT_COMPUTE,
+             PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI,
              PIPELINE_BIND_POINT_RAY_TRACING_KHR :: PipelineBindPoint #-}
 
 conNamePipelineBindPoint :: String
@@ -52,9 +58,10 @@ enumPrefixPipelineBindPoint = "PIPELINE_BIND_POINT_"
 
 showTablePipelineBindPoint :: [(PipelineBindPoint, String)]
 showTablePipelineBindPoint =
-  [ (PIPELINE_BIND_POINT_GRAPHICS       , "GRAPHICS")
-  , (PIPELINE_BIND_POINT_COMPUTE        , "COMPUTE")
-  , (PIPELINE_BIND_POINT_RAY_TRACING_KHR, "RAY_TRACING_KHR")
+  [ (PIPELINE_BIND_POINT_GRAPHICS              , "GRAPHICS")
+  , (PIPELINE_BIND_POINT_COMPUTE               , "COMPUTE")
+  , (PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI, "SUBPASS_SHADING_HUAWEI")
+  , (PIPELINE_BIND_POINT_RAY_TRACING_KHR       , "RAY_TRACING_KHR")
   ]
 
 instance Show PipelineBindPoint where

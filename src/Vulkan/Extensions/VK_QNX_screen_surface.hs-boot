@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Mike Gorchak
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QNX_screen_surface:%20&body=@mgorchak-blackberry%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QNX_screen_surface] @mgorchak-blackberry%0A<<Here describe the issue or question you have about the VK_QNX_screen_surface extension>> >
 --
 -- == Other Extension Metadata
 --

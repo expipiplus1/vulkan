@@ -55,7 +55,7 @@ import           Data.Char                      ( isAlpha
                                                 )
 import           Data.Set                       ( insert )
 import           Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( pattern Empty
                                                 , Vector

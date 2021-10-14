@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Hai Nguyen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GOOGLE_decorate_string:%20&body=@chaoticbob%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_decorate_string] @chaoticbob%0A<<Here describe the issue or question you have about the VK_GOOGLE_decorate_string extension>> >
 --
 -- == Other Extension Metadata
 --

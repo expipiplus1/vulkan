@@ -11,7 +11,7 @@ import           Data.Text.Extra               as T
                                                 , lowerCaseFirst
                                                 , upperCaseFirst
                                                 )
-import           Data.Text.Prettyprint.Doc      ( pretty )
+import           Prettyprinter                  ( pretty )
 import           Data.Tuple.Extra               ( curry3 )
 import qualified Data.Vector                   as V
 import           Language.Haskell.TH            ( nameBase )

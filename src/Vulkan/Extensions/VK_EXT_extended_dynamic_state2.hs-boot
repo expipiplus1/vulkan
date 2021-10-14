@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_extended_dynamic_state2:%20&body=@vkushwaha-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_extended_dynamic_state2] @vkushwaha-nv%0A<<Here describe the issue or question you have about the VK_EXT_extended_dynamic_state2 extension>> >
 --
 -- == Other Extension Metadata
 --

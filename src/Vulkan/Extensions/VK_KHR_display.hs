@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_display extension>> >
 --
 --     -   Norbert Nopper
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display:%20&body=@FslNopper%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @FslNopper%0A<<Here describe the issue or question you have about the VK_KHR_display extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -693,6 +693,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPropertiesKHR :: forall io
                                        . (MonadIO io)
@@ -770,6 +771,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPlanePropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io
                                             . (MonadIO io)
@@ -856,6 +858,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneSupportedDisplaysKHR :: forall io
@@ -944,6 +947,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayModePropertiesKHR :: forall io
@@ -1024,6 +1028,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
@@ -1100,6 +1105,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneCapabilitiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneCapabilitiesKHR :: forall io
@@ -1171,6 +1177,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DisplaySurfaceCreateInfoKHR', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -1222,6 +1229,7 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayProperties2KHR',
@@ -1317,6 +1325,7 @@ instance Zero DisplayPropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneProperties2KHR',
 -- 'getPhysicalDeviceDisplayPlanePropertiesKHR'
@@ -1390,6 +1399,7 @@ instance Zero DisplayPlanePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayModeCreateInfoKHR', 'DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D'
 data DisplayModeParametersKHR = DisplayModeParametersKHR
@@ -1442,6 +1452,7 @@ instance Zero DisplayModeParametersKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR', 'DisplayModeParametersKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayModeProperties2KHR',
 -- 'getDisplayModePropertiesKHR'
@@ -1499,6 +1510,7 @@ instance Zero DisplayModePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayModeCreateFlagsKHR', 'DisplayModeParametersKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDisplayModeKHR'
@@ -1598,6 +1610,7 @@ instance Zero DisplayModeCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPlaneAlphaFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneCapabilities2KHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
@@ -1768,6 +1781,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneAlphaFlagBitsKHR', 'DisplaySurfaceCreateFlagsKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
@@ -1873,6 +1887,7 @@ instance Zero DisplaySurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayModeCreateInfoKHR'
 newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1911,6 +1926,7 @@ instance Read DisplayModeCreateFlagsKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplaySurfaceCreateInfoKHR'
 newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1946,6 +1962,7 @@ type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPlaneAlphaFlagsKHR', 'DisplaySurfaceCreateInfoKHR'
 newtype DisplayPlaneAlphaFlagBitsKHR = DisplayPlaneAlphaFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1958,15 +1975,15 @@ pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                  = DisplayPlaneAlphaF
 -- image.
 pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                  = DisplayPlaneAlphaFlagBitsKHR 0x00000002
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR' specifies that the alpha value
--- will be determined by the alpha channel of the source image’s pixels. If
--- the source format contains no alpha values, no blending will be applied.
--- The source alpha values are not premultiplied into the source image’s
--- other color channels.
+-- will be determined by the alpha component of the source image’s pixels.
+-- If the source format contains no alpha values, no blending will be
+-- applied. The source alpha values are not premultiplied into the source
+-- image’s other color components.
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR               = DisplayPlaneAlphaFlagBitsKHR 0x00000004
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR' is equivalent to
 -- 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR', except the source alpha values
 -- are assumed to be premultiplied into the source image’s other color
--- channels.
+-- components.
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000008
 
 conNameDisplayPlaneAlphaFlagBitsKHR :: String

@@ -82,7 +82,7 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.SamplerCreateFlagBits
                             , module Vulkan.Core10.Enums.SamplerMipmapMode
                             , module Vulkan.Core10.Enums.SemaphoreCreateFlags
-                            , module Vulkan.Core10.Enums.ShaderModuleCreateFlagBits
+                            , module Vulkan.Core10.Enums.ShaderModuleCreateFlags
                             , module Vulkan.Core10.Enums.ShaderStageFlagBits
                             , module Vulkan.Core10.Enums.SharingMode
                             , module Vulkan.Core10.Enums.SparseImageFormatFlagBits
@@ -178,7 +178,7 @@ import Vulkan.Core10.Enums.SamplerAddressMode
 import Vulkan.Core10.Enums.SamplerCreateFlagBits
 import Vulkan.Core10.Enums.SamplerMipmapMode
 import Vulkan.Core10.Enums.SemaphoreCreateFlags
-import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits
+import Vulkan.Core10.Enums.ShaderModuleCreateFlags
 import Vulkan.Core10.Enums.ShaderStageFlagBits
 import Vulkan.Core10.Enums.SharingMode
 import Vulkan.Core10.Enums.SparseImageFormatFlagBits

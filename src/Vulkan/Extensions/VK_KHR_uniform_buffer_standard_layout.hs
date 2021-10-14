@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Graeme Leese
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_uniform_buffer_standard_layout:%20&body=@gnl21%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_uniform_buffer_standard_layout] @gnl21%0A<<Here describe the issue or question you have about the VK_KHR_uniform_buffer_standard_layout extension>> >
 --
 -- == Other Extension Metadata
 --

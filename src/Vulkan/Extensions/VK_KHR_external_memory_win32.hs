@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_memory_win32:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory_win32] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_memory_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -246,6 +246,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetWin32HandleInfoKHR'
 getMemoryWin32HandleKHR :: forall io
                          . (MonadIO io)
@@ -300,6 +301,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryWin32HandlePropertiesKHR'
@@ -423,6 +425,7 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryWin32HandleInfoKHR = ImportMemoryWin32HandleInfoKHR
@@ -549,6 +552,7 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryWin32HandleInfoKHR = ExportMemoryWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
@@ -614,6 +618,7 @@ instance Zero ExportMemoryWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getMemoryWin32HandlePropertiesKHR'
 data MemoryWin32HandlePropertiesKHR = MemoryWin32HandlePropertiesKHR
@@ -702,6 +707,7 @@ instance Zero MemoryWin32HandlePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

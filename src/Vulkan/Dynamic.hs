@@ -51,6 +51,10 @@ import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (BindSparseIn
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (BlitImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Bool32)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Buffer)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionCreateInfoFUCHSIA)
+import {-# SOURCE #-} Vulkan.Extensions.Handles (BufferCollectionFUCHSIA)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionPropertiesFUCHSIA)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferConstraintsInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (BufferCopy)
 import {-# SOURCE #-} Vulkan.Core10.Buffer (BufferCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo)
@@ -124,10 +128,12 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (Descripto
 import {-# SOURCE #-} Vulkan.Core11.Handles (DescriptorUpdateTemplate)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (DeviceAddress)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance4 (DeviceBufferMemoryRequirementsKHR)
 import {-# SOURCE #-} Vulkan.Core10.Device (DeviceCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (DeviceEventInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentCapabilitiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance4 (DeviceImageMemoryRequirementsKHR)
 import {-# SOURCE #-} Vulkan.Core10.Handles (DeviceMemory)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (DeviceMemoryOpaqueCaptureAddressInfo)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (DeviceQueueInfo2)
@@ -184,6 +190,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_directfb_surface (IDirectFB)
 import {-# SOURCE #-} Vulkan.Extensions.VK_MVK_ios_surface (IOSSurfaceCreateInfoMVK)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Image)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageBlit)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (ImageConstraintsInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageCopy)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import {-# SOURCE #-} Vulkan.Core10.Image (ImageCreateInfo)
@@ -725,6 +732,7 @@ data DeviceCmds = DeviceCmds
   , pVkMergePipelineCaches :: FunPtr (Ptr Device_T -> ("dstCache" ::: PipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr PipelineCache) -> IO Result)
   , pVkCreateGraphicsPipelines :: FunPtr (Ptr Device_T -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct GraphicsPipelineCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result)
   , pVkCreateComputePipelines :: FunPtr (Ptr Device_T -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct ComputePipelineCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result)
+  , pVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI :: FunPtr (Ptr Device_T -> RenderPass -> ("pMaxWorkgroupSize" ::: Ptr Extent2D) -> IO Result)
   , pVkDestroyPipeline :: FunPtr (Ptr Device_T -> Pipeline -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkCreatePipelineLayout :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr PipelineLayoutCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelineLayout" ::: Ptr PipelineLayout) -> IO Result)
   , pVkDestroyPipelineLayout :: FunPtr (Ptr Device_T -> PipelineLayout -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
@@ -772,6 +780,7 @@ data DeviceCmds = DeviceCmds
   , pVkCmdDrawIndexedIndirect :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
   , pVkCmdDispatch :: FunPtr (Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ())
   , pVkCmdDispatchIndirect :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> IO ())
+  , pVkCmdSubpassShadingHUAWEI :: FunPtr (Ptr CommandBuffer_T -> IO ())
   , pVkCmdCopyBuffer :: FunPtr (Ptr CommandBuffer_T -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferCopy) -> IO ())
   , pVkCmdCopyImage :: FunPtr (Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageCopy) -> IO ())
   , pVkCmdBlitImage :: FunPtr (Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageBlit) -> Filter -> IO ())
@@ -862,6 +871,9 @@ data DeviceCmds = DeviceCmds
   , pVkGetBufferMemoryRequirements2 :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr BufferMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ())
   , pVkGetImageMemoryRequirements2 :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct ImageMemoryRequirementsInfo2)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ())
   , pVkGetImageSparseMemoryRequirements2 :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr ImageSparseMemoryRequirementsInfo2) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr SparseImageMemoryRequirements2) -> IO ())
+  , pVkGetDeviceBufferMemoryRequirementsKHR :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr DeviceBufferMemoryRequirementsKHR) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ())
+  , pVkGetDeviceImageMemoryRequirementsKHR :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr DeviceImageMemoryRequirementsKHR) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ())
+  , pVkGetDeviceImageSparseMemoryRequirementsKHR :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr DeviceImageMemoryRequirementsKHR) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr SparseImageMemoryRequirements2) -> IO ())
   , pVkCreateSamplerYcbcrConversion :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct SamplerYcbcrConversionCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pYcbcrConversion" ::: Ptr SamplerYcbcrConversion) -> IO Result)
   , pVkDestroySamplerYcbcrConversion :: FunPtr (Ptr Device_T -> SamplerYcbcrConversion -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkGetDeviceQueue2 :: FunPtr (Ptr Device_T -> ("pQueueInfo" ::: Ptr DeviceQueueInfo2) -> ("pQueue" ::: Ptr (Ptr Queue_T)) -> IO ())
@@ -1017,7 +1029,13 @@ data DeviceCmds = DeviceCmds
   , pVkDestroyCuModuleNVX :: FunPtr (Ptr Device_T -> CuModuleNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkDestroyCuFunctionNVX :: FunPtr (Ptr Device_T -> CuFunctionNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkCmdCuLaunchKernelNVX :: FunPtr (Ptr CommandBuffer_T -> ("pLaunchInfo" ::: Ptr CuLaunchInfoNVX) -> IO ())
+  , pVkSetDeviceMemoryPriorityEXT :: FunPtr (Ptr Device_T -> DeviceMemory -> ("priority" ::: CFloat) -> IO ())
   , pVkWaitForPresentKHR :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("presentId" ::: Word64) -> ("timeout" ::: Word64) -> IO Result)
+  , pVkCreateBufferCollectionFUCHSIA :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr BufferCollectionCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pCollection" ::: Ptr BufferCollectionFUCHSIA) -> IO Result)
+  , pVkSetBufferCollectionBufferConstraintsFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pBufferConstraintsInfo" ::: Ptr BufferConstraintsInfoFUCHSIA) -> IO Result)
+  , pVkSetBufferCollectionImageConstraintsFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pImageConstraintsInfo" ::: Ptr ImageConstraintsInfoFUCHSIA) -> IO Result)
+  , pVkDestroyBufferCollectionFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
+  , pVkGetBufferCollectionPropertiesFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result)
   }
 
 deriving instance Eq DeviceCmds
@@ -1067,7 +1085,8 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1140,6 +1159,7 @@ initDeviceCmds instanceCmds handle = do
   vkMergePipelineCaches <- getDeviceProcAddr' handle (Ptr "vkMergePipelineCaches"#)
   vkCreateGraphicsPipelines <- getDeviceProcAddr' handle (Ptr "vkCreateGraphicsPipelines"#)
   vkCreateComputePipelines <- getDeviceProcAddr' handle (Ptr "vkCreateComputePipelines"#)
+  vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI <- getDeviceProcAddr' handle (Ptr "vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI"#)
   vkDestroyPipeline <- getDeviceProcAddr' handle (Ptr "vkDestroyPipeline"#)
   vkCreatePipelineLayout <- getDeviceProcAddr' handle (Ptr "vkCreatePipelineLayout"#)
   vkDestroyPipelineLayout <- getDeviceProcAddr' handle (Ptr "vkDestroyPipelineLayout"#)
@@ -1187,6 +1207,7 @@ initDeviceCmds instanceCmds handle = do
   vkCmdDrawIndexedIndirect <- getDeviceProcAddr' handle (Ptr "vkCmdDrawIndexedIndirect"#)
   vkCmdDispatch <- getDeviceProcAddr' handle (Ptr "vkCmdDispatch"#)
   vkCmdDispatchIndirect <- getDeviceProcAddr' handle (Ptr "vkCmdDispatchIndirect"#)
+  vkCmdSubpassShadingHUAWEI <- getDeviceProcAddr' handle (Ptr "vkCmdSubpassShadingHUAWEI"#)
   vkCmdCopyBuffer <- getDeviceProcAddr' handle (Ptr "vkCmdCopyBuffer"#)
   vkCmdCopyImage <- getDeviceProcAddr' handle (Ptr "vkCmdCopyImage"#)
   vkCmdBlitImage <- getDeviceProcAddr' handle (Ptr "vkCmdBlitImage"#)
@@ -1277,6 +1298,9 @@ initDeviceCmds instanceCmds handle = do
   vkGetBufferMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetBufferMemoryRequirements2KHR"#), (Ptr "vkGetBufferMemoryRequirements2"#)]
   vkGetImageMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetImageMemoryRequirements2KHR"#), (Ptr "vkGetImageMemoryRequirements2"#)]
   vkGetImageSparseMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetImageSparseMemoryRequirements2KHR"#), (Ptr "vkGetImageSparseMemoryRequirements2"#)]
+  vkGetDeviceBufferMemoryRequirementsKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceBufferMemoryRequirementsKHR"#)
+  vkGetDeviceImageMemoryRequirementsKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceImageMemoryRequirementsKHR"#)
+  vkGetDeviceImageSparseMemoryRequirementsKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceImageSparseMemoryRequirementsKHR"#)
   vkCreateSamplerYcbcrConversion <- getFirstDeviceProcAddr [(Ptr "vkCreateSamplerYcbcrConversionKHR"#), (Ptr "vkCreateSamplerYcbcrConversion"#)]
   vkDestroySamplerYcbcrConversion <- getFirstDeviceProcAddr [(Ptr "vkDestroySamplerYcbcrConversionKHR"#), (Ptr "vkDestroySamplerYcbcrConversion"#)]
   vkGetDeviceQueue2 <- getDeviceProcAddr' handle (Ptr "vkGetDeviceQueue2"#)
@@ -1432,7 +1456,13 @@ initDeviceCmds instanceCmds handle = do
   vkDestroyCuModuleNVX <- getDeviceProcAddr' handle (Ptr "vkDestroyCuModuleNVX"#)
   vkDestroyCuFunctionNVX <- getDeviceProcAddr' handle (Ptr "vkDestroyCuFunctionNVX"#)
   vkCmdCuLaunchKernelNVX <- getDeviceProcAddr' handle (Ptr "vkCmdCuLaunchKernelNVX"#)
+  vkSetDeviceMemoryPriorityEXT <- getDeviceProcAddr' handle (Ptr "vkSetDeviceMemoryPriorityEXT"#)
   vkWaitForPresentKHR <- getDeviceProcAddr' handle (Ptr "vkWaitForPresentKHR"#)
+  vkCreateBufferCollectionFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkCreateBufferCollectionFUCHSIA"#)
+  vkSetBufferCollectionBufferConstraintsFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkSetBufferCollectionBufferConstraintsFUCHSIA"#)
+  vkSetBufferCollectionImageConstraintsFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkSetBufferCollectionImageConstraintsFUCHSIA"#)
+  vkDestroyBufferCollectionFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkDestroyBufferCollectionFUCHSIA"#)
+  vkGetBufferCollectionPropertiesFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetBufferCollectionPropertiesFUCHSIA"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1486,6 +1516,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ("dstCache" ::: PipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr PipelineCache) -> IO Result) vkMergePipelineCaches)
     (castFunPtr @_ @(Ptr Device_T -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct GraphicsPipelineCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result) vkCreateGraphicsPipelines)
     (castFunPtr @_ @(Ptr Device_T -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct ComputePipelineCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result) vkCreateComputePipelines)
+    (castFunPtr @_ @(Ptr Device_T -> RenderPass -> ("pMaxWorkgroupSize" ::: Ptr Extent2D) -> IO Result) vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI)
     (castFunPtr @_ @(Ptr Device_T -> Pipeline -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyPipeline)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr PipelineLayoutCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelineLayout" ::: Ptr PipelineLayout) -> IO Result) vkCreatePipelineLayout)
     (castFunPtr @_ @(Ptr Device_T -> PipelineLayout -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyPipelineLayout)
@@ -1533,6 +1564,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawIndexedIndirect)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()) vkCmdDispatch)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> IO ()) vkCmdDispatchIndirect)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdSubpassShadingHUAWEI)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferCopy) -> IO ()) vkCmdCopyBuffer)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageCopy) -> IO ()) vkCmdCopyImage)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageBlit) -> Filter -> IO ()) vkCmdBlitImage)
@@ -1623,6 +1655,9 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr BufferMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()) vkGetBufferMemoryRequirements2)
     (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct ImageMemoryRequirementsInfo2)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()) vkGetImageMemoryRequirements2)
     (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr ImageSparseMemoryRequirementsInfo2) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr SparseImageMemoryRequirements2) -> IO ()) vkGetImageSparseMemoryRequirements2)
+    (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr DeviceBufferMemoryRequirementsKHR) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()) vkGetDeviceBufferMemoryRequirementsKHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr DeviceImageMemoryRequirementsKHR) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()) vkGetDeviceImageMemoryRequirementsKHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr DeviceImageMemoryRequirementsKHR) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr SparseImageMemoryRequirements2) -> IO ()) vkGetDeviceImageSparseMemoryRequirementsKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct SamplerYcbcrConversionCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pYcbcrConversion" ::: Ptr SamplerYcbcrConversion) -> IO Result) vkCreateSamplerYcbcrConversion)
     (castFunPtr @_ @(Ptr Device_T -> SamplerYcbcrConversion -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroySamplerYcbcrConversion)
     (castFunPtr @_ @(Ptr Device_T -> ("pQueueInfo" ::: Ptr DeviceQueueInfo2) -> ("pQueue" ::: Ptr (Ptr Queue_T)) -> IO ()) vkGetDeviceQueue2)
@@ -1778,5 +1813,11 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> CuModuleNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyCuModuleNVX)
     (castFunPtr @_ @(Ptr Device_T -> CuFunctionNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyCuFunctionNVX)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pLaunchInfo" ::: Ptr CuLaunchInfoNVX) -> IO ()) vkCmdCuLaunchKernelNVX)
+    (castFunPtr @_ @(Ptr Device_T -> DeviceMemory -> ("priority" ::: CFloat) -> IO ()) vkSetDeviceMemoryPriorityEXT)
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("presentId" ::: Word64) -> ("timeout" ::: Word64) -> IO Result) vkWaitForPresentKHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr BufferCollectionCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pCollection" ::: Ptr BufferCollectionFUCHSIA) -> IO Result) vkCreateBufferCollectionFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pBufferConstraintsInfo" ::: Ptr BufferConstraintsInfoFUCHSIA) -> IO Result) vkSetBufferCollectionBufferConstraintsFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pImageConstraintsInfo" ::: Ptr ImageConstraintsInfoFUCHSIA) -> IO Result) vkSetBufferCollectionImageConstraintsFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyBufferCollectionFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result) vkGetBufferCollectionPropertiesFUCHSIA)
 

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_coverage_reduction_mode:%20&body=@kthangudu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_coverage_reduction_mode] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_coverage_reduction_mode extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -267,6 +267,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'FramebufferMixedSamplesCombinationNV',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io
@@ -318,6 +319,7 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReductionModeFeaturesNV
@@ -399,6 +401,7 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'CoverageReductionModeNV',
 -- 'PipelineCoverageReductionStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -457,6 +460,7 @@ instance Zero PipelineCoverageReductionStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'CoverageReductionModeNV',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
@@ -538,6 +542,7 @@ instance Zero FramebufferMixedSamplesCombinationNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'PipelineCoverageReductionStateCreateInfoNV'
 newtype PipelineCoverageReductionStateCreateFlagsNV = PipelineCoverageReductionStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -571,6 +576,7 @@ instance Read PipelineCoverageReductionStateCreateFlagsNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'FramebufferMixedSamplesCombinationNV',
 -- 'PipelineCoverageReductionStateCreateInfoNV'
 newtype CoverageReductionModeNV = CoverageReductionModeNV Int32

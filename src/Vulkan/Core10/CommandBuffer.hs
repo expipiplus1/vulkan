@@ -183,6 +183,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferAllocateInfo',
 -- 'Vulkan.Core10.Handles.Device'
 allocateCommandBuffers :: forall io
@@ -276,6 +277,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
 freeCommandBuffers :: forall io
@@ -372,6 +374,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferBeginInfo'
 beginCommandBuffer :: forall a io
                     . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO io)
@@ -482,6 +485,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 endCommandBuffer :: forall io
                   . (MonadIO io)
@@ -552,6 +556,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlags'
 resetCommandBuffer :: forall io
@@ -583,6 +588,7 @@ resetCommandBuffer commandBuffer flags = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel',
 -- 'Vulkan.Core10.Handles.CommandPool',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -707,6 +713,7 @@ instance Zero CommandBufferAllocateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'CommandBufferBeginInfo',
 -- 'Vulkan.Core10.Handles.Framebuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
@@ -874,6 +881,7 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'CommandBufferInheritanceInfo',
 -- 'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.CommandBufferUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'beginCommandBuffer'

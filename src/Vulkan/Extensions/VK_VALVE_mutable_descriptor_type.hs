@@ -30,10 +30,10 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@Joshua-Ashton%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 --     -   Hans-Kristian Arntzen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@HansKristian-Work%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @HansKristian-Work%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -254,6 +254,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type VK_VALVE_mutable_descriptor_type>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
@@ -345,6 +346,7 @@ instance Zero PhysicalDeviceMutableDescriptorTypeFeaturesVALVE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type VK_VALVE_mutable_descriptor_type>,
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'MutableDescriptorTypeCreateInfoVALVE'
 data MutableDescriptorTypeListVALVE = MutableDescriptorTypeListVALVE
@@ -411,6 +413,7 @@ instance Zero MutableDescriptorTypeListVALVE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type VK_VALVE_mutable_descriptor_type>,
 -- 'MutableDescriptorTypeListVALVE',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MutableDescriptorTypeCreateInfoVALVE = MutableDescriptorTypeCreateInfoVALVE

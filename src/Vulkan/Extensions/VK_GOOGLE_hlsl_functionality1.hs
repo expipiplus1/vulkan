@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Hai Nguyen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GOOGLE_hlsl_functionality1:%20&body=@chaoticbob%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_hlsl_functionality1] @chaoticbob%0A<<Here describe the issue or question you have about the VK_GOOGLE_hlsl_functionality1 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -52,9 +52,9 @@
 --
 -- == New Enum Constants
 --
--- -   'GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME'
+-- -   'GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME'
 --
--- -   'GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION'
+-- -   'GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION'
 --
 -- == Version History
 --
@@ -73,24 +73,34 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1  ( GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION
-                                                        , pattern GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION
-                                                        , GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME
+module Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1  ( pattern GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION
                                                         , pattern GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME
+                                                        , GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION
+                                                        , pattern GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION
+                                                        , GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME
+                                                        , pattern GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME
                                                         ) where
 
 import Data.String (IsString)
 
-type GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION = 1
-
 -- No documentation found for TopLevel "VK_GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION"
-pattern GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION :: forall a . Integral a => a
-pattern GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION = 1
+pattern GOOGLE_HLSL_FUNCTIONALITY1_SPEC_VERSION = GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION
 
-
-type GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME = "VK_GOOGLE_hlsl_functionality1"
 
 -- No documentation found for TopLevel "VK_GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME"
-pattern GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME = "VK_GOOGLE_hlsl_functionality1"
+pattern GOOGLE_HLSL_FUNCTIONALITY1_EXTENSION_NAME = GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME
+
+
+type GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION = 1
+
+-- No documentation found for TopLevel "VK_GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION"
+pattern GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION :: forall a . Integral a => a
+pattern GOOGLE_HLSL_FUNCTIONALITY_1_SPEC_VERSION = 1
+
+
+type GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME = "VK_GOOGLE_hlsl_functionality1"
+
+-- No documentation found for TopLevel "VK_GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME"
+pattern GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME = "VK_GOOGLE_hlsl_functionality1"
 

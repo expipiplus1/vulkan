@@ -5,7 +5,7 @@ module Render.Dynamic
   ) where
 
 import qualified Data.List.Extra               as List
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector                   as V
 import           Data.Vector.Extra              ( pattern (:<|)
                                                 , Vector

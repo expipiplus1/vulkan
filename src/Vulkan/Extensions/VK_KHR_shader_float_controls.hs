@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Alexander Galazin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_float_controls:%20&body=@alegal-arm%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_float_controls] @alegal-arm%0A<<Here describe the issue or question you have about the VK_KHR_shader_float_controls extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -190,7 +190,7 @@
 -- -   Revision 4, 2019-06-18 (Tobias Hector)
 --
 --     -   Modified settings restrictions, see
---         <VK_KHR_shader_controls_v4_incompatibility.html VK_KHR_shader_controls_v4_incompatibility>
+--         <VK_KHR_shader_controls_v4_incompatibility.html Version 4 API incompatibility>
 --
 -- -   Revision 3, 2018-09-11 (Alexander Galazin)
 --

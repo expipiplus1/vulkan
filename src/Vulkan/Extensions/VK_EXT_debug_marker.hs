@@ -34,7 +34,7 @@
 -- [__Contact__]
 --
 --     -   Baldur Karlsson
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_marker:%20&body=@baldurk%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_marker] @baldurk%0A<<Here describe the issue or question you have about the VK_EXT_debug_marker extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -389,6 +389,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'DebugMarkerObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
 debugMarkerSetObjectNameEXT :: forall io
                              . (MonadIO io)
@@ -444,6 +445,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'DebugMarkerObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
 debugMarkerSetObjectTagEXT :: forall io
                             . (MonadIO io)
@@ -510,6 +512,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
 cmdDebugMarkerBeginEXT :: forall io
                         . (MonadIO io)
@@ -594,6 +597,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDebugMarkerEndEXT :: forall io
                       . (MonadIO io)
@@ -657,6 +661,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
 cmdDebugMarkerInsertEXT :: forall io
                          . (MonadIO io)
@@ -690,6 +695,7 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'debugMarkerSetObjectNameEXT'
@@ -777,6 +783,7 @@ instance Zero DebugMarkerObjectNameInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'debugMarkerSetObjectTagEXT'
@@ -877,6 +884,7 @@ instance Zero DebugMarkerObjectTagInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdDebugMarkerBeginEXT', 'cmdDebugMarkerInsertEXT'
 data DebugMarkerMarkerInfoEXT = DebugMarkerMarkerInfoEXT

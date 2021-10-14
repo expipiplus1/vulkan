@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_inline_uniform_block:%20&body=@aqnuep%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_inline_uniform_block] @aqnuep%0A<<Here describe the issue or question you have about the VK_EXT_inline_uniform_block extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -233,6 +233,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DES
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
@@ -311,6 +312,7 @@ instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
   { -- | #limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@ is the
@@ -407,6 +409,7 @@ instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
   { -- | @dataSize@ is the number of bytes of inline uniform block data pointed
@@ -475,6 +478,7 @@ instance Zero WriteDescriptorSetInlineUniformBlockEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniformBlockCreateInfoEXT
   { -- | @maxInlineUniformBlockBindings@ is the number of inline uniform block

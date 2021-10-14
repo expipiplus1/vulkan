@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Carsten Rohde
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_win32_keyed_mutex:%20&body=@crohde%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_win32_keyed_mutex] @crohde%0A<<Here describe the issue or question you have about the VK_NV_win32_keyed_mutex extension>> >
 --
 -- == Other Extension Metadata
 --

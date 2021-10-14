@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Jaakko Konttinen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_info:%20&body=@jaakkoamd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_info] @jaakkoamd%0A<<Here describe the issue or question you have about the VK_AMD_shader_info extension>> >
 --
 -- == Other Extension Metadata
 --

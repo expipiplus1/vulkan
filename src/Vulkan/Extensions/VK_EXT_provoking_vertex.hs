@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_provoking_vertex:%20&body=@jessehall%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_provoking_vertex] @jessehall%0A<<Here describe the issue or question you have about the VK_EXT_provoking_vertex extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -253,6 +253,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProvokingVertexFeaturesEXT = PhysicalDeviceProvokingVertexFeaturesEXT
@@ -331,6 +332,7 @@ instance Zero PhysicalDeviceProvokingVertexFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProvokingVertexPropertiesEXT = PhysicalDeviceProvokingVertexPropertiesEXT
@@ -420,6 +422,7 @@ instance Zero PhysicalDeviceProvokingVertexPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>,
 -- 'ProvokingVertexModeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationProvokingVertexStateCreateInfoEXT = PipelineRasterizationProvokingVertexStateCreateInfoEXT
@@ -474,6 +477,7 @@ instance Zero PipelineRasterizationProvokingVertexStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>,
 -- 'PipelineRasterizationProvokingVertexStateCreateInfoEXT'
 newtype ProvokingVertexModeEXT = ProvokingVertexModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

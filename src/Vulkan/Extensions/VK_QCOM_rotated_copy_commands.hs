@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_rotated_copy_commands:%20&body=@jackohound%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_rotated_copy_commands] @jackohound%0A<<Here describe the issue or question you have about the VK_QCOM_rotated_copy_commands extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -157,6 +157,7 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_rotated_copy_commands VK_QCOM_rotated_copy_commands>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
 data CopyCommandTransformInfoQCOM = CopyCommandTransformInfoQCOM

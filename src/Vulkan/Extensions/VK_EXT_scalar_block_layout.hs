@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_scalar_block_layout:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_scalar_block_layout] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_scalar_block_layout extension>> >
 --
 -- == Other Extension Metadata
 --

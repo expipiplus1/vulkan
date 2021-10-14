@@ -9,7 +9,7 @@ import           Data.Bits
 import           Data.Foldable
 import           Data.List.Extra                ( nubOrd )
 import qualified Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Data.Version                   ( Version

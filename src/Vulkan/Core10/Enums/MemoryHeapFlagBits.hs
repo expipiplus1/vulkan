@@ -24,13 +24,14 @@ type MemoryHeapFlags = MemoryHeapFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'MemoryHeapFlags'
 newtype MemoryHeapFlagBits = MemoryHeapFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'MEMORY_HEAP_DEVICE_LOCAL_BIT' specifies that the heap corresponds to
--- device local memory. Device local memory /may/ have different
--- performance characteristics than host local memory, and /may/ support
+-- device-local memory. Device-local memory /may/ have different
+-- performance characteristics than host-local memory, and /may/ support
 -- different memory property flags.
 pattern MEMORY_HEAP_DEVICE_LOCAL_BIT   = MemoryHeapFlagBits 0x00000001
 -- | 'MEMORY_HEAP_MULTI_INSTANCE_BIT' specifies that in a logical device

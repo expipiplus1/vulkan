@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Cort Stratton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_cache:%20&body=@cdwfs%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_cache] @cdwfs%0A<<Here describe the issue or question you have about the VK_EXT_validation_cache extension>> >
 --
 -- == Other Extension Metadata
 --

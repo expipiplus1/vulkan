@@ -21,10 +21,12 @@
 --
 --     -   Requires Vulkan 1.1
 --
+--     -   Requires @VK_KHR_buffer_device_address@
+--
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_generated_commands:%20&body=@pixeljetstream%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_generated_commands] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_NV_device_generated_commands extension>> >
 --
 -- == Other Extension Metadata
 --

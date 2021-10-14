@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Jean-Francois Roy
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_feedback:%20&body=@jfroy%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_creation_feedback] @jfroy%0A<<Here describe the issue or question you have about the VK_EXT_pipeline_creation_feedback extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -172,6 +172,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,
 -- 'PipelineCreationFeedbackCreateInfoEXT',
 -- 'PipelineCreationFeedbackFlagBitsEXT',
 -- 'PipelineCreationFeedbackFlagsEXT'
@@ -298,6 +299,7 @@ instance Zero PipelineCreationFeedbackEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 -- 'PipelineCreationFeedbackEXT',
@@ -369,6 +371,7 @@ type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,
 -- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
 -- 'PipelineCreationFeedbackFlagsEXT'
 newtype PipelineCreationFeedbackFlagBitsEXT = PipelineCreationFeedbackFlagBitsEXT Flags

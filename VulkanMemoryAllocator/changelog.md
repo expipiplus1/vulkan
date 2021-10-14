@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.7.2] - 2021-10-14
+- Bump VMA, documentation changes and internal improvements
+- Raise upper bound on `vulkan`
+
 ## [0.7.1] - 2021-08-12
 - Raise upper bound on `vulkan`
 

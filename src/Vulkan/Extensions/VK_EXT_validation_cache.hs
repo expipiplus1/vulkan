@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Cort Stratton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_cache:%20&body=@cdwfs%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_cache] @cdwfs%0A<<Here describe the issue or question you have about the VK_EXT_validation_cache extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -287,6 +287,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'ValidationCacheCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
@@ -377,6 +378,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
@@ -514,6 +516,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
 getValidationCacheDataEXT :: forall io
@@ -605,6 +608,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
 mergeValidationCachesEXT :: forall io
@@ -660,6 +664,7 @@ mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ValidationCacheCreateFlagsEXT', 'createValidationCacheEXT'
 data ValidationCacheCreateInfoEXT = ValidationCacheCreateInfoEXT
@@ -725,6 +730,7 @@ instance Zero ValidationCacheCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
 data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreateInfoEXT
@@ -784,6 +790,7 @@ instance Zero ShaderModuleValidationCacheCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'ValidationCacheCreateInfoEXT'
 newtype ValidationCacheCreateFlagsEXT = ValidationCacheCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -817,6 +824,7 @@ instance Read ValidationCacheCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'createValidationCacheEXT', 'getValidationCacheDataEXT'
 newtype ValidationCacheHeaderVersionEXT = ValidationCacheHeaderVersionEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

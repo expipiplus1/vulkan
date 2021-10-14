@@ -21,8 +21,8 @@ module Text.InterpolatedString.Perl6.Unindented (qqi, qci, qi, showQ)where
 
 import           Data.Char
 import           Data.List
-import           Data.Text.Prettyprint.Doc
-import           Data.Text.Prettyprint.Doc.Render.String
+import           Prettyprinter
+import           Prettyprinter.Render.String
 import           Language.Haskell.TH.Quote
 import           Prelude
 import           Text.InterpolatedString.Perl6

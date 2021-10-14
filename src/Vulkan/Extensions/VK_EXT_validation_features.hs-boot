@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Karl Schultz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_features:%20&body=@karl-lunarg%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_features] @karl-lunarg%0A<<Here describe the issue or question you have about the VK_EXT_validation_features extension>> >
 --
 -- == Other Extension Metadata
 --

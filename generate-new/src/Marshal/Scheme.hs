@@ -1,6 +1,6 @@
 module Marshal.Scheme where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector.Extra              ( pattern (:<|)
                                                 , pattern Empty
                                                 , pattern Singleton

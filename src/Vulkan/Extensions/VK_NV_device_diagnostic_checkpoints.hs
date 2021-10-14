@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Nuno Subtil
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_diagnostic_checkpoints:%20&body=@nsubtil%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostic_checkpoints] @nsubtil%0A<<Here describe the issue or question you have about the VK_NV_device_diagnostic_checkpoints extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -171,7 +171,7 @@ foreign import ccall
   "dynamic" mkVkCmdSetCheckpointNV
   :: FunPtr (Ptr CommandBuffer_T -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> Ptr () -> IO ()
 
--- | vkCmdSetCheckpointNV - insert diagnostic checkpoint in command stream
+-- | vkCmdSetCheckpointNV - Insert diagnostic checkpoint in command stream
 --
 -- == Valid Usage (Implicit)
 --
@@ -208,6 +208,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCheckpointNV :: forall io
                     . (MonadIO io)
@@ -233,7 +234,7 @@ foreign import ccall
   "dynamic" mkVkGetQueueCheckpointDataNV
   :: FunPtr (Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()) -> Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()
 
--- | vkGetQueueCheckpointDataNV - retrieve diagnostic checkpoint data
+-- | vkGetQueueCheckpointDataNV - Retrieve diagnostic checkpoint data
 --
 -- = Description
 --
@@ -270,6 +271,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'CheckpointDataNV', 'Vulkan.Core10.Handles.Queue'
 getQueueCheckpointDataNV :: forall io
                           . (MonadIO io)
@@ -294,7 +296,7 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
   pure $ (pCheckpointData')
 
 
--- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
+-- | VkQueueFamilyCheckpointPropertiesNV - Return structure for queue family
 -- checkpoint information query
 --
 -- = Description
@@ -307,6 +309,7 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data QueueFamilyCheckpointPropertiesNV = QueueFamilyCheckpointPropertiesNV
@@ -351,7 +354,7 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
            zero
 
 
--- | VkCheckpointDataNV - return structure for command buffer checkpoint data
+-- | VkCheckpointDataNV - Return structure for command buffer checkpoint data
 --
 -- = Description
 --
@@ -363,6 +366,7 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getQueueCheckpointDataNV'

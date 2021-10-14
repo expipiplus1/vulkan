@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_synchronization2:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_synchronization2] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_synchronization2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -82,10 +82,9 @@
 --
 -- Queue submission has been changed to wrap command buffers and semaphores
 -- in extensible structures, which incorporate changes from Vulkan 1.1,
--- <VK_KHR_device_group.html VK_KHR_device_group>, and
--- <VK_KHR_timeline_semaphore.html VK_KHR_timeline_semaphore>. This also
--- adds a pipeline stage to the semaphore signal operation, mirroring the
--- existing pipeline stage specification for wait operations.
+-- @VK_KHR_device_group@, and @VK_KHR_timeline_semaphore@. This also adds a
+-- pipeline stage to the semaphore signal operation, mirroring the existing
+-- pipeline stage specification for wait operations.
 --
 -- Other miscellaneous changes include:
 --

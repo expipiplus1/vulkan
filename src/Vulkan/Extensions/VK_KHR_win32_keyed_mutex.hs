@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Carsten Rohde
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_keyed_mutex:%20&body=@crohde%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_win32_keyed_mutex] @crohde%0A<<Here describe the issue or question you have about the VK_KHR_win32_keyed_mutex extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -176,6 +176,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WIN32_KEY
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_keyed_mutex VK_KHR_win32_keyed_mutex>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data Win32KeyedMutexAcquireReleaseInfoKHR = Win32KeyedMutexAcquireReleaseInfoKHR

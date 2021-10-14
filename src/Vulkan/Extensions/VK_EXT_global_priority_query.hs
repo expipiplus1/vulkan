@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Yiwei Zhang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_global_priority_query:%20&body=@zhangyiwei%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority_query] @zhangyiwei%0A<<Here describe the issue or question you have about the VK_EXT_global_priority_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -193,6 +193,7 @@ import Vulkan.Core10.APIConstants (pattern MAX_GLOBAL_PRIORITY_SIZE_EXT)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority_query VK_EXT_global_priority_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceGlobalPriorityQueryFeaturesEXT = PhysicalDeviceGlobalPriorityQueryFeaturesEXT
@@ -273,6 +274,7 @@ instance Zero PhysicalDeviceGlobalPriorityQueryFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority_query VK_EXT_global_priority_query>,
 -- 'Vulkan.Extensions.VK_EXT_global_priority.QueueGlobalPriorityEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data QueueFamilyGlobalPriorityPropertiesEXT = QueueFamilyGlobalPriorityPropertiesEXT

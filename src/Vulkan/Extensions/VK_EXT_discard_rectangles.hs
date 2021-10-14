@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_discard_rectangles:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_discard_rectangles] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_discard_rectangles extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -201,7 +201,8 @@ foreign import ccall
   "dynamic" mkVkCmdSetDiscardRectangleEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
--- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically
+-- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically for a
+-- command buffer
 --
 -- = Description
 --
@@ -209,11 +210,14 @@ foreign import ccall
 -- replace the current state for the discard rectangle at index
 -- @firstDiscardRectangle@ + i, for i in [0, @discardRectangleCount@).
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the discard rectangles for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineDiscardRectangleStateCreateInfoEXT'::@pDiscardRectangles@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -285,6 +289,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetDiscardRectangleEXT :: forall io
@@ -328,6 +333,7 @@ cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDiscardRectanglePropertiesEXT = PhysicalDeviceDiscardRectanglePropertiesEXT
   { -- | #limits-maxDiscardRectangles# @maxDiscardRectangles@ is the maximum
@@ -391,6 +397,7 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'DiscardRectangleModeEXT',
 -- 'PipelineDiscardRectangleStateCreateFlagsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
@@ -464,6 +471,7 @@ instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'
 newtype PipelineDiscardRectangleStateCreateFlagsEXT = PipelineDiscardRectangleStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -497,6 +505,7 @@ instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'
 newtype DiscardRectangleModeEXT = DiscardRectangleModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

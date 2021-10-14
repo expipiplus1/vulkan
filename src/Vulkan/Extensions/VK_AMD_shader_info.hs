@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Jaakko Konttinen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_info:%20&body=@jaakkoamd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_info] @jaakkoamd%0A<<Here describe the issue or question you have about the VK_AMD_shader_info extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -321,6 +321,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'ShaderInfoTypeAMD',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
@@ -361,6 +362,7 @@ getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'ShaderStatisticsInfoAMD'
 data ShaderResourceUsageAMD = ShaderResourceUsageAMD
   { -- | @numUsedVgprs@ is the number of vector instruction general-purpose
@@ -449,6 +451,7 @@ instance Zero ShaderResourceUsageAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'ShaderResourceUsageAMD',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
 data ShaderStatisticsInfoAMD = ShaderStatisticsInfoAMD
@@ -550,6 +553,7 @@ instance Zero ShaderStatisticsInfoAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'getShaderInfoAMD'
 newtype ShaderInfoTypeAMD = ShaderInfoTypeAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)

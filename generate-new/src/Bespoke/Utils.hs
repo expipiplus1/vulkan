@@ -4,7 +4,7 @@ module Bespoke.Utils
   , hasObjectTypeClass
   ) where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Foreign.C.Types
 import           Foreign.Ptr
 import           Polysemy

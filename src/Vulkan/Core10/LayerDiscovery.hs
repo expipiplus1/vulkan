@@ -119,6 +119,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'LayerProperties'
 enumerateInstanceLayerProperties :: forall io
                                   . (MonadIO io)
@@ -200,6 +201,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'LayerProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
 enumerateDeviceLayerProperties :: forall io
                                 . (MonadIO io)
@@ -229,6 +231,7 @@ enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'enumerateDeviceLayerProperties', 'enumerateInstanceLayerProperties'
 data LayerProperties = LayerProperties
   { -- | @layerName@ is an array of

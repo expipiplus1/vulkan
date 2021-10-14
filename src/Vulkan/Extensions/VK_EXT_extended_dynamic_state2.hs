@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_extended_dynamic_state2:%20&body=@vkushwaha-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_extended_dynamic_state2] @vkushwaha-nv%0A<<Here describe the issue or question you have about the VK_EXT_extended_dynamic_state2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -176,15 +176,18 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> IO ()
 
 -- | vkCmdSetPatchControlPointsEXT - Specify the number of control points per
--- patch
+-- patch dynamically for a command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the number of control points per patch for subsequent
+-- drawing commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo'::@patchControlPoints@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -231,13 +234,14 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetPatchControlPointsEXT :: forall io
                              . (MonadIO io)
                             => -- | @commandBuffer@ is the command buffer into which the command will be
                                -- recorded.
                                CommandBuffer
-                            -> -- | @patchControlPoints@ specifies number of control points per patch.
+                            -> -- | @patchControlPoints@ specifies the number of control points per patch.
                                ("patchControlPoints" ::: Word32)
                             -> io ()
 cmdSetPatchControlPointsEXT commandBuffer patchControlPoints = liftIO $ do
@@ -257,15 +261,19 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
 -- | vkCmdSetRasterizerDiscardEnableEXT - Control whether primitives are
--- discarded before the rasterization stage for a command buffer
+-- discarded before the rasterization stage dynamically for a command
+-- buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the discard enable for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -307,6 +315,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetRasterizerDiscardEnableEXT :: forall io
@@ -334,16 +343,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthBiasEnableEXT
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
--- | vkCmdSetDepthBiasEnableEXT - Controls whether to bias fragment depth
--- values for a command buffer
+-- | vkCmdSetDepthBiasEnableEXT - Control whether to bias fragment depth
+-- values dynamically for a command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the depth bias enable for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthBiasEnable@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -385,6 +397,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBiasEnableEXT :: forall io
@@ -412,14 +425,17 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> LogicOp -> IO ()) -> Ptr CommandBuffer_T -> LogicOp -> IO ()
 
 -- | vkCmdSetLogicOpEXT - Select which logical operation to apply for blend
--- state
+-- state dynamically for a command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the logical operation for blend state for subsequent
+-- drawing commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@logicOp@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -463,6 +479,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.LogicOp.LogicOp'
 cmdSetLogicOpEXT :: forall io
@@ -489,16 +506,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetPrimitiveRestartEnableEXT
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
 
--- | vkCmdSetPrimitiveRestartEnableEXT - Control whether a special vertex
--- index value is treated as restarting the assembly of primitives
+-- | vkCmdSetPrimitiveRestartEnableEXT - Set primitive assembly restart state
+-- dynamically for a command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the primitive restart enable for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -540,6 +560,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetPrimitiveRestartEnableEXT :: forall io
@@ -585,6 +606,7 @@ cmdSetPrimitiveRestartEnableEXT commandBuffer primitiveRestartEnable = liftIO $ 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExtendedDynamicState2FeaturesEXT = PhysicalDeviceExtendedDynamicState2FeaturesEXT

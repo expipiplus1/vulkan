@@ -17,6 +17,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.OtherTypes.PipelineCacheHeaderVersionOne',
 -- 'Vulkan.Core10.PipelineCache.createPipelineCache',
 -- 'Vulkan.Core10.PipelineCache.getPipelineCacheData'

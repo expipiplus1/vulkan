@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Martin Dinkov
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_core_properties:%20&body=@mdinkov%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_core_properties] @mdinkov%0A<<Here describe the issue or question you have about the VK_AMD_shader_core_properties extension>> >
 --
 -- == Other Extension Metadata
 --

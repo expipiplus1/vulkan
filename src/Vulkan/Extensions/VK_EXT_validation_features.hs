@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Karl Schultz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_features:%20&body=@karl-lunarg%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_features] @karl-lunarg%0A<<Here describe the issue or question you have about the VK_EXT_validation_features extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -219,6 +219,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT'
 data ValidationFeaturesEXT = ValidationFeaturesEXT
@@ -279,6 +280,7 @@ instance Zero ValidationFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>,
 -- 'ValidationFeaturesEXT'
 newtype ValidationFeatureEnableEXT = ValidationFeatureEnableEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -353,6 +355,7 @@ instance Read ValidationFeatureEnableEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>,
 -- 'ValidationFeaturesEXT'
 newtype ValidationFeatureDisableEXT = ValidationFeatureDisableEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

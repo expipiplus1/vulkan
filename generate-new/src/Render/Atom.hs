@@ -1,6 +1,6 @@
 module Render.Atom where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Polysemy
 import           Polysemy.Input
 import           Relude                  hiding ( Handle

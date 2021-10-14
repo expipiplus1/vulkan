@@ -54,6 +54,7 @@ type MemoryPropertyFlags = MemoryPropertyFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'MemoryPropertyFlags'
 newtype MemoryPropertyFlagBits = MemoryPropertyFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

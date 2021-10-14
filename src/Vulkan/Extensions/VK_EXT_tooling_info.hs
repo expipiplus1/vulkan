@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_tooling_info:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_tooling_info] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_tooling_info extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -304,6 +304,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info VK_EXT_tooling_info>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceToolPropertiesEXT'
 getPhysicalDeviceToolPropertiesEXT :: forall io
@@ -338,6 +339,7 @@ getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info VK_EXT_tooling_info>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ToolPurposeFlagsEXT', 'getPhysicalDeviceToolPropertiesEXT'
 data PhysicalDeviceToolPropertiesEXT = PhysicalDeviceToolPropertiesEXT
@@ -419,6 +421,7 @@ type ToolPurposeFlagsEXT = ToolPurposeFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info VK_EXT_tooling_info>,
 -- 'ToolPurposeFlagsEXT'
 newtype ToolPurposeFlagBitsEXT = ToolPurposeFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

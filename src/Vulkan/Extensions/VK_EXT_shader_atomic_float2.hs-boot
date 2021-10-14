@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_atomic_float2:%20&body=@jekstrand%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_atomic_float2] @jekstrand%0A<<Here describe the issue or question you have about the VK_EXT_shader_atomic_float2 extension>> >
 --
 -- == Other Extension Metadata
 --

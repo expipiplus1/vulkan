@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_macos_surface:%20&body=@billhollings%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_MVK_macos_surface] @billhollings%0A<<Here describe the issue or question you have about the VK_MVK_macos_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -246,6 +246,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface VK_MVK_macos_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'MacOSSurfaceCreateInfoMVK',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -303,6 +304,7 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface VK_MVK_macos_surface>,
 -- 'MacOSSurfaceCreateFlagsMVK',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createMacOSSurfaceMVK'
@@ -364,6 +366,7 @@ instance Zero MacOSSurfaceCreateInfoMVK where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface VK_MVK_macos_surface>,
 -- 'MacOSSurfaceCreateInfoMVK'
 newtype MacOSSurfaceCreateFlagsMVK = MacOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -77,6 +77,7 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Sampler)
 import Vulkan.Core10.Handles (Sampler(..))
 import Vulkan.Core10.Enums.SamplerAddressMode (SamplerAddressMode)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_border_color_swizzle (SamplerBorderColorComponentMappingCreateInfoEXT)
 import Vulkan.Core10.Enums.SamplerCreateFlagBits (SamplerCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (SamplerCustomBorderColorCreateInfoEXT)
 import Vulkan.Core10.Enums.SamplerMipmapMode (SamplerMipmapMode)
@@ -140,6 +141,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Sampler',
 -- 'SamplerCreateInfo'
@@ -230,6 +232,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Sampler'
 destroySampler :: forall io
@@ -489,6 +492,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSamplerCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
 --     or
@@ -526,6 +530,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.BorderColor.BorderColor',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp',
@@ -553,18 +558,15 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     mipmapMode :: SamplerMipmapMode
   , -- | @addressModeU@ is a
     -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for outside [0..1] range for U
-    -- coordinate.
+    -- specifying the addressing mode for U coordinates outside [0,1).
     addressModeU :: SamplerAddressMode
   , -- | @addressModeV@ is a
     -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for outside [0..1] range for V
-    -- coordinate.
+    -- specifying the addressing mode for V coordinates outside [0,1).
     addressModeV :: SamplerAddressMode
   , -- | @addressModeW@ is a
     -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for outside [0..1] range for W
-    -- coordinate.
+    -- specifying the addressing mode for W coordinates outside [0,1).
     addressModeW :: SamplerAddressMode
   , -- | #samplers-mipLodBias# @mipLodBias@ is the bias to be added to mipmap LOD
     -- (level-of-detail) calculation and bias provided by image sampling
@@ -646,6 +648,7 @@ instance Extensible SamplerCreateInfo where
   getNext SamplerCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SamplerBorderColorComponentMappingCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerCustomBorderColorCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerReductionModeCreateInfo = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f

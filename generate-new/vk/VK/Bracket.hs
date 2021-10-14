@@ -94,6 +94,7 @@ brackets marshaledCommands handles = context "brackets" $ do
     -- , cdBracket "VideoSessionParametersKHR"
     , cdBracket "CuModuleNVX"
     , cdBracket "CuFunctionNVX"
+    , cdBracket "BufferCollectionFUCHSIA"
     , pure withCommmandBuffers
     , afBracket "Memory"
     , pure withDescriptorSets

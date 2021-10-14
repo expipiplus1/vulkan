@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_hdr_metadata:%20&body=@courtney-g%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_hdr_metadata] @courtney-g%0A<<Here describe the issue or question you have about the VK_EXT_hdr_metadata extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -205,6 +205,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,
 -- 'Vulkan.Core10.Handles.Device', 'HdrMetadataEXT',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setHdrMetadataEXT :: forall io
@@ -238,6 +239,7 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,
 -- 'HdrMetadataEXT'
 data XYColorEXT = XYColorEXT
   { -- No documentation found for Nested "VkXYColorEXT" "x"
@@ -293,6 +295,7 @@ instance Zero XYColorEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'XYColorEXT',
 -- 'setHdrMetadataEXT'
 data HdrMetadataEXT = HdrMetadataEXT

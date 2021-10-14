@@ -122,7 +122,6 @@ dependencies:
 - parsec
 - parsers
 - polysemy >= 1.4
-- polysemy-plugin
 - pretty-show
 - prettyprinter
 - regex-applicative

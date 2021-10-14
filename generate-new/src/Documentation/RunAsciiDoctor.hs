@@ -78,7 +78,9 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
     noteOpts = []
     adocExts = case specFlavor of
       SpecVk ->
-        [ "-r"
+        [ "-I"
+        , vkPath </> "gen"
+        , "-r"
         , vkPath </> "config/spec-macros.rb"
         , "-r"
         , vkPath </> "config/tilde_open_block.rb"
@@ -161,6 +163,7 @@ replaceTag needle maybeAttr replacement =
   in  TL.replace ("<" <> needle <> attr <> ">") ("<" <> replacement <> ">")
         . TL.replace ("</" <> needle <> ">") ("</" <> replacement <> ">")
 
+-- call like: :main vk ./Vulkan-Docs ./Vulkan-Docs/gen/api/structs/VkXYColorEXT.txt
 main :: IO ()
 main = do
   [flavor, d, m] <- getArgs

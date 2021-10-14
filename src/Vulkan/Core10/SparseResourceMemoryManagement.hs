@@ -184,6 +184,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'SparseImageMemoryRequirements'
 getImageSparseMemoryRequirements :: forall io
@@ -297,6 +298,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageTiling.ImageTiling',
 -- 'Vulkan.Core10.Enums.ImageType.ImageType',
@@ -470,6 +472,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Handles.Queue'
 queueBindSparse :: forall io
@@ -501,6 +504,7 @@ queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.Enums.SparseImageFormatFlagBits.SparseImageFormatFlags',
@@ -565,6 +569,7 @@ instance Zero SparseImageFormatProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'SparseImageFormatProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.SparseImageMemoryRequirements2',
@@ -648,6 +653,7 @@ instance Zero SparseImageMemoryRequirements where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'SparseImageMemoryBind', 'Vulkan.Core10.Image.getImageSubresourceLayout'
 data ImageSubresource = ImageSubresource
@@ -796,6 +802,7 @@ instance Zero ImageSubresource where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'SparseBufferMemoryBindInfo', 'SparseImageOpaqueMemoryBindInfo',
@@ -946,6 +953,7 @@ instance Zero SparseMemoryBind where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresource',
@@ -1035,6 +1043,7 @@ instance Zero SparseImageMemoryBind where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Buffer', 'SparseMemoryBind'
 data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
   { -- | @buffer@ is the 'Vulkan.Core10.Handles.Buffer' object to be bound.
@@ -1110,6 +1119,7 @@ instance Zero SparseBufferMemoryBindInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Image', 'SparseMemoryBind'
 data SparseImageOpaqueMemoryBindInfo = SparseImageOpaqueMemoryBindInfo
   { -- | @image@ is the 'Vulkan.Core10.Handles.Image' object to be bound.
@@ -1187,6 +1197,7 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Image', 'SparseImageMemoryBind'
 data SparseImageMemoryBindInfo = SparseImageMemoryBindInfo
   { -- | @image@ is the 'Vulkan.Core10.Handles.Image' object to be bound
@@ -1337,6 +1348,7 @@ instance Zero SparseImageMemoryBindInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Semaphore', 'SparseBufferMemoryBindInfo',
 -- 'SparseImageMemoryBindInfo', 'SparseImageOpaqueMemoryBindInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'queueBindSparse'

@@ -15,7 +15,7 @@
 --     159
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,12 +32,12 @@
 -- [__Contact__]
 --
 --     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_image_drm_format_modifier:%20&body=@chadversary%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @chadversary%0A<<Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-08-29
+--     2021-09-30
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -304,6 +304,17 @@
 --
 --     -   'PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   'DrmFormatModifierProperties2EXT'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2':
+--
+--     -   'DrmFormatModifierPropertiesList2EXT'
+--
 -- == New Enum Constants
 --
 -- -   'EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME'
@@ -340,6 +351,14 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT'
 --
 -- == Issues
 --
@@ -510,6 +529,10 @@
 --
 --     -   First stable revision
 --
+-- -   Revision 2, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
 -- = See Also
 --
 -- 'DrmFormatModifierPropertiesEXT', 'DrmFormatModifierPropertiesListEXT',
@@ -526,7 +549,9 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( DrmFormatModifierPropertiesEXT
+module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( DrmFormatModifierProperties2EXT
+                                                           , DrmFormatModifierPropertiesEXT
+                                                           , DrmFormatModifierPropertiesList2EXT
                                                            , DrmFormatModifierPropertiesListEXT
                                                            , ImageDrmFormatModifierExplicitCreateInfoEXT
                                                            , ImageDrmFormatModifierListCreateInfoEXT
@@ -538,12 +563,28 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 
+data DrmFormatModifierProperties2EXT
+
+instance ToCStruct DrmFormatModifierProperties2EXT
+instance Show DrmFormatModifierProperties2EXT
+
+instance FromCStruct DrmFormatModifierProperties2EXT
+
+
 data DrmFormatModifierPropertiesEXT
 
 instance ToCStruct DrmFormatModifierPropertiesEXT
 instance Show DrmFormatModifierPropertiesEXT
 
 instance FromCStruct DrmFormatModifierPropertiesEXT
+
+
+data DrmFormatModifierPropertiesList2EXT
+
+instance ToCStruct DrmFormatModifierPropertiesList2EXT
+instance Show DrmFormatModifierPropertiesList2EXT
+
+instance FromCStruct DrmFormatModifierPropertiesList2EXT
 
 
 data DrmFormatModifierPropertiesListEXT
