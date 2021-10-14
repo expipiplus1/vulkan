@@ -473,6 +473,8 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------+-----------+-----------------------------------------------+
+-- |           | allocator |                                               |
+-- +-----------+-----------+-----------------------------------------------+
 -- | out       | pBudget   | Must point to array with number of elements   |
 -- |           |           | at least equal to number of memory heaps in   |
 -- |           |           | physical device used.                         |
@@ -509,8 +511,12 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------+---------------+-----------------------------------------------+
+-- |           | allocator     |                                               |
+-- +-----------+---------------+-----------------------------------------------+
 -- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
 -- |           |               | function.                                     |
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | detailedMap   |                                               |
 -- +-----------+---------------+-----------------------------------------------+
 buildStatsString :: forall io
                   . (MonadIO io)
@@ -832,9 +838,9 @@ foreign import ccall
 -- -   @VK_SUCCESS@ - corruption detection has been performed and
 --     succeeded.
 --
--- -   @VK_ERROR_VALIDATION_FAILED_EXT@ - corruption detection has been
---     performed and found memory corruptions around one of the
---     allocations. @VMA_ASSERT@ is also fired in that case.
+-- -   @VK_ERROR_UNKNOWN@ - corruption detection has been performed and
+--     found memory corruptions around one of the allocations. @VMA_ASSERT@
+--     is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
 checkPoolCorruption :: forall io
@@ -916,13 +922,19 @@ foreign import ccall
 --
 -- __Parameters__
 --
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocation     | Handle to allocated memory.                   |
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocationInfo | Optional. Information about allocated memory. |
--- |           |                 | It can be later fetched using function        |
--- |           |                 | 'getAllocationInfo'.                          |
--- +-----------+-----------------+-----------------------------------------------+
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pVkMemoryRequirements |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pCreateInfo           |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocation           | Handle to allocated memory.                   |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocationInfo       | Optional. Information about allocated memory. |
+-- |           |                       | It can be later fetched using function        |
+-- |           |                       | 'getAllocationInfo'.                          |
+-- +-----------+-----------------------+-----------------------------------------------+
 --
 -- You should free the memory using 'freeMemory' or 'freeMemoryPages'.
 --
@@ -1054,6 +1066,12 @@ foreign import ccall
 
 -- | __Parameters__
 --
+-- +-----------+-----------------+-----------------------------------------------+
+-- |           | allocator       |                                               |
+-- +-----------+-----------------+-----------------------------------------------+
+-- |           | buffer          |                                               |
+-- +-----------+-----------------+-----------------------------------------------+
+-- |           | pCreateInfo     |                                               |
 -- +-----------+-----------------+-----------------------------------------------+
 -- | out       | pAllocation     | Handle to allocated memory.                   |
 -- +-----------+-----------------+-----------------------------------------------+
@@ -1247,7 +1265,7 @@ foreign import ccall
 --
 -- If the allocation has been created with
 -- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function returns
--- @VK_TRUE@ if it\'s not in lost state, so it can still be used. It then
+-- @VK_TRUE@ if it is not in lost state, so it can still be used. It then
 -- also atomically \"touches\" the allocation - marks it as used in current
 -- frame, so that you can be sure it won\'t become lost in current frame or
 -- next @frameInUseCount@ frames.
@@ -1708,6 +1726,8 @@ foreign import ccall
 -- __Parameters__
 --
 -- +----------------+--------------------------------------------------------+
+-- | allocator      |                                                        |
+-- +----------------+--------------------------------------------------------+
 -- | memoryTypeBits | Bit mask, where each bit set means that a memory type  |
 -- |                | with that index should be checked.                     |
 -- +----------------+--------------------------------------------------------+
@@ -1725,9 +1745,9 @@ foreign import ccall
 -- -   @VK_SUCCESS@ - corruption detection has been performed and
 --     succeeded.
 --
--- -   @VK_ERROR_VALIDATION_FAILED_EXT@ - corruption detection has been
---     performed and found memory corruptions around one of the
---     allocations. @VMA_ASSERT@ is also fired in that case.
+-- -   @VK_ERROR_UNKNOWN@ - corruption detection has been performed and
+--     found memory corruptions around one of the allocations. @VMA_ASSERT@
+--     is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
 checkCorruption :: forall io
@@ -1924,6 +1944,8 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
 -- |           | pAllocations          | Array of allocations that can be moved during |
 -- |           |                       | this compation.                               |
 -- +-----------+-----------------------+-----------------------------------------------+
@@ -2062,9 +2084,15 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------------------+--------------------------------------------------------+
+-- | allocator             |                                                        |
+-- +-----------------------+--------------------------------------------------------+
+-- | allocation            |                                                        |
+-- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
 -- |                       | to the beginning of the @allocation@. Normally it      |
 -- |                       | should be 0.                                           |
+-- +-----------------------+--------------------------------------------------------+
+-- | buffer                |                                                        |
 -- +-----------------------+--------------------------------------------------------+
 -- | pNext                 | A chain of structures to be attached to                |
 -- |                       | @VkBindBufferMemoryInfoKHR@ structure used internally. |
@@ -2142,9 +2170,15 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------------------+--------------------------------------------------------+
+-- | allocator             |                                                        |
+-- +-----------------------+--------------------------------------------------------+
+-- | allocation            |                                                        |
+-- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
 -- |                       | to the beginning of the @allocation@. Normally it      |
 -- |                       | should be 0.                                           |
+-- +-----------------------+--------------------------------------------------------+
+-- | image                 |                                                        |
 -- +-----------------------+--------------------------------------------------------+
 -- | pNext                 | A chain of structures to be attached to                |
 -- |                       | @VkBindImageMemoryInfoKHR@ structure used internally.  |
@@ -2185,15 +2219,21 @@ foreign import ccall
 
 -- | __Parameters__
 --
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pBuffer         | Buffer that was created.                      |
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocation     | Allocation that was created.                  |
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocationInfo | Optional. Information about allocated memory. |
--- |           |                 | It can be later fetched using function        |
--- |           |                 | 'getAllocationInfo'.                          |
--- +-----------+-----------------+-----------------------------------------------+
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pBufferCreateInfo     |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pAllocationCreateInfo |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pBuffer               | Buffer that was created.                      |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocation           | Allocation that was created.                  |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocationInfo       | Optional. Information about allocated memory. |
+-- |           |                       | It can be later fetched using function        |
+-- |           |                       | 'getAllocationInfo'.                          |
+-- +-----------+-----------------------+-----------------------------------------------+
 --
 -- This function automatically:
 --
@@ -2611,7 +2651,7 @@ pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT    = AllocatorCreateFlagBit
 -- | Enables usage of VK_KHR_dedicated_allocation extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
--- @== VK_API_VERSION_1_0@. When it\'s @VK_API_VERSION_1_1@, the flag is
+-- @== VK_API_VERSION_1_0@. When it is @VK_API_VERSION_1_1@, the flag is
 -- ignored because the extension has been promoted to Vulkan 1.1.
 --
 -- Using this extension will automatically allocate dedicated blocks of
@@ -2638,7 +2678,7 @@ pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT   = AllocatorCreateFlagBit
 -- | Enables usage of VK_KHR_bind_memory2 extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
--- @== VK_API_VERSION_1_0@. When it\'s @VK_API_VERSION_1_1@, the flag is
+-- @== VK_API_VERSION_1_0@. When it is @VK_API_VERSION_1_1@, the flag is
 -- ignored because the extension has been promoted to Vulkan 1.1.
 --
 -- You may set this flag only if you found out that this device extension
