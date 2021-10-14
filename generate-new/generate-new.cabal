@@ -152,7 +152,6 @@ library
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -259,7 +258,6 @@ library khronos-spec
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -362,7 +360,6 @@ executable vk
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -468,7 +465,6 @@ executable vma
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -572,7 +568,6 @@ executable xr
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative

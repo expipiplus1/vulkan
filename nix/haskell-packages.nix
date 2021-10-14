@@ -91,8 +91,6 @@ let
       #
       # Overrides for examples
       #
-      nothunks = markUnbroken (doJailbreak super.nothunks);
-      derive-storable-plugin = markUnbroken super.derive-storable-plugin;
       # profiling
       eventlog2html = markUnbroken (doJailbreak (appendPatch
         (overrideSrc super.eventlog2html {
@@ -128,7 +126,6 @@ let
       #
       pandoc = appendPatch super.pandoc
         ../generate-new/patches/pandoc-haddock-tables.patch;
-      polysemy-plugin = dontCheck super.polysemy-plugin;
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = self.ghc.withPackages;
