@@ -39,6 +39,7 @@ newtype F a = F {unF :: ReaderT Frame V a }
                    , Applicative
                    , Monad
                    , MonadIO
+                   , MonadFail
                    , HasVulkan
                    )
 

@@ -41,6 +41,7 @@ newtype F a = F {unF :: ReaderT Frame V a }
   deriving newtype ( Functor
                    , Applicative
                    , Monad
+                   , MonadFail
                    , MonadIO
                    , HasVulkan
                    )
