@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['9.0.1', '8.10.7', '8.8.4']
+        ghc: ['9.0', '8.10', '8.8']
         os: [ubuntu-20.04, macOS-latest, windows-latest]
       fail-fast: false
 
@@ -20,12 +20,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - uses: actions/setup-haskell@v1
+    - uses: haskell/actions/setup@v1
       id: setup-haskell
       with:
         ghc-version: ${{ matrix.ghc }}
-        # Work around https://github.com/polysemy-research/polysemy/issues/390
-        cabal-version: '3.0.0.0'
 
     - uses: actions/cache@v2
       with:
@@ -92,7 +90,7 @@ jobs:
     - name: Remove generator for all but 8.10 and 9.0
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.10.7' || matrix.ghc != '9.0.1'
+      if: matrix.ghc != '8.10' || matrix.ghc != '9.0'
 
     - run: cabal update
 
@@ -136,22 +134,17 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macOS-latest, windows-latest]
         stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-raytracing --flag vulkan-examples:-have-shaderc --system-ghc']
-        exclude:
-          # https://github.com/actions/setup-haskell/issues/49
-          - os: windows-latest
-          # https://github.com/haskell/cabal/issues/6421
-          - os: macOS-latest
       fail-fast: false
 
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - uses: actions/setup-haskell@v1
+    - uses: haskell/actions/setup@v1
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: '8.10.7'
+        ghc-version: '8.10'
 
     - name: Cache stack things
       uses: actions/cache@v2
