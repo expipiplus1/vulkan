@@ -129,12 +129,6 @@ let
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = self.ghc.withPackages;
-    } // pkgs.lib.optionalAttrs (super.ghc.version == "9.0.1") {
-      mkDerivation = drv:
-        super.mkDerivation (drv // {
-          jailbreak = true;
-          doHaddock = false;
-        });
     };
 
 in baseHaskellPackages.override { inherit overrides; }
