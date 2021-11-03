@@ -64,6 +64,19 @@ module VulkanMemoryAllocator  ( createAllocator
                               , createImage
                               , withImage
                               , destroyImage
+                              , createVirtualBlock
+                              , withVirtualBlock
+                              , destroyVirtualBlock
+                              , isVirtualBlockEmpty
+                              , getVirtualAllocationInfo
+                              , virtualAllocate
+                              , withVirtualAllocation
+                              , virtualFree
+                              , clearVirtualBlock
+                              , setVirtualAllocationUserData
+                              , calculateVirtualBlockStats
+                              , buildVirtualBlockStatsString
+                              , freeVirtualBlockStatsString
                               , Allocator(..)
                               , PFN_vmaAllocateDeviceMemoryFunction
                               , FN_vmaAllocateDeviceMemoryFunction
@@ -142,6 +155,24 @@ module VulkanMemoryAllocator  ( createAllocator
                               , DefragmentationPassInfo(..)
                               , DefragmentationInfo(..)
                               , DefragmentationStats(..)
+                              , VirtualBlockCreateFlags
+                              , VirtualBlockCreateFlagBits( VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT
+                                                          , VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT
+                                                          , VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK
+                                                          , ..
+                                                          )
+                              , VirtualBlockCreateInfo(..)
+                              , VirtualAllocationCreateFlags
+                              , VirtualAllocationCreateFlagBits( VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK
+                                                               , ..
+                                                               )
+                              , VirtualAllocationCreateInfo(..)
+                              , VirtualAllocationInfo(..)
+                              , VirtualBlock(..)
                               ) where
 
 import Vulkan (AllocationCallbacks)
@@ -506,7 +537,8 @@ foreign import ccall
   "vmaBuildStatsString" ffiVmaBuildStatsString
   :: Allocator -> Ptr (Ptr CChar) -> Bool32 -> IO ()
 
--- | Builds and returns statistics as string in JSON format.
+-- | Builds and returns statistics as a null-terminated string in JSON
+-- format.
 --
 -- __Parameters__
 --
@@ -2443,6 +2475,309 @@ destroyImage allocator image allocation = liftIO $ do
   pure $ ()
 
 
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaCreateVirtualBlock" ffiVmaCreateVirtualBlock
+  :: Ptr VirtualBlockCreateInfo -> Ptr VirtualBlock -> IO Result
+
+-- | Creates new 'VirtualBlock' object.
+--
+-- __Parameters__
+--
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | pCreateInfo   | Parameters for creation.                      |
+-- +-----------+---------------+-----------------------------------------------+
+-- | out       | pVirtualBlock | Returned virtual block object or @VMA_NULL@   |
+-- |           |               | if creation failed.                           |
+-- +-----------+---------------+-----------------------------------------------+
+createVirtualBlock :: forall io
+                    . (MonadIO io)
+                   => -- No documentation found for Nested "vmaCreateVirtualBlock" "pCreateInfo"
+                      VirtualBlockCreateInfo
+                   -> io (VirtualBlock)
+createVirtualBlock createInfo = liftIO . evalContT $ do
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pPVirtualBlock <- ContT $ bracket (callocBytes @VirtualBlock 8) free
+  r <- lift $ traceAroundEvent "vmaCreateVirtualBlock" ((ffiVmaCreateVirtualBlock) pCreateInfo (pPVirtualBlock))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pVirtualBlock <- lift $ peek @VirtualBlock pPVirtualBlock
+  pure $ (pVirtualBlock)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createVirtualBlock' and 'destroyVirtualBlock'
+--
+-- To ensure that 'destroyVirtualBlock' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
+--
+withVirtualBlock :: forall io r . MonadIO io => VirtualBlockCreateInfo -> (io VirtualBlock -> (VirtualBlock -> io ()) -> r) -> r
+withVirtualBlock pCreateInfo b =
+  b (createVirtualBlock pCreateInfo)
+    (\(o0) -> destroyVirtualBlock o0)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaDestroyVirtualBlock" ffiVmaDestroyVirtualBlock
+  :: VirtualBlock -> IO ()
+
+-- | Destroys 'VirtualBlock' object.
+--
+-- Please note that you should consciously handle virtual allocations that
+-- could remain unfreed in the block. You should either free them
+-- individually using 'virtualFree' or call 'clearVirtualBlock' if you are
+-- sure this is what you want. If you do neither, an assert is called.
+--
+-- If you keep pointers to some additional metadata associated with your
+-- virtual allocations in their @pUserData@, don\'t forget to free them.
+destroyVirtualBlock :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaDestroyVirtualBlock" "virtualBlock"
+                       VirtualBlock
+                    -> io ()
+destroyVirtualBlock virtualBlock = liftIO $ do
+  traceAroundEvent "vmaDestroyVirtualBlock" ((ffiVmaDestroyVirtualBlock) (virtualBlock))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaIsVirtualBlockEmpty" ffiVmaIsVirtualBlockEmpty
+  :: VirtualBlock -> IO Bool32
+
+-- | Returns true of the 'VirtualBlock' is empty - contains 0 virtual
+-- allocations and has all its space available for new allocations.
+isVirtualBlockEmpty :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaIsVirtualBlockEmpty" "virtualBlock"
+                       VirtualBlock
+                    -> io (Bool)
+isVirtualBlockEmpty virtualBlock = liftIO $ do
+  r <- traceAroundEvent "vmaIsVirtualBlockEmpty" ((ffiVmaIsVirtualBlockEmpty) (virtualBlock))
+  pure $ ((bool32ToBool r))
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaGetVirtualAllocationInfo" ffiVmaGetVirtualAllocationInfo
+  :: VirtualBlock -> DeviceSize -> Ptr VirtualAllocationInfo -> IO ()
+
+-- | Returns information about a specific virtual allocation within a virtual
+-- block, like its size and @pUserData@ pointer.
+getVirtualAllocationInfo :: forall io
+                          . (MonadIO io)
+                         => -- No documentation found for Nested "vmaGetVirtualAllocationInfo" "virtualBlock"
+                            VirtualBlock
+                         -> -- No documentation found for Nested "vmaGetVirtualAllocationInfo" "offset"
+                            ("offset" ::: DeviceSize)
+                         -> io (("virtualAllocInfo" ::: VirtualAllocationInfo))
+getVirtualAllocationInfo virtualBlock offset = liftIO . evalContT $ do
+  pPVirtualAllocInfo <- ContT (withZeroCStruct @VirtualAllocationInfo)
+  lift $ traceAroundEvent "vmaGetVirtualAllocationInfo" ((ffiVmaGetVirtualAllocationInfo) (virtualBlock) (offset) (pPVirtualAllocInfo))
+  pVirtualAllocInfo <- lift $ peekCStruct @VirtualAllocationInfo pPVirtualAllocInfo
+  pure $ (pVirtualAllocInfo)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaVirtualAllocate" ffiVmaVirtualAllocate
+  :: VirtualBlock -> Ptr VirtualAllocationCreateInfo -> Ptr DeviceSize -> IO Result
+
+-- | Allocates new virtual allocation inside given 'VirtualBlock'.
+--
+-- There is no handle type for a virtual allocation. Virtual allocations
+-- within a specific virtual block are uniquely identified by their
+-- offsets.
+--
+-- If the allocation fails due to not enough free space available,
+-- @VK_ERROR_OUT_OF_DEVICE_MEMORY@ is returned (despite the function
+-- doesn\'t ever allocate actual GPU memory).
+virtualAllocate :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaVirtualAllocate" "virtualBlock"
+                   VirtualBlock
+                -> -- No documentation found for Nested "vmaVirtualAllocate" "pCreateInfo"
+                   VirtualAllocationCreateInfo
+                -> io (("offset" ::: DeviceSize))
+virtualAllocate virtualBlock createInfo = liftIO . evalContT $ do
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pPOffset <- ContT $ bracket (callocBytes @DeviceSize 8) free
+  r <- lift $ traceAroundEvent "vmaVirtualAllocate" ((ffiVmaVirtualAllocate) (virtualBlock) pCreateInfo (pPOffset))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pOffset <- lift $ peek @DeviceSize pPOffset
+  pure $ (pOffset)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'virtualAllocate' and 'virtualFree'
+--
+-- To ensure that 'virtualFree' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
+--
+withVirtualAllocation :: forall io r . MonadIO io => VirtualBlock -> VirtualAllocationCreateInfo -> (io DeviceSize -> (DeviceSize -> io ()) -> r) -> r
+withVirtualAllocation virtualBlock pCreateInfo b =
+  b (virtualAllocate virtualBlock pCreateInfo)
+    (\(o0) -> virtualFree virtualBlock o0)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaVirtualFree" ffiVmaVirtualFree
+  :: VirtualBlock -> DeviceSize -> IO ()
+
+-- | Frees virtual allocation inside given 'VirtualBlock'.
+virtualFree :: forall io
+             . (MonadIO io)
+            => -- No documentation found for Nested "vmaVirtualFree" "virtualBlock"
+               VirtualBlock
+            -> -- No documentation found for Nested "vmaVirtualFree" "offset"
+               ("offset" ::: DeviceSize)
+            -> io ()
+virtualFree virtualBlock offset = liftIO $ do
+  traceAroundEvent "vmaVirtualFree" ((ffiVmaVirtualFree) (virtualBlock) (offset))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaClearVirtualBlock" ffiVmaClearVirtualBlock
+  :: VirtualBlock -> IO ()
+
+-- | Frees all virtual allocations inside given 'VirtualBlock'.
+--
+-- You must either call this function or free each virtual allocation
+-- individually with 'virtualFree' before destroying a virtual block.
+-- Otherwise, an assert is called.
+--
+-- If you keep pointer to some additional metadata associated with your
+-- virtual allocation in its @pUserData@, don\'t forget to free it as well.
+clearVirtualBlock :: forall io
+                   . (MonadIO io)
+                  => -- No documentation found for Nested "vmaClearVirtualBlock" "virtualBlock"
+                     VirtualBlock
+                  -> io ()
+clearVirtualBlock virtualBlock = liftIO $ do
+  traceAroundEvent "vmaClearVirtualBlock" ((ffiVmaClearVirtualBlock) (virtualBlock))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaSetVirtualAllocationUserData" ffiVmaSetVirtualAllocationUserData
+  :: VirtualBlock -> DeviceSize -> Ptr () -> IO ()
+
+-- | Changes custom pointer associated with given virtual allocation.
+setVirtualAllocationUserData :: forall io
+                              . (MonadIO io)
+                             => -- No documentation found for Nested "vmaSetVirtualAllocationUserData" "virtualBlock"
+                                VirtualBlock
+                             -> -- No documentation found for Nested "vmaSetVirtualAllocationUserData" "offset"
+                                ("offset" ::: DeviceSize)
+                             -> -- No documentation found for Nested "vmaSetVirtualAllocationUserData" "pUserData"
+                                ("userData" ::: Ptr ())
+                             -> io ()
+setVirtualAllocationUserData virtualBlock offset userData = liftIO $ do
+  traceAroundEvent "vmaSetVirtualAllocationUserData" ((ffiVmaSetVirtualAllocationUserData) (virtualBlock) (offset) (userData))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaCalculateVirtualBlockStats" ffiVmaCalculateVirtualBlockStats
+  :: VirtualBlock -> Ptr StatInfo -> IO ()
+
+-- | Calculates and returns statistics about virtual allocations and memory
+-- usage in given 'VirtualBlock'.
+calculateVirtualBlockStats :: forall io
+                            . (MonadIO io)
+                           => -- No documentation found for Nested "vmaCalculateVirtualBlockStats" "virtualBlock"
+                              VirtualBlock
+                           -> io (StatInfo)
+calculateVirtualBlockStats virtualBlock = liftIO . evalContT $ do
+  pPStatInfo <- ContT (withZeroCStruct @StatInfo)
+  lift $ traceAroundEvent "vmaCalculateVirtualBlockStats" ((ffiVmaCalculateVirtualBlockStats) (virtualBlock) (pPStatInfo))
+  pStatInfo <- lift $ peekCStruct @StatInfo pPStatInfo
+  pure $ (pStatInfo)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaBuildVirtualBlockStatsString" ffiVmaBuildVirtualBlockStatsString
+  :: VirtualBlock -> Ptr (Ptr CChar) -> Bool32 -> IO ()
+
+-- | Builds and returns a null-terminated string in JSON format with
+-- information about given 'VirtualBlock'.
+--
+-- __Parameters__
+--
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | virtualBlock  | Virtual block.                                |
+-- +-----------+---------------+-----------------------------------------------+
+-- | out       | ppStatsString | Returned string.                              |
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | detailedMap   | Pass @VK_FALSE@ to only obtain statistics as  |
+-- |           |               | returned by 'calculateVirtualBlockStats'.     |
+-- |           |               | Pass @VK_TRUE@ to also obtain full list of    |
+-- |           |               | allocations and free spaces.                  |
+-- +-----------+---------------+-----------------------------------------------+
+--
+-- Returned string must be freed using 'freeVirtualBlockStatsString'.
+buildVirtualBlockStatsString :: forall io
+                              . (MonadIO io)
+                             => -- No documentation found for Nested "vmaBuildVirtualBlockStatsString" "virtualBlock"
+                                VirtualBlock
+                             -> -- No documentation found for Nested "vmaBuildVirtualBlockStatsString" "detailedMap"
+                                ("detailedMap" ::: Bool)
+                             -> io (("statsString" ::: Ptr CChar))
+buildVirtualBlockStatsString virtualBlock detailedMap = liftIO . evalContT $ do
+  pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
+  lift $ traceAroundEvent "vmaBuildVirtualBlockStatsString" ((ffiVmaBuildVirtualBlockStatsString) (virtualBlock) (pPpStatsString) (boolToBool32 (detailedMap)))
+  ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
+  pure $ (ppStatsString)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaFreeVirtualBlockStatsString" ffiVmaFreeVirtualBlockStatsString
+  :: VirtualBlock -> Ptr CChar -> IO ()
+
+-- | Frees a string returned by 'buildVirtualBlockStatsString'.
+freeVirtualBlockStatsString :: forall io
+                             . (MonadIO io)
+                            => -- No documentation found for Nested "vmaFreeVirtualBlockStatsString" "virtualBlock"
+                               VirtualBlock
+                            -> -- No documentation found for Nested "vmaFreeVirtualBlockStatsString" "pStatsString"
+                               ("statsString" ::: Ptr CChar)
+                            -> io ()
+freeVirtualBlockStatsString virtualBlock statsString = liftIO $ do
+  traceAroundEvent "vmaFreeVirtualBlockStatsString" ((ffiVmaFreeVirtualBlockStatsString) (virtualBlock) (statsString))
+  pure $ ()
+
+
 type FN_vkAllocateMemory = Ptr Device_T -> ("pAllocateInfo" ::: Ptr (SomeStruct MemoryAllocateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pMemory" ::: Ptr DeviceMemory) -> IO Result
 -- No documentation found for TopLevel "PFN_vkAllocateMemory"
 type PFN_vkAllocateMemory = FunPtr FN_vkAllocateMemory
@@ -3987,8 +4322,6 @@ pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x0
 --
 -- When using this flag, you must specify
 -- /VmaPoolCreateInfo::maxBlockCount/ == 1 (or 0 for default).
---
--- For more details, see /Linear allocation algorithm/.
 pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x00000004
 -- | Enables alternative, buddy allocation algorithm in this pool.
 --
@@ -3996,9 +4329,8 @@ pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x0
 -- and a half of its parent\'s size. Comparing to default algorithm, this
 -- one provides faster allocation and deallocation and decreased external
 -- fragmentation, at the expense of more memory wasted (internal
--- fragmentation).
---
--- For more details, see /Buddy allocation algorithm/.
+-- fragmentation). For details, see documentation chapter /Buddy allocation
+-- algorithm/.
 pattern POOL_CREATE_BUDDY_ALGORITHM_BIT                 = PoolCreateFlagBits 0x00000008
 -- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
 pattern POOL_CREATE_ALGORITHM_MASK                      = PoolCreateFlagBits 0x0000000c
@@ -4794,4 +5126,305 @@ instance Zero DefragmentationStats where
            zero
            zero
            zero
+
+
+type VirtualBlockCreateFlags = VirtualBlockCreateFlagBits
+
+-- | Flags to be passed as /VmaVirtualBlockCreateInfo::flags/.
+newtype VirtualBlockCreateFlagBits = VirtualBlockCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Enables alternative, linear allocation algorithm in this virtual block.
+--
+-- Specify this flag to enable linear allocation algorithm, which always
+-- creates new allocations after last one and doesn\'t reuse space from
+-- allocations freed in between. It trades memory consumption for
+-- simplified algorithm and data structure, which has better performance
+-- and uses less memory for metadata.
+--
+-- By using this flag, you can achieve behavior of free-at-once, stack,
+-- ring buffer, and double stack. For details, see documentation chapter
+-- /Linear allocation algorithm/.
+pattern VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT = VirtualBlockCreateFlagBits 0x00000001
+-- | Enables alternative, buddy allocation algorithm in this virtual block.
+--
+-- It operates on a tree of blocks, each having size that is a power of two
+-- and a half of its parent\'s size. Comparing to default algorithm, this
+-- one provides faster allocation and deallocation and decreased external
+-- fragmentation, at the expense of more memory wasted (internal
+-- fragmentation). For details, see documentation chapter /Buddy allocation
+-- algorithm/.
+pattern VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT  = VirtualBlockCreateFlagBits 0x00000002
+-- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
+pattern VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK       = VirtualBlockCreateFlagBits 0x00000003
+
+conNameVirtualBlockCreateFlagBits :: String
+conNameVirtualBlockCreateFlagBits = "VirtualBlockCreateFlagBits"
+
+enumPrefixVirtualBlockCreateFlagBits :: String
+enumPrefixVirtualBlockCreateFlagBits = "VIRTUAL_BLOCK_CREATE_"
+
+showTableVirtualBlockCreateFlagBits :: [(VirtualBlockCreateFlagBits, String)]
+showTableVirtualBlockCreateFlagBits =
+  [ (VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT, "LINEAR_ALGORITHM_BIT")
+  , (VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT , "BUDDY_ALGORITHM_BIT")
+  , (VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK      , "ALGORITHM_MASK")
+  ]
+
+instance Show VirtualBlockCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixVirtualBlockCreateFlagBits
+                            showTableVirtualBlockCreateFlagBits
+                            conNameVirtualBlockCreateFlagBits
+                            (\(VirtualBlockCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read VirtualBlockCreateFlagBits where
+  readPrec = enumReadPrec enumPrefixVirtualBlockCreateFlagBits
+                          showTableVirtualBlockCreateFlagBits
+                          conNameVirtualBlockCreateFlagBits
+                          VirtualBlockCreateFlagBits
+
+
+-- | VmaVirtualBlockCreateInfo
+--
+-- Parameters of created 'VirtualBlock' object to be passed to
+-- 'createVirtualBlock'.
+data VirtualBlockCreateInfo = VirtualBlockCreateInfo
+  { -- | Total size of the virtual block.
+    --
+    -- Sizes can be expressed in bytes or any units you want as long as you are
+    -- consistent in using them. For example, if you allocate from some array
+    -- of structures, 1 can mean single instance of entire structure.
+    size :: DeviceSize
+  , -- | Use combination of 'VirtualBlockCreateFlagBits'.
+    flags :: VirtualBlockCreateFlagBits
+  , -- | Custom CPU memory allocation callbacks. Optional.
+    --
+    -- Optional, can be null. When specified, they will be used for all
+    -- CPU-side memory allocations.
+    allocationCallbacks :: Maybe AllocationCallbacks
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VirtualBlockCreateInfo)
+#endif
+deriving instance Show VirtualBlockCreateInfo
+
+instance ToCStruct VirtualBlockCreateInfo where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p VirtualBlockCreateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
+    lift $ poke ((p `plusPtr` 8 :: Ptr VirtualBlockCreateFlagBits)) (flags)
+    pAllocationCallbacks'' <- case (allocationCallbacks) of
+      Nothing -> pure nullPtr
+      Just j -> ContT $ withCStruct (j)
+    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr AllocationCallbacks))) pAllocationCallbacks''
+    lift $ f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr VirtualBlockCreateFlagBits)) (zero)
+    f
+
+instance FromCStruct VirtualBlockCreateInfo where
+  peekCStruct p = do
+    size <- peek @DeviceSize ((p `plusPtr` 0 :: Ptr DeviceSize))
+    flags <- peek @VirtualBlockCreateFlagBits ((p `plusPtr` 8 :: Ptr VirtualBlockCreateFlagBits))
+    pAllocationCallbacks <- peek @(Ptr AllocationCallbacks) ((p `plusPtr` 16 :: Ptr (Ptr AllocationCallbacks)))
+    pAllocationCallbacks' <- maybePeek (\j -> peekCStruct @AllocationCallbacks (j)) pAllocationCallbacks
+    pure $ VirtualBlockCreateInfo
+             size flags pAllocationCallbacks'
+
+instance Zero VirtualBlockCreateInfo where
+  zero = VirtualBlockCreateInfo
+           zero
+           zero
+           Nothing
+
+
+type VirtualAllocationCreateFlags = VirtualAllocationCreateFlagBits
+
+-- | Flags to be passed as /VmaVirtualAllocationCreateInfo::flags/.
+newtype VirtualAllocationCreateFlagBits = VirtualAllocationCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Allocation will be created from upper stack in a double stack pool.
+--
+-- This flag is only allowed for virtual blocks created with
+-- 'VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT' flag.
+pattern VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT              = VirtualAllocationCreateFlagBits 0x00000040
+-- | Allocation strategy that tries to minimize memory usage.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT        = VirtualAllocationCreateFlagBits 0x00010000
+-- | Allocation strategy that tries to minimize allocation time.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT          = VirtualAllocationCreateFlagBits 0x00040000
+-- | Allocation strategy that tries to minimize memory fragmentation.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = VirtualAllocationCreateFlagBits 0x00020000
+-- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
+--
+-- These stategy flags are binary compatible with equivalent flags in
+-- 'AllocationCreateFlagBits'.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                  = VirtualAllocationCreateFlagBits 0x00070000
+
+conNameVirtualAllocationCreateFlagBits :: String
+conNameVirtualAllocationCreateFlagBits = "VirtualAllocationCreateFlagBits"
+
+enumPrefixVirtualAllocationCreateFlagBits :: String
+enumPrefixVirtualAllocationCreateFlagBits = "VIRTUAL_ALLOCATION_CREATE_"
+
+showTableVirtualAllocationCreateFlagBits :: [(VirtualAllocationCreateFlagBits, String)]
+showTableVirtualAllocationCreateFlagBits =
+  [ (VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT             , "UPPER_ADDRESS_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT       , "STRATEGY_MIN_MEMORY_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT         , "STRATEGY_MIN_TIME_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT, "STRATEGY_MIN_FRAGMENTATION_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                 , "STRATEGY_MASK")
+  ]
+
+instance Show VirtualAllocationCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixVirtualAllocationCreateFlagBits
+                            showTableVirtualAllocationCreateFlagBits
+                            conNameVirtualAllocationCreateFlagBits
+                            (\(VirtualAllocationCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read VirtualAllocationCreateFlagBits where
+  readPrec = enumReadPrec enumPrefixVirtualAllocationCreateFlagBits
+                          showTableVirtualAllocationCreateFlagBits
+                          conNameVirtualAllocationCreateFlagBits
+                          VirtualAllocationCreateFlagBits
+
+
+-- | VmaVirtualAllocationCreateInfo
+--
+-- Parameters of created virtual allocation to be passed to
+-- 'virtualAllocate'.
+data VirtualAllocationCreateInfo = VirtualAllocationCreateInfo
+  { -- | Size of the allocation.
+    --
+    -- Cannot be zero.
+    size :: DeviceSize
+  , -- | Required alignment of the allocation. Optional.
+    --
+    -- Must be power of two. Special value 0 has the same meaning as 1 - means
+    -- no special alignment is required, so allocation can start at any offset.
+    alignment :: DeviceSize
+  , -- | Use combination of 'VirtualAllocationCreateFlagBits'.
+    flags :: VirtualAllocationCreateFlags
+  , -- | Custom pointer to be associated with the allocation. Optional.
+    --
+    -- It can be any value and can be used for user-defined purposes. It can be
+    -- fetched or changed later.
+    userData :: Ptr ()
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VirtualAllocationCreateInfo)
+#endif
+deriving instance Show VirtualAllocationCreateInfo
+
+instance ToCStruct VirtualAllocationCreateInfo where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p VirtualAllocationCreateInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
+    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (alignment)
+    poke ((p `plusPtr` 16 :: Ptr VirtualAllocationCreateFlags)) (flags)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (userData)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr VirtualAllocationCreateFlags)) (zero)
+    f
+
+instance FromCStruct VirtualAllocationCreateInfo where
+  peekCStruct p = do
+    size <- peek @DeviceSize ((p `plusPtr` 0 :: Ptr DeviceSize))
+    alignment <- peek @DeviceSize ((p `plusPtr` 8 :: Ptr DeviceSize))
+    flags <- peek @VirtualAllocationCreateFlags ((p `plusPtr` 16 :: Ptr VirtualAllocationCreateFlags))
+    pUserData <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
+    pure $ VirtualAllocationCreateInfo
+             size alignment flags pUserData
+
+instance Storable VirtualAllocationCreateInfo where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero VirtualAllocationCreateInfo where
+  zero = VirtualAllocationCreateInfo
+           zero
+           zero
+           zero
+           zero
+
+
+-- | VmaVirtualAllocationInfo
+--
+-- Parameters of an existing virtual allocation, returned by
+-- 'getVirtualAllocationInfo'.
+data VirtualAllocationInfo = VirtualAllocationInfo
+  { -- | Size of the allocation.
+    --
+    -- Same value as passed in /VmaVirtualAllocationCreateInfo::size/.
+    size :: DeviceSize
+  , -- | Custom pointer associated with the allocation.
+    --
+    -- Same value as passed in /VmaVirtualAllocationCreateInfo::pUserData/ or
+    -- to 'setVirtualAllocationUserData'.
+    userData :: Ptr ()
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VirtualAllocationInfo)
+#endif
+deriving instance Show VirtualAllocationInfo
+
+instance ToCStruct VirtualAllocationInfo where
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p VirtualAllocationInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (userData)
+    f
+  cStructSize = 16
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (zero)
+    f
+
+instance FromCStruct VirtualAllocationInfo where
+  peekCStruct p = do
+    size <- peek @DeviceSize ((p `plusPtr` 0 :: Ptr DeviceSize))
+    pUserData <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    pure $ VirtualAllocationInfo
+             size pUserData
+
+instance Storable VirtualAllocationInfo where
+  sizeOf ~_ = 16
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero VirtualAllocationInfo where
+  zero = VirtualAllocationInfo
+           zero
+           zero
+
+
+-- | VmaVirtualBlock
+--
+-- Handle to a virtual block object that allows to use core allocation
+-- algorithm without allocating any real GPU memory.
+--
+-- Fill in 'VirtualBlockCreateInfo' structure and Use 'createVirtualBlock'
+-- to create it. Use 'destroyVirtualBlock' to destroy it. For more
+-- information, see documentation chapter /Virtual allocator/.
+newtype VirtualBlock = VirtualBlock Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show VirtualBlock where
+  showsPrec p (VirtualBlock x) = showParen (p >= 11) (showString "VirtualBlock 0x" . showHex x)
 
