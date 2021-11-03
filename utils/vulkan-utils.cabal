@@ -10,7 +10,7 @@ synopsis:       Utils for the vulkan package
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
 bug-reports:    https://github.com/expipiplus1/vulkan/issues
-maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer:     Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 license:        BSD3
 license-file:   LICENSE
 build-type:     Custom

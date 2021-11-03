@@ -3,7 +3,7 @@ version: "3.13.1"
 synopsis: Bindings to the Vulkan graphics API.
 description: Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category: Graphics
-maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
 - readme.md

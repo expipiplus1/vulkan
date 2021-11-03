@@ -2,7 +2,7 @@ name: openxr
 version: '0.1'
 synopsis: Bindings to the OpenXR API
 category: Graphics
-maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
 - readme.md

@@ -2,7 +2,7 @@ name: VulkanMemoryAllocator
 version: "0.7.3"
 synopsis: Bindings to the VulkanMemoryAllocator library
 category: Graphics
-maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
   - readme.md

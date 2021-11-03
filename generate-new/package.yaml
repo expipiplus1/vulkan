@@ -50,7 +50,7 @@ default-extensions:
 - ViewPatterns
 name: generate-new
 synopsis: A program to generate the vulkan package from the vulkan docs.
-author: Joe Hermaszewski
+author: Ellie Hermaszewska
 extra-source-files:
 - readme.md
 - package.yaml
