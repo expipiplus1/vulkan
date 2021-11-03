@@ -472,14 +472,15 @@ This is currently a 64 bit only library.
 ## See also
 
 The [VulkanMemoryAllocator
-package](https://hackage.haskell.org/package/VulkanMemoryAllocator-0.1.0.0)
-(source in the [VulkanMemoryAllocator directory](./VulkanMemoryAllocator)) has
-similarly styled bindings to the [Vulkan Memory
+package](https://hackage.haskell.org/package/VulkanMemoryAllocator) (source in
+the [VulkanMemoryAllocator directory](./VulkanMemoryAllocator)) has similarly
+styled bindings to the [Vulkan Memory
 Allocator](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator)
 library.
 
-The [vulkan-utils](./utils) package (not currently on Hackage) includes a few
-utilities for writing programs using these bindings.
+The [vulkan-utils](https://hackage.haskell.org/package/vulkan-utils) (source in
+the [utils directory](./utils)) includes a few utilities for writing programs
+using these bindings.
 
 For an alternative take on Haskell bindings to Vulkan see the
 [vulkan-api](https://github.com/achirkin/vulkan#readme) package. `vulkan-api`
