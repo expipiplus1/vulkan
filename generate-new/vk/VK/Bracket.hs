@@ -126,6 +126,7 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cmdBeBracket "RenderPass2"
     , cmdBeBracket "TransformFeedbackEXT"
     , cmdBeBracket "QueryIndexedEXT"
+    , cmdBeBracket "RenderingKHR"
     ]
 
   --
