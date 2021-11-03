@@ -253,6 +253,7 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_dynamic_rendering  ( cmdBeginRenderingKHR
+                                                   , cmdUseRenderingKHR
                                                    , cmdEndRenderingKHR
                                                    , pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV
                                                    , PipelineRenderingCreateInfoKHR(..)
@@ -451,6 +452,15 @@ cmdBeginRenderingKHR commandBuffer renderingInfo = liftIO . evalContT $ do
   pRenderingInfo <- ContT $ withCStruct (renderingInfo)
   lift $ traceAroundEvent "vkCmdBeginRenderingKHR" (vkCmdBeginRenderingKHR' (commandBufferHandle (commandBuffer)) (forgetExtensions pRenderingInfo))
   pure $ ()
+
+-- | This function will call the supplied action between calls to
+-- 'cmdBeginRenderingKHR' and 'cmdEndRenderingKHR'
+--
+-- Note that 'cmdEndRenderingKHR' is *not* called if an exception is thrown
+-- by the inner action.
+cmdUseRenderingKHR :: forall a io r . (Extendss RenderingInfoKHR a, PokeChain a, MonadIO io) => CommandBuffer -> RenderingInfoKHR a -> io r -> io r
+cmdUseRenderingKHR commandBuffer pRenderingInfo a =
+  (cmdBeginRenderingKHR commandBuffer pRenderingInfo) *> a <* (cmdEndRenderingKHR commandBuffer)
 
 
 foreign import ccall
