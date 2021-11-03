@@ -159,7 +159,7 @@
 -- -   Revision 4, 2015-09-08 (James Jones)
 --
 --     -   Allow creating multiple swap chains that share the same images
---         using a single call to vkCreateSwapChainKHR().
+--         using a single call to vkCreateSwapchainKHR().
 --
 -- -   Revision 5, 2015-09-10 (Alon Or-bach)
 --

@@ -2,7 +2,7 @@
 -- No documentation found for Chapter "AttachmentStoreOp"
 module Vulkan.Core10.Enums.AttachmentStoreOp  (AttachmentStoreOp( ATTACHMENT_STORE_OP_STORE
                                                                 , ATTACHMENT_STORE_OP_DONT_CARE
-                                                                , ATTACHMENT_STORE_OP_NONE_EXT
+                                                                , ATTACHMENT_STORE_OP_NONE_KHR
                                                                 , ..
                                                                 )) where
 
@@ -30,7 +30,8 @@ import GHC.Show (Show(showsPrec))
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pass.AttachmentDescription',
--- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2'
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingAttachmentInfoKHR'
 newtype AttachmentStoreOp = AttachmentStoreOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -49,14 +50,14 @@ pattern ATTACHMENT_STORE_OP_STORE     = AttachmentStoreOp 0
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
 pattern ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
--- | 'ATTACHMENT_STORE_OP_NONE_EXT' specifies the contents within the render
--- area are not modified after rendering. However, if the attachment was
--- written to during the render pass, the contents of the attachment will
--- be undefined inside the render area.
-pattern ATTACHMENT_STORE_OP_NONE_EXT  = AttachmentStoreOp 1000301000
+-- | 'ATTACHMENT_STORE_OP_NONE_KHR' specifies the contents within the render
+-- area are not accessed by the store operation. However, if the attachment
+-- was written to during the render pass, the contents of the attachment
+-- will be undefined inside the render area.
+pattern ATTACHMENT_STORE_OP_NONE_KHR  = AttachmentStoreOp 1000301000
 {-# complete ATTACHMENT_STORE_OP_STORE,
              ATTACHMENT_STORE_OP_DONT_CARE,
-             ATTACHMENT_STORE_OP_NONE_EXT :: AttachmentStoreOp #-}
+             ATTACHMENT_STORE_OP_NONE_KHR :: AttachmentStoreOp #-}
 
 conNameAttachmentStoreOp :: String
 conNameAttachmentStoreOp = "AttachmentStoreOp"
@@ -68,7 +69,7 @@ showTableAttachmentStoreOp :: [(AttachmentStoreOp, String)]
 showTableAttachmentStoreOp =
   [ (ATTACHMENT_STORE_OP_STORE    , "STORE")
   , (ATTACHMENT_STORE_OP_DONT_CARE, "DONT_CARE")
-  , (ATTACHMENT_STORE_OP_NONE_EXT , "NONE_EXT")
+  , (ATTACHMENT_STORE_OP_NONE_KHR , "NONE_KHR")
   ]
 
 instance Show AttachmentStoreOp where

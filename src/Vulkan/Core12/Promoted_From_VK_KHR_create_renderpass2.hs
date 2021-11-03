@@ -549,6 +549,10 @@ foreign import ccall
 -- -   #VUID-vkCmdEndRenderPass2-None-02352# This command /must/ not be
 --     recorded when transform feedback is active
 --
+-- -   #VUID-vkCmdEndRenderPass2-None-06171# The current render pass
+--     instance /must/ not have been begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdEndRenderPass2-commandBuffer-parameter# @commandBuffer@
@@ -1126,12 +1130,13 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
 -- has on each corresponding subpass.
 --
--- If an instance of
+-- If a
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
--- is included in the @pNext@ chain, @pFragmentShadingRateAttachment@ is
--- not @NULL@, and its @attachment@ member is not
--- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the identified
--- attachment defines a fragment shading rate attachment for that subpass.
+-- structure is included in the @pNext@ chain,
+-- @pFragmentShadingRateAttachment@ is not @NULL@, and its @attachment@
+-- member is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the
+-- identified attachment defines a fragment shading rate attachment for
+-- that subpass.
 --
 -- == Valid Usage
 --
@@ -1486,12 +1491,12 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewOffsets@
 -- has on each corresponding subpass dependency.
 --
--- If an instance of
--- 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR' is
--- included in the @pNext@ chain, @srcStageMask@, @dstStageMask@,
--- @srcAccessMask@, and @dstAccessMask@ parameters are ignored. The
--- synchronization and access scopes instead are defined by the parameters
--- of 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'.
+-- If a 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'
+-- structure is included in the @pNext@ chain, @srcStageMask@,
+-- @dstStageMask@, @srcAccessMask@, and @dstAccessMask@ parameters are
+-- ignored. The synchronization and access scopes instead are defined by
+-- the parameters of
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'.
 --
 -- == Valid Usage
 --

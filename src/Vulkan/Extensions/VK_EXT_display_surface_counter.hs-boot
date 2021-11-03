@@ -78,6 +78,8 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
+--     -   'STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT'
+--
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT'
 --
 -- == Version History

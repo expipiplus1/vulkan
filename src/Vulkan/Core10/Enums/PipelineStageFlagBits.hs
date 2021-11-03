@@ -191,7 +191,7 @@ pattern PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV            = PipelineStageFlagB
 -- stage of the pipeline where the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-attachment shading rate image>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
 -- is read to determine the fragment shading rate for portions of a
 -- rasterized primitive.
 pattern PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineStageFlagBits 0x00400000

@@ -41,9 +41,8 @@
 --
 -- == Description
 --
--- This extension incorporates
--- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_EXT'
--- from @VK_QCOM_render_pass_store_ops@, enabling applications to avoid
+-- This extension incorporates 'ATTACHMENT_STORE_OP_NONE_EXT' from
+-- @VK_QCOM_render_pass_store_ops@, enabling applications to avoid
 -- unnecessary synchronization when an attachment is not written during a
 -- render pass.
 --
@@ -51,10 +50,10 @@
 -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_NONE_EXT' is
 -- introduced to avoid unnecessary synchronization when an attachment is
 -- not used during a render pass at all. In combination with
--- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_EXT',
--- this is useful as an alternative to preserve attachments in applications
--- that cannot decide if an attachment will be used in a render pass until
--- after the necessary pipelines have been created.
+-- 'ATTACHMENT_STORE_OP_NONE_EXT', this is useful as an alternative to
+-- preserve attachments in applications that cannot decide if an attachment
+-- will be used in a render pass until after the necessary pipelines have
+-- been created.
 --
 -- == New Enum Constants
 --
@@ -68,7 +67,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
---     -   'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_EXT'
+--     -   'ATTACHMENT_STORE_OP_NONE_EXT'
 --
 -- == Version History
 --
@@ -89,13 +88,18 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_load_store_op_none  ( EXT_LOAD_STORE_OP_NONE_SPEC_VERSION
+module Vulkan.Extensions.VK_EXT_load_store_op_none  ( pattern ATTACHMENT_STORE_OP_NONE_EXT
+                                                    , EXT_LOAD_STORE_OP_NONE_SPEC_VERSION
                                                     , pattern EXT_LOAD_STORE_OP_NONE_SPEC_VERSION
                                                     , EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME
                                                     , pattern EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME
                                                     ) where
 
 import Data.String (IsString)
+import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE_KHR))
+-- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_EXT"
+pattern ATTACHMENT_STORE_OP_NONE_EXT = ATTACHMENT_STORE_OP_NONE_KHR
+
 
 type EXT_LOAD_STORE_OP_NONE_SPEC_VERSION = 1
 

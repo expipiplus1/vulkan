@@ -799,9 +799,9 @@ cmdSubpassShadingHUAWEI commandBuffer = liftIO $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SubpassShadingPipelineCreateInfoHUAWEI = SubpassShadingPipelineCreateInfoHUAWEI
   { -- | @renderPass@ is a handle to a render pass object describing the
-    -- environment in which the pipeline will be used; the pipeline /must/ only
-    -- be used with an instance of any render pass compatible with the one
-    -- provided. See
+    -- environment in which the pipeline will be used. The pipeline /must/ only
+    -- be used with a render pass instance compatible with the one provided.
+    -- See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility Render Pass Compatibility>
     -- for more information.
     renderPass :: RenderPass

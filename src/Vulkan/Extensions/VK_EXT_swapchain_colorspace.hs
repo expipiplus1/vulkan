@@ -62,6 +62,8 @@
 --
 --     -   'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_BT709_NONLINEAR_EXT'
 --
+--     -   'COLOR_SPACE_DCI_P3_LINEAR_EXT'
+--
 --     -   'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_DCI_P3_NONLINEAR_EXT'
 --
 --     -   'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_DISPLAY_P3_LINEAR_EXT'

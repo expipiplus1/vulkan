@@ -143,6 +143,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_display_swapchain
                           , module Vulkan.Extensions.VK_KHR_draw_indirect_count
                           , module Vulkan.Extensions.VK_KHR_driver_properties
+                          , module Vulkan.Extensions.VK_KHR_dynamic_rendering
                           , module Vulkan.Extensions.VK_KHR_external_fence
                           , module Vulkan.Extensions.VK_KHR_external_fence_capabilities
                           , module Vulkan.Extensions.VK_KHR_external_fence_fd
@@ -403,6 +404,7 @@ import Vulkan.Extensions.VK_KHR_display
 import Vulkan.Extensions.VK_KHR_display_swapchain
 import Vulkan.Extensions.VK_KHR_draw_indirect_count
 import Vulkan.Extensions.VK_KHR_driver_properties
+import Vulkan.Extensions.VK_KHR_dynamic_rendering
 import Vulkan.Extensions.VK_KHR_external_fence
 import Vulkan.Extensions.VK_KHR_external_fence_capabilities
 import Vulkan.Extensions.VK_KHR_external_fence_fd

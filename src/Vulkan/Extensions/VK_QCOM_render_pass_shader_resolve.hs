@@ -98,7 +98,7 @@
 -- resolve hardware has this limitation, there is little reason to require
 -- a shader resolve to resolve to a single sample buffer.
 --
--- 3) Should a shader resolve subpass be the last subpass in a renderpass?
+-- 3) Should a shader resolve subpass be the last subpass in a render pass?
 --
 -- __RESOLVED__ Yes.
 --

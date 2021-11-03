@@ -396,6 +396,7 @@ library
       Vulkan.Extensions.VK_KHR_display_swapchain
       Vulkan.Extensions.VK_KHR_draw_indirect_count
       Vulkan.Extensions.VK_KHR_driver_properties
+      Vulkan.Extensions.VK_KHR_dynamic_rendering
       Vulkan.Extensions.VK_KHR_external_fence
       Vulkan.Extensions.VK_KHR_external_fence_capabilities
       Vulkan.Extensions.VK_KHR_external_fence_fd

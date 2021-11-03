@@ -112,6 +112,8 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT'
 --
+--     -   'STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT'
+--
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 -- is supported:

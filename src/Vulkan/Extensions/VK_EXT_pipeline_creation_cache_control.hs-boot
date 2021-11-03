@@ -169,6 +169,8 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
+--     -   'ERROR_PIPELINE_COMPILE_REQUIRED_EXT'
+--
 --     -   'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':

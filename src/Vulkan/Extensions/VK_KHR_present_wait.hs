@@ -245,7 +245,7 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId t
 -- be signaled.
 --
 -- When the presentation has completed, the presentId associated with the
--- related @pSwapChains@ entry will be increased in value so that it is at
+-- related @pSwapchains@ entry will be increased in value so that it is at
 -- least equal to the value provided in the
 -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR' structure.
 --

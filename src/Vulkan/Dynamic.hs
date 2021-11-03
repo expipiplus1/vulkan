@@ -312,6 +312,7 @@ import {-# SOURCE #-} Vulkan.Core10.Handles (RenderPass)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (RenderPassCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (RenderPassCreateInfo2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ResolveImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core10.Enums.Result (Result)
 import {-# SOURCE #-} Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
@@ -1036,6 +1037,8 @@ data DeviceCmds = DeviceCmds
   , pVkSetBufferCollectionImageConstraintsFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pImageConstraintsInfo" ::: Ptr ImageConstraintsInfoFUCHSIA) -> IO Result)
   , pVkDestroyBufferCollectionFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkGetBufferCollectionPropertiesFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result)
+  , pVkCmdBeginRenderingKHR :: FunPtr (Ptr CommandBuffer_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfoKHR)) -> IO ())
+  , pVkCmdEndRenderingKHR :: FunPtr (Ptr CommandBuffer_T -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -1086,7 +1089,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1463,6 +1466,8 @@ initDeviceCmds instanceCmds handle = do
   vkSetBufferCollectionImageConstraintsFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkSetBufferCollectionImageConstraintsFUCHSIA"#)
   vkDestroyBufferCollectionFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkDestroyBufferCollectionFUCHSIA"#)
   vkGetBufferCollectionPropertiesFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetBufferCollectionPropertiesFUCHSIA"#)
+  vkCmdBeginRenderingKHR <- getDeviceProcAddr' handle (Ptr "vkCmdBeginRenderingKHR"#)
+  vkCmdEndRenderingKHR <- getDeviceProcAddr' handle (Ptr "vkCmdEndRenderingKHR"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1820,4 +1825,6 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pImageConstraintsInfo" ::: Ptr ImageConstraintsInfoFUCHSIA) -> IO Result) vkSetBufferCollectionImageConstraintsFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyBufferCollectionFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result) vkGetBufferCollectionPropertiesFUCHSIA)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfoKHR)) -> IO ()) vkCmdBeginRenderingKHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdEndRenderingKHR)
 

@@ -56,7 +56,7 @@
 -- way that can be easily extended by other extensions through the
 -- substructures of render pass creation. The Vulkan 1.0 render pass
 -- creation sub-structures do not include @sType@\/@pNext@ members.
--- Additionally, the renderpass begin\/next\/end commands have been
+-- Additionally, the render pass begin\/next\/end commands have been
 -- augmented with new extensible structures for passing additional subpass
 -- information.
 --

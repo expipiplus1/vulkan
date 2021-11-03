@@ -82,6 +82,8 @@
 --
 --     -   'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
 --
+--     -   'SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE_KHR'
+--
 -- == Example
 --
 -- Creating a sampler with the new address mode in each dimension
