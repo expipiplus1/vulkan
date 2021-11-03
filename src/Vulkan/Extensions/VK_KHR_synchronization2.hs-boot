@@ -123,6 +123,10 @@
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2',
 --     overriding the original 32-bit stage and access masks.
 --
+-- == New Base Types
+--
+-- -   'Vulkan.Core10.FundamentalTypes.Flags64'
+--
 -- == New Commands
 --
 -- -   'cmdPipelineBarrier2KHR'
@@ -404,8 +408,8 @@
 --
 -- 'AccessFlagBits2KHR', 'AccessFlags2KHR', 'BufferMemoryBarrier2KHR',
 -- 'CommandBufferSubmitInfoKHR', 'DependencyInfoKHR',
--- 'ImageMemoryBarrier2KHR', 'MemoryBarrier2KHR',
--- 'PhysicalDeviceSynchronization2FeaturesKHR',
+-- 'Vulkan.Core10.FundamentalTypes.Flags64', 'ImageMemoryBarrier2KHR',
+-- 'MemoryBarrier2KHR', 'PhysicalDeviceSynchronization2FeaturesKHR',
 -- 'PipelineStageFlagBits2KHR', 'PipelineStageFlags2KHR',
 -- 'SemaphoreSubmitInfoKHR', 'SubmitFlagBitsKHR', 'SubmitFlagsKHR',
 -- 'SubmitInfo2KHR', 'cmdPipelineBarrier2KHR', 'cmdResetEvent2KHR',

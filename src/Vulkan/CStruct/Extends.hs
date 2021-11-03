@@ -84,6 +84,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_
 import {-# SOURCE #-} Vulkan.Core10.Pass (AttachmentReference)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (AttachmentReference2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (AttachmentReferenceStencilLayout)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (AttachmentSampleCountInfoAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (AttachmentSampleLocationsEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (BindAccelerationStructureMemoryInfoNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindBufferMemoryDeviceGroupInfo)
@@ -128,6 +129,7 @@ import {-# SOURCE #-} Vulkan.Core10.CommandBuffer (CommandBufferBeginInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (CommandBufferInheritanceConditionalRenderingInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.CommandBuffer (CommandBufferInheritanceInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (CommandBufferInheritanceRenderPassTransformInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (CommandBufferInheritanceRenderingInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (CommandBufferInheritanceViewportScissorInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (CommandBufferSubmitInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.CommandPool (CommandPoolCreateInfo)
@@ -345,6 +347,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreate
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawIndexedInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (MultiviewPerViewAttributesInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeCreateInfoVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeListVALVE)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Offset2D)
@@ -392,6 +395,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (Physica
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PhysicalDeviceDiscardRectanglePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_physical_device_drm (PhysicalDeviceDrmPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (PhysicalDeviceDynamicRenderingFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state2 (PhysicalDeviceExtendedDynamicState2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state (PhysicalDeviceExtendedDynamicStateFeaturesEXT)
@@ -566,6 +570,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PipelineRasteri
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineRasterizationStateCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_rasterization_order (PipelineRasterizationStateRasterizationOrderAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PipelineRasterizationStateStreamCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (PipelineRenderingCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PipelineRepresentativeFragmentTestStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (PipelineSampleLocationsStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineShaderStageCreateInfo)
@@ -615,6 +620,10 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (RenderPas
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (RenderPassMultiviewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingAttachmentInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentDensityMapAttachmentInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentShadingRateAttachmentInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ResolveImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (SRTDataNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationEXT)
@@ -843,6 +852,9 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends CommandBufferInheritanceInfo CommandBufferInheritanceConditionalRenderingInfoEXT = ()
   Extends CommandBufferInheritanceInfo CommandBufferInheritanceRenderPassTransformInfoQCOM = ()
   Extends CommandBufferInheritanceInfo CommandBufferInheritanceViewportScissorInfoNV = ()
+  Extends CommandBufferInheritanceInfo CommandBufferInheritanceRenderingInfoKHR = ()
+  Extends CommandBufferInheritanceInfo AttachmentSampleCountInfoAMD = ()
+  Extends CommandBufferInheritanceInfo MultiviewPerViewAttributesInfoNVX = ()
   Extends ComputePipelineCreateInfo PipelineCreationFeedbackCreateInfoEXT = ()
   Extends ComputePipelineCreateInfo SubpassShadingPipelineCreateInfoHUAWEI = ()
   Extends ComputePipelineCreateInfo PipelineCompilerControlCreateInfoAMD = ()
@@ -960,6 +972,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderIntegerDotProductFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceRGBA10X6FormatsFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceDynamicRenderingFeaturesKHR = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -974,6 +987,9 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends GraphicsPipelineCreateInfo PipelineCompilerControlCreateInfoAMD = ()
   Extends GraphicsPipelineCreateInfo PipelineFragmentShadingRateStateCreateInfoKHR = ()
   Extends GraphicsPipelineCreateInfo PipelineFragmentShadingRateEnumStateCreateInfoNV = ()
+  Extends GraphicsPipelineCreateInfo PipelineRenderingCreateInfoKHR = ()
+  Extends GraphicsPipelineCreateInfo AttachmentSampleCountInfoAMD = ()
+  Extends GraphicsPipelineCreateInfo MultiviewPerViewAttributesInfoNVX = ()
   Extends ImageBlit2KHR CopyCommandTransformInfoQCOM = ()
   Extends ImageCreateInfo DedicatedAllocationImageCreateInfoNV = ()
   Extends ImageCreateInfo ExternalMemoryImageCreateInfoNV = ()
@@ -1120,6 +1136,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderIntegerDotProductFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRGBA10X6FormatsFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceDynamicRenderingFeaturesKHR = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1221,6 +1238,10 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends RenderPassCreateInfo RenderPassInputAttachmentAspectCreateInfo = ()
   Extends RenderPassCreateInfo RenderPassFragmentDensityMapCreateInfoEXT = ()
   Extends RenderPassCreateInfo2 RenderPassFragmentDensityMapCreateInfoEXT = ()
+  Extends RenderingInfoKHR DeviceGroupRenderPassBeginInfo = ()
+  Extends RenderingInfoKHR RenderingFragmentShadingRateAttachmentInfoKHR = ()
+  Extends RenderingInfoKHR RenderingFragmentDensityMapAttachmentInfoEXT = ()
+  Extends RenderingInfoKHR MultiviewPerViewAttributesInfoNVX = ()
   Extends SamplerCreateInfo SamplerYcbcrConversionInfo = ()
   Extends SamplerCreateInfo SamplerReductionModeCreateInfo = ()
   Extends SamplerCreateInfo SamplerCustomBorderColorCreateInfoEXT = ()
@@ -1671,6 +1692,13 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR -> go @FormatProperties3KHR
   STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT -> go @DrmFormatModifierPropertiesList2EXT
   STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_2_ANDROID -> go @AndroidHardwareBufferFormatProperties2ANDROID
+  STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR -> go @PipelineRenderingCreateInfoKHR
+  STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR -> go @RenderingFragmentShadingRateAttachmentInfoKHR
+  STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT -> go @RenderingFragmentDensityMapAttachmentInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR -> go @PhysicalDeviceDynamicRenderingFeaturesKHR
+  STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR -> go @CommandBufferInheritanceRenderingInfoKHR
+  STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD -> go @AttachmentSampleCountInfoAMD
+  STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX -> go @MultiviewPerViewAttributesInfoNVX
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2037,6 +2065,13 @@ infix 6 ::&
 {-# complete (::&) :: FormatProperties3KHR #-}
 {-# complete (::&) :: DrmFormatModifierPropertiesList2EXT #-}
 {-# complete (::&) :: AndroidHardwareBufferFormatProperties2ANDROID #-}
+{-# complete (::&) :: PipelineRenderingCreateInfoKHR #-}
+{-# complete (::&) :: RenderingFragmentShadingRateAttachmentInfoKHR #-}
+{-# complete (::&) :: RenderingFragmentDensityMapAttachmentInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceDynamicRenderingFeaturesKHR #-}
+{-# complete (::&) :: CommandBufferInheritanceRenderingInfoKHR #-}
+{-# complete (::&) :: AttachmentSampleCountInfoAMD #-}
+{-# complete (::&) :: MultiviewPerViewAttributesInfoNVX #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

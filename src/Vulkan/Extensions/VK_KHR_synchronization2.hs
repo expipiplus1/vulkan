@@ -123,6 +123,10 @@
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2',
 --     overriding the original 32-bit stage and access masks.
 --
+-- == New Base Types
+--
+-- -   'Vulkan.Core10.FundamentalTypes.Flags64'
+--
 -- == New Commands
 --
 -- -   'cmdPipelineBarrier2KHR'
@@ -404,8 +408,8 @@
 --
 -- 'AccessFlagBits2KHR', 'AccessFlags2KHR', 'BufferMemoryBarrier2KHR',
 -- 'CommandBufferSubmitInfoKHR', 'DependencyInfoKHR',
--- 'ImageMemoryBarrier2KHR', 'MemoryBarrier2KHR',
--- 'PhysicalDeviceSynchronization2FeaturesKHR',
+-- 'Vulkan.Core10.FundamentalTypes.Flags64', 'ImageMemoryBarrier2KHR',
+-- 'MemoryBarrier2KHR', 'PhysicalDeviceSynchronization2FeaturesKHR',
 -- 'PipelineStageFlagBits2KHR', 'PipelineStageFlags2KHR',
 -- 'SemaphoreSubmitInfoKHR', 'SubmitFlagBitsKHR', 'SubmitFlagsKHR',
 -- 'SubmitInfo2KHR', 'cmdPipelineBarrier2KHR', 'cmdResetEvent2KHR',
@@ -1310,6 +1314,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --     /must/ not be included in the dependency flags
 --
+-- -   #VUID-vkCmdPipelineBarrier2KHR-None-06191# If
+--     'cmdPipelineBarrier2KHR' is called within a render pass instance,
+--     the render pass /must/ not have been started with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--
 -- -   #VUID-vkCmdPipelineBarrier2KHR-synchronization2-03848# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature /must/ be enabled
@@ -1402,8 +1411,7 @@ foreign import ccall
 --
 -- 'queueSubmit2KHR' is a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission command>,
--- with each batch defined by an element of @pSubmits@ as an instance of
--- the 'SubmitInfo2KHR' structure.
+-- with each batch defined by an element of @pSubmits@.
 --
 -- Semaphore operations submitted with 'queueSubmit2KHR' have additional
 -- ordering constraints compared to other submission commands, with
@@ -5024,6 +5032,40 @@ instance Zero CommandBufferSubmitInfoKHR where
 --     'SUBMIT_PROTECTED_BIT_KHR', each element of @pCommandBuffers@ /must/
 --     not be a protected command buffer
 --
+-- -   #VUID-VkSubmitInfo2KHR-commandBuffer-06192# If any @commandBuffer@
+--     member of an element of @pCommandBufferInfos@ contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension resumed render pass instances>,
+--     they /must/ be suspended by a render pass instance earlier in
+--     submission order within @pCommandBufferInfos@
+--
+-- -   #VUID-VkSubmitInfo2KHR-commandBuffer-06010# If any @commandBuffer@
+--     member of an element of @pCommandBufferInfos@ contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     they /must/ be resumed by a render pass instance later in submission
+--     order within @pCommandBufferInfos@
+--
+-- -   #VUID-VkSubmitInfo2KHR-commandBuffer-06011# If any @commandBuffer@
+--     member of an element of @pCommandBufferInfos@ contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no action or synchronization commands between that
+--     render pass instance and the render pass instance that resumes it
+--
+-- -   #VUID-VkSubmitInfo2KHR-commandBuffer-06012# If any @commandBuffer@
+--     member of an element of @pCommandBufferInfos@ contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no render pass instances between that render pass
+--     instance and the render pass instance that resumes it
+--
+-- -   #VUID-VkSubmitInfo2KHR-variableSampleLocations-06013# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-variableSampleLocations variableSampleLocations>
+--     limit is not supported, and any @commandBuffer@ member of an element
+--     of @pCommandBufferInfos@ contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     where a graphics pipeline has been bound, any pipelines bound in the
+--     render pass instance that resumes it, or any subsequent render pass
+--     instances that resume from that one and so on, /must/ use the same
+--     sample locations
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSubmitInfo2KHR-sType-sType# @sType@ /must/ be
@@ -5846,7 +5888,7 @@ pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR   = PipelineStageF
 -- the stage of the pipeline where the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-attachment shading rate image>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
 -- is read to determine the fragment shading rate for portions of a
 -- rasterized primitive.
 pattern PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineStageFlagBits2KHR 0x0000000000400000

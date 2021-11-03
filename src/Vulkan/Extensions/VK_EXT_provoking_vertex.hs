@@ -121,18 +121,18 @@
 --
 -- 1) At what granularity should this state be set?
 --
--- __RESOLVED__: At pipeline bind, with an optional per-renderpass
+-- __RESOLVED__: At pipeline bind, with an optional per-render pass
 -- restriction.
 --
 -- The most natural place to put this state is in the graphics pipeline
 -- object. Some implementations require it to be known when creating the
 -- pipeline, and pipeline state is convenient for implementing OpenGL 3.2’s
 -- glProvokingVertex, which can change the state between draw calls.
--- However, some implementations can only change it approximately
--- renderpass granularity. To accommodate both, provoking vertex will be
--- pipeline state, but implementations can require that only one mode is
--- used within a renderpass instance; the renderpass’s mode is chosen
--- implicitly when the first pipeline is bound.
+-- However, some implementations can only change it approximately render
+-- pass granularity. To accommodate both, provoking vertex will be pipeline
+-- state, but implementations can require that only one mode is used within
+-- a render pass instance; the render pass’s mode is chosen implicitly when
+-- the first pipeline is bound.
 --
 -- 2) Does the provoking vertex mode affect the order that vertices are
 -- written to transform feedback buffers?
@@ -338,7 +338,7 @@ instance Zero PhysicalDeviceProvokingVertexFeaturesEXT where
 data PhysicalDeviceProvokingVertexPropertiesEXT = PhysicalDeviceProvokingVertexPropertiesEXT
   { -- | #limits-provokingVertexModePerPipeline# @provokingVertexModePerPipeline@
     -- indicates whether the implementation supports graphics pipelines with
-    -- different provoking vertex modes within the same renderpass instance.
+    -- different provoking vertex modes within the same render pass instance.
     provokingVertexModePerPipeline :: Bool
   , -- | #limits-transformFeedbackPreservesTriangleFanProvokingVertex#
     -- @transformFeedbackPreservesTriangleFanProvokingVertex@ indicates whether
@@ -398,8 +398,8 @@ instance Zero PhysicalDeviceProvokingVertexPropertiesEXT where
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-provokingVertexModePerPipeline provokingVertexModePerPipeline>
--- limit is 'Vulkan.Core10.FundamentalTypes.FALSE', then the all pipelines
--- bound within a renderpass instance /must/ have the same
+-- limit is 'Vulkan.Core10.FundamentalTypes.FALSE', then all pipelines
+-- bound within a render pass instance /must/ have the same
 -- @provokingVertexMode@.
 --
 -- == Valid Usage

@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [0.7.3] - 2021-11-03
+- Bump VMA, Adds virtual allocation functionality
+
 ## [0.7.2] - 2021-10-14
 - Bump VMA, documentation changes and internal improvements
 - Raise upper bound on `vulkan`

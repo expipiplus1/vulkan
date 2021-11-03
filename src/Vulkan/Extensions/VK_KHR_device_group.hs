@@ -148,7 +148,8 @@
 --
 --     -   'MemoryAllocateFlagsInfoKHR'
 --
--- -   Extending 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo':
+-- -   Extending 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR':
 --
 --     -   'DeviceGroupRenderPassBeginInfoKHR'
 --

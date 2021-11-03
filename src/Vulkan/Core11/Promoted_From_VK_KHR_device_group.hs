@@ -734,7 +734,7 @@ instance Zero MemoryAllocateFlagsInfo where
 -- The @deviceMask@ serves several purposes. It is an upper bound on the
 -- set of physical devices that /can/ be used during the render pass
 -- instance, and the initial device mask when the render pass instance
--- begins. In addition, commands transitioning to the next subpass in the
+-- begins. In addition, commands transitioning to the next subpass in a
 -- render pass instance and commands ending the render pass instance, and,
 -- accordingly render pass attachment load, store, and resolve operations
 -- and subpass dependencies corresponding to the render pass instance, are
@@ -772,6 +772,24 @@ instance Zero MemoryAllocateFlagsInfo where
 -- -   #VUID-VkDeviceGroupRenderPassBeginInfo-deviceRenderAreaCount-00908#
 --     @deviceRenderAreaCount@ /must/ either be zero or equal to the number
 --     of physical devices in the logical device
+--
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06166# The @offset.x@
+--     member of any element of @pDeviceRenderAreas@ /must/ be greater than
+--     or equal to 0
+--
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06167# The @offset.y@
+--     member of any element of @pDeviceRenderAreas@ /must/ be greater than
+--     or equal to 0
+--
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06168# The sum of the
+--     @offset.x@ and @extent.width@ members of any element of
+--     @pDeviceRenderAreas@ /must/ be less than or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferWidth>
+--
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06169# The sum of the
+--     @offset.y@ and @extent.height@ members of any element of
+--     @pDeviceRenderAreas@ /must/ be less than or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFramebufferHeight maxFramebufferHeight>
 --
 -- == Valid Usage (Implicit)
 --

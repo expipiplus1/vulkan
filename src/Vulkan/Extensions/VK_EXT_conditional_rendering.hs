@@ -143,7 +143,7 @@
 -- -   Revision 2, 2018-05-21 (Vikram Kushwaha)
 --
 --     -   Add new pipeline stage, access flags and limit conditional
---         rendering to a subpass or entire renderpass.
+--         rendering to a subpass or entire render pass.
 --
 -- = See Also
 --

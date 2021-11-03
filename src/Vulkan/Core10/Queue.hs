@@ -707,6 +707,40 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then each element of the
 --     @pCommandBuffers@ array /must/ be a protected command buffer
 --
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06193# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension resumed render pass instances>,
+--     they /must/ be suspended by a render pass instance earlier in
+--     submission order within @pCommandBuffers@
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06014# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     they /must/ be resumed by a render pass instance later in submission
+--     order within @pCommandBuffers@
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06015# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no action or synchronization commands between that
+--     render pass instance and the render pass instance that resumes it
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06016# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no render pass instances between that render pass
+--     instance and the render pass instance that resumes it
+--
+-- -   #VUID-VkSubmitInfo-variableSampleLocations-06017# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-variableSampleLocations variableSampleLocations>
+--     limit is not supported, and any element of @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     where a graphics pipeline has been bound, any pipelines bound in the
+--     render pass instance that resumes it, or any subsequent render pass
+--     instances that resume from that one and so on, /must/ use the same
+--     sample locations
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSubmitInfo-sType-sType# @sType@ /must/ be

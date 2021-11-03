@@ -32,15 +32,13 @@ nix-shell -p haskellPackages.hpack --run hpack
 # VMA
 ################################################################
 
-echo "Cleaning VulkanMemoryAllocator source"
-git -C VulkanMemoryAllocator/VulkanMemoryAllocator clean -dxf
+echo "Cleaning VulkanMemoryAllocator source" &&
+git -C VulkanMemoryAllocator/VulkanMemoryAllocator clean -dxf &&
 
-# link the header to src to work around
-# https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/165#issuecomment-855259149
-echo "Generating VMA documentation"
+echo "Generating VMA documentation" &&
 (cd VulkanMemoryAllocator/VulkanMemoryAllocator &&
   sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' Doxyfile &&
-  nix-shell -p doxygen --run "doxygen Doxyfile")
+  nix-shell -p cmake vulkan-headers vulkan-loader doxygen --run 'cmake . -DBUILD_DOCUMENTATION=ON && cmake --build . --target doc_doxygen' )
 
 echo "Generating VulkanMemoryAllocator"
 nix-shell -p vulkan-headers --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"

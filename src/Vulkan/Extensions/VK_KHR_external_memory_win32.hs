@@ -507,23 +507,11 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --
--- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT'
---
 -- The implementation /must/ ensure the access rights allow read and write
 -- access to the memory.
 --
--- For handles of the following types:
---
--- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT'
---
--- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT'
---
--- The access rights /must/ be:
---
--- -   @GENERIC_ALL@
---
---     [1]
---         <https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights>
+-- [1]
+--     <https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights>
 --
 -- == Valid Usage
 --
@@ -531,10 +519,6 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     does not include
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
---     or
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     a 'ExportMemoryWin32HandleInfoKHR' structure /must/ not be included
 --     in the @pNext@ chain of 'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --

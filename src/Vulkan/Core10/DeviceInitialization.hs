@@ -1292,7 +1292,7 @@ instance Zero PhysicalDeviceProperties where
 --
 -- Implicit layers /must/ be disabled if they do not support a version at
 -- least as high as @apiVersion@. See the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#LoaderAndLayerInterface Vulkan Loader Specification and Architecture Overview>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#LoaderInterfaceArchitecture “Architecture of the Vulkan Loader Interfaces”>
 -- document for additional information.
 --
 -- Note

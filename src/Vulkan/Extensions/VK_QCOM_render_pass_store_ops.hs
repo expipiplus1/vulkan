@@ -37,8 +37,8 @@
 --
 -- == Description
 --
--- Renderpass attachments /can/ be read-only for the duration of a
--- renderpass.
+-- Renderpass attachments /can/ be read-only for the duration of a render
+-- pass.
 --
 -- Examples include input attachments and depth attachments where depth
 -- tests are enabled but depth writes are not enabled.
@@ -104,9 +104,9 @@ module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( pattern ATTACHMENT_STO
                                                         ) where
 
 import Data.String (IsString)
-import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE_EXT))
+import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE_KHR))
 -- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_QCOM"
-pattern ATTACHMENT_STORE_OP_NONE_QCOM = ATTACHMENT_STORE_OP_NONE_EXT
+pattern ATTACHMENT_STORE_OP_NONE_QCOM = ATTACHMENT_STORE_OP_NONE_KHR
 
 
 type QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION = 2

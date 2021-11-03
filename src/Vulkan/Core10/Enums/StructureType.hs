@@ -407,6 +407,15 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
                                                         , STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
+                                                        , STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX
+                                                        , STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD
+                                                        , STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT
+                                                        , STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR
+                                                        , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR
+                                                        , STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR
+                                                        , STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR
+                                                        , STRUCTURE_TYPE_RENDERING_INFO_KHR
                                                         , STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD
                                                         , STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX
                                                         , STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
@@ -592,6 +601,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD',
 -- 'Vulkan.CStruct.Extends.BaseInStructure',
 -- 'Vulkan.CStruct.Extends.BaseOutStructure',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
@@ -627,6 +637,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.CommandBufferSubmitInfoKHR',
 -- 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo',
@@ -804,6 +815,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryZirconHandlePropertiesFUCHSIA',
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.MetalSurfaceCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX',
 -- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.PerformanceConfigurationAcquireInfoINTEL',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterDescriptionKHR',
@@ -846,6 +858,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PhysicalDeviceDiscardRectanglePropertiesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
 -- 'Vulkan.Extensions.VK_EXT_physical_device_drm.PhysicalDeviceDrmPropertiesEXT',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.PhysicalDeviceDynamicRenderingFeaturesKHR',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PhysicalDeviceExclusiveScissorFeaturesNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.PhysicalDeviceExtendedDynamicState2FeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.PhysicalDeviceExtendedDynamicStateFeaturesEXT',
@@ -1013,6 +1026,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo',
 -- 'Vulkan.Extensions.VK_AMD_rasterization_order.PipelineRasterizationStateRasterizationOrderAMD',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_representative_fragment_test.PipelineRepresentativeFragmentTestStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT',
 -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
@@ -1055,6 +1069,10 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.RenderPassSampleLocationsBeginInfoEXT',
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingAttachmentInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.ResolveImageInfo2KHR',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
@@ -1985,6 +2003,24 @@ pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV      = StructureType
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV = StructureType 1000050000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP"
 pattern STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP = StructureType 1000049000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX"
+pattern STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX    = StructureType 1000044009
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD"
+pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD          = StructureType 1000044008
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT"
+pattern STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT = StructureType 1000044007
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR"
+pattern STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR = StructureType 1000044006
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR"
+pattern STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR = StructureType 1000044004
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR = StructureType 1000044003
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR        = StructureType 1000044002
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR"
+pattern STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR             = StructureType 1000044001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_INFO_KHR"
+pattern STRUCTURE_TYPE_RENDERING_INFO_KHR                        = StructureType 1000044000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD"
 pattern STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD  = StructureType 1000041000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX"
@@ -2676,6 +2712,15 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES       = StructureType
              STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV,
              STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP,
+             STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX,
+             STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD,
+             STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT,
+             STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR,
+             STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR,
+             STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR,
+             STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR,
+             STRUCTURE_TYPE_RENDERING_INFO_KHR,
              STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD,
              STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX,
              STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX,
@@ -3448,12 +3493,25 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV"
     )
   , (STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP, "STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP")
-  , (STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD , "TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD")
-  , (STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX        , "IMAGE_VIEW_ADDRESS_PROPERTIES_NVX")
-  , (STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX               , "IMAGE_VIEW_HANDLE_INFO_NVX")
-  , (STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX                       , "CU_LAUNCH_INFO_NVX")
-  , (STRUCTURE_TYPE_CU_FUNCTION_CREATE_INFO_NVX              , "CU_FUNCTION_CREATE_INFO_NVX")
-  , (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX                , "CU_MODULE_CREATE_INFO_NVX")
+  , (STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX   , "MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX")
+  , (STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD         , "ATTACHMENT_SAMPLE_COUNT_INFO_AMD")
+  , ( STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT
+    , "RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT"
+    )
+  , ( STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR
+    , "RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR"
+    )
+  , (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR , "COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR")
+  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR, "PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR")
+  , (STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR            , "PIPELINE_RENDERING_CREATE_INFO_KHR")
+  , (STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR                 , "RENDERING_ATTACHMENT_INFO_KHR")
+  , (STRUCTURE_TYPE_RENDERING_INFO_KHR                            , "RENDERING_INFO_KHR")
+  , (STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD      , "TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD")
+  , (STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX             , "IMAGE_VIEW_ADDRESS_PROPERTIES_NVX")
+  , (STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX                    , "IMAGE_VIEW_HANDLE_INFO_NVX")
+  , (STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX                            , "CU_LAUNCH_INFO_NVX")
+  , (STRUCTURE_TYPE_CU_FUNCTION_CREATE_INFO_NVX                   , "CU_FUNCTION_CREATE_INFO_NVX")
+  , (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX                     , "CU_MODULE_CREATE_INFO_NVX")
   , ( STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT
     , "PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT"
     )

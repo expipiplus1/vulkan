@@ -250,7 +250,7 @@ instance Zero PhysicalDevicePresentIdFeaturesKHR where
 -- -   #VUID-VkPresentIdKHR-swapchainCount-04998# @swapchainCount@ /must/
 --     be the same value as
 --     'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@swapchainCount@,
---     where this 'PresentIdKHR' is in the pNext-chain of the
+--     where this 'PresentIdKHR' is in the @pNext@ chain of the
 --     'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR' structure
 --
 -- -   #VUID-VkPresentIdKHR-presentIds-04999# Each @presentIds@ entry

@@ -5424,6 +5424,12 @@ instance Zero AccelerationStructureGeometryKHR where
 -- vertex motion in its instances /must/ set
 -- 'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' in @flags@.
 --
+-- Members @srcAccelerationStructure@ and @dstAccelerationStructure@ /may/
+-- be the same or different for an update operation (when @mode@ is
+-- 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR'). If they are the same,
+-- the update happens in-place. Otherwise, the target acceleration
+-- structure is updated and the source is not modified.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-type-03654# @type@
@@ -6953,9 +6959,10 @@ newtype BuildAccelerationStructureFlagBitsKHR = BuildAccelerationStructureFlagBi
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' indicates that the
--- specified acceleration structure /can/ be updated with @update@ of
+-- specified acceleration structure /can/ be updated with a @mode@ of
+-- 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR' in
+-- 'AccelerationStructureBuildGeometryInfoKHR' or an @update@ of
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' in
--- 'cmdBuildAccelerationStructuresKHR' or
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV' .
 pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR      = BuildAccelerationStructureFlagBitsKHR 0x00000001
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' indicates that

@@ -145,9 +145,12 @@ marshalParams handles =
       ("VmaAllocatorCreateInfo", "pTypeExternalMemoryHandleTypes") -> Just $ Preserve (type' a)
       ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
         Just $ Returned (Preserve p)
+      ("vmaBuildVirtualBlockStatsString", "ppStatsString") | Ptr _ p <- type' a ->
+        Just $ Returned (Preserve p)
       ("vmaGetPoolName", "ppName") | Ptr _ p <- type' a ->
         Just $ Returned (Preserve p)
       ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
+      ("vmaFreeVirtualBlockStatsString", "pStatsString") -> Just $ Preserve (type' a)
       _ -> Nothing
     isForeignStruct = const False
   in

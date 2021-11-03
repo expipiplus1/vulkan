@@ -68,6 +68,7 @@ import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (withSomeCStruct)
 import Vulkan.NamedType ((:::))
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (AttachmentSampleCountInfoAMD)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
@@ -75,6 +76,7 @@ import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (CommandBufferInheritanceConditionalRenderingInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (CommandBufferInheritanceRenderPassTransformInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (CommandBufferInheritanceRenderingInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (CommandBufferInheritanceViewportScissorInfoNV)
 import Vulkan.Core10.Enums.CommandBufferLevel (CommandBufferLevel)
 import Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlagBits(..))
@@ -96,6 +98,7 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Handles (Framebuffer)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (MultiviewPerViewAttributesInfoNVX)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -659,6 +662,13 @@ instance Zero CommandBufferAllocateInfo where
 -- | VkCommandBufferInheritanceInfo - Structure specifying command buffer
 -- inheritance information
 --
+-- = Description
+--
+-- If the 'Vulkan.Core10.Handles.CommandBuffer' will not be executed within
+-- a render pass instance, or if the render pass instance was begun with
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+-- @renderPass@, @subpass@, and @framebuffer@ are ignored.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-occlusionQueryEnable-00056# If
@@ -698,10 +708,13 @@ instance Zero CommandBufferAllocateInfo where
 -- -   #VUID-VkCommandBufferInheritanceInfo-pNext-pNext# Each @pNext@
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD',
 --     'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR',
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
 --     or
---     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX'
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-sType-unique# The @sType@ value
 --     of each struct in the @pNext@ chain /must/ be unique
@@ -726,21 +739,16 @@ data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
   , -- | @renderPass@ is a 'Vulkan.Core10.Handles.RenderPass' object defining
     -- which render passes the 'Vulkan.Core10.Handles.CommandBuffer' will be
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
-    -- with and /can/ be executed within. If the
-    -- 'Vulkan.Core10.Handles.CommandBuffer' will not be executed within a
-    -- render pass instance, @renderPass@ is ignored.
+    -- with and /can/ be executed within.
     renderPass :: RenderPass
   , -- | @subpass@ is the index of the subpass within the render pass instance
     -- that the 'Vulkan.Core10.Handles.CommandBuffer' will be executed within.
-    -- If the 'Vulkan.Core10.Handles.CommandBuffer' will not be executed within
-    -- a render pass instance, @subpass@ is ignored.
     subpass :: Word32
   , -- | @framebuffer@ /can/ refer to the 'Vulkan.Core10.Handles.Framebuffer'
     -- object that the 'Vulkan.Core10.Handles.CommandBuffer' will be rendering
     -- to if it is executed within a render pass instance. It /can/ be
     -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' if the framebuffer is not
-    -- known, or if the 'Vulkan.Core10.Handles.CommandBuffer' will not be
-    -- executed within a render pass instance.
+    -- known.
     --
     -- Note
     --
@@ -788,6 +796,9 @@ instance Extensible CommandBufferInheritanceInfo where
   getNext CommandBufferInheritanceInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferInheritanceInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @MultiviewPerViewAttributesInfoNVX = Just f
+    | Just Refl <- eqT @e @AttachmentSampleCountInfoAMD = Just f
+    | Just Refl <- eqT @e @CommandBufferInheritanceRenderingInfoKHR = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceViewportScissorInfoNV = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceRenderPassTransformInfoQCOM = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceConditionalRenderingInfoEXT = Just f
@@ -845,22 +856,45 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkCommandBufferBeginInfo-flags-00053# If @flags@ contains
---     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
---     the @renderPass@ member of @pInheritanceInfo@ /must/ be a valid
---     'Vulkan.Core10.Handles.RenderPass'
---
--- -   #VUID-VkCommandBufferBeginInfo-flags-00054# If @flags@ contains
---     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
---     the @subpass@ member of @pInheritanceInfo@ /must/ be a valid subpass
---     index within the @renderPass@ member of @pInheritanceInfo@
---
 -- -   #VUID-VkCommandBufferBeginInfo-flags-00055# If @flags@ contains
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
 --     the @framebuffer@ member of @pInheritanceInfo@ /must/ be either
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', or a valid
 --     'Vulkan.Core10.Handles.Framebuffer' that is compatible with the
 --     @renderPass@ member of @pInheritanceInfo@
+--
+-- -   #VUID-VkCommandBufferBeginInfo-flags-06000# If @flags@ contains
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
+--     and the @renderPass@ member of @pInheritanceInfo@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @renderPass@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.RenderPass'
+--
+-- -   #VUID-VkCommandBufferBeginInfo-flags-06001# If @flags@ contains
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
+--     and the @renderPass@ member of @pInheritanceInfo@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the @subpass@ member of
+--     @pInheritanceInfo@ /must/ be a valid subpass index within the
+--     @renderPass@ member of @pInheritanceInfo@
+--
+-- -   #VUID-VkCommandBufferBeginInfo-flags-06002# If @flags@ contains
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
+--     and the @renderPass@ member of @pInheritanceInfo@ is
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the @pNext@ chain of
+--     @pInheritanceInfo@ /must/ include a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     structure
+--
+-- -   #VUID-VkCommandBufferBeginInfo-flags-06003# If @flags@ contains
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
+--     the @renderPass@ member of @pInheritanceInfo@ is
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @pNext@ chain of
+--     @pInheritanceInfo@ includes a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, the @colorAttachmentCount@ member of that structure
+--     /must/ be equal to the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'::@colorAttachmentCount@
 --
 -- == Valid Usage (Implicit)
 --

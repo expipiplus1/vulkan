@@ -329,7 +329,7 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 --
 -- The queue returned by 'getDeviceQueue2' /must/ have the same @flags@
 -- value from this structure as that used at device creation time in a
--- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' instance. If no matching
+-- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure. If no matching
 -- @flags@ were specified at device creation time, then the handle returned
 -- in @pQueue@ /must/ be @NULL@.
 --

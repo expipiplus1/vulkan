@@ -111,6 +111,8 @@
 --
 --     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES_KHR'
 --
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR'
+--
 -- == New SPIR-V Capabilities
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointers VariablePointers>
