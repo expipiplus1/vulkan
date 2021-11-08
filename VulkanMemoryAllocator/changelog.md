@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [0.7.4] - 2021-11-08
+- Bump VMA, documentation changes
+
 ## [0.7.3] - 2021-11-03
 - Bump VMA, Adds virtual allocation functionality
 
