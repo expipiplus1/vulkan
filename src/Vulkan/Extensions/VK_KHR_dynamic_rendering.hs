@@ -237,7 +237,7 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'CommandBufferInheritanceRenderingInfoKHR',
 -- 'PhysicalDeviceDynamicRenderingFeaturesKHR',
@@ -245,7 +245,7 @@
 -- 'RenderingFlagBitsKHR', 'RenderingFlagsKHR', 'RenderingInfoKHR',
 -- 'cmdBeginRenderingKHR', 'cmdEndRenderingKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering Vulkan Specification>
@@ -701,7 +701,7 @@ instance Zero PipelineRenderingCreateInfoKHR where
 --
 -- If @viewMask@ is not @0@, multiview is enabled.
 --
--- If there’s an instance of
+-- If there is an instance of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 -- included in the @pNext@ chain and its @deviceCount@ member is not @0@,
 -- then @renderArea@ is ignored, and the render area is defined per-device
@@ -721,12 +721,13 @@ instance Zero PipelineRenderingCreateInfoKHR where
 --     @layerCount@ /must/ not be @0@
 --
 -- -   #VUID-VkRenderingInfoKHR-imageView-06070# If neither the
---     @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled,
---     @imageView@ members of @pDepthAttachment@, @pStencilAttachment@, and
---     elements of @pColorAttachments@ that are not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
---     with the same @sampleCount@
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_mixed_attachment_samples VK_AMD_mixed_attachment_samples>
+--     nor the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>
+--     extensions are enabled, @imageView@ members of @pDepthAttachment@,
+--     @pStencilAttachment@, and elements of @pColorAttachments@ that are
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been
+--     created with the same @sampleCount@
 --
 -- -   #VUID-VkRenderingInfoKHR-pNext-06077# If the @pNext@ chain does not
 --     contain
@@ -1530,7 +1531,7 @@ instance Zero RenderingAttachmentInfoKHR where
 -- 'RenderingInfoKHR' to define a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
 -- If @imageView@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or if this
--- structure isn’t specified, the implementation behaves as if a valid
+-- structure is not specified, the implementation behaves as if a valid
 -- shading rate attachment was specified with all texels specifying a
 -- single pixel per fragment.
 --
@@ -1681,7 +1682,7 @@ instance Zero RenderingFragmentShadingRateAttachmentInfoKHR where
 --
 -- This structure can be included in the @pNext@ chain of
 -- 'RenderingInfoKHR' to define a fragment density map. If @imageView@ is
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE', If this structure isn’t
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE', or if this structure is not
 -- specified, @imageView@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- == Valid Usage

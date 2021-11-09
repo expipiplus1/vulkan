@@ -4571,17 +4571,17 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-rasterizationSamples-04899# If
 --     the pipeline is being created with fragment shader state, and the
---     VK_QCOM_render_pass_shader_resolve extension is enabled, and if
---     subpass has any input attachments, and if the subpass description
---     contains
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve VK_QCOM_render_pass_shader_resolve>
+--     extension is enabled, and if subpass has any input attachments, and
+--     if the subpass description contains
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
 --     then the sample count of the input attachments /must/ equal
 --     @rasterizationSamples@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-sampleShadingEnable-04900# If the
 --     pipeline is being created with fragment shader state, and the
---     VK_QCOM_render_pass_shader_resolve extension is enabled, and if the
---     subpass description contains
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve VK_QCOM_render_pass_shader_resolve>
+--     extension is enabled, and if the subpass description contains
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
 --     then @sampleShadingEnable@ /must/ be false
 --

@@ -217,7 +217,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTransformFeedbackFeaturesEXT',
 -- 'PhysicalDeviceTransformFeedbackPropertiesEXT',
@@ -227,7 +227,7 @@
 -- 'cmdBindTransformFeedbackBuffersEXT', 'cmdDrawIndirectByteCountEXT',
 -- 'cmdEndQueryIndexedEXT', 'cmdEndTransformFeedbackEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback Vulkan Specification>

@@ -101,12 +101,12 @@
 --
 --     -   Pulled bind memory functions into their own extension
 --
--- = See Also
+-- == See Also
 --
 -- 'BindBufferMemoryInfoKHR', 'BindImageMemoryInfoKHR',
 -- 'bindBufferMemory2KHR', 'bindImageMemory2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 Vulkan Specification>

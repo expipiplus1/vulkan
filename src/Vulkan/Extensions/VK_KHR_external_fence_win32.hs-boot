@@ -109,13 +109,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ExportFenceWin32HandleInfoKHR', 'FenceGetWin32HandleInfoKHR',
 -- 'ImportFenceWin32HandleInfoKHR', 'getFenceWin32HandleKHR',
 -- 'importFenceWin32HandleKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 Vulkan Specification>

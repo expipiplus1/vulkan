@@ -102,13 +102,13 @@
 --
 -- -   Revision 1, 2017-08-22
 --
--- = See Also
+-- == See Also
 --
 -- 'DescriptorSetLayoutSupportKHR',
 -- 'PhysicalDeviceMaintenance3PropertiesKHR',
 -- 'getDescriptorSetLayoutSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3 Vulkan Specification>

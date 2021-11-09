@@ -84,11 +84,11 @@
 --
 --     -   Internal draft version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_uniform_control_flow Vulkan Specification>

@@ -147,12 +147,12 @@
 --     -   Moved VK_ERROR_NATIVE_WINDOW_IN_USE_KHR from the
 --         VK_KHR_android_surface to the VK_KHR_surface extension.
 --
--- = See Also
+-- == See Also
 --
 -- 'ANativeWindow', 'AndroidSurfaceCreateFlagsKHR',
 -- 'AndroidSurfaceCreateInfoKHR', 'createAndroidSurfaceKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface Vulkan Specification>

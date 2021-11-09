@@ -132,14 +132,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE_KHR',
 -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE_KHR',
 -- 'ConformanceVersionKHR', 'DriverIdKHR',
 -- 'PhysicalDeviceDriverPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties Vulkan Specification>

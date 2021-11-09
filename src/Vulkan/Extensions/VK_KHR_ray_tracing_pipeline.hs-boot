@@ -687,7 +687,7 @@
 --     -   define sync for indirect trace rays and indirect buffer
 --         (#2407,!4208)
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR',
 -- 'PhysicalDeviceRayTracingPipelineFeaturesKHR',
@@ -703,7 +703,7 @@
 -- 'getRayTracingShaderGroupHandlesKHR',
 -- 'getRayTracingShaderGroupStackSizeKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline Vulkan Specification>

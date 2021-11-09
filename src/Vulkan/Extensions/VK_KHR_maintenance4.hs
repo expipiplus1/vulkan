@@ -141,7 +141,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceBufferMemoryRequirementsKHR', 'DeviceImageMemoryRequirementsKHR',
 -- 'PhysicalDeviceMaintenance4FeaturesKHR',
@@ -150,7 +150,7 @@
 -- 'getDeviceImageMemoryRequirementsKHR',
 -- 'getDeviceImageSparseMemoryRequirementsKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance4 Vulkan Specification>

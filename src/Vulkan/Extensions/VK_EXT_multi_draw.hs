@@ -107,14 +107,14 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'MultiDrawIndexedInfoEXT', 'MultiDrawInfoEXT',
 -- 'PhysicalDeviceMultiDrawFeaturesEXT',
 -- 'PhysicalDeviceMultiDrawPropertiesEXT', 'cmdDrawMultiEXT',
 -- 'cmdDrawMultiIndexedEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_multi_draw Vulkan Specification>
@@ -373,7 +373,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawMultiEXT-commandBuffer-02707# If @commandBuffer@ is
---     an unprotected command buffer, any resource accessed by the
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -947,15 +949,19 @@ foreign import ccall
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdDrawMultiEXT-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDrawMultiEXT-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDrawMultiEXT-commandBuffer-04617# If any of the shader
 --     stages of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
@@ -1255,10 +1261,11 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawMultiIndexedEXT-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdDrawMultiIndexedEXT-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -1830,16 +1837,19 @@ foreign import ccall
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdDrawMultiIndexedEXT-commandBuffer-02712# If
---     @commandBuffer@ is a protected command buffer, any resource written
---     to by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be an
---     unprotected resource
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDrawMultiIndexedEXT-commandBuffer-02713# If
---     @commandBuffer@ is a protected command buffer, pipeline stages other
---     than the framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not write to any resource
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDrawMultiIndexedEXT-commandBuffer-04617# If any of the
 --     shader stages of the 'Vulkan.Core10.Handles.Pipeline' bound to the

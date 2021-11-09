@@ -79,11 +79,11 @@
 --
 --     -   Internal draft version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_zero_initialize_workgroup_memory Vulkan Specification>

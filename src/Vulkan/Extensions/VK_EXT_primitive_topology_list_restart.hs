@@ -81,11 +81,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_primitive_topology_list_restart Vulkan Specification>

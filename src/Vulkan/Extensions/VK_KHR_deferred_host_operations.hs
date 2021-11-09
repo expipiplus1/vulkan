@@ -254,14 +254,14 @@
 --     -   clarify return value of vkGetDeferredOperationResultKHR
 --         (#2339,!4110)
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'createDeferredOperationKHR', 'deferredOperationJoinKHR',
 -- 'destroyDeferredOperationKHR', 'getDeferredOperationMaxConcurrencyKHR',
 -- 'getDeferredOperationResultKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations Vulkan Specification>

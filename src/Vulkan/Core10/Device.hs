@@ -443,6 +443,12 @@ destroyDevice device allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
 --     bit of @flags@ /must/ not be set
 --
+-- -   #VUID-VkDeviceQueueCreateInfo-flags-06449# If @flags@ includes
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT',
+--     @queueFamilyIndex@ /must/ be the index of a queue family that
+--     includes the 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_PROTECTED_BIT'
+--     capability
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDeviceQueueCreateInfo-sType-sType# @sType@ /must/ be
@@ -577,8 +583,8 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 -- -   #VUID-VkDeviceCreateInfo-pNext-04748# if the @pNext@ chain includes
 --     a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure and
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@bufferDeviceAddress@
---     is VK_TRUE, @ppEnabledExtensionNames@ /must/ not contain
---     @VK_EXT_buffer_device_address@
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE', @ppEnabledExtensionNames@
+--     /must/ not contain @VK_EXT_buffer_device_address@
 --
 -- -   #VUID-VkDeviceCreateInfo-pNext-02829# If the @pNext@ chain includes
 --     a 'Vulkan.Core12.PhysicalDeviceVulkan11Features' structure, then it

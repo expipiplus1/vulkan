@@ -118,12 +118,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceFloat16Int8FeaturesKHR',
 -- 'PhysicalDeviceShaderFloat16Int8FeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_float16_int8 Vulkan Specification>

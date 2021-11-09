@@ -109,13 +109,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PastPresentationTimingGOOGLE', 'PresentTimeGOOGLE',
 -- 'PresentTimesInfoGOOGLE', 'RefreshCycleDurationGOOGLE',
 -- 'getPastPresentationTimingGOOGLE', 'getRefreshCycleDurationGOOGLE'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing Vulkan Specification>

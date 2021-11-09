@@ -137,11 +137,11 @@
 --     -   Add an issue explaining the reason for the extension API not
 --         being suffixed with KHR.
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_mirror_clamp_to_edge Vulkan Specification>

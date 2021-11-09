@@ -256,7 +256,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoarseSampleLocationNV', 'CoarseSampleOrderCustomNV',
 -- 'CoarseSampleOrderTypeNV', 'PhysicalDeviceShadingRateImageFeaturesNV',
@@ -267,7 +267,7 @@
 -- 'cmdBindShadingRateImageNV', 'cmdSetCoarseSampleOrderNV',
 -- 'cmdSetViewportShadingRatePaletteNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>

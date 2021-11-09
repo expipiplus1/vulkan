@@ -453,7 +453,7 @@
 --
 -- -   Revision 1, 2019-10-08
 --
--- = See Also
+-- == See Also
 --
 -- 'AcquireProfilingLockFlagBitsKHR', 'AcquireProfilingLockFlagsKHR',
 -- 'AcquireProfilingLockInfoKHR',
@@ -470,7 +470,7 @@
 -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR',
 -- 'releaseProfilingLockKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>

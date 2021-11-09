@@ -90,11 +90,11 @@
 --
 --     -   First stable revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceDrmPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_physical_device_drm Vulkan Specification>

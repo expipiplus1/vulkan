@@ -106,11 +106,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceComputeShaderDerivativesFeaturesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_compute_shader_derivatives Vulkan Specification>

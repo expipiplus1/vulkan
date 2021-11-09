@@ -119,13 +119,13 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR',
 -- 'FormatProperties3KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 Vulkan Specification>

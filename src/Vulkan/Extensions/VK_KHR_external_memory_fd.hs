@@ -112,12 +112,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ImportMemoryFdInfoKHR', 'MemoryFdPropertiesKHR', 'MemoryGetFdInfoKHR',
 -- 'getMemoryFdKHR', 'getMemoryFdPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd Vulkan Specification>
@@ -297,7 +297,7 @@ getMemoryFdPropertiesKHR :: forall io
                             --
                             -- #VUID-vkGetMemoryFdPropertiesKHR-handleType-00674# @handleType@ /must/
                             -- not be
-                            -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR'
+                            -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'
                             --
                             -- #VUID-vkGetMemoryFdPropertiesKHR-handleType-parameter# @handleType@
                             -- /must/ be a valid

@@ -183,7 +183,7 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'BufferCollectionBufferCreateInfoFUCHSIA',
 -- 'BufferCollectionConstraintsInfoFUCHSIA',
@@ -201,7 +201,7 @@
 -- 'setBufferCollectionBufferConstraintsFUCHSIA',
 -- 'setBufferCollectionImageConstraintsFUCHSIA'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection Vulkan Specification>
@@ -450,7 +450,7 @@ foreign import ccall
 -- implementation does not support the constraints specified in the
 -- @bufferCollectionConstraints@ structure. If that occurs,
 -- 'setBufferCollectionBufferConstraintsFUCHSIA' will return
--- VK_ERROR_FORMAT_NOT_SUPPORTED.
+-- 'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'.
 --
 -- == Return Codes
 --
@@ -529,7 +529,7 @@ foreign import ccall
 -- implementation does not support any of the formats described by the
 -- @pImageConstraintsInfo@ structure. If that occurs,
 -- 'setBufferCollectionImageConstraintsFUCHSIA' will return
--- VK_ERROR_FORMAT_NOT_SUPPORTED.
+-- 'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'.
 --
 -- == Return Codes
 --
@@ -685,7 +685,7 @@ foreign import ccall
 -- 'getBufferCollectionPropertiesFUCHSIA' /may/ fail if Sysmem is unable to
 -- resolve the constraints of all of the participants in the buffer
 -- collection. If that occurs, 'getBufferCollectionPropertiesFUCHSIA' will
--- return VK_ERROR_INITIALIZATION_FAILED.
+-- return 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
 --
 -- == Valid Usage
 --

@@ -145,7 +145,7 @@
 --     -   Add new pipeline stage, access flags and limit conditional
 --         rendering to a subpass or entire render pass.
 --
--- = See Also
+-- == See Also
 --
 -- 'CommandBufferInheritanceConditionalRenderingInfoEXT',
 -- 'ConditionalRenderingBeginInfoEXT', 'ConditionalRenderingFlagBitsEXT',
@@ -153,7 +153,7 @@
 -- 'PhysicalDeviceConditionalRenderingFeaturesEXT',
 -- 'cmdBeginConditionalRenderingEXT', 'cmdEndConditionalRenderingEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering Vulkan Specification>

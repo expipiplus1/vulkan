@@ -138,11 +138,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'TextureLODGatherFormatPropertiesAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod Vulkan Specification>

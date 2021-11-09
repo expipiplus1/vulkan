@@ -896,7 +896,8 @@ instance Zero ImageSubresourceRange where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     then the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
---     structure with a conversion value other than VK_NULL_HANDLE
+--     structure with a conversion value other than
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkImageViewCreateInfo-format-04714# If @format@ has a @_422@
 --     or @_420@ suffix then @image@ /must/ have been created with a width

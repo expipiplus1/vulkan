@@ -430,7 +430,7 @@
 --     -   update to use InstanceId instead of InstanceIndex as
 --         implemented.
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_NV', 'AabbPositionsNV',
 -- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureInfoNV',
@@ -458,7 +458,7 @@
 -- 'getAccelerationStructureMemoryRequirementsNV',
 -- 'getRayTracingShaderGroupHandlesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing Vulkan Specification>

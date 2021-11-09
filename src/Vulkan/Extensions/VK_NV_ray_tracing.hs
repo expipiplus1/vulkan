@@ -430,7 +430,7 @@
 --     -   update to use InstanceId instead of InstanceIndex as
 --         implemented.
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_NV', 'AabbPositionsNV',
 -- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureInfoNV',
@@ -458,7 +458,7 @@
 -- 'getAccelerationStructureMemoryRequirementsNV',
 -- 'getRayTracingShaderGroupHandlesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing Vulkan Specification>
@@ -1802,7 +1802,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdTraceRaysNV-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --

@@ -133,12 +133,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceInvocationMaskFeaturesHUAWEI',
 -- 'cmdBindInvocationMaskHUAWEI'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>

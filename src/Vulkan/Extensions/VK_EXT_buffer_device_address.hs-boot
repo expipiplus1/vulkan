@@ -149,14 +149,14 @@
 --
 --     -   Minor updates to appendix for publication
 --
--- = See Also
+-- == See Also
 --
 -- 'BufferDeviceAddressCreateInfoEXT', 'BufferDeviceAddressInfoEXT',
 -- 'PhysicalDeviceBufferAddressFeaturesEXT',
 -- 'PhysicalDeviceBufferDeviceAddressFeaturesEXT',
 -- 'getBufferDeviceAddressEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_buffer_device_address Vulkan Specification>

@@ -135,7 +135,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'BlitImageInfo2KHR', 'BufferCopy2KHR', 'BufferImageCopy2KHR',
 -- 'CopyBufferInfo2KHR', 'CopyBufferToImageInfo2KHR', 'CopyImageInfo2KHR',
@@ -144,7 +144,7 @@
 -- 'cmdCopyBuffer2KHR', 'cmdCopyBufferToImage2KHR', 'cmdCopyImage2KHR',
 -- 'cmdCopyImageToBuffer2KHR', 'cmdResolveImage2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 Vulkan Specification>

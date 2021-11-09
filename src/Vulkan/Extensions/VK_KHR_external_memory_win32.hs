@@ -122,13 +122,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ExportMemoryWin32HandleInfoKHR', 'ImportMemoryWin32HandleInfoKHR',
 -- 'MemoryGetWin32HandleInfoKHR', 'MemoryWin32HandlePropertiesKHR',
 -- 'getMemoryWin32HandleKHR', 'getMemoryWin32HandlePropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 Vulkan Specification>

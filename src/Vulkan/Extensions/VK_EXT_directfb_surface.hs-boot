@@ -78,13 +78,13 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'DirectFBSurfaceCreateFlagsEXT', 'DirectFBSurfaceCreateInfoEXT',
 -- 'createDirectFBSurfaceEXT',
 -- 'getPhysicalDeviceDirectFBPresentationSupportEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface Vulkan Specification>

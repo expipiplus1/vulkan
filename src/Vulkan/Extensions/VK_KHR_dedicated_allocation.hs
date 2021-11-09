@@ -204,11 +204,11 @@
 --         VkMemoryDedicatedAllocateInfoKHR can only have the specified
 --         resource bound and no others.
 --
--- = See Also
+-- == See Also
 --
 -- 'MemoryDedicatedAllocateInfoKHR', 'MemoryDedicatedRequirementsKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation Vulkan Specification>

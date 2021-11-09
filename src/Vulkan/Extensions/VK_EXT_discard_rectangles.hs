@@ -109,7 +109,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DiscardRectangleModeEXT',
 -- 'PhysicalDeviceDiscardRectanglePropertiesEXT',
@@ -117,7 +117,7 @@
 -- 'PipelineDiscardRectangleStateCreateInfoEXT',
 -- 'cmdSetDiscardRectangleEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>

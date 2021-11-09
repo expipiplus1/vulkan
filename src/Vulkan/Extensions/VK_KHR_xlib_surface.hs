@@ -156,12 +156,12 @@
 --     -   Updated the surface create function to take a pCreateInfo
 --         structure.
 --
--- = See Also
+-- == See Also
 --
 -- 'XlibSurfaceCreateFlagsKHR', 'XlibSurfaceCreateInfoKHR',
 -- 'createXlibSurfaceKHR', 'getPhysicalDeviceXlibPresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface Vulkan Specification>

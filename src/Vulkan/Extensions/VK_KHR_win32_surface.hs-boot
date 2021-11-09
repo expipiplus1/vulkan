@@ -200,12 +200,12 @@
 --     -   Add issue 2 addressing reuse of a native window object in a
 --         different Graphics API, or by a different Vulkan ICD.
 --
--- = See Also
+-- == See Also
 --
 -- 'Win32SurfaceCreateFlagsKHR', 'Win32SurfaceCreateInfoKHR',
 -- 'createWin32SurfaceKHR', 'getPhysicalDeviceWin32PresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface Vulkan Specification>

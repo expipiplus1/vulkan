@@ -162,13 +162,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DedicatedAllocationBufferCreateInfoNV',
 -- 'DedicatedAllocationImageCreateInfoNV',
 -- 'DedicatedAllocationMemoryAllocateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_dedicated_allocation Vulkan Specification>

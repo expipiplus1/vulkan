@@ -166,14 +166,14 @@
 --
 --     -   Initial draft, based on a proposal by Alexis Hétu
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceProvokingVertexFeaturesEXT',
 -- 'PhysicalDeviceProvokingVertexPropertiesEXT',
 -- 'PipelineRasterizationProvokingVertexStateCreateInfoEXT',
 -- 'ProvokingVertexModeEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex Vulkan Specification>
@@ -270,7 +270,8 @@ data PhysicalDeviceProvokingVertexFeaturesEXT = PhysicalDeviceProvokingVertexFea
     -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     -- @transformFeedbackPreservesProvokingVertex@ /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' when the
-    -- VK_EXT_transform_feedback extension is not supported.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
+    -- extension is not supported.
     transformFeedbackPreservesProvokingVertex :: Bool
   }
   deriving (Typeable, Eq)

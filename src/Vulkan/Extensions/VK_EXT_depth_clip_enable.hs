@@ -94,13 +94,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceDepthClipEnableFeaturesEXT',
 -- 'PipelineRasterizationDepthClipStateCreateFlagsEXT',
 -- 'PipelineRasterizationDepthClipStateCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable Vulkan Specification>

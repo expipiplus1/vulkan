@@ -91,11 +91,11 @@
 --
 --     -   Squashed internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign Vulkan Specification>

@@ -433,7 +433,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-02707# If @commandBuffer@ is
---     an unprotected command buffer, any resource accessed by the
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -496,15 +498,19 @@ foreign import ccall
 --     command
 --
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-04617# If any of the shader
 --     stages of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline

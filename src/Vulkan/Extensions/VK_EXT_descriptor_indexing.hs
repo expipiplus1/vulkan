@@ -195,7 +195,7 @@
 --
 --     -   ???
 --
--- = See Also
+-- == See Also
 --
 -- 'DescriptorBindingFlagBitsEXT', 'DescriptorBindingFlagsEXT',
 -- 'DescriptorSetLayoutBindingFlagsCreateInfoEXT',
@@ -204,7 +204,7 @@
 -- 'PhysicalDeviceDescriptorIndexingFeaturesEXT',
 -- 'PhysicalDeviceDescriptorIndexingPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing Vulkan Specification>

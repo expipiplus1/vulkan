@@ -533,7 +533,7 @@
 --
 --     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
--- = See Also
+-- == See Also
 --
 -- 'DrmFormatModifierPropertiesEXT', 'DrmFormatModifierPropertiesListEXT',
 -- 'ImageDrmFormatModifierExplicitCreateInfoEXT',
@@ -542,7 +542,7 @@
 -- 'PhysicalDeviceImageDrmFormatModifierInfoEXT',
 -- 'getImageDrmFormatModifierPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier Vulkan Specification>
@@ -1271,6 +1271,11 @@ instance Zero ImageDrmFormatModifierPropertiesEXT where
 --
 -- Among the elements in array @pDrmFormatModifierProperties@, each
 -- returned @drmFormatModifier@ /must/ be unique.
+--
+-- Among the elements in array @pDrmFormatModifierProperties@, the bits
+-- reported in @drmFormatModifierTilingFeatures@ /must/ include the bits
+-- reported in the corresponding element of
+-- 'DrmFormatModifierPropertiesListEXT'::@pDrmFormatModifierProperties@.
 --
 -- == Valid Usage (Implicit)
 --

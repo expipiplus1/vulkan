@@ -459,7 +459,7 @@
 --         in for @pObjectName@ in 'DebugUtilsObjectNameInfoEXT', because
 --         the loader and various drivers support @NULL@ already.
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDebugUtilsMessengerCallbackEXT', 'DebugUtilsLabelEXT',
 -- 'DebugUtilsMessageSeverityFlagBitsEXT',
@@ -476,7 +476,7 @@
 -- 'setDebugUtilsObjectNameEXT', 'setDebugUtilsObjectTagEXT',
 -- 'submitDebugUtilsMessageEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>

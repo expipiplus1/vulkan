@@ -103,11 +103,11 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_workgroup_memory_explicit_layout Vulkan Specification>

@@ -1425,13 +1425,15 @@ instance Zero ApplicationInfo where
 --     'InstanceCreateInfo' includes a
 --     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT'
 --     structure, the list of enabled extensions in
---     @ppEnabledExtensionNames@ /must/ contain VK_EXT_debug_report
+--     @ppEnabledExtensionNames@ /must/ contain
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
 --
 -- -   #VUID-VkInstanceCreateInfo-pNext-04926# If the @pNext@ chain of
 --     'InstanceCreateInfo' includes a
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
 --     structure, the list of enabled extensions in
---     @ppEnabledExtensionNames@ /must/ contain VK_EXT_debug_utils
+--     @ppEnabledExtensionNames@ /must/ contain
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
 --
 -- == Valid Usage (Implicit)
 --

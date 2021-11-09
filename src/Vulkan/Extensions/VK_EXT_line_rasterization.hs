@@ -117,14 +117,14 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'LineRasterizationModeEXT',
 -- 'PhysicalDeviceLineRasterizationFeaturesEXT',
 -- 'PhysicalDeviceLineRasterizationPropertiesEXT',
 -- 'PipelineRasterizationLineStateCreateInfoEXT', 'cmdSetLineStippleEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>

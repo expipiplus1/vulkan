@@ -82,11 +82,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_ycbcr_2plane_444_formats Vulkan Specification>

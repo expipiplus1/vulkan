@@ -346,7 +346,7 @@
 --     -   Rename “SFR” bits and structure members to use the phrase “split
 --         instance bind regions”.
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceGroupBindSparseInfoKHR', 'DeviceGroupCommandBufferBeginInfoKHR',
 -- 'DeviceGroupRenderPassBeginInfoKHR', 'DeviceGroupSubmitInfoKHR',
@@ -355,7 +355,7 @@
 -- 'PeerMemoryFeatureFlagsKHR', 'cmdDispatchBaseKHR',
 -- 'cmdSetDeviceMaskKHR', 'getDeviceGroupPeerMemoryFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group Vulkan Specification>

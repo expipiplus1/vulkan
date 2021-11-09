@@ -57,7 +57,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CuFunctionCreateInfoNVX', 'Vulkan.Extensions.Handles.CuFunctionNVX',
 -- 'CuLaunchInfoNVX', 'CuModuleCreateInfoNVX',
@@ -65,7 +65,7 @@
 -- 'createCuFunctionNVX', 'createCuModuleNVX', 'destroyCuFunctionNVX',
 -- 'destroyCuModuleNVX'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import Vulkan Specification>

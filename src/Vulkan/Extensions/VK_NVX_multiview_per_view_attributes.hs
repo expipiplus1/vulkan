@@ -146,11 +146,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_multiview_per_view_attributes Vulkan Specification>

@@ -1982,7 +1982,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -2552,15 +2554,19 @@ foreign import ccall
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-04617# If any of the shader stages of
 --     the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -2856,7 +2862,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -3430,15 +3438,19 @@ foreign import ccall
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-04617# If any of the shader
 --     stages of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
@@ -3728,7 +3740,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawIndirect-commandBuffer-02707# If @commandBuffer@ is
---     an unprotected command buffer, any resource accessed by the
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -4627,10 +4641,11 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -5521,7 +5536,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -5584,15 +5601,19 @@ foreign import ccall
 --     command
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-04617# If any of the shader stages
 --     of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -5869,7 +5890,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDispatchIndirect-commandBuffer-02707# If @commandBuffer@
---     is an unprotected command buffer, any resource accessed by the
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -6034,16 +6057,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBuffer-commandBuffer-01822# If @commandBuffer@ is an
---     unprotected command buffer, then @srcBuffer@ /must/ not be a
---     protected buffer
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer-commandBuffer-01823# If @commandBuffer@ is an
---     unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer-commandBuffer-01824# If @commandBuffer@ is a
---     protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer-srcOffset-00113# The @srcOffset@ member of
 --     each element of @pRegions@ /must/ be less than the size of
@@ -6291,16 +6317,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImage-commandBuffer-01825# If @commandBuffer@ is an
---     unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage-commandBuffer-01826# If @commandBuffer@ is an
---     unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage-commandBuffer-01827# If @commandBuffer@ is a
---     protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- -   #VUID-vkCmdCopyImage-pRegions-00124# The union of all source
 --     regions, and the union of all destination regions, specified by the
@@ -6840,16 +6869,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBlitImage-commandBuffer-01834# If @commandBuffer@ is an
---     unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage-commandBuffer-01835# If @commandBuffer@ is an
---     unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage-commandBuffer-01836# If @commandBuffer@ is a
---     protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- -   #VUID-vkCmdBlitImage-pRegions-00215# The source region specified by
 --     each element of @pRegions@ /must/ be a region that is contained
@@ -7190,16 +7222,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-01828# If @commandBuffer@
---     is an unprotected command buffer, then @srcBuffer@ /must/ not be a
---     protected buffer
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-01829# If @commandBuffer@
---     is an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-01830# If @commandBuffer@
---     is a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- -   #VUID-vkCmdCopyBufferToImage-pRegions-06217# The image region
 --     specified by each element of @pRegions@ /must/ be contained within
@@ -7538,16 +7573,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-01831# If @commandBuffer@
---     is an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-01832# If @commandBuffer@
---     is an unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-01833# If @commandBuffer@
---     is a protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06220# The image region
 --     specified by each element of @pRegions@ /must/ be contained within
@@ -7913,12 +7951,14 @@ foreign import ccall
 --     multiple of @4@
 --
 -- -   #VUID-vkCmdUpdateBuffer-commandBuffer-01813# If @commandBuffer@ is
---     an unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdUpdateBuffer-commandBuffer-01814# If @commandBuffer@ is a
---     protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -8048,12 +8088,14 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdFillBuffer-commandBuffer-01811# If @commandBuffer@ is an
---     unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdFillBuffer-commandBuffer-01812# If @commandBuffer@ is a
---     protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -8220,12 +8262,14 @@ foreign import ccall
 --     pointer to a 'ClearColorValue' union
 --
 -- -   #VUID-vkCmdClearColorImage-commandBuffer-01805# If @commandBuffer@
---     is an unprotected command buffer, then @image@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @image@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdClearColorImage-commandBuffer-01806# If @commandBuffer@
---     is a protected command buffer, then @image@ /must/ not be an
---     unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -8434,12 +8478,14 @@ foreign import ccall
 --     depth\/stencil format
 --
 -- -   #VUID-vkCmdClearDepthStencilImage-commandBuffer-01807# If
---     @commandBuffer@ is an unprotected command buffer, then @image@
---     /must/ not be a protected image
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @image@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdClearDepthStencilImage-commandBuffer-01808# If
---     @commandBuffer@ is a protected command buffer, then @image@ /must/
---     not be an unprotected image
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @image@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -8632,12 +8678,16 @@ foreign import ccall
 --     member of each element of @pRects@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdClearAttachments-commandBuffer-02504# If @commandBuffer@
---     is an unprotected command buffer, then each attachment to be cleared
---     /must/ not be a protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each attachment to be cleared /must/ not be a
+--     protected image
 --
 -- -   #VUID-vkCmdClearAttachments-commandBuffer-02505# If @commandBuffer@
---     is a protected command buffer, then each attachment to be cleared
---     /must/ not be an unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each attachment to be cleared /must/ not be an
+--     unprotected image
 --
 -- -   #VUID-vkCmdClearAttachments-baseArrayLayer-00018# If the render pass
 --     instance this is recorded in uses multiview, then @baseArrayLayer@
@@ -8752,16 +8802,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdResolveImage-commandBuffer-01837# If @commandBuffer@ is
---     an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage-commandBuffer-01838# If @commandBuffer@ is
---     an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage-commandBuffer-01839# If @commandBuffer@ is a
---     protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- -   #VUID-vkCmdResolveImage-pRegions-00255# The union of all source
 --     regions, and the union of all destination regions, specified by the
@@ -11772,12 +11825,16 @@ foreign import ccall
 --     in @commandBuffer@
 --
 -- -   #VUID-vkCmdExecuteCommands-commandBuffer-01820# If @commandBuffer@
---     is a protected command buffer, then each element of
---     @pCommandBuffers@ /must/ be a protected command buffer
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each element of @pCommandBuffers@ /must/ be a
+--     protected command buffer
 --
 -- -   #VUID-vkCmdExecuteCommands-commandBuffer-01821# If @commandBuffer@
---     is an unprotected command buffer, then each element of
---     @pCommandBuffers@ /must/ be an unprotected command buffer
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each element of @pCommandBuffers@ /must/ be an
+--     unprotected command buffer
 --
 -- -   #VUID-vkCmdExecuteCommands-None-02286# This command /must/ not be
 --     recorded when transform feedback is active

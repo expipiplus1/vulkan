@@ -96,11 +96,11 @@
 --
 --     -   Initial draft based off VK_AMD_draw_indirect_count
 --
--- = See Also
+-- == See Also
 --
 -- 'cmdDrawIndexedIndirectCountKHR', 'cmdDrawIndirectCountKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_draw_indirect_count Vulkan Specification>

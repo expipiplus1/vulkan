@@ -104,13 +104,13 @@
 --
 --     -   Initial revision.
 --
--- = See Also
+-- == See Also
 --
 -- 'StreamDescriptorSurfaceCreateFlagsGGP',
 -- 'StreamDescriptorSurfaceCreateInfoGGP',
 -- 'createStreamDescriptorSurfaceGGP'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface Vulkan Specification>

@@ -237,13 +237,13 @@
 --     -   Renamed VK_BORDER_COLOR_CUSTOM_FLOAT_EXT to
 --         VK_BORDER_COLOR_FLOAT_CUSTOM_EXT for consistency
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceCustomBorderColorFeaturesEXT',
 -- 'PhysicalDeviceCustomBorderColorPropertiesEXT',
 -- 'SamplerCustomBorderColorCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color Vulkan Specification>

@@ -89,11 +89,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceMemoryBudgetPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_memory_budget Vulkan Specification>

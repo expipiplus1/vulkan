@@ -1098,7 +1098,7 @@
 --
 --     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
--- = See Also
+-- == See Also
 --
 -- 'AabbPositionsKHR', 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildRangeInfoKHR',
@@ -1143,7 +1143,7 @@
 -- 'getDeviceAccelerationStructureCompatibilityKHR',
 -- 'writeAccelerationStructuresPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>

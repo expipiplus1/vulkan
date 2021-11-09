@@ -114,12 +114,12 @@
 --
 --     -   Add Shader Validation Cache disable
 --
--- = See Also
+-- == See Also
 --
 -- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT',
 -- 'ValidationFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features Vulkan Specification>

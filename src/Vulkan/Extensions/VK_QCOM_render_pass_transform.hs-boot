@@ -240,12 +240,12 @@
 --
 --     -   Adds interactions with VK_KHR_fragment_shading_rate
 --
--- = See Also
+-- == See Also
 --
 -- 'CommandBufferInheritanceRenderPassTransformInfoQCOM',
 -- 'RenderPassTransformBeginInfoQCOM'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_transform Vulkan Specification>

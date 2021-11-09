@@ -258,7 +258,7 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'AHardwareBuffer', 'AndroidHardwareBufferFormatPropertiesANDROID',
 -- 'AndroidHardwareBufferPropertiesANDROID',
@@ -268,7 +268,7 @@
 -- 'getAndroidHardwareBufferPropertiesANDROID',
 -- 'getMemoryAndroidHardwareBufferANDROID'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>

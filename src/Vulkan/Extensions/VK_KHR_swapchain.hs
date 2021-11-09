@@ -1058,7 +1058,7 @@
 --
 --     -   Corrected interactions with Vulkan 1.1
 --
--- = See Also
+-- == See Also
 --
 -- 'PresentInfoKHR', 'SwapchainCreateFlagBitsKHR',
 -- 'SwapchainCreateFlagsKHR', 'SwapchainCreateInfoKHR',
@@ -1066,7 +1066,7 @@
 -- 'createSwapchainKHR', 'destroySwapchainKHR', 'getSwapchainImagesKHR',
 -- 'queuePresentKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
