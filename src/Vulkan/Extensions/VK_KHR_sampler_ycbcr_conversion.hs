@@ -378,7 +378,7 @@
 --
 --     -   Reflected quantization changes in BT.2100-1
 --
--- = See Also
+-- == See Also
 --
 -- 'BindImagePlaneMemoryInfoKHR', 'ChromaLocationKHR',
 -- 'ImagePlaneMemoryRequirementsInfoKHR',
@@ -389,7 +389,7 @@
 -- 'SamplerYcbcrModelConversionKHR', 'SamplerYcbcrRangeKHR',
 -- 'createSamplerYcbcrConversionKHR', 'destroySamplerYcbcrConversionKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion Vulkan Specification>

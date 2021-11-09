@@ -135,7 +135,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'BlitImageInfo2KHR', 'BufferCopy2KHR', 'BufferImageCopy2KHR',
 -- 'CopyBufferInfo2KHR', 'CopyBufferToImageInfo2KHR', 'CopyImageInfo2KHR',
@@ -144,7 +144,7 @@
 -- 'cmdCopyBuffer2KHR', 'cmdCopyBufferToImage2KHR', 'cmdCopyImage2KHR',
 -- 'cmdCopyImageToBuffer2KHR', 'cmdResolveImage2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 Vulkan Specification>
@@ -275,16 +275,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBuffer2KHR-commandBuffer-01822# If @commandBuffer@ is
---     an unprotected command buffer, then @srcBuffer@ /must/ not be a
---     protected buffer
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer2KHR-commandBuffer-01823# If @commandBuffer@ is
---     an unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer2KHR-commandBuffer-01824# If @commandBuffer@ is
---     a protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -368,16 +371,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImage2KHR-commandBuffer-01825# If @commandBuffer@ is
---     an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage2KHR-commandBuffer-01826# If @commandBuffer@ is
---     an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage2KHR-commandBuffer-01827# If @commandBuffer@ is
---     a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -461,16 +467,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBlitImage2KHR-commandBuffer-01834# If @commandBuffer@ is
---     an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage2KHR-commandBuffer-01835# If @commandBuffer@ is
---     an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage2KHR-commandBuffer-01836# If @commandBuffer@ is
---     a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -551,16 +560,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBufferToImage2KHR-commandBuffer-01828# If
---     @commandBuffer@ is an unprotected command buffer, then @srcBuffer@
---     /must/ not be a protected buffer
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBufferToImage2KHR-commandBuffer-01829# If
---     @commandBuffer@ is an unprotected command buffer, then @dstImage@
---     /must/ not be a protected image
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyBufferToImage2KHR-commandBuffer-01830# If
---     @commandBuffer@ is a protected command buffer, then @dstImage@
---     /must/ not be an unprotected image
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -645,16 +657,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2KHR-commandBuffer-01831# If
---     @commandBuffer@ is an unprotected command buffer, then @srcImage@
---     /must/ not be a protected image
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2KHR-commandBuffer-01832# If
---     @commandBuffer@ is an unprotected command buffer, then @dstBuffer@
---     /must/ not be a protected buffer
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2KHR-commandBuffer-01833# If
---     @commandBuffer@ is a protected command buffer, then @dstBuffer@
---     /must/ not be an unprotected buffer
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -739,16 +754,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdResolveImage2KHR-commandBuffer-01837# If @commandBuffer@
---     is an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage2KHR-commandBuffer-01838# If @commandBuffer@
---     is an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage2KHR-commandBuffer-01839# If @commandBuffer@
---     is a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --

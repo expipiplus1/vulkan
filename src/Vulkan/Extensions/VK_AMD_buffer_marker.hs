@@ -75,11 +75,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'cmdWriteBufferMarkerAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_buffer_marker Vulkan Specification>

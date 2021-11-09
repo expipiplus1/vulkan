@@ -121,13 +121,13 @@
 --
 --     -   Initial specification, squashed from public draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'MutableDescriptorTypeCreateInfoVALVE',
 -- 'MutableDescriptorTypeListVALVE',
 -- 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type Vulkan Specification>

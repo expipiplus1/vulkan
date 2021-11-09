@@ -151,7 +151,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'AttachmentSampleLocationsEXT', 'MultisamplePropertiesEXT',
 -- 'PhysicalDeviceSampleLocationsPropertiesEXT',
@@ -160,7 +160,7 @@
 -- 'SampleLocationsInfoEXT', 'SubpassSampleLocationsEXT',
 -- 'cmdSetSampleLocationsEXT', 'getPhysicalDeviceMultisamplePropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations Vulkan Specification>

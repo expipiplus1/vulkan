@@ -128,11 +128,11 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevicePresentWaitFeaturesKHR', 'waitForPresentKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_present_wait Vulkan Specification>

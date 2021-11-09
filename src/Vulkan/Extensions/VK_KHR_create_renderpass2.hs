@@ -148,7 +148,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'AttachmentDescription2KHR', 'AttachmentReference2KHR',
 -- 'RenderPassCreateInfo2KHR', 'SubpassBeginInfoKHR',
@@ -156,7 +156,7 @@
 -- 'cmdBeginRenderPass2KHR', 'cmdEndRenderPass2KHR', 'cmdNextSubpass2KHR',
 -- 'createRenderPass2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 Vulkan Specification>

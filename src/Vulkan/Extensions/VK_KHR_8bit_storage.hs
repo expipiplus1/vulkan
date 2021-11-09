@@ -109,11 +109,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevice8BitStorageFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_8bit_storage Vulkan Specification>

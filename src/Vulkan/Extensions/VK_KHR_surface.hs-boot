@@ -354,7 +354,7 @@
 --     -   A note was added at the beginning of the example code, stating
 --         that it will be removed from future versions of the appendix.
 --
--- = See Also
+-- == See Also
 --
 -- 'ColorSpaceKHR', 'CompositeAlphaFlagBitsKHR', 'CompositeAlphaFlagsKHR',
 -- 'PresentModeKHR', 'SurfaceCapabilitiesKHR', 'SurfaceFormatKHR',
@@ -364,7 +364,7 @@
 -- 'getPhysicalDeviceSurfacePresentModesKHR',
 -- 'getPhysicalDeviceSurfaceSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface Vulkan Specification>

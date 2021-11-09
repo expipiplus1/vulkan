@@ -108,11 +108,11 @@
 --
 -- -   Revision 1, 2020-09-19 (Jeff Leger)
 --
--- = See Also
+-- == See Also
 --
 -- 'CopyCommandTransformInfoQCOM'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_rotated_copy_commands Vulkan Specification>

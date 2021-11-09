@@ -106,11 +106,11 @@
 --
 --     -   Correct implicit validity for VkHdrMetadataEXT structure
 --
--- = See Also
+-- == See Also
 --
 -- 'HdrMetadataEXT', 'XYColorEXT', 'setHdrMetadataEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata Vulkan Specification>

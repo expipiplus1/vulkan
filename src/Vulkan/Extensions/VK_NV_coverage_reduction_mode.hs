@@ -115,7 +115,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoverageReductionModeNV', 'FramebufferMixedSamplesCombinationNV',
 -- 'PhysicalDeviceCoverageReductionModeFeaturesNV',
@@ -123,7 +123,7 @@
 -- 'PipelineCoverageReductionStateCreateInfoNV',
 -- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>

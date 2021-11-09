@@ -203,7 +203,7 @@
 --
 --     -   Internal revisions based on VK_EXT_buffer_device_address
 --
--- = See Also
+-- == See Also
 --
 -- 'BufferDeviceAddressInfoKHR', 'BufferOpaqueCaptureAddressCreateInfoKHR',
 -- 'DeviceMemoryOpaqueCaptureAddressInfoKHR',
@@ -212,7 +212,7 @@
 -- 'getBufferDeviceAddressKHR', 'getBufferOpaqueCaptureAddressKHR',
 -- 'getDeviceMemoryOpaqueCaptureAddressKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address Vulkan Specification>

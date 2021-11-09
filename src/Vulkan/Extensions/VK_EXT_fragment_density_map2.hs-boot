@@ -141,12 +141,12 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceFragmentDensityMap2FeaturesEXT',
 -- 'PhysicalDeviceFragmentDensityMap2PropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map2 Vulkan Specification>

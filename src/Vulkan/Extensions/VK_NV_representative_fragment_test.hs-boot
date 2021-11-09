@@ -148,12 +148,12 @@
 --
 --     -   Internal Revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
 -- 'PipelineRepresentativeFragmentTestStateCreateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test Vulkan Specification>

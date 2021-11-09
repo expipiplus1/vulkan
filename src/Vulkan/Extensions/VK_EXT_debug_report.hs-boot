@@ -311,7 +311,7 @@
 --     -   Add issue 4 discussing matching handles returned by the
 --         extension, based on suggestion in public issue 368.
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDebugReportCallbackEXT', 'DebugReportCallbackCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
@@ -319,7 +319,7 @@
 -- 'DebugReportObjectTypeEXT', 'createDebugReportCallbackEXT',
 -- 'debugReportMessageEXT', 'destroyDebugReportCallbackEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report Vulkan Specification>

@@ -122,14 +122,14 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'ExternalImageFormatPropertiesNV', 'ExternalMemoryFeatureFlagBitsNV',
 -- 'ExternalMemoryFeatureFlagsNV', 'ExternalMemoryHandleTypeFlagBitsNV',
 -- 'ExternalMemoryHandleTypeFlagsNV',
 -- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities Vulkan Specification>

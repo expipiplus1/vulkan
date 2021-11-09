@@ -94,11 +94,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderClockFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_clock Vulkan Specification>

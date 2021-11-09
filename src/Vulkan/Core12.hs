@@ -396,11 +396,17 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- drawing command recorded within a subpass of a multiview render pass
     -- instance.
     maxMultiviewInstanceIndex :: Word32
-  , -- | @protectedNoFault@ specifies the behavior of the implementation when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
-    -- result in process termination or device loss.
+  , -- | #limits-protectedNoFault# @protectedNoFault@ specifies how an
+    -- implementation behaves when an application attempts to write to
+    -- unprotected memory in a protected queue operation, read from protected
+    -- memory in an unprotected queue operation, or perform a query in a
+    -- protected queue operation. If this limit is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
+    -- have undefined values written, reads and queries will return undefined
+    -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- applications /must/ not perform these operations. See
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules ???>
+    -- for more information.
     protectedNoFault :: Bool
   , -- | #limits-maxPerSetDescriptors# @maxPerSetDescriptors@ is a maximum number
     -- of descriptors (summed over all descriptor types) in a single descriptor

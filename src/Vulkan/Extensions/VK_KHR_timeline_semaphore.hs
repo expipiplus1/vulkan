@@ -271,7 +271,7 @@
 --
 --     -   Added an initialValue parameter to timeline semaphore creation
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTimelineSemaphoreFeaturesKHR',
 -- 'PhysicalDeviceTimelineSemaphorePropertiesKHR',
@@ -280,7 +280,7 @@
 -- 'SemaphoreWaitInfoKHR', 'TimelineSemaphoreSubmitInfoKHR',
 -- 'getSemaphoreCounterValueKHR', 'signalSemaphoreKHR', 'waitSemaphoresKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore Vulkan Specification>

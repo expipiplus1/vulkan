@@ -148,13 +148,13 @@
 --     -   Add the missing 'PhysicalDeviceSubgroupSizeControlFeaturesEXT'
 --         for querying subgroup size control features.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSubgroupSizeControlFeaturesEXT',
 -- 'PhysicalDeviceSubgroupSizeControlPropertiesEXT',
 -- 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control Vulkan Specification>

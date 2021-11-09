@@ -173,13 +173,13 @@
 --         'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' and the
 --         Wayland requests sent to the compositor.
 --
--- = See Also
+-- == See Also
 --
 -- 'WaylandSurfaceCreateFlagsKHR', 'WaylandSurfaceCreateInfoKHR',
 -- 'createWaylandSurfaceKHR',
 -- 'getPhysicalDeviceWaylandPresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface Vulkan Specification>

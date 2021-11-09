@@ -132,14 +132,14 @@
 -- > #extension GL_HUAWEI_subpass_shading: enable
 -- > #extension GL_KHR_shader_subgroup_arithmetic: enable
 -- >
--- > layout(constant_id = 0) const uint tileWidth = 16;
--- > layout(constant_id = 1) const uint tileHeight = 16;
+-- > layout(constant_id = 0) const uint tileWidth = 8;
+-- > layout(constant_id = 1) const uint tileHeight = 8;
 -- > layout(local_size_x_id = 0, local_size_y_id = 1, local_size_z = 1) in;
 -- > layout (set=0, binding=0, input_attachment_index=0) uniform subpassInput depth;
 -- >
 -- > void main()
 -- > {
--- >   float d = subpassLoad(depth);
+-- >   float d = subpassLoad(depth).x;
 -- >   float minD = subgroupMin(d);
 -- >   float maxD = subgroupMax(d);
 -- > }
@@ -298,13 +298,13 @@
 -- > VkPipelineShaderStageCreateInfo subpassShadingPipelineStageCreateInfo {
 -- >   VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, NULL,
 -- >   0, VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI,
--- >   shaderModule, "subpass shading example",
+-- >   shaderModule, "main",
 -- >   &subpassShadingConstants
 -- > };
 -- >
 -- > VkComputePipelineCreateInfo subpassShadingComputePipelineCreateInfo = {
--- >   VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO, NULL,
--- >   0, &subpassShadingPipelineCreateInfo,
+-- >   VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO, &subpassShadingPipelineCreateInfo,
+-- >   0, &subpassShadingPipelineStageCreateInfo,
 -- >   pipelineLayout, basePipelineHandle, basePipelineIndex
 -- > };
 -- >
@@ -325,14 +325,14 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSubpassShadingFeaturesHUAWEI',
 -- 'PhysicalDeviceSubpassShadingPropertiesHUAWEI',
 -- 'SubpassShadingPipelineCreateInfoHUAWEI', 'cmdSubpassShadingHUAWEI',
 -- 'getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>

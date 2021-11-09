@@ -233,11 +233,11 @@
 --
 --     -   add ray query shader stages for AS read bit (#2407,!4203)
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceRayQueryFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_query Vulkan Specification>

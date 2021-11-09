@@ -123,11 +123,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_array2 Vulkan Specification>

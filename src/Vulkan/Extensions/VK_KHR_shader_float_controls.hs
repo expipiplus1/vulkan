@@ -204,12 +204,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceFloatControlsPropertiesKHR',
 -- 'ShaderFloatControlsIndependenceKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_float_controls Vulkan Specification>

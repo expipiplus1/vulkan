@@ -150,14 +150,14 @@
 --     -   Add a physical device features structure to query\/enable this
 --         feature.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT',
 -- 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT',
 -- 'PipelineVertexInputDivisorStateCreateInfoEXT',
 -- 'VertexInputBindingDivisorDescriptionEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_attribute_divisor Vulkan Specification>

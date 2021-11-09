@@ -112,12 +112,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'DisplayNativeHdrSurfaceCapabilitiesAMD',
 -- 'SwapchainDisplayNativeHdrCreateInfoAMD', 'setLocalDimmingAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr Vulkan Specification>

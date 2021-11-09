@@ -141,13 +141,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceDepthStencilResolvePropertiesKHR',
 -- 'ResolveModeFlagBitsKHR', 'ResolveModeFlagsKHR',
 -- 'SubpassDescriptionDepthStencilResolveKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_depth_stencil_resolve Vulkan Specification>

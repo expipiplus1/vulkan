@@ -191,12 +191,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineViewportWScalingStateCreateInfoNV', 'ViewportWScalingNV',
 -- 'cmdSetViewportWScalingNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling Vulkan Specification>

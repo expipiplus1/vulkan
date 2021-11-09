@@ -195,7 +195,7 @@
 --     -   Added ability for applications to use the physical-device
 --         components of device extensions before vkCreateDevice is called.
 --
--- = See Also
+-- == See Also
 --
 -- 'FormatProperties2KHR', 'ImageFormatProperties2KHR',
 -- 'PhysicalDeviceFeatures2KHR', 'PhysicalDeviceImageFormatInfo2KHR',
@@ -209,7 +209,7 @@
 -- 'getPhysicalDeviceQueueFamilyProperties2KHR',
 -- 'getPhysicalDeviceSparseImageFormatProperties2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 Vulkan Specification>

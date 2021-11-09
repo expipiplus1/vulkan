@@ -195,12 +195,12 @@
 --         'ERROR_PIPELINE_COMPILE_REQUIRED_EXT'. Also updated the xml to
 --         include these codes as return values.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT',
 -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control Vulkan Specification>

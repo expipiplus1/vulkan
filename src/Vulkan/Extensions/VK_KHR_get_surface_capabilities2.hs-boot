@@ -128,13 +128,13 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSurfaceInfo2KHR', 'SurfaceCapabilities2KHR',
 -- 'SurfaceFormat2KHR', 'getPhysicalDeviceSurfaceCapabilities2KHR',
 -- 'getPhysicalDeviceSurfaceFormats2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>

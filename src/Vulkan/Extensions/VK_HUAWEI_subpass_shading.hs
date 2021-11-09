@@ -132,14 +132,14 @@
 -- > #extension GL_HUAWEI_subpass_shading: enable
 -- > #extension GL_KHR_shader_subgroup_arithmetic: enable
 -- >
--- > layout(constant_id = 0) const uint tileWidth = 16;
--- > layout(constant_id = 1) const uint tileHeight = 16;
+-- > layout(constant_id = 0) const uint tileWidth = 8;
+-- > layout(constant_id = 1) const uint tileHeight = 8;
 -- > layout(local_size_x_id = 0, local_size_y_id = 1, local_size_z = 1) in;
 -- > layout (set=0, binding=0, input_attachment_index=0) uniform subpassInput depth;
 -- >
 -- > void main()
 -- > {
--- >   float d = subpassLoad(depth);
+-- >   float d = subpassLoad(depth).x;
 -- >   float minD = subgroupMin(d);
 -- >   float maxD = subgroupMax(d);
 -- > }
@@ -298,13 +298,13 @@
 -- > VkPipelineShaderStageCreateInfo subpassShadingPipelineStageCreateInfo {
 -- >   VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, NULL,
 -- >   0, VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI,
--- >   shaderModule, "subpass shading example",
+-- >   shaderModule, "main",
 -- >   &subpassShadingConstants
 -- > };
 -- >
 -- > VkComputePipelineCreateInfo subpassShadingComputePipelineCreateInfo = {
--- >   VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO, NULL,
--- >   0, &subpassShadingPipelineCreateInfo,
+-- >   VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO, &subpassShadingPipelineCreateInfo,
+-- >   0, &subpassShadingPipelineStageCreateInfo,
 -- >   pipelineLayout, basePipelineHandle, basePipelineIndex
 -- > };
 -- >
@@ -325,14 +325,14 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSubpassShadingFeaturesHUAWEI',
 -- 'PhysicalDeviceSubpassShadingPropertiesHUAWEI',
 -- 'SubpassShadingPipelineCreateInfoHUAWEI', 'cmdSubpassShadingHUAWEI',
 -- 'getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
@@ -662,10 +662,11 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -729,9 +730,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-04931# This command must be
 --     called in a subpass with bind point
---     VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI. No draw commands can
---     be called in the same subpass. Only one vkCmdSubpassShadingHUAWEI
---     command can be called in a subpass
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'.
+--     No draw commands can be called in the same subpass. Only one
+--     'cmdSubpassShadingHUAWEI' command can be called in a subpass
 --
 -- == Valid Usage (Implicit)
 --
@@ -809,7 +810,8 @@ data SubpassShadingPipelineCreateInfoHUAWEI = SubpassShadingPipelineCreateInfoHU
     -- pipeline will be used.
     --
     -- #VUID-VkSubpassShadingPipelineCreateInfoHUAWEI-subpass-04946# @subpass@
-    -- /must/ be created with VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI
+    -- /must/ be created with
+    -- 'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'
     -- bind point
     subpass :: Word32
   }

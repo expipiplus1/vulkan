@@ -101,14 +101,14 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'ImportMemoryZirconHandleInfoFUCHSIA',
 -- 'MemoryGetZirconHandleInfoFUCHSIA',
 -- 'MemoryZirconHandlePropertiesFUCHSIA', 'getMemoryZirconHandleFUCHSIA',
 -- 'getMemoryZirconHandlePropertiesFUCHSIA'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory Vulkan Specification>

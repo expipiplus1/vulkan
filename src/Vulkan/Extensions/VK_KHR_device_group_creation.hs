@@ -127,13 +127,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.MAX_DEVICE_GROUP_SIZE_KHR',
 -- 'DeviceGroupDeviceCreateInfoKHR', 'PhysicalDeviceGroupPropertiesKHR',
 -- 'enumeratePhysicalDeviceGroupsKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group_creation Vulkan Specification>

@@ -250,13 +250,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineViewportSwizzleStateCreateFlagsNV',
 -- 'PipelineViewportSwizzleStateCreateInfoNV',
 -- 'ViewportCoordinateSwizzleNV', 'ViewportSwizzleNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle Vulkan Specification>

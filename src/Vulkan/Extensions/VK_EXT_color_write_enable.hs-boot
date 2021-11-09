@@ -99,12 +99,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceColorWriteEnableFeaturesEXT',
 -- 'PipelineColorWriteCreateInfoEXT', 'cmdSetColorWriteEnableEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_color_write_enable Vulkan Specification>

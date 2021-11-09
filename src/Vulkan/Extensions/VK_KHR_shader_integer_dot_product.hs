@@ -126,12 +126,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderIntegerDotProductFeaturesKHR',
 -- 'PhysicalDeviceShaderIntegerDotProductPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_integer_dot_product Vulkan Specification>

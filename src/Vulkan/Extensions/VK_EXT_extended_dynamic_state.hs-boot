@@ -140,7 +140,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceExtendedDynamicStateFeaturesEXT',
 -- 'cmdBindVertexBuffers2EXT', 'cmdSetCullModeEXT',
@@ -150,7 +150,7 @@
 -- 'cmdSetScissorWithCountEXT', 'cmdSetStencilOpEXT',
 -- 'cmdSetStencilTestEnableEXT', 'cmdSetViewportWithCountEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state Vulkan Specification>

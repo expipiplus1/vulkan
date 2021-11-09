@@ -488,7 +488,7 @@
 --     -   Removed the sample code and noted it has been integrated into
 --         the official Vulkan SDK cube demo.
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeCreateFlagsKHR',
 -- 'DisplayModeCreateInfoKHR', 'Vulkan.Extensions.Handles.DisplayModeKHR',
@@ -504,7 +504,7 @@
 -- 'getPhysicalDeviceDisplayPlanePropertiesKHR',
 -- 'getPhysicalDeviceDisplayPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display Vulkan Specification>

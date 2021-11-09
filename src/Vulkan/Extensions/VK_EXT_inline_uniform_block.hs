@@ -160,14 +160,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DescriptorPoolInlineUniformBlockCreateInfoEXT',
 -- 'PhysicalDeviceInlineUniformBlockFeaturesEXT',
 -- 'PhysicalDeviceInlineUniformBlockPropertiesEXT',
 -- 'WriteDescriptorSetInlineUniformBlockEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block Vulkan Specification>

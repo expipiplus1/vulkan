@@ -104,13 +104,13 @@
 --
 -- -   Revision 1, 2021-03-29 (Yiwei Zhang)
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.MAX_GLOBAL_PRIORITY_SIZE_EXT',
 -- 'PhysicalDeviceGlobalPriorityQueryFeaturesEXT',
 -- 'QueueFamilyGlobalPriorityPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority_query Vulkan Specification>

@@ -151,11 +151,11 @@
 --     -   Clarified alignment of rectangles for presentation engines that
 --         support transformed swapchains.
 --
--- = See Also
+-- == See Also
 --
 -- 'PresentRegionKHR', 'PresentRegionsKHR', 'RectLayerKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present Vulkan Specification>

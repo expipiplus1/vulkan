@@ -127,16 +127,7 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 -- | VkProtectedSubmitInfo - Structure indicating whether the submission is
 -- protected
 --
--- == Valid Usage
---
--- -   #VUID-VkProtectedSubmitInfo-protectedSubmit-01816# If the protected
---     memory feature is not enabled, @protectedSubmit@ /must/ not be
---     'Vulkan.Core10.FundamentalTypes.TRUE'
---
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkProtectedSubmitInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO'
 --
 -- = See Also
 --
@@ -278,11 +269,17 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProperties
-  { -- | @protectedNoFault@ specifies the behavior of the implementation when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
-    -- result in process termination or device loss.
+  { -- | #extension-limits-protectedNoFault# @protectedNoFault@ specifies how an
+    -- implementation behaves when an application attempts to write to
+    -- unprotected memory in a protected queue operation, read from protected
+    -- memory in an unprotected queue operation, or perform a query in a
+    -- protected queue operation. If this limit is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
+    -- have undefined values written, reads and queries will return undefined
+    -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- applications /must/ not perform these operations. See
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules>
+    -- for more information.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

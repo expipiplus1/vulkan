@@ -96,11 +96,11 @@
 --
 --     -   Internal revisions.
 --
--- = See Also
+-- == See Also
 --
 -- 'SurfaceProtectedCapabilitiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface_protected_capabilities Vulkan Specification>

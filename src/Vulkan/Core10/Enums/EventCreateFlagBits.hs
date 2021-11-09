@@ -21,11 +21,6 @@ type EventCreateFlags = EventCreateFlagBits
 
 -- | VkEventCreateFlagBits - Event creation flag bits
 --
--- = Description
---
--- -   VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR specifies that host event
---     commands will not be used with this event.
---
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -33,7 +28,8 @@ type EventCreateFlags = EventCreateFlagBits
 newtype EventCreateFlagBits = EventCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- No documentation found for Nested "VkEventCreateFlagBits" "VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR"
+-- | 'EVENT_CREATE_DEVICE_ONLY_BIT_KHR' specifies that host event commands
+-- will not be used with this event.
 pattern EVENT_CREATE_DEVICE_ONLY_BIT_KHR = EventCreateFlagBits 0x00000001
 
 conNameEventCreateFlagBits :: String

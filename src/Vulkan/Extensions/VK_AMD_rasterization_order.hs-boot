@@ -152,12 +152,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineRasterizationStateRasterizationOrderAMD',
 -- 'RasterizationOrderAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order Vulkan Specification>

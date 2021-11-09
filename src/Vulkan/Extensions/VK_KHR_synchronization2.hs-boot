@@ -404,7 +404,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'AccessFlagBits2KHR', 'AccessFlags2KHR', 'BufferMemoryBarrier2KHR',
 -- 'CommandBufferSubmitInfoKHR', 'DependencyInfoKHR',
@@ -416,7 +416,7 @@
 -- 'cmdSetEvent2KHR', 'cmdWaitEvents2KHR', 'cmdWriteTimestamp2KHR',
 -- 'queueSubmit2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>

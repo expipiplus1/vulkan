@@ -159,7 +159,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'FragmentShadingRateNV', 'FragmentShadingRateTypeNV',
 -- 'PhysicalDeviceFragmentShadingRateEnumsFeaturesNV',
@@ -167,7 +167,7 @@
 -- 'PipelineFragmentShadingRateEnumStateCreateInfoNV',
 -- 'cmdSetFragmentShadingRateEnumNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_shading_rate_enums Vulkan Specification>

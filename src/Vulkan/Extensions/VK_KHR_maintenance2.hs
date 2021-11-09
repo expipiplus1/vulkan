@@ -228,7 +228,7 @@
 --
 -- -   Revision 1, 2017-04-28
 --
--- = See Also
+-- == See Also
 --
 -- 'ImageViewUsageCreateInfoKHR', 'InputAttachmentAspectReferenceKHR',
 -- 'PhysicalDevicePointClippingPropertiesKHR',
@@ -237,7 +237,7 @@
 -- 'RenderPassInputAttachmentAspectCreateInfoKHR',
 -- 'TessellationDomainOriginKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 Vulkan Specification>

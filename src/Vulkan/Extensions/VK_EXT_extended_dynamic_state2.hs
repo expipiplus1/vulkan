@@ -98,14 +98,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceExtendedDynamicState2FeaturesEXT',
 -- 'cmdSetDepthBiasEnableEXT', 'cmdSetLogicOpEXT',
 -- 'cmdSetPatchControlPointsEXT', 'cmdSetPrimitiveRestartEnableEXT',
 -- 'cmdSetRasterizerDiscardEnableEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 Vulkan Specification>

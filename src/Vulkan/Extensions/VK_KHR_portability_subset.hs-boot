@@ -128,12 +128,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevicePortabilitySubsetFeaturesKHR',
 -- 'PhysicalDevicePortabilitySubsetPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_portability_subset Vulkan Specification>

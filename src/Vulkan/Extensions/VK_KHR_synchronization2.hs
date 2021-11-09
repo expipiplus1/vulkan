@@ -404,7 +404,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'AccessFlagBits2KHR', 'AccessFlags2KHR', 'BufferMemoryBarrier2KHR',
 -- 'CommandBufferSubmitInfoKHR', 'DependencyInfoKHR',
@@ -416,7 +416,7 @@
 -- 'cmdSetEvent2KHR', 'cmdWaitEvents2KHR', 'cmdWriteTimestamp2KHR',
 -- 'queueSubmit2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>
@@ -1563,6 +1563,11 @@ foreign import ccall
 --     /must/ have been held continuously on the
 --     'Vulkan.Core10.Handles.Device' that @queue@ was retrieved from,
 --     throughout recording of those command buffers
+--
+-- -   #VUID-vkQueueSubmit2KHR-queue-06447# If @queue@ was not created with
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT',
+--     the @flags@ member of any element of @pSubmits@ /must/ not include
+--     'SUBMIT_PROTECTED_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -5020,10 +5025,6 @@ instance Zero CommandBufferSubmitInfoKHR where
 --     more than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
--- -   #VUID-VkSubmitInfo2KHR-flags-03885# If the protected memory feature
---     is not enabled, @flags@ /must/ not include
---     'SUBMIT_PROTECTED_BIT_KHR'
---
 -- -   #VUID-VkSubmitInfo2KHR-flags-03886# If @flags@ includes
 --     'SUBMIT_PROTECTED_BIT_KHR', all elements of @pCommandBuffers@ /must/
 --     be protected command buffers
@@ -5448,11 +5449,11 @@ pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR          = AccessFlagBits2KHR 0x0
 -- in any shader pipeline. In addition, it is equivalent to the logical OR
 -- of:
 --
--- -   VK_ACCESS_2_UNIFORM_READ_BIT_KHR
+-- -   'ACCESS_2_UNIFORM_READ_BIT_KHR'
 --
--- -   VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR
+-- -   'ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR'
 --
--- -   VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR
+-- -   'ACCESS_2_SHADER_STORAGE_READ_BIT_KHR'
 pattern ACCESS_2_SHADER_READ_BIT_KHR                    = AccessFlagBits2KHR 0x0000000000000020
 -- | 'ACCESS_2_SHADER_WRITE_BIT_KHR' is equivalent to
 -- 'ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR'.

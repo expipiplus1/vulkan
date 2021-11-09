@@ -222,7 +222,7 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.LUID_SIZE_KHR',
 -- 'ExternalBufferPropertiesKHR', 'ExternalImageFormatPropertiesKHR',
@@ -234,7 +234,7 @@
 -- 'PhysicalDeviceIDPropertiesKHR',
 -- 'getPhysicalDeviceExternalBufferPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities Vulkan Specification>

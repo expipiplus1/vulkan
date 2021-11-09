@@ -100,13 +100,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ImportSemaphoreZirconHandleInfoFUCHSIA',
 -- 'SemaphoreGetZirconHandleInfoFUCHSIA',
 -- 'getSemaphoreZirconHandleFUCHSIA', 'importSemaphoreZirconHandleFUCHSIA'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_semaphore Vulkan Specification>

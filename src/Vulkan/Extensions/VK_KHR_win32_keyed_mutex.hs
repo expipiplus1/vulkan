@@ -76,11 +76,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'Win32KeyedMutexAcquireReleaseInfoKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_keyed_mutex Vulkan Specification>

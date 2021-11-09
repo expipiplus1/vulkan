@@ -258,7 +258,7 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'AHardwareBuffer', 'AndroidHardwareBufferFormatPropertiesANDROID',
 -- 'AndroidHardwareBufferPropertiesANDROID',
@@ -268,7 +268,7 @@
 -- 'getAndroidHardwareBufferPropertiesANDROID',
 -- 'getMemoryAndroidHardwareBufferANDROID'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
@@ -1071,6 +1071,12 @@ instance Zero ExternalFormatANDROID where
 
 -- | VkAndroidHardwareBufferFormatProperties2ANDROID - Structure describing
 -- the image format properties of an Android hardware buffer
+--
+-- = Description
+--
+-- The bits reported in @formatFeatures@ /must/ include the bits reported
+-- in the corresponding fields of
+-- 'AndroidHardwareBufferFormatPropertiesANDROID'::@formatFeatures@.
 --
 -- == Valid Usage (Implicit)
 --

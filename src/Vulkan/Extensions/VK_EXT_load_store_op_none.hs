@@ -77,11 +77,11 @@
 --
 --     -   Added VK_ATTACHMENT_LOAD_OP_NONE_EXT.
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_load_store_op_none Vulkan Specification>

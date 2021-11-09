@@ -242,14 +242,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DrawMeshTasksIndirectCommandNV', 'PhysicalDeviceMeshShaderFeaturesNV',
 -- 'PhysicalDeviceMeshShaderPropertiesNV',
 -- 'cmdDrawMeshTasksIndirectCountNV', 'cmdDrawMeshTasksIndirectNV',
 -- 'cmdDrawMeshTasksNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_mesh_shader Vulkan Specification>
@@ -505,7 +505,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-02707# If @commandBuffer@
---     is an unprotected command buffer, any resource accessed by the
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -1337,10 +1339,11 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -2217,10 +2220,11 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@

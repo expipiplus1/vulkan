@@ -79,12 +79,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'createImagePipeSurfaceFUCHSIA'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface Vulkan Specification>

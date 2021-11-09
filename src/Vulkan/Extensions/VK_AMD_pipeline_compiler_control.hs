@@ -89,12 +89,12 @@
 --
 --     -   Initial revision.
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineCompilerControlCreateInfoAMD',
 -- 'PipelineCompilerControlFlagBitsAMD', 'PipelineCompilerControlFlagsAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control Vulkan Specification>

@@ -157,13 +157,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'MemoryGetRemoteAddressInfoNV',
 -- 'PhysicalDeviceExternalMemoryRDMAFeaturesNV', 'RemoteAddressNV',
 -- 'getMemoryRemoteAddressNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_rdma Vulkan Specification>

@@ -123,12 +123,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSamplerFilterMinmaxPropertiesEXT',
 -- 'SamplerReductionModeCreateInfoEXT', 'SamplerReductionModeEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax Vulkan Specification>

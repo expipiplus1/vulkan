@@ -92,11 +92,11 @@
 --
 -- -   Revision 1, 2020-08-11 (Jesse Hall)
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_terminate_invocation Vulkan Specification>

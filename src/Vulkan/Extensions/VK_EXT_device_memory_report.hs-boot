@@ -223,7 +223,7 @@
 --
 --     -   Minor description update
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDeviceMemoryReportCallbackEXT',
 -- 'DeviceDeviceMemoryReportCreateInfoEXT',
@@ -231,7 +231,7 @@
 -- 'DeviceMemoryReportFlagsEXT',
 -- 'PhysicalDeviceDeviceMemoryReportFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report Vulkan Specification>

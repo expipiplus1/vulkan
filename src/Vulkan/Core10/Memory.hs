@@ -1028,7 +1028,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-01742# If the parameters
 --     define an import operation, the external handle specified was
 --     created by the Vulkan API, and the external handle type is
---     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
 --     match those specified when the payload being imported was created
 --
@@ -1055,9 +1055,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-01743# If the parameters
 --     define an import operation, the external handle was created by the
 --     Vulkan API, and the external handle type is
---     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --     or
---     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
 --     match those specified when the payload being imported was created
 --

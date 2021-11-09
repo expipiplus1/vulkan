@@ -115,11 +115,11 @@
 --     -   Add vulkanMemoryModelAvailabilityVisibilityChains member to the
 --         VkPhysicalDeviceVulkanMemoryModelFeaturesKHR structure.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceVulkanMemoryModelFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model Vulkan Specification>

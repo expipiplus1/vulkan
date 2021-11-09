@@ -174,13 +174,13 @@
 --
 --     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceFragmentDensityMapFeaturesEXT',
 -- 'PhysicalDeviceFragmentDensityMapPropertiesEXT',
 -- 'RenderPassFragmentDensityMapCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>
