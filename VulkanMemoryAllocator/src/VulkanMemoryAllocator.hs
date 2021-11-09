@@ -3178,15 +3178,21 @@ data VulkanFunctions = VulkanFunctions
     vkDestroyImage :: PFN_vkDestroyImage
   , 
     vkCmdCopyBuffer :: PFN_vkCmdCopyBuffer
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetBufferMemoryRequirements2KHR"
+  , -- | Fetch \"vkGetBufferMemoryRequirements2\" on Vulkan >= 1.1, fetch
+    -- \"vkGetBufferMemoryRequirements2KHR\" when using
+    -- VK_KHR_dedicated_allocation extension.
     vkGetBufferMemoryRequirements2KHR :: PFN_vkGetBufferMemoryRequirements2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetImageMemoryRequirements2KHR"
+  , -- | Fetch \"vkGetImageMemoryRequirements 2\" on Vulkan >= 1.1, fetch
+    -- \"vkGetImageMemoryRequirements2KHR\" when using
+    -- VK_KHR_dedicated_allocation extension.
     vkGetImageMemoryRequirements2KHR :: PFN_vkGetImageMemoryRequirements2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkBindBufferMemory2KHR"
+  , -- | Fetch \"vkBindBufferMemory2\" on Vulkan >= 1.1, fetch
+    -- \"vkBindBufferMemory2KHR\" when using VK_KHR_bind_memory2 extension.
     vkBindBufferMemory2KHR :: PFN_vkBindBufferMemory2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkBindImageMemory2KHR"
+  , -- | Fetch \"vkBindImageMemory2\" on Vulkan >= 1.1, fetch
+    -- \"vkBindImageMemory2KHR\" when using VK_KHR_bind_memory2 extension.
     vkBindImageMemory2KHR :: PFN_vkBindImageMemory2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetPhysicalDeviceMemoryProperties2KHR"
+  , 
     vkGetPhysicalDeviceMemoryProperties2KHR :: PFN_vkGetPhysicalDeviceMemoryProperties2KHR
   }
   deriving (Typeable, Eq)
