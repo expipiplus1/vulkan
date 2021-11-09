@@ -91,32 +91,22 @@ let
       # Overrides for examples
       #
       # profiling
-      eventlog2html = markUnbroken (doJailbreak (appendPatch (pkgs.fetchpatch {
-        url = "https://github.com/mpickering/eventlog2html/pull/129.patch";
-        name = "vega.patch";
-        sha256 = "1lnbdscngb5g5b6ys0xhp7izdfkz6j3llnpirbfxck3sy3ssxph5";
-      }) (overrideSrc {
+      eventlog2html = markUnbroken (overrideSrc {
         src = pkgs.fetchFromGitHub {
-          owner = "BinderDavid";
+          owner = "expipiplus1";
           repo = "eventlog2html";
-          rev =
-            "9abc05ed94fef094b3ac54d57e00664c793b5923"; # switch-to-ghc-events-0.13
-          sha256 = "0h1527zxdmail35526nn47zawsaafvsby7p50qg54wq023zazxlj";
+          rev = "3612e7000cfbb1498349c331b5adaa2d17f02206"; # ellie-size
+          sha256 = "0s2wxqwmaldqyz9yz52wxy0dla9pahqlpq6cx4pm4c744ggmpswd";
         };
-      } super.eventlog2html)));
-      hs-speedscope = doJailbreak (markUnbroken (overrideSrc {
+      } super.eventlog2html);
+      hs-speedscope = markUnbroken (addBuildDepend self.machines (overrideSrc {
         src = pkgs.fetchFromGitHub {
           owner = "mpickering";
           repo = "hs-speedscope";
-          rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
-          sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
+          rev = "5a77aeb163e07dc63769d4e0a659e5821cdee527";
+          sha256 = "0q9kdlxhm37f260v4ydmznwmmsaa4w9mq3fh2iivj792y6ybmp5j";
         };
       } super.hs-speedscope));
-      hvega = doJailbreak (self.callHackageDirect {
-        pkg = "hvega";
-        ver = "0.6.0.0";
-        sha256 = "1bkwp8zlb1248w95ksw71iksgd3xfw1pnb9klv8xxsqay542970a";
-      } { });
 
       #
       # Overrides for generate
