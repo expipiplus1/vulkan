@@ -8,6 +8,7 @@ module Spec.Parse
 import           Control.Monad.Extra            ( mapMaybeM )
 import           Data.Bits
 import qualified Data.ByteString.Char8         as BS
+import qualified Data.ByteString.Extra         as BS
 import           Data.Char
 import           Data.List                      ( dropWhileEnd
                                                 , lookup
@@ -1258,10 +1259,12 @@ disabled p e =
 
 -- >>> parseAPIVersion "VK_API_VERSION_1_2"
 -- Just (Version {versionBranch = [1,2], versionTags = []})
+--
+-- >>> parseAPIVersion "VK_VERSION_1_2"
+-- Just (Version {versionBranch = [1,2], versionTags = []})
 parseAPIVersion :: ByteString -> Maybe Version
 parseAPIVersion b = do
-  let p = "VK_API_VERSION_"
-  v <- if p `BS.isPrefixOf` b then pure $ BS.drop (BS.length p) b else empty
+  v <- BS.dropPrefix "VK_VERSION_" b <|> BS.dropPrefix "VK_API_VERSION_" b
   let cs = BS.split '_' v
   is <- traverse (readMaybe . BS.unpack) cs
   pure $ makeVersion is
