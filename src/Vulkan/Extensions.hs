@@ -64,6 +64,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_host_query_reset
                           , module Vulkan.Extensions.VK_EXT_image_drm_format_modifier
                           , module Vulkan.Extensions.VK_EXT_image_robustness
+                          , module Vulkan.Extensions.VK_EXT_image_view_min_lod
                           , module Vulkan.Extensions.VK_EXT_index_type_uint8
                           , module Vulkan.Extensions.VK_EXT_inline_uniform_block
                           , module Vulkan.Extensions.VK_EXT_line_rasterization
@@ -325,6 +326,7 @@ import Vulkan.Extensions.VK_EXT_headless_surface
 import Vulkan.Extensions.VK_EXT_host_query_reset
 import Vulkan.Extensions.VK_EXT_image_drm_format_modifier
 import Vulkan.Extensions.VK_EXT_image_robustness
+import Vulkan.Extensions.VK_EXT_image_view_min_lod
 import Vulkan.Extensions.VK_EXT_index_type_uint8
 import Vulkan.Extensions.VK_EXT_inline_uniform_block
 import Vulkan.Extensions.VK_EXT_line_rasterization

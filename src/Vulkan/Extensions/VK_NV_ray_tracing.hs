@@ -3813,6 +3813,11 @@ instance Zero AccelerationStructureMemoryRequirementsInfoNV where
 --
 -- = Description
 --
+-- Due to the fact that the geometry, instance, and triangle counts are
+-- specified at acceleration structure creation as 32-bit values,
+-- @maxGeometryCount@, @maxInstanceCount@, and @maxTriangleCount@ /must/
+-- not exceed 232-1.
+--
 -- If the 'PhysicalDeviceRayTracingPropertiesNV' structure is included in
 -- the @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'

@@ -69,6 +69,7 @@ import Vulkan.Core10.Handles (ImageView)
 import Vulkan.Core10.Handles (ImageView(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_astc_decode_mode (ImageViewASTCDecodeModeEXT)
 import Vulkan.Core10.Enums.ImageViewCreateFlagBits (ImageViewCreateFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (ImageViewMinLodCreateInfoEXT)
 import Vulkan.Core10.Enums.ImageViewType (ImageViewType)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (ImageViewUsageCreateInfo)
 import Vulkan.CStruct.Extends (PeekChain)
@@ -1117,6 +1118,7 @@ instance Zero ImageSubresourceRange where
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
+--     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo',
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileEXT VkVideoDecodeH264ProfileEXT>,
@@ -1195,6 +1197,7 @@ instance Extensible ImageViewCreateInfo where
   getNext ImageViewCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageViewCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImageViewMinLodCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewASTCDecodeModeEXT = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f
     | Just Refl <- eqT @e @ImageViewUsageCreateInfo = Just f
