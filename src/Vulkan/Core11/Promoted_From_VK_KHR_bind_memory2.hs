@@ -53,6 +53,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkBindBufferMemory2))
 import Vulkan.Dynamic (DeviceCmds(pVkBindImageMemory2))
 import Vulkan.Core10.Handles (DeviceMemory)
@@ -125,7 +126,7 @@ bindBufferMemory2 :: forall io
                      ("bindInfos" ::: Vector (SomeStruct BindBufferMemoryInfo))
                   -> io ()
 bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
-  let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (deviceCmds (device :: Device))
+  let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBindBufferMemory2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory2 is null" Nothing Nothing
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 vkBindBufferMemory2Ptr
@@ -197,7 +198,7 @@ bindImageMemory2 :: forall io
                     ("bindInfos" ::: Vector (SomeStruct BindImageMemoryInfo))
                  -> io ()
 bindImageMemory2 device bindInfos = liftIO . evalContT $ do
-  let vkBindImageMemory2Ptr = pVkBindImageMemory2 (deviceCmds (device :: Device))
+  let vkBindImageMemory2Ptr = pVkBindImageMemory2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBindImageMemory2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory2 is null" Nothing Nothing
   let vkBindImageMemory2' = mkVkBindImageMemory2 vkBindImageMemory2Ptr
@@ -385,7 +386,7 @@ deriving instance Show (Chain es) => Show (BindBufferMemoryInfo es)
 
 instance Extensible BindBufferMemoryInfo where
   extensibleTypeName = "BindBufferMemoryInfo"
-  setNext x next = x{next = next}
+  setNext BindBufferMemoryInfo{..} next' = BindBufferMemoryInfo{next = next', ..}
   getNext BindBufferMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindBufferMemoryInfo e => b) -> Maybe b
   extends _ f
@@ -724,7 +725,7 @@ deriving instance Show (Chain es) => Show (BindImageMemoryInfo es)
 
 instance Extensible BindImageMemoryInfo where
   extensibleTypeName = "BindImageMemoryInfo"
-  setNext x next = x{next = next}
+  setNext BindImageMemoryInfo{..} next' = BindImageMemoryInfo{next = next', ..}
   getNext BindImageMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindImageMemoryInfo e => b) -> Maybe b
   extends _ f

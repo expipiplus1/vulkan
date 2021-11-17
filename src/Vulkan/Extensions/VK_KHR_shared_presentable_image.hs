@@ -255,6 +255,7 @@ import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSwapchainStatusKHR))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
@@ -327,7 +328,7 @@ getSwapchainStatusKHR :: forall io
                          SwapchainKHR
                       -> io (Result)
 getSwapchainStatusKHR device swapchain = liftIO $ do
-  let vkGetSwapchainStatusKHRPtr = pVkGetSwapchainStatusKHR (deviceCmds (device :: Device))
+  let vkGetSwapchainStatusKHRPtr = pVkGetSwapchainStatusKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetSwapchainStatusKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainStatusKHR is null" Nothing Nothing
   let vkGetSwapchainStatusKHR' = mkVkGetSwapchainStatusKHR vkGetSwapchainStatusKHRPtr

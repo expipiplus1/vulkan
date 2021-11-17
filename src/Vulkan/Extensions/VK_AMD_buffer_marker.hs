@@ -110,6 +110,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdWriteBufferMarkerAMD))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
@@ -289,7 +290,7 @@ cmdWriteBufferMarkerAMD :: forall io
                            ("marker" ::: Word32)
                         -> io ()
 cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = liftIO $ do
-  let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdWriteBufferMarkerAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteBufferMarkerAMD is null" Nothing Nothing
   let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMDPtr

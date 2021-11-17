@@ -332,6 +332,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireFullScreenExclusiveModeEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceGroupSurfacePresentModes2EXT))
 import Vulkan.Dynamic (DeviceCmds(pVkReleaseFullScreenExclusiveModeEXT))
@@ -342,6 +343,7 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfacePresentModes2EXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR)
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
@@ -444,7 +446,7 @@ getPhysicalDeviceSurfacePresentModes2EXT :: forall a io
                                             (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfacePresentModes2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfacePresentModes2EXT is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT vkGetPhysicalDeviceSurfacePresentModes2EXTPtr
@@ -521,7 +523,7 @@ getDeviceGroupSurfacePresentModes2EXT :: forall a io
                                          (PhysicalDeviceSurfaceInfo2KHR a)
                                       -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
-  let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device))
+  let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupSurfacePresentModes2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModes2EXT is null" Nothing Nothing
   let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXTPtr
@@ -616,7 +618,7 @@ acquireFullScreenExclusiveModeEXT :: forall io
                                      SwapchainKHR
                                   -> io ()
 acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
-  let vkAcquireFullScreenExclusiveModeEXTPtr = pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
+  let vkAcquireFullScreenExclusiveModeEXTPtr = pVkAcquireFullScreenExclusiveModeEXT (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkAcquireFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXTPtr
@@ -666,7 +668,7 @@ releaseFullScreenExclusiveModeEXT :: forall io
                                      SwapchainKHR
                                   -> io ()
 releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
-  let vkReleaseFullScreenExclusiveModeEXTPtr = pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
+  let vkReleaseFullScreenExclusiveModeEXTPtr = pVkReleaseFullScreenExclusiveModeEXT (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkReleaseFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXTPtr

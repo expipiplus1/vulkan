@@ -160,6 +160,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreZirconHandleFUCHSIA))
 import Vulkan.Dynamic (DeviceCmds(pVkImportSemaphoreZirconHandleFUCHSIA))
 import Vulkan.Core10.Handles (Device_T)
@@ -238,7 +239,7 @@ getSemaphoreZirconHandleFUCHSIA :: forall io
                                    SemaphoreGetZirconHandleInfoFUCHSIA
                                 -> io (("zirconHandle" ::: Zx_handle_t))
 getSemaphoreZirconHandleFUCHSIA device getZirconHandleInfo = liftIO . evalContT $ do
-  let vkGetSemaphoreZirconHandleFUCHSIAPtr = pVkGetSemaphoreZirconHandleFUCHSIA (deviceCmds (device :: Device))
+  let vkGetSemaphoreZirconHandleFUCHSIAPtr = pVkGetSemaphoreZirconHandleFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreZirconHandleFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreZirconHandleFUCHSIA is null" Nothing Nothing
   let vkGetSemaphoreZirconHandleFUCHSIA' = mkVkGetSemaphoreZirconHandleFUCHSIA vkGetSemaphoreZirconHandleFUCHSIAPtr
@@ -304,7 +305,7 @@ importSemaphoreZirconHandleFUCHSIA :: forall io
                                       ImportSemaphoreZirconHandleInfoFUCHSIA
                                    -> io ()
 importSemaphoreZirconHandleFUCHSIA device importSemaphoreZirconHandleInfo = liftIO . evalContT $ do
-  let vkImportSemaphoreZirconHandleFUCHSIAPtr = pVkImportSemaphoreZirconHandleFUCHSIA (deviceCmds (device :: Device))
+  let vkImportSemaphoreZirconHandleFUCHSIAPtr = pVkImportSemaphoreZirconHandleFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportSemaphoreZirconHandleFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreZirconHandleFUCHSIA is null" Nothing Nothing
   let vkImportSemaphoreZirconHandleFUCHSIA' = mkVkImportSemaphoreZirconHandleFUCHSIA vkImportSemaphoreZirconHandleFUCHSIAPtr

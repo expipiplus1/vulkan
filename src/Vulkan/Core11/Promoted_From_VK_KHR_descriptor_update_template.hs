@@ -68,6 +68,7 @@ import Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags (DescriptorUpdate
 import Vulkan.Core11.Enums.DescriptorUpdateTemplateType (DescriptorUpdateTemplateType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDescriptorUpdateTemplate))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyDescriptorUpdateTemplate))
 import Vulkan.Dynamic (DeviceCmds(pVkUpdateDescriptorSetWithTemplate))
@@ -148,7 +149,7 @@ createDescriptorUpdateTemplate :: forall io
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (DescriptorUpdateTemplate)
 createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorUpdateTemplatePtr = pVkCreateDescriptorUpdateTemplate (deviceCmds (device :: Device))
+  let vkCreateDescriptorUpdateTemplatePtr = pVkCreateDescriptorUpdateTemplate (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDescriptorUpdateTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorUpdateTemplate is null" Nothing Nothing
   let vkCreateDescriptorUpdateTemplate' = mkVkCreateDescriptorUpdateTemplate vkCreateDescriptorUpdateTemplatePtr
@@ -242,7 +243,7 @@ destroyDescriptorUpdateTemplate :: forall io
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
 destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorUpdateTemplatePtr = pVkDestroyDescriptorUpdateTemplate (deviceCmds (device :: Device))
+  let vkDestroyDescriptorUpdateTemplatePtr = pVkDestroyDescriptorUpdateTemplate (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDescriptorUpdateTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorUpdateTemplate is null" Nothing Nothing
   let vkDestroyDescriptorUpdateTemplate' = mkVkDestroyDescriptorUpdateTemplate vkDestroyDescriptorUpdateTemplatePtr
@@ -396,7 +397,7 @@ updateDescriptorSetWithTemplate :: forall io
                                    ("data" ::: Ptr ())
                                 -> io ()
 updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
-  let vkUpdateDescriptorSetWithTemplatePtr = pVkUpdateDescriptorSetWithTemplate (deviceCmds (device :: Device))
+  let vkUpdateDescriptorSetWithTemplatePtr = pVkUpdateDescriptorSetWithTemplate (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkUpdateDescriptorSetWithTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSetWithTemplate is null" Nothing Nothing
   let vkUpdateDescriptorSetWithTemplate' = mkVkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplatePtr

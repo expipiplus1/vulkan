@@ -325,6 +325,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryWin32HandleNV))
 import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.Handles (DeviceMemory(..))
@@ -401,7 +402,7 @@ getMemoryWin32HandleNV :: forall io
                           ExternalMemoryHandleTypeFlagsNV
                        -> io (HANDLE)
 getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
-  let vkGetMemoryWin32HandleNVPtr = pVkGetMemoryWin32HandleNV (deviceCmds (device :: Device))
+  let vkGetMemoryWin32HandleNVPtr = pVkGetMemoryWin32HandleNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryWin32HandleNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandleNV is null" Nothing Nothing
   let vkGetMemoryWin32HandleNV' = mkVkGetMemoryWin32HandleNV vkGetMemoryWin32HandleNVPtr

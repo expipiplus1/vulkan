@@ -335,6 +335,7 @@ import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.CommandBufferBuilding (ClearValue)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginRenderingKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndRenderingKHR))
@@ -445,7 +446,7 @@ cmdBeginRenderingKHR :: forall a io
                         (RenderingInfoKHR a)
                      -> io ()
 cmdBeginRenderingKHR commandBuffer renderingInfo = liftIO . evalContT $ do
-  let vkCmdBeginRenderingKHRPtr = pVkCmdBeginRenderingKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginRenderingKHRPtr = pVkCmdBeginRenderingKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginRenderingKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderingKHR is null" Nothing Nothing
   let vkCmdBeginRenderingKHR' = mkVkCmdBeginRenderingKHR vkCmdBeginRenderingKHRPtr
@@ -531,7 +532,7 @@ cmdEndRenderingKHR :: forall io
                       CommandBuffer
                    -> io ()
 cmdEndRenderingKHR commandBuffer = liftIO $ do
-  let vkCmdEndRenderingKHRPtr = pVkCmdEndRenderingKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndRenderingKHRPtr = pVkCmdEndRenderingKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndRenderingKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderingKHR is null" Nothing Nothing
   let vkCmdEndRenderingKHR' = mkVkCmdEndRenderingKHR vkCmdEndRenderingKHRPtr
@@ -1190,7 +1191,7 @@ deriving instance Show (Chain es) => Show (RenderingInfoKHR es)
 
 instance Extensible RenderingInfoKHR where
   extensibleTypeName = "RenderingInfoKHR"
-  setNext x next = x{next = next}
+  setNext RenderingInfoKHR{..} next' = RenderingInfoKHR{next = next', ..}
   getNext RenderingInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderingInfoKHR e => b) -> Maybe b
   extends _ f

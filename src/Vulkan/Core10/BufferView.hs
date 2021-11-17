@@ -48,6 +48,7 @@ import Vulkan.Core10.Handles (BufferView(..))
 import Vulkan.Core10.Enums.BufferViewCreateFlags (BufferViewCreateFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateBufferView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBufferView))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
@@ -116,7 +117,7 @@ createBufferView :: forall io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io (BufferView)
 createBufferView device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateBufferViewPtr = pVkCreateBufferView (deviceCmds (device :: Device))
+  let vkCreateBufferViewPtr = pVkCreateBufferView (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateBufferViewPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBufferView is null" Nothing Nothing
   let vkCreateBufferView' = mkVkCreateBufferView vkCreateBufferViewPtr
@@ -206,7 +207,7 @@ destroyBufferView :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroyBufferView device bufferView allocator = liftIO . evalContT $ do
-  let vkDestroyBufferViewPtr = pVkDestroyBufferView (deviceCmds (device :: Device))
+  let vkDestroyBufferViewPtr = pVkDestroyBufferView (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyBufferViewPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBufferView is null" Nothing Nothing
   let vkDestroyBufferView' = mkVkDestroyBufferView vkDestroyBufferViewPtr

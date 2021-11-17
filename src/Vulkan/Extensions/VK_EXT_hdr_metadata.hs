@@ -167,6 +167,7 @@ import Data.Vector (Vector)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkSetHdrMetadataEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -220,7 +221,7 @@ setHdrMetadataEXT :: forall io
                      ("metadata" ::: Vector HdrMetadataEXT)
                   -> io ()
 setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
-  let vkSetHdrMetadataEXTPtr = pVkSetHdrMetadataEXT (deviceCmds (device :: Device))
+  let vkSetHdrMetadataEXTPtr = pVkSetHdrMetadataEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetHdrMetadataEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetHdrMetadataEXT is null" Nothing Nothing
   let vkSetHdrMetadataEXT' = mkVkSetHdrMetadataEXT vkSetHdrMetadataEXTPtr

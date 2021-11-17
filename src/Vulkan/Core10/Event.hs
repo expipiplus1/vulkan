@@ -48,6 +48,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateEvent))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyEvent))
 import Vulkan.Dynamic (DeviceCmds(pVkGetEventStatus))
@@ -135,7 +136,7 @@ createEvent :: forall io
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Event)
 createEvent device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateEventPtr = pVkCreateEvent (deviceCmds (device :: Device))
+  let vkCreateEventPtr = pVkCreateEvent (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateEvent is null" Nothing Nothing
   let vkCreateEvent' = mkVkCreateEvent vkCreateEventPtr
@@ -223,7 +224,7 @@ destroyEvent :: forall io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
 destroyEvent device event allocator = liftIO . evalContT $ do
-  let vkDestroyEventPtr = pVkDestroyEvent (deviceCmds (device :: Device))
+  let vkDestroyEventPtr = pVkDestroyEvent (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyEvent is null" Nothing Nothing
   let vkDestroyEvent' = mkVkDestroyEvent vkDestroyEventPtr
@@ -313,7 +314,7 @@ getEventStatus :: forall io
                   Event
                -> io (Result)
 getEventStatus device event = liftIO $ do
-  let vkGetEventStatusPtr = pVkGetEventStatus (deviceCmds (device :: Device))
+  let vkGetEventStatusPtr = pVkGetEventStatus (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetEventStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetEventStatus is null" Nothing Nothing
   let vkGetEventStatus' = mkVkGetEventStatus vkGetEventStatusPtr
@@ -384,7 +385,7 @@ setEvent :: forall io
             Event
          -> io ()
 setEvent device event = liftIO $ do
-  let vkSetEventPtr = pVkSetEvent (deviceCmds (device :: Device))
+  let vkSetEventPtr = pVkSetEvent (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkSetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetEvent is null" Nothing Nothing
   let vkSetEvent' = mkVkSetEvent vkSetEventPtr
@@ -463,7 +464,7 @@ resetEvent :: forall io
               Event
            -> io ()
 resetEvent device event = liftIO $ do
-  let vkResetEventPtr = pVkResetEvent (deviceCmds (device :: Device))
+  let vkResetEventPtr = pVkResetEvent (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkResetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetEvent is null" Nothing Nothing
   let vkResetEvent' = mkVkResetEvent vkResetEventPtr

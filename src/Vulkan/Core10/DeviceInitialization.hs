@@ -139,6 +139,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_report (DebugReportCallback
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsMessengerCreateInfoEXT)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceProcAddr))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
@@ -402,7 +403,7 @@ destroyInstance :: forall io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io ()
 destroyInstance instance' allocator = liftIO . evalContT $ do
-  let vkDestroyInstancePtr = pVkDestroyInstance (instanceCmds (instance' :: Instance))
+  let vkDestroyInstancePtr = pVkDestroyInstance (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyInstancePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyInstance is null" Nothing Nothing
   let vkDestroyInstance' = mkVkDestroyInstance vkDestroyInstancePtr
@@ -478,7 +479,7 @@ enumeratePhysicalDevices :: forall io
                             Instance
                          -> io (Result, ("physicalDevices" ::: Vector PhysicalDevice))
 enumeratePhysicalDevices instance' = liftIO . evalContT $ do
-  let cmds = instanceCmds (instance' :: Instance)
+  let cmds = case instance' of Instance{instanceCmds} -> instanceCmds
   let vkEnumeratePhysicalDevicesPtr = pVkEnumeratePhysicalDevices cmds
   lift $ unless (vkEnumeratePhysicalDevicesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDevices is null" Nothing Nothing
@@ -580,7 +581,7 @@ getDeviceProcAddr :: forall io
                      ("name" ::: ByteString)
                   -> io (PFN_vkVoidFunction)
 getDeviceProcAddr device name = liftIO . evalContT $ do
-  let vkGetDeviceProcAddrPtr = pVkGetDeviceProcAddr (deviceCmds (device :: Device))
+  let vkGetDeviceProcAddrPtr = pVkGetDeviceProcAddr (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceProcAddrPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceProcAddr is null" Nothing Nothing
   let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr vkGetDeviceProcAddrPtr
@@ -698,7 +699,7 @@ getInstanceProcAddr :: forall io
                        ("name" ::: ByteString)
                     -> io (PFN_vkVoidFunction)
 getInstanceProcAddr instance' name = liftIO . evalContT $ do
-  let vkGetInstanceProcAddrPtr = pVkGetInstanceProcAddr (instanceCmds (instance' :: Instance))
+  let vkGetInstanceProcAddrPtr = pVkGetInstanceProcAddr (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetInstanceProcAddrPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetInstanceProcAddr is null" Nothing Nothing
   let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr vkGetInstanceProcAddrPtr
@@ -733,7 +734,7 @@ getPhysicalDeviceProperties :: forall io
                                PhysicalDevice
                             -> io (PhysicalDeviceProperties)
 getPhysicalDeviceProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDevicePropertiesPtr = pVkGetPhysicalDeviceProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDevicePropertiesPtr = pVkGetPhysicalDeviceProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDevicePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties vkGetPhysicalDevicePropertiesPtr
@@ -793,7 +794,7 @@ getPhysicalDeviceQueueFamilyProperties :: forall io
                                           PhysicalDevice
                                        -> io (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
 getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceQueueFamilyPropertiesPtr = pVkGetPhysicalDeviceQueueFamilyProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceQueueFamilyPropertiesPtr = pVkGetPhysicalDeviceQueueFamilyProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceQueueFamilyPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyPropertiesPtr
@@ -835,7 +836,7 @@ getPhysicalDeviceMemoryProperties :: forall io
                                      PhysicalDevice
                                   -> io (PhysicalDeviceMemoryProperties)
 getPhysicalDeviceMemoryProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceMemoryPropertiesPtr = pVkGetPhysicalDeviceMemoryProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceMemoryPropertiesPtr = pVkGetPhysicalDeviceMemoryProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceMemoryPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryPropertiesPtr
@@ -871,7 +872,7 @@ getPhysicalDeviceFeatures :: forall io
                              PhysicalDevice
                           -> io (PhysicalDeviceFeatures)
 getPhysicalDeviceFeatures physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFeaturesPtr = pVkGetPhysicalDeviceFeatures (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceFeaturesPtr = pVkGetPhysicalDeviceFeatures (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFeaturesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeaturesPtr
@@ -914,7 +915,7 @@ getPhysicalDeviceFormatProperties :: forall io
                                      Format
                                   -> io (FormatProperties)
 getPhysicalDeviceFormatProperties physicalDevice format = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFormatPropertiesPtr = pVkGetPhysicalDeviceFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceFormatPropertiesPtr = pVkGetPhysicalDeviceFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatPropertiesPtr
@@ -1042,7 +1043,7 @@ getPhysicalDeviceImageFormatProperties :: forall io
                                           ImageCreateFlags
                                        -> io (ImageFormatProperties)
 getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceImageFormatPropertiesPtr = pVkGetPhysicalDeviceImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceImageFormatPropertiesPtr = pVkGetPhysicalDeviceImageFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceImageFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatPropertiesPtr
@@ -1507,7 +1508,7 @@ deriving instance Show (Chain es) => Show (InstanceCreateInfo es)
 
 instance Extensible InstanceCreateInfo where
   extensibleTypeName = "InstanceCreateInfo"
-  setNext x next = x{next = next}
+  setNext InstanceCreateInfo{..} next' = InstanceCreateInfo{next = next', ..}
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b
   extends _ f

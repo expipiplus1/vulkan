@@ -1378,11 +1378,13 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.Handles (DeferredOperationKHR)
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkBuildAccelerationStructuresKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBuildAccelerationStructuresIndirectKHR))
@@ -1513,7 +1515,7 @@ destroyAccelerationStructureKHR :: forall io
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
 destroyAccelerationStructureKHR device accelerationStructure allocator = liftIO . evalContT $ do
-  let vkDestroyAccelerationStructureKHRPtr = pVkDestroyAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkDestroyAccelerationStructureKHRPtr = pVkDestroyAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyAccelerationStructureKHR is null" Nothing Nothing
   let vkDestroyAccelerationStructureKHR' = mkVkDestroyAccelerationStructureKHR vkDestroyAccelerationStructureKHRPtr
@@ -1614,7 +1616,7 @@ cmdCopyAccelerationStructureKHR :: forall io
                                    CopyAccelerationStructureInfoKHR
                                 -> io ()
 cmdCopyAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
-  let vkCmdCopyAccelerationStructureKHRPtr = pVkCmdCopyAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyAccelerationStructureKHRPtr = pVkCmdCopyAccelerationStructureKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureKHR' = mkVkCmdCopyAccelerationStructureKHR vkCmdCopyAccelerationStructureKHRPtr
@@ -1722,7 +1724,7 @@ copyAccelerationStructureKHR :: forall io
                                 CopyAccelerationStructureInfoKHR
                              -> io (Result)
 copyAccelerationStructureKHR device deferredOperation info = liftIO . evalContT $ do
-  let vkCopyAccelerationStructureKHRPtr = pVkCopyAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkCopyAccelerationStructureKHRPtr = pVkCopyAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureKHR' = mkVkCopyAccelerationStructureKHR vkCopyAccelerationStructureKHRPtr
@@ -1869,7 +1871,7 @@ cmdCopyAccelerationStructureToMemoryKHR :: forall io
                                            CopyAccelerationStructureToMemoryInfoKHR
                                         -> io ()
 cmdCopyAccelerationStructureToMemoryKHR commandBuffer info = liftIO . evalContT $ do
-  let vkCmdCopyAccelerationStructureToMemoryKHRPtr = pVkCmdCopyAccelerationStructureToMemoryKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyAccelerationStructureToMemoryKHRPtr = pVkCmdCopyAccelerationStructureToMemoryKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureToMemoryKHR' = mkVkCmdCopyAccelerationStructureToMemoryKHR vkCmdCopyAccelerationStructureToMemoryKHRPtr
@@ -1985,7 +1987,7 @@ copyAccelerationStructureToMemoryKHR :: forall io
                                         CopyAccelerationStructureToMemoryInfoKHR
                                      -> io (Result)
 copyAccelerationStructureToMemoryKHR device deferredOperation info = liftIO . evalContT $ do
-  let vkCopyAccelerationStructureToMemoryKHRPtr = pVkCopyAccelerationStructureToMemoryKHR (deviceCmds (device :: Device))
+  let vkCopyAccelerationStructureToMemoryKHRPtr = pVkCopyAccelerationStructureToMemoryKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureToMemoryKHR' = mkVkCopyAccelerationStructureToMemoryKHR vkCopyAccelerationStructureToMemoryKHRPtr
@@ -2104,7 +2106,7 @@ cmdCopyMemoryToAccelerationStructureKHR :: forall io
                                            CopyMemoryToAccelerationStructureInfoKHR
                                         -> io ()
 cmdCopyMemoryToAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
-  let vkCmdCopyMemoryToAccelerationStructureKHRPtr = pVkCmdCopyMemoryToAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyMemoryToAccelerationStructureKHRPtr = pVkCmdCopyMemoryToAccelerationStructureKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyMemoryToAccelerationStructureKHR' = mkVkCmdCopyMemoryToAccelerationStructureKHR vkCmdCopyMemoryToAccelerationStructureKHRPtr
@@ -2216,7 +2218,7 @@ copyMemoryToAccelerationStructureKHR :: forall io
                                         CopyMemoryToAccelerationStructureInfoKHR
                                      -> io (Result)
 copyMemoryToAccelerationStructureKHR device deferredOperation info = liftIO . evalContT $ do
-  let vkCopyMemoryToAccelerationStructureKHRPtr = pVkCopyMemoryToAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkCopyMemoryToAccelerationStructureKHRPtr = pVkCopyMemoryToAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyMemoryToAccelerationStructureKHR' = mkVkCopyMemoryToAccelerationStructureKHR vkCopyMemoryToAccelerationStructureKHRPtr
@@ -2375,7 +2377,7 @@ cmdWriteAccelerationStructuresPropertiesKHR :: forall io
                                                ("firstQuery" ::: Word32)
                                             -> io ()
 cmdWriteAccelerationStructuresPropertiesKHR commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
-  let vkCmdWriteAccelerationStructuresPropertiesKHRPtr = pVkCmdWriteAccelerationStructuresPropertiesKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteAccelerationStructuresPropertiesKHRPtr = pVkCmdWriteAccelerationStructuresPropertiesKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkCmdWriteAccelerationStructuresPropertiesKHR' = mkVkCmdWriteAccelerationStructuresPropertiesKHR vkCmdWriteAccelerationStructuresPropertiesKHRPtr
@@ -2529,7 +2531,7 @@ writeAccelerationStructuresPropertiesKHR :: forall io
                                             ("stride" ::: Word64)
                                          -> io ()
 writeAccelerationStructuresPropertiesKHR device accelerationStructures queryType dataSize data' stride = liftIO . evalContT $ do
-  let vkWriteAccelerationStructuresPropertiesKHRPtr = pVkWriteAccelerationStructuresPropertiesKHR (deviceCmds (device :: Device))
+  let vkWriteAccelerationStructuresPropertiesKHRPtr = pVkWriteAccelerationStructuresPropertiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkWriteAccelerationStructuresPropertiesKHR' = mkVkWriteAccelerationStructuresPropertiesKHR vkWriteAccelerationStructuresPropertiesKHRPtr
@@ -2585,7 +2587,7 @@ getDeviceAccelerationStructureCompatibilityKHR :: forall io
                                                   AccelerationStructureVersionInfoKHR
                                                -> io (AccelerationStructureCompatibilityKHR)
 getDeviceAccelerationStructureCompatibilityKHR device versionInfo = liftIO . evalContT $ do
-  let vkGetDeviceAccelerationStructureCompatibilityKHRPtr = pVkGetDeviceAccelerationStructureCompatibilityKHR (deviceCmds (device :: Device))
+  let vkGetDeviceAccelerationStructureCompatibilityKHRPtr = pVkGetDeviceAccelerationStructureCompatibilityKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceAccelerationStructureCompatibilityKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceAccelerationStructureCompatibilityKHR is null" Nothing Nothing
   let vkGetDeviceAccelerationStructureCompatibilityKHR' = mkVkGetDeviceAccelerationStructureCompatibilityKHR vkGetDeviceAccelerationStructureCompatibilityKHRPtr
@@ -2697,7 +2699,7 @@ createAccelerationStructureKHR :: forall a io
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (AccelerationStructureKHR)
 createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateAccelerationStructureKHRPtr = pVkCreateAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkCreateAccelerationStructureKHRPtr = pVkCreateAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAccelerationStructureKHR is null" Nothing Nothing
   let vkCreateAccelerationStructureKHR' = mkVkCreateAccelerationStructureKHR vkCreateAccelerationStructureKHRPtr
@@ -3306,7 +3308,7 @@ cmdBuildAccelerationStructuresKHR :: forall io
                                      ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                   -> io ()
 cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO . evalContT $ do
-  let vkCmdBuildAccelerationStructuresKHRPtr = pVkCmdBuildAccelerationStructuresKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBuildAccelerationStructuresKHRPtr = pVkCmdBuildAccelerationStructuresKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructuresKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructuresKHR is null" Nothing Nothing
   let vkCmdBuildAccelerationStructuresKHR' = mkVkCmdBuildAccelerationStructuresKHR vkCmdBuildAccelerationStructuresKHRPtr
@@ -3942,7 +3944,7 @@ cmdBuildAccelerationStructuresIndirectKHR :: forall io
                                              ("maxPrimitiveCounts" ::: Vector (Vector Word32))
                                           -> io ()
 cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddresses indirectStrides maxPrimitiveCounts = liftIO . evalContT $ do
-  let vkCmdBuildAccelerationStructuresIndirectKHRPtr = pVkCmdBuildAccelerationStructuresIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBuildAccelerationStructuresIndirectKHRPtr = pVkCmdBuildAccelerationStructuresIndirectKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructuresIndirectKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructuresIndirectKHR is null" Nothing Nothing
   let vkCmdBuildAccelerationStructuresIndirectKHR' = mkVkCmdBuildAccelerationStructuresIndirectKHR vkCmdBuildAccelerationStructuresIndirectKHRPtr
@@ -4437,7 +4439,7 @@ buildAccelerationStructuresKHR :: forall io
                                   ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                -> io (Result)
 buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = liftIO . evalContT $ do
-  let vkBuildAccelerationStructuresKHRPtr = pVkBuildAccelerationStructuresKHR (deviceCmds (device :: Device))
+  let vkBuildAccelerationStructuresKHRPtr = pVkBuildAccelerationStructuresKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBuildAccelerationStructuresKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBuildAccelerationStructuresKHR is null" Nothing Nothing
   let vkBuildAccelerationStructuresKHR' = mkVkBuildAccelerationStructuresKHR vkBuildAccelerationStructuresKHRPtr
@@ -4524,7 +4526,7 @@ getAccelerationStructureDeviceAddressKHR :: forall io
                                             AccelerationStructureDeviceAddressInfoKHR
                                          -> io (DeviceAddress)
 getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
-  let vkGetAccelerationStructureDeviceAddressKHRPtr = pVkGetAccelerationStructureDeviceAddressKHR (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureDeviceAddressKHRPtr = pVkGetAccelerationStructureDeviceAddressKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAccelerationStructureDeviceAddressKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureDeviceAddressKHR is null" Nothing Nothing
   let vkGetAccelerationStructureDeviceAddressKHR' = mkVkGetAccelerationStructureDeviceAddressKHR vkGetAccelerationStructureDeviceAddressKHRPtr
@@ -4681,7 +4683,7 @@ getAccelerationStructureBuildSizesKHR :: forall io
                                          ("maxPrimitiveCounts" ::: Vector Word32)
                                       -> io (("sizeInfo" ::: AccelerationStructureBuildSizesInfoKHR))
 getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCounts = liftIO . evalContT $ do
-  let vkGetAccelerationStructureBuildSizesKHRPtr = pVkGetAccelerationStructureBuildSizesKHR (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureBuildSizesKHRPtr = pVkGetAccelerationStructureBuildSizesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAccelerationStructureBuildSizesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureBuildSizesKHR is null" Nothing Nothing
   let vkGetAccelerationStructureBuildSizesKHR' = mkVkGetAccelerationStructureBuildSizesKHR vkGetAccelerationStructureBuildSizesKHRPtr
@@ -5148,7 +5150,7 @@ deriving instance Show (Chain es) => Show (AccelerationStructureGeometryTriangle
 
 instance Extensible AccelerationStructureGeometryTrianglesDataKHR where
   extensibleTypeName = "AccelerationStructureGeometryTrianglesDataKHR"
-  setNext x next = x{next = next}
+  setNext AccelerationStructureGeometryTrianglesDataKHR{..} next' = AccelerationStructureGeometryTrianglesDataKHR{next = next', ..}
   getNext AccelerationStructureGeometryTrianglesDataKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureGeometryTrianglesDataKHR e => b) -> Maybe b
   extends _ f
@@ -5936,7 +5938,7 @@ deriving instance Show (Chain es) => Show (AccelerationStructureCreateInfoKHR es
 
 instance Extensible AccelerationStructureCreateInfoKHR where
   extensibleTypeName = "AccelerationStructureCreateInfoKHR"
-  setNext x next = x{next = next}
+  setNext AccelerationStructureCreateInfoKHR{..} next' = AccelerationStructureCreateInfoKHR{next = next', ..}
   getNext AccelerationStructureCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureCreateInfoKHR e => b) -> Maybe b
   extends _ f

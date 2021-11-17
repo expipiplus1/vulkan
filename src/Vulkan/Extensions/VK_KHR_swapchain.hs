@@ -1185,6 +1185,7 @@ import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR)
 import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagBitsKHR)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireNextImage2KHR))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireNextImageKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSwapchainKHR))
@@ -1213,6 +1214,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
@@ -1223,6 +1225,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (PresentRegio
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PresentTimesInfoGOOGLE)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.Result (Result)
@@ -1371,7 +1374,7 @@ createSwapchainKHR :: forall a io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (deviceCmds (device :: Device))
+  let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSwapchainKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSwapchainKHR is null" Nothing Nothing
   let vkCreateSwapchainKHR' = mkVkCreateSwapchainKHR vkCreateSwapchainKHRPtr
@@ -1488,7 +1491,7 @@ destroySwapchainKHR :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
 destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
-  let vkDestroySwapchainKHRPtr = pVkDestroySwapchainKHR (deviceCmds (device :: Device))
+  let vkDestroySwapchainKHRPtr = pVkDestroySwapchainKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySwapchainKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySwapchainKHR is null" Nothing Nothing
   let vkDestroySwapchainKHR' = mkVkDestroySwapchainKHR vkDestroySwapchainKHRPtr
@@ -1572,7 +1575,7 @@ getSwapchainImagesKHR :: forall io
                          SwapchainKHR
                       -> io (Result, ("swapchainImages" ::: Vector Image))
 getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
-  let vkGetSwapchainImagesKHRPtr = pVkGetSwapchainImagesKHR (deviceCmds (device :: Device))
+  let vkGetSwapchainImagesKHRPtr = pVkGetSwapchainImagesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSwapchainImagesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainImagesKHR is null" Nothing Nothing
   let vkGetSwapchainImagesKHR' = mkVkGetSwapchainImagesKHR vkGetSwapchainImagesKHRPtr
@@ -1620,7 +1623,7 @@ acquireNextImageKHRSafeOrUnsafe :: forall io
                                    Fence
                                 -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
-  let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (deviceCmds (device :: Device))
+  let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImageKHR is null" Nothing Nothing
   let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR vkAcquireNextImageKHRPtr
@@ -1949,7 +1952,7 @@ queuePresentKHR :: forall a io
                    (PresentInfoKHR a)
                 -> io (Result)
 queuePresentKHR queue presentInfo = liftIO . evalContT $ do
-  let vkQueuePresentKHRPtr = pVkQueuePresentKHR (deviceCmds (queue :: Queue))
+  let vkQueuePresentKHRPtr = pVkQueuePresentKHR (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueuePresentKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueuePresentKHR is null" Nothing Nothing
   let vkQueuePresentKHR' = mkVkQueuePresentKHR vkQueuePresentKHRPtr
@@ -1997,7 +2000,7 @@ getDeviceGroupPresentCapabilitiesKHR :: forall io
                                         Device
                                      -> io (DeviceGroupPresentCapabilitiesKHR)
 getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
-  let vkGetDeviceGroupPresentCapabilitiesKHRPtr = pVkGetDeviceGroupPresentCapabilitiesKHR (deviceCmds (device :: Device))
+  let vkGetDeviceGroupPresentCapabilitiesKHRPtr = pVkGetDeviceGroupPresentCapabilitiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupPresentCapabilitiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPresentCapabilitiesKHR is null" Nothing Nothing
   let vkGetDeviceGroupPresentCapabilitiesKHR' = mkVkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHRPtr
@@ -2084,7 +2087,7 @@ getDeviceGroupSurfacePresentModesKHR :: forall io
                                         SurfaceKHR
                                      -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModesKHR device surface = liftIO . evalContT $ do
-  let vkGetDeviceGroupSurfacePresentModesKHRPtr = pVkGetDeviceGroupSurfacePresentModesKHR (deviceCmds (device :: Device))
+  let vkGetDeviceGroupSurfacePresentModesKHRPtr = pVkGetDeviceGroupSurfacePresentModesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupSurfacePresentModesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModesKHR is null" Nothing Nothing
   let vkGetDeviceGroupSurfacePresentModesKHR' = mkVkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHRPtr
@@ -2117,7 +2120,7 @@ acquireNextImage2KHRSafeOrUnsafe :: forall io
                                     ("acquireInfo" ::: AcquireNextImageInfoKHR)
                                  -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
-  let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
+  let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImage2KHR is null" Nothing Nothing
   let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR vkAcquireNextImage2KHRPtr
@@ -2301,7 +2304,7 @@ getPhysicalDevicePresentRectanglesKHR :: forall io
                                          SurfaceKHR
                                       -> io (Result, ("rects" ::: Vector Rect2D))
 getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDevicePresentRectanglesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDevicePresentRectanglesKHR is null" Nothing Nothing
   let vkGetPhysicalDevicePresentRectanglesKHR' = mkVkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHRPtr
@@ -2732,7 +2735,7 @@ deriving instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 
 instance Extensible SwapchainCreateInfoKHR where
   extensibleTypeName = "SwapchainCreateInfoKHR"
-  setNext x next = x{next = next}
+  setNext SwapchainCreateInfoKHR{..} next' = SwapchainCreateInfoKHR{next = next', ..}
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
@@ -2960,7 +2963,7 @@ deriving instance Show (Chain es) => Show (PresentInfoKHR es)
 
 instance Extensible PresentInfoKHR where
   extensibleTypeName = "PresentInfoKHR"
-  setNext x next = x{next = next}
+  setNext PresentInfoKHR{..} next' = PresentInfoKHR{next = next', ..}
   getNext PresentInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PresentInfoKHR e => b) -> Maybe b
   extends _ f

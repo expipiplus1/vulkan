@@ -168,6 +168,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkSetLocalDimmingAMD))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -220,7 +221,7 @@ setLocalDimmingAMD :: forall io
                       ("localDimmingEnable" ::: Bool)
                    -> io ()
 setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
-  let vkSetLocalDimmingAMDPtr = pVkSetLocalDimmingAMD (deviceCmds (device :: Device))
+  let vkSetLocalDimmingAMDPtr = pVkSetLocalDimmingAMD (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkSetLocalDimmingAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetLocalDimmingAMD is null" Nothing Nothing
   let vkSetLocalDimmingAMD' = mkVkSetLocalDimmingAMD vkSetLocalDimmingAMDPtr

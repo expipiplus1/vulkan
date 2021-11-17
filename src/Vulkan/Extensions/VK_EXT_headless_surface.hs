@@ -159,6 +159,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateHeadlessSurfaceEXT))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -229,7 +230,7 @@ createHeadlessSurfaceEXT :: forall io
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (SurfaceKHR)
 createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateHeadlessSurfaceEXTPtr = pVkCreateHeadlessSurfaceEXT (instanceCmds (instance' :: Instance))
+  let vkCreateHeadlessSurfaceEXTPtr = pVkCreateHeadlessSurfaceEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateHeadlessSurfaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateHeadlessSurfaceEXT is null" Nothing Nothing
   let vkCreateHeadlessSurfaceEXT' = mkVkCreateHeadlessSurfaceEXT vkCreateHeadlessSurfaceEXTPtr

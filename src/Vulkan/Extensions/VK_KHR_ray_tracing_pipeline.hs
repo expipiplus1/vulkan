@@ -813,11 +813,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.Handles (DeferredOperationKHR)
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetRayTracingPipelineStackSizeKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdTraceRaysIndirectKHR))
@@ -1370,7 +1372,7 @@ cmdTraceRaysKHR :: forall io
                    ("depth" ::: Word32)
                 -> io ()
 cmdTraceRaysKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable width height depth = liftIO . evalContT $ do
-  let vkCmdTraceRaysKHRPtr = pVkCmdTraceRaysKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdTraceRaysKHRPtr = pVkCmdTraceRaysKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdTraceRaysKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysKHR is null" Nothing Nothing
   let vkCmdTraceRaysKHR' = mkVkCmdTraceRaysKHR vkCmdTraceRaysKHRPtr
@@ -1469,7 +1471,7 @@ getRayTracingShaderGroupHandlesKHR :: forall io
                                       ("data" ::: Ptr ())
                                    -> io ()
 getRayTracingShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
-  let vkGetRayTracingShaderGroupHandlesKHRPtr = pVkGetRayTracingShaderGroupHandlesKHR (deviceCmds (device :: Device))
+  let vkGetRayTracingShaderGroupHandlesKHRPtr = pVkGetRayTracingShaderGroupHandlesKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupHandlesKHR' = mkVkGetRayTracingShaderGroupHandlesKHR vkGetRayTracingShaderGroupHandlesKHRPtr
@@ -1565,7 +1567,7 @@ getRayTracingCaptureReplayShaderGroupHandlesKHR :: forall io
                                                    ("data" ::: Ptr ())
                                                 -> io ()
 getRayTracingCaptureReplayShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
-  let vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr = pVkGetRayTracingCaptureReplayShaderGroupHandlesKHR (deviceCmds (device :: Device))
+  let vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr = pVkGetRayTracingCaptureReplayShaderGroupHandlesKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingCaptureReplayShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingCaptureReplayShaderGroupHandlesKHR' = mkVkGetRayTracingCaptureReplayShaderGroupHandlesKHR vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr
@@ -1728,7 +1730,7 @@ createRayTracingPipelinesKHR :: forall io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesKHR device deferredOperation pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (deviceCmds (device :: Device))
+  let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRayTracingPipelinesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesKHR is null" Nothing Nothing
   let vkCreateRayTracingPipelinesKHR' = mkVkCreateRayTracingPipelinesKHR vkCreateRayTracingPipelinesKHRPtr
@@ -2281,7 +2283,7 @@ cmdTraceRaysIndirectKHR :: forall io
                            ("indirectDeviceAddress" ::: DeviceAddress)
                         -> io ()
 cmdTraceRaysIndirectKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable indirectDeviceAddress = liftIO . evalContT $ do
-  let vkCmdTraceRaysIndirectKHRPtr = pVkCmdTraceRaysIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdTraceRaysIndirectKHRPtr = pVkCmdTraceRaysIndirectKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdTraceRaysIndirectKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysIndirectKHR is null" Nothing Nothing
   let vkCmdTraceRaysIndirectKHR' = mkVkCmdTraceRaysIndirectKHR vkCmdTraceRaysIndirectKHRPtr
@@ -2354,7 +2356,7 @@ getRayTracingShaderGroupStackSizeKHR :: forall io
                                         ShaderGroupShaderKHR
                                      -> io (DeviceSize)
 getRayTracingShaderGroupStackSizeKHR device pipeline group groupShader = liftIO $ do
-  let vkGetRayTracingShaderGroupStackSizeKHRPtr = pVkGetRayTracingShaderGroupStackSizeKHR (deviceCmds (device :: Device))
+  let vkGetRayTracingShaderGroupStackSizeKHRPtr = pVkGetRayTracingShaderGroupStackSizeKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingShaderGroupStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupStackSizeKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupStackSizeKHR' = mkVkGetRayTracingShaderGroupStackSizeKHR vkGetRayTracingShaderGroupStackSizeKHRPtr
@@ -2438,7 +2440,7 @@ cmdSetRayTracingPipelineStackSizeKHR :: forall io
                                         ("pipelineStackSize" ::: Word32)
                                      -> io ()
 cmdSetRayTracingPipelineStackSizeKHR commandBuffer pipelineStackSize = liftIO $ do
-  let vkCmdSetRayTracingPipelineStackSizeKHRPtr = pVkCmdSetRayTracingPipelineStackSizeKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetRayTracingPipelineStackSizeKHRPtr = pVkCmdSetRayTracingPipelineStackSizeKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetRayTracingPipelineStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRayTracingPipelineStackSizeKHR is null" Nothing Nothing
   let vkCmdSetRayTracingPipelineStackSizeKHR' = mkVkCmdSetRayTracingPipelineStackSizeKHR vkCmdSetRayTracingPipelineStackSizeKHRPtr
@@ -2981,7 +2983,7 @@ deriving instance Show (Chain es) => Show (RayTracingPipelineCreateInfoKHR es)
 
 instance Extensible RayTracingPipelineCreateInfoKHR where
   extensibleTypeName = "RayTracingPipelineCreateInfoKHR"
-  setNext x next = x{next = next}
+  setNext RayTracingPipelineCreateInfoKHR{..} next' = RayTracingPipelineCreateInfoKHR{next = next', ..}
   getNext RayTracingPipelineCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RayTracingPipelineCreateInfoKHR e => b) -> Maybe b
   extends _ f

@@ -213,6 +213,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryHostPointerPropertiesEXT))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
@@ -302,7 +303,7 @@ getMemoryHostPointerPropertiesEXT :: forall io
                                      ("hostPointer" ::: Ptr ())
                                   -> io (MemoryHostPointerPropertiesEXT)
 getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalContT $ do
-  let vkGetMemoryHostPointerPropertiesEXTPtr = pVkGetMemoryHostPointerPropertiesEXT (deviceCmds (device :: Device))
+  let vkGetMemoryHostPointerPropertiesEXTPtr = pVkGetMemoryHostPointerPropertiesEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryHostPointerPropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryHostPointerPropertiesEXT is null" Nothing Nothing
   let vkGetMemoryHostPointerPropertiesEXT' = mkVkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXTPtr

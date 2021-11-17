@@ -188,6 +188,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetLineStippleEXT))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -269,7 +270,7 @@ cmdSetLineStippleEXT :: forall io
                         ("lineStipplePattern" ::: Word16)
                      -> io ()
 cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
-  let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetLineStippleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineStippleEXT is null" Nothing Nothing
   let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT vkCmdSetLineStippleEXTPtr

@@ -150,6 +150,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateImagePipeSurfaceFUCHSIA))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -221,7 +222,7 @@ createImagePipeSurfaceFUCHSIA :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (SurfaceKHR)
 createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateImagePipeSurfaceFUCHSIAPtr = pVkCreateImagePipeSurfaceFUCHSIA (instanceCmds (instance' :: Instance))
+  let vkCreateImagePipeSurfaceFUCHSIAPtr = pVkCreateImagePipeSurfaceFUCHSIA (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateImagePipeSurfaceFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImagePipeSurfaceFUCHSIA is null" Nothing Nothing
   let vkCreateImagePipeSurfaceFUCHSIA' = mkVkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIAPtr

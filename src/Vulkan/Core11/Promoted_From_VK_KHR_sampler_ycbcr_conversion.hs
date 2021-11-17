@@ -71,6 +71,7 @@ import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.ImageView (ComponentMapping)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSamplerYcbcrConversion))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySamplerYcbcrConversion))
 import Vulkan.Core10.Handles (Device_T)
@@ -189,7 +190,7 @@ createSamplerYcbcrConversion :: forall a io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (SamplerYcbcrConversion)
 createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device))
+  let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSamplerYcbcrConversionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSamplerYcbcrConversion is null" Nothing Nothing
   let vkCreateSamplerYcbcrConversion' = mkVkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversionPtr
@@ -267,7 +268,7 @@ destroySamplerYcbcrConversion :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
 destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
-  let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device))
+  let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySamplerYcbcrConversionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySamplerYcbcrConversion is null" Nothing Nothing
   let vkDestroySamplerYcbcrConversion' = mkVkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversionPtr
@@ -565,7 +566,7 @@ deriving instance Show (Chain es) => Show (SamplerYcbcrConversionCreateInfo es)
 
 instance Extensible SamplerYcbcrConversionCreateInfo where
   extensibleTypeName = "SamplerYcbcrConversionCreateInfo"
-  setNext x next = x{next = next}
+  setNext SamplerYcbcrConversionCreateInfo{..} next' = SamplerYcbcrConversionCreateInfo{next = next', ..}
   getNext SamplerYcbcrConversionCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerYcbcrConversionCreateInfo e => b) -> Maybe b
   extends _ f

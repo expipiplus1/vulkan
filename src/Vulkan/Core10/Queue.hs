@@ -58,6 +58,7 @@ import Vulkan.Core10.Handles (CommandBuffer_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (D3D12FenceSubmitInfoKHR)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkDeviceWaitIdle))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceQueue))
 import Vulkan.Dynamic (DeviceCmds(pVkQueueSubmit))
@@ -152,7 +153,7 @@ getDeviceQueue :: forall io
                   ("queueIndex" ::: Word32)
                -> io (Queue)
 getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
-  let cmds = deviceCmds (device :: Device)
+  let cmds = case device of Device{deviceCmds} -> deviceCmds
   let vkGetDeviceQueuePtr = pVkGetDeviceQueue cmds
   lift $ unless (vkGetDeviceQueuePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue is null" Nothing Nothing
@@ -415,7 +416,7 @@ queueSubmit :: forall io
                Fence
             -> io ()
 queueSubmit queue submits fence = liftIO . evalContT $ do
-  let vkQueueSubmitPtr = pVkQueueSubmit (deviceCmds (queue :: Queue))
+  let vkQueueSubmitPtr = pVkQueueSubmit (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueSubmitPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSubmit is null" Nothing Nothing
   let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
@@ -444,7 +445,7 @@ queueWaitIdleSafeOrUnsafe :: forall io
                              Queue
                           -> io ()
 queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
-  let vkQueueWaitIdlePtr = pVkQueueWaitIdle (deviceCmds (queue :: Queue))
+  let vkQueueWaitIdlePtr = pVkQueueWaitIdle (case queue of Queue{deviceCmds} -> deviceCmds)
   unless (vkQueueWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueWaitIdle is null" Nothing Nothing
   let vkQueueWaitIdle' = mkVkQueueWaitIdle vkQueueWaitIdlePtr
@@ -534,7 +535,7 @@ deviceWaitIdleSafeOrUnsafe :: forall io
                               Device
                            -> io ()
 deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
-  let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (deviceCmds (device :: Device))
+  let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeviceWaitIdle is null" Nothing Nothing
   let vkDeviceWaitIdle' = mkVkDeviceWaitIdle vkDeviceWaitIdlePtr
@@ -855,7 +856,7 @@ deriving instance Show (Chain es) => Show (SubmitInfo es)
 
 instance Extensible SubmitInfo where
   extensibleTypeName = "SubmitInfo"
-  setNext x next = x{next = next}
+  setNext SubmitInfo{..} next' = SubmitInfo{next = next', ..}
   getNext SubmitInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubmitInfo e => b) -> Maybe b
   extends _ f

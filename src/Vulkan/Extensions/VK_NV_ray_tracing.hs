@@ -645,11 +645,13 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructu
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (CopyAccelerationStructureModeKHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (CopyAccelerationStructureModeKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkBindAccelerationStructureMemoryNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBuildAccelerationStructureNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyAccelerationStructureNV))
@@ -839,7 +841,7 @@ compileDeferredNV :: forall io
                      ("shader" ::: Word32)
                   -> io ()
 compileDeferredNV device pipeline shader = liftIO $ do
-  let vkCompileDeferredNVPtr = pVkCompileDeferredNV (deviceCmds (device :: Device))
+  let vkCompileDeferredNVPtr = pVkCompileDeferredNV (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkCompileDeferredNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCompileDeferredNV is null" Nothing Nothing
   let vkCompileDeferredNV' = mkVkCompileDeferredNV vkCompileDeferredNVPtr
@@ -918,7 +920,7 @@ createAccelerationStructureNV :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (AccelerationStructureNV)
 createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateAccelerationStructureNVPtr = pVkCreateAccelerationStructureNV (deviceCmds (device :: Device))
+  let vkCreateAccelerationStructureNVPtr = pVkCreateAccelerationStructureNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAccelerationStructureNV is null" Nothing Nothing
   let vkCreateAccelerationStructureNV' = mkVkCreateAccelerationStructureNV vkCreateAccelerationStructureNVPtr
@@ -1015,7 +1017,7 @@ destroyAccelerationStructureNV :: forall io
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io ()
 destroyAccelerationStructureNV device accelerationStructure allocator = liftIO . evalContT $ do
-  let vkDestroyAccelerationStructureNVPtr = pVkDestroyAccelerationStructureNV (deviceCmds (device :: Device))
+  let vkDestroyAccelerationStructureNVPtr = pVkDestroyAccelerationStructureNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyAccelerationStructureNV is null" Nothing Nothing
   let vkDestroyAccelerationStructureNV' = mkVkDestroyAccelerationStructureNV vkDestroyAccelerationStructureNVPtr
@@ -1062,7 +1064,7 @@ getAccelerationStructureMemoryRequirementsNV :: forall a io
                                                 AccelerationStructureMemoryRequirementsInfoNV
                                              -> io (MemoryRequirements2KHR a)
 getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ do
-  let vkGetAccelerationStructureMemoryRequirementsNVPtr = pVkGetAccelerationStructureMemoryRequirementsNV (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureMemoryRequirementsNVPtr = pVkGetAccelerationStructureMemoryRequirementsNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAccelerationStructureMemoryRequirementsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureMemoryRequirementsNV is null" Nothing Nothing
   let vkGetAccelerationStructureMemoryRequirementsNV' = mkVkGetAccelerationStructureMemoryRequirementsNV vkGetAccelerationStructureMemoryRequirementsNVPtr
@@ -1116,7 +1118,7 @@ bindAccelerationStructureMemoryNV :: forall io
                                      ("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoNV)
                                   -> io ()
 bindAccelerationStructureMemoryNV device bindInfos = liftIO . evalContT $ do
-  let vkBindAccelerationStructureMemoryNVPtr = pVkBindAccelerationStructureMemoryNV (deviceCmds (device :: Device))
+  let vkBindAccelerationStructureMemoryNVPtr = pVkBindAccelerationStructureMemoryNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBindAccelerationStructureMemoryNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindAccelerationStructureMemoryNV is null" Nothing Nothing
   let vkBindAccelerationStructureMemoryNV' = mkVkBindAccelerationStructureMemoryNV vkBindAccelerationStructureMemoryNVPtr
@@ -1246,7 +1248,7 @@ cmdCopyAccelerationStructureNV :: forall io
                                   CopyAccelerationStructureModeKHR
                                -> io ()
 cmdCopyAccelerationStructureNV commandBuffer dst src mode = liftIO $ do
-  let vkCmdCopyAccelerationStructureNVPtr = pVkCmdCopyAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyAccelerationStructureNVPtr = pVkCmdCopyAccelerationStructureNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdCopyAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureNV is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureNV' = mkVkCmdCopyAccelerationStructureNV vkCmdCopyAccelerationStructureNVPtr
@@ -1388,7 +1390,7 @@ cmdWriteAccelerationStructuresPropertiesNV :: forall io
                                               ("firstQuery" ::: Word32)
                                            -> io ()
 cmdWriteAccelerationStructuresPropertiesNV commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
-  let vkCmdWriteAccelerationStructuresPropertiesNVPtr = pVkCmdWriteAccelerationStructuresPropertiesNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteAccelerationStructuresPropertiesNVPtr = pVkCmdWriteAccelerationStructuresPropertiesNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWriteAccelerationStructuresPropertiesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteAccelerationStructuresPropertiesNV is null" Nothing Nothing
   let vkCmdWriteAccelerationStructuresPropertiesNV' = mkVkCmdWriteAccelerationStructuresPropertiesNV vkCmdWriteAccelerationStructuresPropertiesNVPtr
@@ -1602,7 +1604,7 @@ cmdBuildAccelerationStructureNV :: forall io
                                    ("scratchOffset" ::: DeviceSize)
                                 -> io ()
 cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = liftIO . evalContT $ do
-  let vkCmdBuildAccelerationStructureNVPtr = pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBuildAccelerationStructureNVPtr = pVkCmdBuildAccelerationStructureNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructureNV is null" Nothing Nothing
   let vkCmdBuildAccelerationStructureNV' = mkVkCmdBuildAccelerationStructureNV vkCmdBuildAccelerationStructureNVPtr
@@ -2086,7 +2088,7 @@ cmdTraceRaysNV :: forall io
                   ("depth" ::: Word32)
                -> io ()
 cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth = liftIO $ do
-  let vkCmdTraceRaysNVPtr = pVkCmdTraceRaysNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdTraceRaysNVPtr = pVkCmdTraceRaysNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdTraceRaysNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysNV is null" Nothing Nothing
   let vkCmdTraceRaysNV' = mkVkCmdTraceRaysNV vkCmdTraceRaysNVPtr
@@ -2160,7 +2162,7 @@ getAccelerationStructureHandleNV :: forall io
                                     ("data" ::: Ptr ())
                                  -> io ()
 getAccelerationStructureHandleNV device accelerationStructure dataSize data' = liftIO $ do
-  let vkGetAccelerationStructureHandleNVPtr = pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureHandleNVPtr = pVkGetAccelerationStructureHandleNV (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetAccelerationStructureHandleNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureHandleNV is null" Nothing Nothing
   let vkGetAccelerationStructureHandleNV' = mkVkGetAccelerationStructureHandleNV vkGetAccelerationStructureHandleNVPtr
@@ -2276,7 +2278,7 @@ createRayTracingPipelinesNV :: forall io
                                ("allocator" ::: Maybe AllocationCallbacks)
                             -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device))
+  let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRayTracingPipelinesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesNV is null" Nothing Nothing
   let vkCreateRayTracingPipelinesNV' = mkVkCreateRayTracingPipelinesNV vkCreateRayTracingPipelinesNVPtr
@@ -2794,7 +2796,7 @@ deriving instance Show (Chain es) => Show (RayTracingPipelineCreateInfoNV es)
 
 instance Extensible RayTracingPipelineCreateInfoNV where
   extensibleTypeName = "RayTracingPipelineCreateInfoNV"
-  setNext x next = x{next = next}
+  setNext RayTracingPipelineCreateInfoNV{..} next' = RayTracingPipelineCreateInfoNV{next = next', ..}
   getNext RayTracingPipelineCreateInfoNV{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RayTracingPipelineCreateInfoNV e => b) -> Maybe b
   extends _ f

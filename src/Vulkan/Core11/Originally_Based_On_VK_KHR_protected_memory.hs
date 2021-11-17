@@ -57,6 +57,7 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceQueue2))
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 import Vulkan.Core10.Handles (Device_T)
@@ -112,7 +113,7 @@ getDeviceQueue2 :: forall io
                    DeviceQueueInfo2
                 -> io (Queue)
 getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
-  let cmds = deviceCmds (device :: Device)
+  let cmds = case device of Device{deviceCmds} -> deviceCmds
   let vkGetDeviceQueue2Ptr = pVkGetDeviceQueue2 cmds
   lift $ unless (vkGetDeviceQueue2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue2 is null" Nothing Nothing

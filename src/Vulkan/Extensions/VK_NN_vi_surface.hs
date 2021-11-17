@@ -166,6 +166,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateViSurfaceNN))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -252,7 +253,7 @@ createViSurfaceNN :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (SurfaceKHR)
 createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateViSurfaceNNPtr = pVkCreateViSurfaceNN (instanceCmds (instance' :: Instance))
+  let vkCreateViSurfaceNNPtr = pVkCreateViSurfaceNN (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateViSurfaceNNPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateViSurfaceNN is null" Nothing Nothing
   let vkCreateViSurfaceNN' = mkVkCreateViSurfaceNN vkCreateViSurfaceNNPtr

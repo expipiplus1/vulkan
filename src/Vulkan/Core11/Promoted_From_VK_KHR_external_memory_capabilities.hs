@@ -62,6 +62,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceExternalBufferProperties
 import Vulkan.Core10.APIConstants (LUID_SIZE)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
@@ -113,7 +114,7 @@ getPhysicalDeviceExternalBufferProperties :: forall io
                                              PhysicalDeviceExternalBufferInfo
                                           -> io (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalBufferPropertiesPtr = pVkGetPhysicalDeviceExternalBufferProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceExternalBufferPropertiesPtr = pVkGetPhysicalDeviceExternalBufferProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalBufferPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalBufferProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalBufferProperties' = mkVkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferPropertiesPtr

@@ -42,6 +42,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkBindBufferMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkBindImageMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferMemoryRequirements))
@@ -91,7 +92,7 @@ getBufferMemoryRequirements :: forall io
                                Buffer
                             -> io (MemoryRequirements)
 getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
-  let vkGetBufferMemoryRequirementsPtr = pVkGetBufferMemoryRequirements (deviceCmds (device :: Device))
+  let vkGetBufferMemoryRequirementsPtr = pVkGetBufferMemoryRequirements (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferMemoryRequirementsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferMemoryRequirements is null" Nothing Nothing
   let vkGetBufferMemoryRequirements' = mkVkGetBufferMemoryRequirements vkGetBufferMemoryRequirementsPtr
@@ -280,7 +281,7 @@ bindBufferMemory :: forall io
                     ("memoryOffset" ::: DeviceSize)
                  -> io ()
 bindBufferMemory device buffer memory memoryOffset = liftIO $ do
-  let vkBindBufferMemoryPtr = pVkBindBufferMemory (deviceCmds (device :: Device))
+  let vkBindBufferMemoryPtr = pVkBindBufferMemory (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkBindBufferMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory is null" Nothing Nothing
   let vkBindBufferMemory' = mkVkBindBufferMemory vkBindBufferMemoryPtr
@@ -338,7 +339,7 @@ getImageMemoryRequirements :: forall io
                               Image
                            -> io (MemoryRequirements)
 getImageMemoryRequirements device image = liftIO . evalContT $ do
-  let vkGetImageMemoryRequirementsPtr = pVkGetImageMemoryRequirements (deviceCmds (device :: Device))
+  let vkGetImageMemoryRequirementsPtr = pVkGetImageMemoryRequirements (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageMemoryRequirementsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageMemoryRequirements is null" Nothing Nothing
   let vkGetImageMemoryRequirements' = mkVkGetImageMemoryRequirements vkGetImageMemoryRequirementsPtr
@@ -542,7 +543,7 @@ bindImageMemory :: forall io
                    ("memoryOffset" ::: DeviceSize)
                 -> io ()
 bindImageMemory device image memory memoryOffset = liftIO $ do
-  let vkBindImageMemoryPtr = pVkBindImageMemory (deviceCmds (device :: Device))
+  let vkBindImageMemoryPtr = pVkBindImageMemory (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkBindImageMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory is null" Nothing Nothing
   let vkBindImageMemory' = mkVkBindImageMemory vkBindImageMemoryPtr

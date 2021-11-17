@@ -51,6 +51,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (DescriptorSetLayout)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreatePipelineLayout))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipelineLayout))
 import Vulkan.Core10.Handles (Device_T)
@@ -122,7 +123,7 @@ createPipelineLayout :: forall io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (PipelineLayout)
 createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
-  let vkCreatePipelineLayoutPtr = pVkCreatePipelineLayout (deviceCmds (device :: Device))
+  let vkCreatePipelineLayoutPtr = pVkCreatePipelineLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreatePipelineLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreatePipelineLayout is null" Nothing Nothing
   let vkCreatePipelineLayout' = mkVkCreatePipelineLayout vkCreatePipelineLayoutPtr
@@ -216,7 +217,7 @@ destroyPipelineLayout :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
 destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
-  let vkDestroyPipelineLayoutPtr = pVkDestroyPipelineLayout (deviceCmds (device :: Device))
+  let vkDestroyPipelineLayoutPtr = pVkDestroyPipelineLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyPipelineLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPipelineLayout is null" Nothing Nothing
   let vkDestroyPipelineLayout' = mkVkDestroyPipelineLayout vkDestroyPipelineLayoutPtr

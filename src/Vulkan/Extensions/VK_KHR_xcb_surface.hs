@@ -233,11 +233,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateXcbSurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceXcbPresentationSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -305,7 +307,7 @@ createXcbSurfaceKHR :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (SurfaceKHR)
 createXcbSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateXcbSurfaceKHRPtr = pVkCreateXcbSurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateXcbSurfaceKHRPtr = pVkCreateXcbSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateXcbSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateXcbSurfaceKHR is null" Nothing Nothing
   let vkCreateXcbSurfaceKHR' = mkVkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHRPtr
@@ -366,7 +368,7 @@ getPhysicalDeviceXcbPresentationSupportKHR :: forall io
                                               ("visual_id" ::: Xcb_visualid_t)
                                            -> io (Bool)
 getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id = liftIO $ do
-  let vkGetPhysicalDeviceXcbPresentationSupportKHRPtr = pVkGetPhysicalDeviceXcbPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceXcbPresentationSupportKHRPtr = pVkGetPhysicalDeviceXcbPresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceXcbPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceXcbPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceXcbPresentationSupportKHR' = mkVkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHRPtr

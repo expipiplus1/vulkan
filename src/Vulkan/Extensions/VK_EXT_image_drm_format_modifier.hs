@@ -606,6 +606,7 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageDrmFormatModifierPropertiesEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
@@ -674,7 +675,7 @@ getImageDrmFormatModifierPropertiesEXT :: forall io
                                           Image
                                        -> io (ImageDrmFormatModifierPropertiesEXT)
 getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
-  let vkGetImageDrmFormatModifierPropertiesEXTPtr = pVkGetImageDrmFormatModifierPropertiesEXT (deviceCmds (device :: Device))
+  let vkGetImageDrmFormatModifierPropertiesEXTPtr = pVkGetImageDrmFormatModifierPropertiesEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageDrmFormatModifierPropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageDrmFormatModifierPropertiesEXT is null" Nothing Nothing
   let vkGetImageDrmFormatModifierPropertiesEXT' = mkVkGetImageDrmFormatModifierPropertiesEXT vkGetImageDrmFormatModifierPropertiesEXTPtr

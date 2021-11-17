@@ -58,6 +58,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateQueryPool))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyQueryPool))
 import Vulkan.Dynamic (DeviceCmds(pVkGetQueryPoolResults))
@@ -148,7 +149,7 @@ createQueryPool :: forall a io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (QueryPool)
 createQueryPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateQueryPoolPtr = pVkCreateQueryPool (deviceCmds (device :: Device))
+  let vkCreateQueryPoolPtr = pVkCreateQueryPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateQueryPool is null" Nothing Nothing
   let vkCreateQueryPool' = mkVkCreateQueryPool vkCreateQueryPoolPtr
@@ -245,7 +246,7 @@ destroyQueryPool :: forall io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
-  let vkDestroyQueryPoolPtr = pVkDestroyQueryPool (deviceCmds (device :: Device))
+  let vkDestroyQueryPoolPtr = pVkDestroyQueryPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyQueryPool is null" Nothing Nothing
   let vkDestroyQueryPool' = mkVkDestroyQueryPool vkDestroyQueryPoolPtr
@@ -494,7 +495,7 @@ getQueryPoolResults :: forall io
                        QueryResultFlags
                     -> io (Result)
 getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = liftIO $ do
-  let vkGetQueryPoolResultsPtr = pVkGetQueryPoolResults (deviceCmds (device :: Device))
+  let vkGetQueryPoolResultsPtr = pVkGetQueryPoolResults (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetQueryPoolResultsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueryPoolResults is null" Nothing Nothing
   let vkGetQueryPoolResults' = mkVkGetQueryPoolResults vkGetQueryPoolResultsPtr
@@ -590,7 +591,7 @@ deriving instance Show (Chain es) => Show (QueryPoolCreateInfo es)
 
 instance Extensible QueryPoolCreateInfo where
   extensibleTypeName = "QueryPoolCreateInfo"
-  setNext x next = x{next = next}
+  setNext QueryPoolCreateInfo{..} next' = QueryPoolCreateInfo{next = next', ..}
   getNext QueryPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends QueryPoolCreateInfo e => b) -> Maybe b
   extends _ f

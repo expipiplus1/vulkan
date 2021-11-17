@@ -423,9 +423,11 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquirePerformanceConfigurationINTEL))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetPerformanceMarkerINTEL))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetPerformanceOverrideINTEL))
@@ -440,6 +442,7 @@ import Vulkan.Extensions.Handles (PerformanceConfigurationINTEL)
 import Vulkan.Extensions.Handles (PerformanceConfigurationINTEL(..))
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -495,7 +498,7 @@ initializePerformanceApiINTEL :: forall io
                                  ("initializeInfo" ::: InitializePerformanceApiInfoINTEL)
                               -> io ()
 initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
-  let vkInitializePerformanceApiINTELPtr = pVkInitializePerformanceApiINTEL (deviceCmds (device :: Device))
+  let vkInitializePerformanceApiINTELPtr = pVkInitializePerformanceApiINTEL (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkInitializePerformanceApiINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInitializePerformanceApiINTEL is null" Nothing Nothing
   let vkInitializePerformanceApiINTEL' = mkVkInitializePerformanceApiINTEL vkInitializePerformanceApiINTELPtr
@@ -529,7 +532,7 @@ uninitializePerformanceApiINTEL :: forall io
                                    Device
                                 -> io ()
 uninitializePerformanceApiINTEL device = liftIO $ do
-  let vkUninitializePerformanceApiINTELPtr = pVkUninitializePerformanceApiINTEL (deviceCmds (device :: Device))
+  let vkUninitializePerformanceApiINTELPtr = pVkUninitializePerformanceApiINTEL (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkUninitializePerformanceApiINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUninitializePerformanceApiINTEL is null" Nothing Nothing
   let vkUninitializePerformanceApiINTEL' = mkVkUninitializePerformanceApiINTEL vkUninitializePerformanceApiINTELPtr
@@ -613,7 +616,7 @@ cmdSetPerformanceMarkerINTEL :: forall io
                                 PerformanceMarkerInfoINTEL
                              -> io ()
 cmdSetPerformanceMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceMarkerINTELPtr = pVkCmdSetPerformanceMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPerformanceMarkerINTELPtr = pVkCmdSetPerformanceMarkerINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceMarkerINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceMarkerINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceMarkerINTEL' = mkVkCmdSetPerformanceMarkerINTEL vkCmdSetPerformanceMarkerINTELPtr
@@ -694,7 +697,7 @@ cmdSetPerformanceStreamMarkerINTEL :: forall io
                                       PerformanceStreamMarkerInfoINTEL
                                    -> io ()
 cmdSetPerformanceStreamMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceStreamMarkerINTELPtr = pVkCmdSetPerformanceStreamMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPerformanceStreamMarkerINTELPtr = pVkCmdSetPerformanceStreamMarkerINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceStreamMarkerINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceStreamMarkerINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceStreamMarkerINTEL' = mkVkCmdSetPerformanceStreamMarkerINTEL vkCmdSetPerformanceStreamMarkerINTELPtr
@@ -782,7 +785,7 @@ cmdSetPerformanceOverrideINTEL :: forall io
                                   PerformanceOverrideInfoINTEL
                                -> io ()
 cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceOverrideINTELPtr = pVkCmdSetPerformanceOverrideINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPerformanceOverrideINTELPtr = pVkCmdSetPerformanceOverrideINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceOverrideINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceOverrideINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceOverrideINTEL' = mkVkCmdSetPerformanceOverrideINTEL vkCmdSetPerformanceOverrideINTELPtr
@@ -837,7 +840,7 @@ acquirePerformanceConfigurationINTEL :: forall io
                                         PerformanceConfigurationAcquireInfoINTEL
                                      -> io (PerformanceConfigurationINTEL)
 acquirePerformanceConfigurationINTEL device acquireInfo = liftIO . evalContT $ do
-  let vkAcquirePerformanceConfigurationINTELPtr = pVkAcquirePerformanceConfigurationINTEL (deviceCmds (device :: Device))
+  let vkAcquirePerformanceConfigurationINTELPtr = pVkAcquirePerformanceConfigurationINTEL (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquirePerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquirePerformanceConfigurationINTEL is null" Nothing Nothing
   let vkAcquirePerformanceConfigurationINTEL' = mkVkAcquirePerformanceConfigurationINTEL vkAcquirePerformanceConfigurationINTELPtr
@@ -910,7 +913,7 @@ releasePerformanceConfigurationINTEL :: forall io
                                         PerformanceConfigurationINTEL
                                      -> io ()
 releasePerformanceConfigurationINTEL device configuration = liftIO $ do
-  let vkReleasePerformanceConfigurationINTELPtr = pVkReleasePerformanceConfigurationINTEL (deviceCmds (device :: Device))
+  let vkReleasePerformanceConfigurationINTELPtr = pVkReleasePerformanceConfigurationINTEL (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkReleasePerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleasePerformanceConfigurationINTEL is null" Nothing Nothing
   let vkReleasePerformanceConfigurationINTEL' = mkVkReleasePerformanceConfigurationINTEL vkReleasePerformanceConfigurationINTELPtr
@@ -975,7 +978,7 @@ queueSetPerformanceConfigurationINTEL :: forall io
                                          PerformanceConfigurationINTEL
                                       -> io ()
 queueSetPerformanceConfigurationINTEL queue configuration = liftIO $ do
-  let vkQueueSetPerformanceConfigurationINTELPtr = pVkQueueSetPerformanceConfigurationINTEL (deviceCmds (queue :: Queue))
+  let vkQueueSetPerformanceConfigurationINTELPtr = pVkQueueSetPerformanceConfigurationINTEL (case queue of Queue{deviceCmds} -> deviceCmds)
   unless (vkQueueSetPerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSetPerformanceConfigurationINTEL is null" Nothing Nothing
   let vkQueueSetPerformanceConfigurationINTEL' = mkVkQueueSetPerformanceConfigurationINTEL vkQueueSetPerformanceConfigurationINTELPtr
@@ -1024,7 +1027,7 @@ getPerformanceParameterINTEL :: forall io
                                 PerformanceParameterTypeINTEL
                              -> io (PerformanceValueINTEL)
 getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
-  let vkGetPerformanceParameterINTELPtr = pVkGetPerformanceParameterINTEL (deviceCmds (device :: Device))
+  let vkGetPerformanceParameterINTELPtr = pVkGetPerformanceParameterINTEL (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPerformanceParameterINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPerformanceParameterINTEL is null" Nothing Nothing
   let vkGetPerformanceParameterINTEL' = mkVkGetPerformanceParameterINTEL vkGetPerformanceParameterINTELPtr

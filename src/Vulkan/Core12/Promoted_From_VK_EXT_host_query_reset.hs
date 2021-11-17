@@ -37,6 +37,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkResetQueryPool))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Handles (QueryPool)
@@ -114,7 +115,7 @@ resetQueryPool :: forall io
                   ("queryCount" ::: Word32)
                -> io ()
 resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
-  let vkResetQueryPoolPtr = pVkResetQueryPool (deviceCmds (device :: Device))
+  let vkResetQueryPoolPtr = pVkResetQueryPool (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkResetQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetQueryPool is null" Nothing Nothing
   let vkResetQueryPool' = mkVkResetQueryPool vkResetQueryPoolPtr

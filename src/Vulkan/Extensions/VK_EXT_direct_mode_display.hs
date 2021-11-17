@@ -127,6 +127,7 @@ import Vulkan.Extensions.Handles (DisplayKHR(..))
 import Vulkan.Dynamic (InstanceCmds(pVkReleaseDisplayEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -168,7 +169,7 @@ releaseDisplayEXT :: forall io
                      DisplayKHR
                   -> io ()
 releaseDisplayEXT physicalDevice display = liftIO $ do
-  let vkReleaseDisplayEXTPtr = pVkReleaseDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkReleaseDisplayEXTPtr = pVkReleaseDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkReleaseDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseDisplayEXT is null" Nothing Nothing
   let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT vkReleaseDisplayEXTPtr

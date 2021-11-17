@@ -178,6 +178,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkSetDeviceMemoryPriorityEXT))
 import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.Handles (DeviceMemory(..))
@@ -230,7 +231,7 @@ setDeviceMemoryPriorityEXT :: forall io
                               ("priority" ::: Float)
                            -> io ()
 setDeviceMemoryPriorityEXT device memory priority = liftIO $ do
-  let vkSetDeviceMemoryPriorityEXTPtr = pVkSetDeviceMemoryPriorityEXT (deviceCmds (device :: Device))
+  let vkSetDeviceMemoryPriorityEXTPtr = pVkSetDeviceMemoryPriorityEXT (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkSetDeviceMemoryPriorityEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDeviceMemoryPriorityEXT is null" Nothing Nothing
   let vkSetDeviceMemoryPriorityEXT' = mkVkSetDeviceMemoryPriorityEXT vkSetDeviceMemoryPriorityEXTPtr

@@ -116,6 +116,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkAcquireDrmDisplayEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkGetDrmDisplayEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -179,7 +180,7 @@ acquireDrmDisplayEXT :: forall io
                         DisplayKHR
                      -> io ()
 acquireDrmDisplayEXT physicalDevice drmFd display = liftIO $ do
-  let vkAcquireDrmDisplayEXTPtr = pVkAcquireDrmDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkAcquireDrmDisplayEXTPtr = pVkAcquireDrmDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkAcquireDrmDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireDrmDisplayEXT is null" Nothing Nothing
   let vkAcquireDrmDisplayEXT' = mkVkAcquireDrmDisplayEXT vkAcquireDrmDisplayEXTPtr
@@ -242,7 +243,7 @@ getDrmDisplayEXT :: forall io
                     ("connectorId" ::: Word32)
                  -> io (DisplayKHR)
 getDrmDisplayEXT physicalDevice drmFd connectorId = liftIO . evalContT $ do
-  let vkGetDrmDisplayEXTPtr = pVkGetDrmDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDrmDisplayEXTPtr = pVkGetDrmDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDrmDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDrmDisplayEXT is null" Nothing Nothing
   let vkGetDrmDisplayEXT' = mkVkGetDrmDisplayEXT vkGetDrmDisplayEXTPtr

@@ -60,6 +60,7 @@ import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationMemoryAllocateInfoNV)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAllocateMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkFlushMappedMemoryRanges))
 import Vulkan.Dynamic (DeviceCmds(pVkFreeMemory))
@@ -289,7 +290,7 @@ allocateMemory :: forall a io
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io (DeviceMemory)
 allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
-  let vkAllocateMemoryPtr = pVkAllocateMemory (deviceCmds (device :: Device))
+  let vkAllocateMemoryPtr = pVkAllocateMemory (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAllocateMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAllocateMemory is null" Nothing Nothing
   let vkAllocateMemory' = mkVkAllocateMemory vkAllocateMemoryPtr
@@ -397,7 +398,7 @@ freeMemory :: forall io
               ("allocator" ::: Maybe AllocationCallbacks)
            -> io ()
 freeMemory device memory allocator = liftIO . evalContT $ do
-  let vkFreeMemoryPtr = pVkFreeMemory (deviceCmds (device :: Device))
+  let vkFreeMemoryPtr = pVkFreeMemory (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkFreeMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeMemory is null" Nothing Nothing
   let vkFreeMemory' = mkVkFreeMemory vkFreeMemoryPtr
@@ -546,7 +547,7 @@ mapMemory :: forall io
              MemoryMapFlags
           -> io (("data" ::: Ptr ()))
 mapMemory device memory offset size flags = liftIO . evalContT $ do
-  let vkMapMemoryPtr = pVkMapMemory (deviceCmds (device :: Device))
+  let vkMapMemoryPtr = pVkMapMemory (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkMapMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMapMemory is null" Nothing Nothing
   let vkMapMemory' = mkVkMapMemory vkMapMemoryPtr
@@ -611,7 +612,7 @@ unmapMemory :: forall io
                DeviceMemory
             -> io ()
 unmapMemory device memory = liftIO $ do
-  let vkUnmapMemoryPtr = pVkUnmapMemory (deviceCmds (device :: Device))
+  let vkUnmapMemoryPtr = pVkUnmapMemory (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkUnmapMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUnmapMemory is null" Nothing Nothing
   let vkUnmapMemory' = mkVkUnmapMemory vkUnmapMemoryPtr
@@ -690,7 +691,7 @@ flushMappedMemoryRanges :: forall io
                            ("memoryRanges" ::: Vector MappedMemoryRange)
                         -> io ()
 flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
-  let vkFlushMappedMemoryRangesPtr = pVkFlushMappedMemoryRanges (deviceCmds (device :: Device))
+  let vkFlushMappedMemoryRangesPtr = pVkFlushMappedMemoryRanges (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkFlushMappedMemoryRangesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFlushMappedMemoryRanges is null" Nothing Nothing
   let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges vkFlushMappedMemoryRangesPtr
@@ -763,7 +764,7 @@ invalidateMappedMemoryRanges :: forall io
                                 ("memoryRanges" ::: Vector MappedMemoryRange)
                              -> io ()
 invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
-  let vkInvalidateMappedMemoryRangesPtr = pVkInvalidateMappedMemoryRanges (deviceCmds (device :: Device))
+  let vkInvalidateMappedMemoryRangesPtr = pVkInvalidateMappedMemoryRanges (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkInvalidateMappedMemoryRangesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInvalidateMappedMemoryRanges is null" Nothing Nothing
   let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRangesPtr
@@ -820,7 +821,7 @@ getDeviceMemoryCommitment :: forall io
                              DeviceMemory
                           -> io (("committedMemoryInBytes" ::: DeviceSize))
 getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
-  let vkGetDeviceMemoryCommitmentPtr = pVkGetDeviceMemoryCommitment (deviceCmds (device :: Device))
+  let vkGetDeviceMemoryCommitmentPtr = pVkGetDeviceMemoryCommitment (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceMemoryCommitmentPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceMemoryCommitment is null" Nothing Nothing
   let vkGetDeviceMemoryCommitment' = mkVkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitmentPtr
@@ -1314,7 +1315,7 @@ deriving instance Show (Chain es) => Show (MemoryAllocateInfo es)
 
 instance Extensible MemoryAllocateInfo where
   extensibleTypeName = "MemoryAllocateInfo"
-  setNext x next = x{next = next}
+  setNext MemoryAllocateInfo{..} next' = MemoryAllocateInfo{next = next', ..}
   getNext MemoryAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryAllocateInfo e => b) -> Maybe b
   extends _ f

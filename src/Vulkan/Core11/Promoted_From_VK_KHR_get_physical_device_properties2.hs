@@ -91,6 +91,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_4444_formats (PhysicalDevice4444FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage (PhysicalDevice8BitStorageFeatures)
@@ -314,7 +315,7 @@ getPhysicalDeviceFeatures2 :: forall a io
                               PhysicalDevice
                            -> io (PhysicalDeviceFeatures2 a)
 getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFeatures2Ptr = pVkGetPhysicalDeviceFeatures2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceFeatures2Ptr = pVkGetPhysicalDeviceFeatures2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFeatures2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures2' = mkVkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2Ptr
@@ -357,7 +358,7 @@ getPhysicalDeviceProperties2 :: forall a io
                                 PhysicalDevice
                              -> io (PhysicalDeviceProperties2 a)
 getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceProperties2Ptr = pVkGetPhysicalDeviceProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceProperties2Ptr = pVkGetPhysicalDeviceProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties2' = mkVkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2Ptr
@@ -407,7 +408,7 @@ getPhysicalDeviceFormatProperties2 :: forall a io
                                       Format
                                    -> io (FormatProperties2 a)
 getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFormatProperties2Ptr = pVkGetPhysicalDeviceFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceFormatProperties2Ptr = pVkGetPhysicalDeviceFormatProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFormatProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties2' = mkVkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2Ptr
@@ -488,7 +489,7 @@ getPhysicalDeviceImageFormatProperties2 :: forall a b io
                                            (PhysicalDeviceImageFormatInfo2 a)
                                         -> io (ImageFormatProperties2 b)
 getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceImageFormatProperties2Ptr = pVkGetPhysicalDeviceImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceImageFormatProperties2Ptr = pVkGetPhysicalDeviceImageFormatProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceImageFormatProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceImageFormatProperties2' = mkVkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2Ptr
@@ -544,7 +545,7 @@ getPhysicalDeviceQueueFamilyProperties2 :: forall a io
                                            PhysicalDevice
                                         -> io (("queueFamilyProperties" ::: Vector (QueueFamilyProperties2 a)))
 getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceQueueFamilyProperties2Ptr = pVkGetPhysicalDeviceQueueFamilyProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceQueueFamilyProperties2Ptr = pVkGetPhysicalDeviceQueueFamilyProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceQueueFamilyProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceQueueFamilyProperties2' = mkVkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2Ptr
@@ -594,7 +595,7 @@ getPhysicalDeviceMemoryProperties2 :: forall a io
                                       PhysicalDevice
                                    -> io (PhysicalDeviceMemoryProperties2 a)
 getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceMemoryProperties2Ptr = pVkGetPhysicalDeviceMemoryProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceMemoryProperties2Ptr = pVkGetPhysicalDeviceMemoryProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceMemoryProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties2' = mkVkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2Ptr
@@ -655,7 +656,7 @@ getPhysicalDeviceSparseImageFormatProperties2 :: forall io
                                                  PhysicalDeviceSparseImageFormatInfo2
                                               -> io (("properties" ::: Vector SparseImageFormatProperties2))
 getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSparseImageFormatProperties2Ptr = pVkGetPhysicalDeviceSparseImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSparseImageFormatProperties2Ptr = pVkGetPhysicalDeviceSparseImageFormatProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSparseImageFormatProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSparseImageFormatProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceSparseImageFormatProperties2' = mkVkGetPhysicalDeviceSparseImageFormatProperties2 vkGetPhysicalDeviceSparseImageFormatProperties2Ptr
@@ -709,7 +710,7 @@ deriving instance Show (Chain es) => Show (PhysicalDeviceFeatures2 es)
 
 instance Extensible PhysicalDeviceFeatures2 where
   extensibleTypeName = "PhysicalDeviceFeatures2"
-  setNext x next = x{next = next}
+  setNext PhysicalDeviceFeatures2{..} next' = PhysicalDeviceFeatures2{next = next', ..}
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
@@ -947,7 +948,7 @@ deriving instance Show (Chain es) => Show (PhysicalDeviceProperties2 es)
 
 instance Extensible PhysicalDeviceProperties2 where
   extensibleTypeName = "PhysicalDeviceProperties2"
-  setNext x next = x{next = next}
+  setNext PhysicalDeviceProperties2{..} next' = PhysicalDeviceProperties2{next = next', ..}
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
   extends _ f
@@ -1083,7 +1084,7 @@ deriving instance Show (Chain es) => Show (FormatProperties2 es)
 
 instance Extensible FormatProperties2 where
   extensibleTypeName = "FormatProperties2"
-  setNext x next = x{next = next}
+  setNext FormatProperties2{..} next' = FormatProperties2{next = next', ..}
   getNext FormatProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FormatProperties2 e => b) -> Maybe b
   extends _ f
@@ -1186,7 +1187,7 @@ deriving instance Show (Chain es) => Show (ImageFormatProperties2 es)
 
 instance Extensible ImageFormatProperties2 where
   extensibleTypeName = "ImageFormatProperties2"
-  setNext x next = x{next = next}
+  setNext ImageFormatProperties2{..} next' = ImageFormatProperties2{next = next', ..}
   getNext ImageFormatProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageFormatProperties2 e => b) -> Maybe b
   extends _ f
@@ -1342,7 +1343,7 @@ deriving instance Show (Chain es) => Show (PhysicalDeviceImageFormatInfo2 es)
 
 instance Extensible PhysicalDeviceImageFormatInfo2 where
   extensibleTypeName = "PhysicalDeviceImageFormatInfo2"
-  setNext x next = x{next = next}
+  setNext PhysicalDeviceImageFormatInfo2{..} next' = PhysicalDeviceImageFormatInfo2{next = next', ..}
   getNext PhysicalDeviceImageFormatInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceImageFormatInfo2 e => b) -> Maybe b
   extends _ f
@@ -1443,7 +1444,7 @@ deriving instance Show (Chain es) => Show (QueueFamilyProperties2 es)
 
 instance Extensible QueueFamilyProperties2 where
   extensibleTypeName = "QueueFamilyProperties2"
-  setNext x next = x{next = next}
+  setNext QueueFamilyProperties2{..} next' = QueueFamilyProperties2{next = next', ..}
   getNext QueueFamilyProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends QueueFamilyProperties2 e => b) -> Maybe b
   extends _ f
@@ -1523,7 +1524,7 @@ deriving instance Show (Chain es) => Show (PhysicalDeviceMemoryProperties2 es)
 
 instance Extensible PhysicalDeviceMemoryProperties2 where
   extensibleTypeName = "PhysicalDeviceMemoryProperties2"
-  setNext x next = x{next = next}
+  setNext PhysicalDeviceMemoryProperties2{..} next' = PhysicalDeviceMemoryProperties2{next = next', ..}
   getNext PhysicalDeviceMemoryProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceMemoryProperties2 e => b) -> Maybe b
   extends _ f

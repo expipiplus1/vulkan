@@ -53,6 +53,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferDeviceAddress))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferOpaqueCaptureAddress))
@@ -126,7 +127,7 @@ getBufferOpaqueCaptureAddress :: forall io
                                  BufferDeviceAddressInfo
                               -> io (Word64)
 getBufferOpaqueCaptureAddress device info = liftIO . evalContT $ do
-  let vkGetBufferOpaqueCaptureAddressPtr = pVkGetBufferOpaqueCaptureAddress (deviceCmds (device :: Device))
+  let vkGetBufferOpaqueCaptureAddressPtr = pVkGetBufferOpaqueCaptureAddress (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferOpaqueCaptureAddressPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferOpaqueCaptureAddress is null" Nothing Nothing
   let vkGetBufferOpaqueCaptureAddress' = mkVkGetBufferOpaqueCaptureAddress vkGetBufferOpaqueCaptureAddressPtr
@@ -202,7 +203,7 @@ getBufferDeviceAddress :: forall io
                           BufferDeviceAddressInfo
                        -> io (DeviceAddress)
 getBufferDeviceAddress device info = liftIO . evalContT $ do
-  let vkGetBufferDeviceAddressPtr = pVkGetBufferDeviceAddress (deviceCmds (device :: Device))
+  let vkGetBufferDeviceAddressPtr = pVkGetBufferDeviceAddress (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferDeviceAddressPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferDeviceAddress is null" Nothing Nothing
   let vkGetBufferDeviceAddress' = mkVkGetBufferDeviceAddress vkGetBufferDeviceAddressPtr
@@ -270,7 +271,7 @@ getDeviceMemoryOpaqueCaptureAddress :: forall io
                                        DeviceMemoryOpaqueCaptureAddressInfo
                                     -> io (Word64)
 getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
-  let vkGetDeviceMemoryOpaqueCaptureAddressPtr = pVkGetDeviceMemoryOpaqueCaptureAddress (deviceCmds (device :: Device))
+  let vkGetDeviceMemoryOpaqueCaptureAddressPtr = pVkGetDeviceMemoryOpaqueCaptureAddress (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceMemoryOpaqueCaptureAddressPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceMemoryOpaqueCaptureAddress is null" Nothing Nothing
   let vkGetDeviceMemoryOpaqueCaptureAddress' = mkVkGetDeviceMemoryOpaqueCaptureAddress vkGetDeviceMemoryOpaqueCaptureAddressPtr

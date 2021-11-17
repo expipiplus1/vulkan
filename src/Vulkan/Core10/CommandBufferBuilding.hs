@@ -121,6 +121,7 @@ import Vulkan.Core10.OtherTypes (BufferMemoryBarrier)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlagBits(..))
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
@@ -484,7 +485,7 @@ cmdBindPipeline :: forall io
                    Pipeline
                 -> io ()
 cmdBindPipeline commandBuffer pipelineBindPoint pipeline = liftIO $ do
-  let vkCmdBindPipelinePtr = pVkCmdBindPipeline (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindPipelinePtr = pVkCmdBindPipeline (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindPipelinePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipeline is null" Nothing Nothing
   let vkCmdBindPipeline' = mkVkCmdBindPipeline vkCmdBindPipelinePtr
@@ -591,7 +592,7 @@ cmdSetViewport :: forall io
                   ("viewports" ::: Vector Viewport)
                -> io ()
 cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
-  let vkCmdSetViewportPtr = pVkCmdSetViewport (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetViewportPtr = pVkCmdSetViewport (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetViewportPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewport is null" Nothing Nothing
   let vkCmdSetViewport' = mkVkCmdSetViewport vkCmdSetViewportPtr
@@ -714,7 +715,7 @@ cmdSetScissor :: forall io
                  ("scissors" ::: Vector Rect2D)
               -> io ()
 cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
-  let vkCmdSetScissorPtr = pVkCmdSetScissor (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetScissorPtr = pVkCmdSetScissor (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetScissorPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetScissor is null" Nothing Nothing
   let vkCmdSetScissor' = mkVkCmdSetScissor vkCmdSetScissorPtr
@@ -793,7 +794,7 @@ cmdSetLineWidth :: forall io
                    ("lineWidth" ::: Float)
                 -> io ()
 cmdSetLineWidth commandBuffer lineWidth = liftIO $ do
-  let vkCmdSetLineWidthPtr = pVkCmdSetLineWidth (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetLineWidthPtr = pVkCmdSetLineWidth (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetLineWidthPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineWidth is null" Nothing Nothing
   let vkCmdSetLineWidth' = mkVkCmdSetLineWidth vkCmdSetLineWidthPtr
@@ -878,7 +879,7 @@ cmdSetDepthBias :: forall io
                    ("depthBiasSlopeFactor" ::: Float)
                 -> io ()
 cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = liftIO $ do
-  let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthBiasPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBias is null" Nothing Nothing
   let vkCmdSetDepthBias' = mkVkCmdSetDepthBias vkCmdSetDepthBiasPtr
@@ -953,7 +954,7 @@ cmdSetBlendConstants :: forall io
                         ("blendConstants" ::: (Float, Float, Float, Float))
                      -> io ()
 cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
-  let vkCmdSetBlendConstantsPtr = pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetBlendConstantsPtr = pVkCmdSetBlendConstants (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetBlendConstantsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetBlendConstants is null" Nothing Nothing
   let vkCmdSetBlendConstants' = mkVkCmdSetBlendConstants vkCmdSetBlendConstantsPtr
@@ -1047,7 +1048,7 @@ cmdSetDepthBounds :: forall io
                      ("maxDepthBounds" ::: Float)
                   -> io ()
 cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = liftIO $ do
-  let vkCmdSetDepthBoundsPtr = pVkCmdSetDepthBounds (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthBoundsPtr = pVkCmdSetDepthBounds (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthBoundsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBounds is null" Nothing Nothing
   let vkCmdSetDepthBounds' = mkVkCmdSetDepthBounds vkCmdSetDepthBoundsPtr
@@ -1134,7 +1135,7 @@ cmdSetStencilCompareMask :: forall io
                             ("compareMask" ::: Word32)
                          -> io ()
 cmdSetStencilCompareMask commandBuffer faceMask compareMask = liftIO $ do
-  let vkCmdSetStencilCompareMaskPtr = pVkCmdSetStencilCompareMask (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilCompareMaskPtr = pVkCmdSetStencilCompareMask (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilCompareMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilCompareMask is null" Nothing Nothing
   let vkCmdSetStencilCompareMask' = mkVkCmdSetStencilCompareMask vkCmdSetStencilCompareMaskPtr
@@ -1222,7 +1223,7 @@ cmdSetStencilWriteMask :: forall io
                           ("writeMask" ::: Word32)
                        -> io ()
 cmdSetStencilWriteMask commandBuffer faceMask writeMask = liftIO $ do
-  let vkCmdSetStencilWriteMaskPtr = pVkCmdSetStencilWriteMask (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilWriteMaskPtr = pVkCmdSetStencilWriteMask (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilWriteMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilWriteMask is null" Nothing Nothing
   let vkCmdSetStencilWriteMask' = mkVkCmdSetStencilWriteMask vkCmdSetStencilWriteMaskPtr
@@ -1310,7 +1311,7 @@ cmdSetStencilReference :: forall io
                           ("reference" ::: Word32)
                        -> io ()
 cmdSetStencilReference commandBuffer faceMask reference = liftIO $ do
-  let vkCmdSetStencilReferencePtr = pVkCmdSetStencilReference (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilReferencePtr = pVkCmdSetStencilReference (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilReferencePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilReference is null" Nothing Nothing
   let vkCmdSetStencilReference' = mkVkCmdSetStencilReference vkCmdSetStencilReferencePtr
@@ -1530,7 +1531,7 @@ cmdBindDescriptorSets :: forall io
                          ("dynamicOffsets" ::: Vector Word32)
                       -> io ()
 cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = liftIO . evalContT $ do
-  let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindDescriptorSets is null" Nothing Nothing
   let vkCmdBindDescriptorSets' = mkVkCmdBindDescriptorSets vkCmdBindDescriptorSetsPtr
@@ -1640,7 +1641,7 @@ cmdBindIndexBuffer :: forall io
                       IndexType
                    -> io ()
 cmdBindIndexBuffer commandBuffer buffer offset indexType = liftIO $ do
-  let vkCmdBindIndexBufferPtr = pVkCmdBindIndexBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindIndexBufferPtr = pVkCmdBindIndexBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindIndexBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindIndexBuffer is null" Nothing Nothing
   let vkCmdBindIndexBuffer' = mkVkCmdBindIndexBuffer vkCmdBindIndexBufferPtr
@@ -1775,7 +1776,7 @@ cmdBindVertexBuffers :: forall io
                         ("offsets" ::: Vector DeviceSize)
                      -> io ()
 cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalContT $ do
-  let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindVertexBuffersPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindVertexBuffers is null" Nothing Nothing
   let vkCmdBindVertexBuffers' = mkVkCmdBindVertexBuffers vkCmdBindVertexBuffersPtr
@@ -2644,7 +2645,7 @@ cmdDraw :: forall io
            ("firstInstance" ::: Word32)
         -> io ()
 cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = liftIO $ do
-  let vkCmdDrawPtr = pVkCmdDraw (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawPtr = pVkCmdDraw (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDraw is null" Nothing Nothing
   let vkCmdDraw' = mkVkCmdDraw vkCmdDrawPtr
@@ -3537,7 +3538,7 @@ cmdDrawIndexed :: forall io
                   ("firstInstance" ::: Word32)
                -> io ()
 cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = liftIO $ do
-  let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndexedPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexed is null" Nothing Nothing
   let vkCmdDrawIndexed' = mkVkCmdDrawIndexed vkCmdDrawIndexedPtr
@@ -4436,7 +4437,7 @@ cmdDrawIndirect :: forall io
                    ("stride" ::: Word32)
                 -> io ()
 cmdDrawIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
-  let vkCmdDrawIndirectPtr = pVkCmdDrawIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawIndirectPtr = pVkCmdDrawIndirect (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirect is null" Nothing Nothing
   let vkCmdDrawIndirect' = mkVkCmdDrawIndirect vkCmdDrawIndirectPtr
@@ -5338,7 +5339,7 @@ cmdDrawIndexedIndirect :: forall io
                           ("stride" ::: Word32)
                        -> io ()
 cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
-  let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndexedIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexedIndirect is null" Nothing Nothing
   let vkCmdDrawIndexedIndirect' = mkVkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirectPtr
@@ -5688,7 +5689,7 @@ cmdDispatch :: forall io
                ("groupCountZ" ::: Word32)
             -> io ()
 cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
-  let vkCmdDispatchPtr = pVkCmdDispatch (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDispatchPtr = pVkCmdDispatch (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDispatchPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatch is null" Nothing Nothing
   let vkCmdDispatch' = mkVkCmdDispatch vkCmdDispatchPtr
@@ -6030,7 +6031,7 @@ cmdDispatchIndirect :: forall io
                        ("offset" ::: DeviceSize)
                     -> io ()
 cmdDispatchIndirect commandBuffer buffer offset = liftIO $ do
-  let vkCmdDispatchIndirectPtr = pVkCmdDispatchIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDispatchIndirectPtr = pVkCmdDispatchIndirect (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDispatchIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchIndirect is null" Nothing Nothing
   let vkCmdDispatchIndirect' = mkVkCmdDispatchIndirect vkCmdDispatchIndirectPtr
@@ -6181,7 +6182,7 @@ cmdCopyBuffer :: forall io
                  ("regions" ::: Vector BufferCopy)
               -> io ()
 cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ do
-  let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer is null" Nothing Nothing
   let vkCmdCopyBuffer' = mkVkCmdCopyBuffer vkCmdCopyBufferPtr
@@ -6730,7 +6731,7 @@ cmdCopyImage :: forall io
                 ("regions" ::: Vector ImageCopy)
              -> io ()
 cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdCopyImagePtr = pVkCmdCopyImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImagePtr = pVkCmdCopyImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage is null" Nothing Nothing
   let vkCmdCopyImage' = mkVkCmdCopyImage vkCmdCopyImagePtr
@@ -7178,7 +7179,7 @@ cmdBlitImage :: forall io
                 Filter
              -> io ()
 cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions filter' = liftIO . evalContT $ do
-  let vkCmdBlitImagePtr = pVkCmdBlitImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBlitImagePtr = pVkCmdBlitImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBlitImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage is null" Nothing Nothing
   let vkCmdBlitImage' = mkVkCmdBlitImage vkCmdBlitImagePtr
@@ -7529,7 +7530,7 @@ cmdCopyBufferToImage :: forall io
                         ("regions" ::: Vector BufferImageCopy)
                      -> io ()
 cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferToImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage is null" Nothing Nothing
   let vkCmdCopyBufferToImage' = mkVkCmdCopyBufferToImage vkCmdCopyBufferToImagePtr
@@ -7871,7 +7872,7 @@ cmdCopyImageToBuffer :: forall io
                         ("regions" ::: Vector BufferImageCopy)
                      -> io ()
 cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = liftIO . evalContT $ do
-  let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImageToBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer is null" Nothing Nothing
   let vkCmdCopyImageToBuffer' = mkVkCmdCopyImageToBuffer vkCmdCopyImageToBufferPtr
@@ -8032,7 +8033,7 @@ cmdUpdateBuffer :: forall io
                    ("data" ::: Ptr ())
                 -> io ()
 cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = liftIO $ do
-  let vkCmdUpdateBufferPtr = pVkCmdUpdateBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdUpdateBufferPtr = pVkCmdUpdateBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdUpdateBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdUpdateBuffer is null" Nothing Nothing
   let vkCmdUpdateBuffer' = mkVkCmdUpdateBuffer vkCmdUpdateBufferPtr
@@ -8168,7 +8169,7 @@ cmdFillBuffer :: forall io
                  ("data" ::: Word32)
               -> io ()
 cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = liftIO $ do
-  let vkCmdFillBufferPtr = pVkCmdFillBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdFillBufferPtr = pVkCmdFillBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdFillBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdFillBuffer is null" Nothing Nothing
   let vkCmdFillBuffer' = mkVkCmdFillBuffer vkCmdFillBufferPtr
@@ -8356,7 +8357,7 @@ cmdClearColorImage :: forall io
                       ("ranges" ::: Vector ImageSubresourceRange)
                    -> io ()
 cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalContT $ do
-  let vkCmdClearColorImagePtr = pVkCmdClearColorImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdClearColorImagePtr = pVkCmdClearColorImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearColorImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearColorImage is null" Nothing Nothing
   let vkCmdClearColorImage' = mkVkCmdClearColorImage vkCmdClearColorImagePtr
@@ -8577,7 +8578,7 @@ cmdClearDepthStencilImage :: forall io
                              ("ranges" ::: Vector ImageSubresourceRange)
                           -> io ()
 cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = liftIO . evalContT $ do
-  let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearDepthStencilImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearDepthStencilImage is null" Nothing Nothing
   let vkCmdClearDepthStencilImage' = mkVkCmdClearDepthStencilImage vkCmdClearDepthStencilImagePtr
@@ -8759,7 +8760,7 @@ cmdClearAttachments :: forall io
                        ("rects" ::: Vector ClearRect)
                     -> io ()
 cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
-  let vkCmdClearAttachmentsPtr = pVkCmdClearAttachments (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdClearAttachmentsPtr = pVkCmdClearAttachments (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearAttachmentsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearAttachments is null" Nothing Nothing
   let vkCmdClearAttachments' = mkVkCmdClearAttachments vkCmdClearAttachmentsPtr
@@ -9040,7 +9041,7 @@ cmdResolveImage :: forall io
                    ("regions" ::: Vector ImageResolve)
                 -> io ()
 cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdResolveImagePtr = pVkCmdResolveImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResolveImagePtr = pVkCmdResolveImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdResolveImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage is null" Nothing Nothing
   let vkCmdResolveImage' = mkVkCmdResolveImage vkCmdResolveImagePtr
@@ -9194,7 +9195,7 @@ cmdSetEvent :: forall io
                ("stageMask" ::: PipelineStageFlags)
             -> io ()
 cmdSetEvent commandBuffer event stageMask = liftIO $ do
-  let vkCmdSetEventPtr = pVkCmdSetEvent (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetEventPtr = pVkCmdSetEvent (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetEvent is null" Nothing Nothing
   let vkCmdSetEvent' = mkVkCmdSetEvent vkCmdSetEventPtr
@@ -9354,7 +9355,7 @@ cmdResetEvent :: forall io
                  ("stageMask" ::: PipelineStageFlags)
               -> io ()
 cmdResetEvent commandBuffer event stageMask = liftIO $ do
-  let vkCmdResetEventPtr = pVkCmdResetEvent (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResetEventPtr = pVkCmdResetEvent (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdResetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetEvent is null" Nothing Nothing
   let vkCmdResetEvent' = mkVkCmdResetEvent vkCmdResetEventPtr
@@ -9403,7 +9404,7 @@ cmdWaitEventsSafeOrUnsafe :: forall io
                              ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                           -> io ()
 cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
-  let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWaitEventsPtr = pVkCmdWaitEvents (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents is null" Nothing Nothing
   let vkCmdWaitEvents' = mkVkCmdWaitEvents vkCmdWaitEventsPtr
@@ -10200,7 +10201,7 @@ cmdPipelineBarrier :: forall io
                       ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                    -> io ()
 cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
-  let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPipelineBarrierPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPipelineBarrier is null" Nothing Nothing
   let vkCmdPipelineBarrier' = mkVkCmdPipelineBarrier vkCmdPipelineBarrierPtr
@@ -10427,7 +10428,7 @@ cmdBeginQuery :: forall io
                  QueryControlFlags
               -> io ()
 cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
-  let vkCmdBeginQueryPtr = pVkCmdBeginQuery (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginQueryPtr = pVkCmdBeginQuery (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBeginQueryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQuery is null" Nothing Nothing
   let vkCmdBeginQuery' = mkVkCmdBeginQuery vkCmdBeginQueryPtr
@@ -10556,7 +10557,7 @@ cmdEndQuery :: forall io
                ("query" ::: Word32)
             -> io ()
 cmdEndQuery commandBuffer queryPool query = liftIO $ do
-  let vkCmdEndQueryPtr = pVkCmdEndQuery (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndQueryPtr = pVkCmdEndQuery (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndQueryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQuery is null" Nothing Nothing
   let vkCmdEndQuery' = mkVkCmdEndQuery vkCmdEndQueryPtr
@@ -10676,7 +10677,7 @@ cmdResetQueryPool :: forall io
                      ("queryCount" ::: Word32)
                   -> io ()
 cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = liftIO $ do
-  let vkCmdResetQueryPoolPtr = pVkCmdResetQueryPool (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResetQueryPoolPtr = pVkCmdResetQueryPool (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdResetQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetQueryPool is null" Nothing Nothing
   let vkCmdResetQueryPool' = mkVkCmdResetQueryPool vkCmdResetQueryPoolPtr
@@ -10872,7 +10873,7 @@ cmdWriteTimestamp :: forall io
                      ("query" ::: Word32)
                   -> io ()
 cmdWriteTimestamp commandBuffer pipelineStage queryPool query = liftIO $ do
-  let vkCmdWriteTimestampPtr = pVkCmdWriteTimestamp (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteTimestampPtr = pVkCmdWriteTimestamp (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdWriteTimestampPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteTimestamp is null" Nothing Nothing
   let vkCmdWriteTimestamp' = mkVkCmdWriteTimestamp vkCmdWriteTimestampPtr
@@ -11107,7 +11108,7 @@ cmdCopyQueryPoolResults :: forall io
                            QueryResultFlags
                         -> io ()
 cmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags = liftIO $ do
-  let vkCmdCopyQueryPoolResultsPtr = pVkCmdCopyQueryPoolResults (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyQueryPoolResultsPtr = pVkCmdCopyQueryPoolResults (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdCopyQueryPoolResultsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyQueryPoolResults is null" Nothing Nothing
   let vkCmdCopyQueryPoolResults' = mkVkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResultsPtr
@@ -11256,7 +11257,7 @@ cmdPushConstants :: forall io
                     ("values" ::: Ptr ())
                  -> io ()
 cmdPushConstants commandBuffer layout stageFlags offset size values = liftIO $ do
-  let vkCmdPushConstantsPtr = pVkCmdPushConstants (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPushConstantsPtr = pVkCmdPushConstants (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdPushConstantsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushConstants is null" Nothing Nothing
   let vkCmdPushConstants' = mkVkCmdPushConstants vkCmdPushConstantsPtr
@@ -11472,7 +11473,7 @@ cmdBeginRenderPass :: forall a io
                       SubpassContents
                    -> io ()
 cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $ do
-  let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass is null" Nothing Nothing
   let vkCmdBeginRenderPass' = mkVkCmdBeginRenderPass vkCmdBeginRenderPassPtr
@@ -11585,7 +11586,7 @@ cmdNextSubpass :: forall io
                   SubpassContents
                -> io ()
 cmdNextSubpass commandBuffer contents = liftIO $ do
-  let vkCmdNextSubpassPtr = pVkCmdNextSubpass (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdNextSubpassPtr = pVkCmdNextSubpass (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdNextSubpassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdNextSubpass is null" Nothing Nothing
   let vkCmdNextSubpass' = mkVkCmdNextSubpass vkCmdNextSubpassPtr
@@ -11667,7 +11668,7 @@ cmdEndRenderPass :: forall io
                     CommandBuffer
                  -> io ()
 cmdEndRenderPass commandBuffer = liftIO $ do
-  let vkCmdEndRenderPassPtr = pVkCmdEndRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndRenderPassPtr = pVkCmdEndRenderPass (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass is null" Nothing Nothing
   let vkCmdEndRenderPass' = mkVkCmdEndRenderPass vkCmdEndRenderPassPtr
@@ -12158,7 +12159,7 @@ cmdExecuteCommands :: forall io
                       ("commandBuffers" ::: Vector CommandBuffer)
                    -> io ()
 cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
-  let vkCmdExecuteCommandsPtr = pVkCmdExecuteCommands (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdExecuteCommandsPtr = pVkCmdExecuteCommands (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdExecuteCommandsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteCommands is null" Nothing Nothing
   let vkCmdExecuteCommands' = mkVkCmdExecuteCommands vkCmdExecuteCommandsPtr
@@ -13199,7 +13200,7 @@ deriving instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 instance Extensible RenderPassBeginInfo where
   extensibleTypeName = "RenderPassBeginInfo"
-  setNext x next = x{next = next}
+  setNext RenderPassBeginInfo{..} next' = RenderPassBeginInfo{next = next', ..}
   getNext RenderPassBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassBeginInfo e => b) -> Maybe b
   extends _ f

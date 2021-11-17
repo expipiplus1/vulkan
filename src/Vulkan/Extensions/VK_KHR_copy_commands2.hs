@@ -221,6 +221,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_rotated_copy_commands (CopyCommandTransformInfoQCOM)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBlitImage2KHR))
@@ -343,7 +344,7 @@ cmdCopyBuffer2KHR :: forall io
                      CopyBufferInfo2KHR
                   -> io ()
 cmdCopyBuffer2KHR commandBuffer copyBufferInfo = liftIO . evalContT $ do
-  let vkCmdCopyBuffer2KHRPtr = pVkCmdCopyBuffer2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBuffer2KHRPtr = pVkCmdCopyBuffer2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBuffer2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer2KHR is null" Nothing Nothing
   let vkCmdCopyBuffer2KHR' = mkVkCmdCopyBuffer2KHR vkCmdCopyBuffer2KHRPtr
@@ -438,7 +439,7 @@ cmdCopyImage2KHR :: forall io
                     CopyImageInfo2KHR
                  -> io ()
 cmdCopyImage2KHR commandBuffer copyImageInfo = liftIO . evalContT $ do
-  let vkCmdCopyImage2KHRPtr = pVkCmdCopyImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImage2KHRPtr = pVkCmdCopyImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage2KHR is null" Nothing Nothing
   let vkCmdCopyImage2KHR' = mkVkCmdCopyImage2KHR vkCmdCopyImage2KHRPtr
@@ -532,7 +533,7 @@ cmdBlitImage2KHR :: forall io
                     BlitImageInfo2KHR
                  -> io ()
 cmdBlitImage2KHR commandBuffer blitImageInfo = liftIO . evalContT $ do
-  let vkCmdBlitImage2KHRPtr = pVkCmdBlitImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBlitImage2KHRPtr = pVkCmdBlitImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBlitImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage2KHR is null" Nothing Nothing
   let vkCmdBlitImage2KHR' = mkVkCmdBlitImage2KHR vkCmdBlitImage2KHRPtr
@@ -629,7 +630,7 @@ cmdCopyBufferToImage2KHR :: forall io
                             CopyBufferToImageInfo2KHR
                          -> io ()
 cmdCopyBufferToImage2KHR commandBuffer copyBufferToImageInfo = liftIO . evalContT $ do
-  let vkCmdCopyBufferToImage2KHRPtr = pVkCmdCopyBufferToImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBufferToImage2KHRPtr = pVkCmdCopyBufferToImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferToImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage2KHR is null" Nothing Nothing
   let vkCmdCopyBufferToImage2KHR' = mkVkCmdCopyBufferToImage2KHR vkCmdCopyBufferToImage2KHRPtr
@@ -726,7 +727,7 @@ cmdCopyImageToBuffer2KHR :: forall io
                             CopyImageToBufferInfo2KHR
                          -> io ()
 cmdCopyImageToBuffer2KHR commandBuffer copyImageToBufferInfo = liftIO . evalContT $ do
-  let vkCmdCopyImageToBuffer2KHRPtr = pVkCmdCopyImageToBuffer2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImageToBuffer2KHRPtr = pVkCmdCopyImageToBuffer2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImageToBuffer2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer2KHR is null" Nothing Nothing
   let vkCmdCopyImageToBuffer2KHR' = mkVkCmdCopyImageToBuffer2KHR vkCmdCopyImageToBuffer2KHRPtr
@@ -820,7 +821,7 @@ cmdResolveImage2KHR :: forall io
                        ResolveImageInfo2KHR
                     -> io ()
 cmdResolveImage2KHR commandBuffer resolveImageInfo = liftIO . evalContT $ do
-  let vkCmdResolveImage2KHRPtr = pVkCmdResolveImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResolveImage2KHRPtr = pVkCmdResolveImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdResolveImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage2KHR is null" Nothing Nothing
   let vkCmdResolveImage2KHR' = mkVkCmdResolveImage2KHR vkCmdResolveImage2KHRPtr
@@ -1076,7 +1077,7 @@ deriving instance Show (Chain es) => Show (ImageBlit2KHR es)
 
 instance Extensible ImageBlit2KHR where
   extensibleTypeName = "ImageBlit2KHR"
-  setNext x next = x{next = next}
+  setNext ImageBlit2KHR{..} next' = ImageBlit2KHR{next = next', ..}
   getNext ImageBlit2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageBlit2KHR e => b) -> Maybe b
   extends _ f
@@ -1228,7 +1229,7 @@ deriving instance Show (Chain es) => Show (BufferImageCopy2KHR es)
 
 instance Extensible BufferImageCopy2KHR where
   extensibleTypeName = "BufferImageCopy2KHR"
-  setNext x next = x{next = next}
+  setNext BufferImageCopy2KHR{..} next' = BufferImageCopy2KHR{next = next', ..}
   getNext BufferImageCopy2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferImageCopy2KHR e => b) -> Maybe b
   extends _ f

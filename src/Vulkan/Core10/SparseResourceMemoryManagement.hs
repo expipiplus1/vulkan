@@ -68,6 +68,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSparseMemoryRequirements))
 import Vulkan.Dynamic (DeviceCmds(pVkQueueBindSparse))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupBindSparseInfo)
@@ -97,11 +98,13 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -196,7 +199,7 @@ getImageSparseMemoryRequirements :: forall io
                                     Image
                                  -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
 getImageSparseMemoryRequirements device image = liftIO . evalContT $ do
-  let vkGetImageSparseMemoryRequirementsPtr = pVkGetImageSparseMemoryRequirements (deviceCmds (device :: Device))
+  let vkGetImageSparseMemoryRequirementsPtr = pVkGetImageSparseMemoryRequirements (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageSparseMemoryRequirementsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSparseMemoryRequirements is null" Nothing Nothing
   let vkGetImageSparseMemoryRequirements' = mkVkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirementsPtr
@@ -325,7 +328,7 @@ getPhysicalDeviceSparseImageFormatProperties :: forall io
                                                 ImageTiling
                                              -> io (("properties" ::: Vector SparseImageFormatProperties))
 getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSparseImageFormatPropertiesPtr = pVkGetPhysicalDeviceSparseImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSparseImageFormatPropertiesPtr = pVkGetPhysicalDeviceSparseImageFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSparseImageFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSparseImageFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceSparseImageFormatProperties' = mkVkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatPropertiesPtr
@@ -489,7 +492,7 @@ queueBindSparse :: forall io
                    Fence
                 -> io ()
 queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
-  let vkQueueBindSparsePtr = pVkQueueBindSparse (deviceCmds (queue :: Queue))
+  let vkQueueBindSparsePtr = pVkQueueBindSparse (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueBindSparsePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBindSparse is null" Nothing Nothing
   let vkQueueBindSparse' = mkVkQueueBindSparse vkQueueBindSparsePtr
@@ -1385,7 +1388,7 @@ deriving instance Show (Chain es) => Show (BindSparseInfo es)
 
 instance Extensible BindSparseInfo where
   extensibleTypeName = "BindSparseInfo"
-  setNext x next = x{next = next}
+  setNext BindSparseInfo{..} next' = BindSparseInfo{next = next', ..}
   getNext BindSparseInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindSparseInfo e => b) -> Maybe b
   extends _ f

@@ -187,6 +187,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDiscardRectangleEXT))
 import Vulkan.Core10.FundamentalTypes (Flags)
@@ -306,7 +307,7 @@ cmdSetDiscardRectangleEXT :: forall io
                              ("discardRectangles" ::: Vector Rect2D)
                           -> io ()
 cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
-  let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetDiscardRectangleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleEXT is null" Nothing Nothing
   let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXTPtr

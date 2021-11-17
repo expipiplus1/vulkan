@@ -87,6 +87,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_4444_formats (PhysicalDevice4444FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage (PhysicalDevice8BitStorageFeatures)
@@ -307,7 +308,7 @@ createDevice :: forall a io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io (Device)
 createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
-  let cmds = instanceCmds (physicalDevice :: PhysicalDevice)
+  let cmds = case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds
   let vkCreateDevicePtr = pVkCreateDevice cmds
   lift $ unless (vkCreateDevicePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDevice is null" Nothing Nothing
@@ -407,7 +408,7 @@ destroyDevice :: forall io
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io ()
 destroyDevice device allocator = liftIO . evalContT $ do
-  let vkDestroyDevicePtr = pVkDestroyDevice (deviceCmds (device :: Device))
+  let vkDestroyDevicePtr = pVkDestroyDevice (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDevicePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDevice is null" Nothing Nothing
   let vkDestroyDevice' = mkVkDestroyDevice vkDestroyDevicePtr
@@ -506,7 +507,7 @@ deriving instance Show (Chain es) => Show (DeviceQueueCreateInfo es)
 
 instance Extensible DeviceQueueCreateInfo where
   extensibleTypeName = "DeviceQueueCreateInfo"
-  setNext x next = x{next = next}
+  setNext DeviceQueueCreateInfo{..} next' = DeviceQueueCreateInfo{next = next', ..}
   getNext DeviceQueueCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceQueueCreateInfo e => b) -> Maybe b
   extends _ f
@@ -925,7 +926,7 @@ deriving instance Show (Chain es) => Show (DeviceCreateInfo es)
 
 instance Extensible DeviceCreateInfo where
   extensibleTypeName = "DeviceCreateInfo"
-  setNext x next = x{next = next}
+  setNext DeviceCreateInfo{..} next' = DeviceCreateInfo{next = next', ..}
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f

@@ -44,6 +44,7 @@ import Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits (ExternalFenceHandleT
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceExternalFenceProperties))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES))
@@ -89,7 +90,7 @@ getPhysicalDeviceExternalFenceProperties :: forall io
                                             PhysicalDeviceExternalFenceInfo
                                          -> io (ExternalFenceProperties)
 getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalFencePropertiesPtr = pVkGetPhysicalDeviceExternalFenceProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceExternalFencePropertiesPtr = pVkGetPhysicalDeviceExternalFenceProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalFencePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalFenceProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalFenceProperties' = mkVkGetPhysicalDeviceExternalFenceProperties vkGetPhysicalDeviceExternalFencePropertiesPtr

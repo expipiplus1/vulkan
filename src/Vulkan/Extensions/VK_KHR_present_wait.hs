@@ -183,6 +183,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkWaitForPresentKHR))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -223,7 +224,7 @@ waitForPresentKHRSafeOrUnsafe :: forall io
                                  ("timeout" ::: Word64)
                               -> io (Result)
 waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId timeout = liftIO $ do
-  let vkWaitForPresentKHRPtr = pVkWaitForPresentKHR (deviceCmds (device :: Device))
+  let vkWaitForPresentKHRPtr = pVkWaitForPresentKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkWaitForPresentKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForPresentKHR is null" Nothing Nothing
   let vkWaitForPresentKHR' = mkVkWaitForPresentKHR vkWaitForPresentKHRPtr

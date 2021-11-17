@@ -201,6 +201,7 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -277,7 +278,7 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io
                                                                    PhysicalDevice
                                                                 -> io (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
 getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr = pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr = pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV is null" Nothing Nothing
   let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' = mkVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr

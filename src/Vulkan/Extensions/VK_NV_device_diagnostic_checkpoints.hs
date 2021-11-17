@@ -153,6 +153,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetCheckpointNV))
 import Vulkan.Dynamic (DeviceCmds(pVkGetQueueCheckpointDataNV))
@@ -160,6 +161,7 @@ import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CHECKPOINT_DATA_NV))
@@ -219,7 +221,7 @@ cmdSetCheckpointNV :: forall io
                       ("checkpointMarker" ::: Ptr ())
                    -> io ()
 cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
-  let vkCmdSetCheckpointNVPtr = pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetCheckpointNVPtr = pVkCmdSetCheckpointNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetCheckpointNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCheckpointNV is null" Nothing Nothing
   let vkCmdSetCheckpointNV' = mkVkCmdSetCheckpointNV vkCmdSetCheckpointNVPtr
@@ -280,7 +282,7 @@ getQueueCheckpointDataNV :: forall io
                             Queue
                          -> io (("checkpointData" ::: Vector CheckpointDataNV))
 getQueueCheckpointDataNV queue = liftIO . evalContT $ do
-  let vkGetQueueCheckpointDataNVPtr = pVkGetQueueCheckpointDataNV (deviceCmds (queue :: Queue))
+  let vkGetQueueCheckpointDataNVPtr = pVkGetQueueCheckpointDataNV (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetQueueCheckpointDataNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueueCheckpointDataNV is null" Nothing Nothing
   let vkGetQueueCheckpointDataNV' = mkVkGetQueueCheckpointDataNV vkGetQueueCheckpointDataNVPtr

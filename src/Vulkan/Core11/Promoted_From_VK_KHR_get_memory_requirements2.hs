@@ -55,6 +55,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferMemoryRequirements2))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageMemoryRequirements2))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSparseMemoryRequirements2))
@@ -111,7 +112,7 @@ getBufferMemoryRequirements2 :: forall a io
                                 BufferMemoryRequirementsInfo2
                              -> io (MemoryRequirements2 a)
 getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetBufferMemoryRequirements2Ptr = pVkGetBufferMemoryRequirements2 (deviceCmds (device :: Device))
+  let vkGetBufferMemoryRequirements2Ptr = pVkGetBufferMemoryRequirements2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferMemoryRequirements2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferMemoryRequirements2 is null" Nothing Nothing
   let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2Ptr
@@ -154,7 +155,7 @@ getImageMemoryRequirements2 :: forall a b io
                                (ImageMemoryRequirementsInfo2 a)
                             -> io (MemoryRequirements2 b)
 getImageMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device))
+  let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageMemoryRequirements2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageMemoryRequirements2 is null" Nothing Nothing
   let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2Ptr
@@ -209,7 +210,7 @@ getImageSparseMemoryRequirements2 :: forall io
                                      ImageSparseMemoryRequirementsInfo2
                                   -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
 getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetImageSparseMemoryRequirements2Ptr = pVkGetImageSparseMemoryRequirements2 (deviceCmds (device :: Device))
+  let vkGetImageSparseMemoryRequirements2Ptr = pVkGetImageSparseMemoryRequirements2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageSparseMemoryRequirements2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSparseMemoryRequirements2 is null" Nothing Nothing
   let vkGetImageSparseMemoryRequirements2' = mkVkGetImageSparseMemoryRequirements2 vkGetImageSparseMemoryRequirements2Ptr
@@ -360,7 +361,7 @@ deriving instance Show (Chain es) => Show (ImageMemoryRequirementsInfo2 es)
 
 instance Extensible ImageMemoryRequirementsInfo2 where
   extensibleTypeName = "ImageMemoryRequirementsInfo2"
-  setNext x next = x{next = next}
+  setNext ImageMemoryRequirementsInfo2{..} next' = ImageMemoryRequirementsInfo2{next = next', ..}
   getNext ImageMemoryRequirementsInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryRequirementsInfo2 e => b) -> Maybe b
   extends _ f
@@ -496,7 +497,7 @@ deriving instance Show (Chain es) => Show (MemoryRequirements2 es)
 
 instance Extensible MemoryRequirements2 where
   extensibleTypeName = "MemoryRequirements2"
-  setNext x next = x{next = next}
+  setNext MemoryRequirements2{..} next' = MemoryRequirements2{next = next', ..}
   getNext MemoryRequirements2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryRequirements2 e => b) -> Maybe b
   extends _ f

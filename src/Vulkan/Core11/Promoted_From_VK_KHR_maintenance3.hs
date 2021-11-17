@@ -47,6 +47,7 @@ import Vulkan.Core10.DescriptorSet (DescriptorSetLayoutCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (DescriptorSetVariableDescriptorCountLayoutSupport)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDescriptorSetLayoutSupport))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
@@ -127,7 +128,7 @@ getDescriptorSetLayoutSupport :: forall a b io
                                  (DescriptorSetLayoutCreateInfo a)
                               -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
-  let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device))
+  let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDescriptorSetLayoutSupportPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDescriptorSetLayoutSupport is null" Nothing Nothing
   let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupportPtr
@@ -256,7 +257,7 @@ deriving instance Show (Chain es) => Show (DescriptorSetLayoutSupport es)
 
 instance Extensible DescriptorSetLayoutSupport where
   extensibleTypeName = "DescriptorSetLayoutSupport"
-  setNext x next = x{next = next}
+  setNext DescriptorSetLayoutSupport{..} next' = DescriptorSetLayoutSupport{next = next', ..}
   getNext DescriptorSetLayoutSupport{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutSupport e => b) -> Maybe b
   extends _ f

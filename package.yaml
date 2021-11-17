@@ -97,6 +97,7 @@ default-extensions:
 - InstanceSigs
 - LambdaCase
 - MagicHash
+- NamedFieldPuns
 - NoMonomorphismRestriction
 - OverloadedStrings
 - PartialTypeSignatures

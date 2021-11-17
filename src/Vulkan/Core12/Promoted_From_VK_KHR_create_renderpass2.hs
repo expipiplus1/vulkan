@@ -74,10 +74,12 @@ import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginRenderPass2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndRenderPass2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdNextSubpass2))
@@ -185,7 +187,7 @@ createRenderPass2 :: forall a io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (RenderPass)
 createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (deviceCmds (device :: Device))
+  let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRenderPass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRenderPass2 is null" Nothing Nothing
   let vkCreateRenderPass2' = mkVkCreateRenderPass2 vkCreateRenderPass2Ptr
@@ -418,7 +420,7 @@ cmdBeginRenderPass2 :: forall a io
                        SubpassBeginInfo
                     -> io ()
 cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . evalContT $ do
-  let vkCmdBeginRenderPass2Ptr = pVkCmdBeginRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginRenderPass2Ptr = pVkCmdBeginRenderPass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginRenderPass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass2 is null" Nothing Nothing
   let vkCmdBeginRenderPass2' = mkVkCmdBeginRenderPass2 vkCmdBeginRenderPass2Ptr
@@ -523,7 +525,7 @@ cmdNextSubpass2 :: forall io
                    SubpassEndInfo
                 -> io ()
 cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalContT $ do
-  let vkCmdNextSubpass2Ptr = pVkCmdNextSubpass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdNextSubpass2Ptr = pVkCmdNextSubpass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdNextSubpass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdNextSubpass2 is null" Nothing Nothing
   let vkCmdNextSubpass2' = mkVkCmdNextSubpass2 vkCmdNextSubpass2Ptr
@@ -616,7 +618,7 @@ cmdEndRenderPass2 :: forall io
                      SubpassEndInfo
                   -> io ()
 cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
-  let vkCmdEndRenderPass2Ptr = pVkCmdEndRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndRenderPass2Ptr = pVkCmdEndRenderPass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdEndRenderPass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass2 is null" Nothing Nothing
   let vkCmdEndRenderPass2' = mkVkCmdEndRenderPass2 vkCmdEndRenderPass2Ptr
@@ -882,7 +884,7 @@ deriving instance Show (Chain es) => Show (AttachmentDescription2 es)
 
 instance Extensible AttachmentDescription2 where
   extensibleTypeName = "AttachmentDescription2"
-  setNext x next = x{next = next}
+  setNext AttachmentDescription2{..} next' = AttachmentDescription2{next = next', ..}
   getNext AttachmentDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentDescription2 e => b) -> Maybe b
   extends _ f
@@ -1080,7 +1082,7 @@ deriving instance Show (Chain es) => Show (AttachmentReference2 es)
 
 instance Extensible AttachmentReference2 where
   extensibleTypeName = "AttachmentReference2"
-  setNext x next = x{next = next}
+  setNext AttachmentReference2{..} next' = AttachmentReference2{next = next', ..}
   getNext AttachmentReference2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentReference2 e => b) -> Maybe b
   extends _ f
@@ -1395,7 +1397,7 @@ deriving instance Show (Chain es) => Show (SubpassDescription2 es)
 
 instance Extensible SubpassDescription2 where
   extensibleTypeName = "SubpassDescription2"
-  setNext x next = x{next = next}
+  setNext SubpassDescription2{..} next' = SubpassDescription2{next = next', ..}
   getNext SubpassDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDescription2 e => b) -> Maybe b
   extends _ f
@@ -1742,7 +1744,7 @@ deriving instance Show (Chain es) => Show (SubpassDependency2 es)
 
 instance Extensible SubpassDependency2 where
   extensibleTypeName = "SubpassDependency2"
-  setNext x next = x{next = next}
+  setNext SubpassDependency2{..} next' = SubpassDependency2{next = next', ..}
   getNext SubpassDependency2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDependency2 e => b) -> Maybe b
   extends _ f
@@ -2058,7 +2060,7 @@ deriving instance Show (Chain es) => Show (RenderPassCreateInfo2 es)
 
 instance Extensible RenderPassCreateInfo2 where
   extensibleTypeName = "RenderPassCreateInfo2"
-  setNext x next = x{next = next}
+  setNext RenderPassCreateInfo2{..} next' = RenderPassCreateInfo2{next = next', ..}
   getNext RenderPassCreateInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo2 e => b) -> Maybe b
   extends _ f

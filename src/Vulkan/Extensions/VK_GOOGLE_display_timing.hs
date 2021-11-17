@@ -179,6 +179,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPastPresentationTimingGOOGLE))
 import Vulkan.Dynamic (DeviceCmds(pVkGetRefreshCycleDurationGOOGLE))
 import Vulkan.Core10.Handles (Device_T)
@@ -249,7 +250,7 @@ getRefreshCycleDurationGOOGLE :: forall io
                                  SwapchainKHR
                               -> io (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
 getRefreshCycleDurationGOOGLE device swapchain = liftIO . evalContT $ do
-  let vkGetRefreshCycleDurationGOOGLEPtr = pVkGetRefreshCycleDurationGOOGLE (deviceCmds (device :: Device))
+  let vkGetRefreshCycleDurationGOOGLEPtr = pVkGetRefreshCycleDurationGOOGLE (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetRefreshCycleDurationGOOGLEPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRefreshCycleDurationGOOGLE is null" Nothing Nothing
   let vkGetRefreshCycleDurationGOOGLE' = mkVkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLEPtr
@@ -344,7 +345,7 @@ getPastPresentationTimingGOOGLE :: forall io
                                    SwapchainKHR
                                 -> io (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
 getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
-  let vkGetPastPresentationTimingGOOGLEPtr = pVkGetPastPresentationTimingGOOGLE (deviceCmds (device :: Device))
+  let vkGetPastPresentationTimingGOOGLEPtr = pVkGetPastPresentationTimingGOOGLE (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPastPresentationTimingGOOGLEPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPastPresentationTimingGOOGLE is null" Nothing Nothing
   let vkGetPastPresentationTimingGOOGLE' = mkVkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLEPtr

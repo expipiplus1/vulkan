@@ -270,6 +270,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSharedSwapchainsKHR))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.FundamentalTypes (Rect2D)
@@ -396,7 +397,7 @@ createSharedSwapchainsKHR :: forall io
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
-  let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device))
+  let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSharedSwapchainsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSharedSwapchainsKHR is null" Nothing Nothing
   let vkCreateSharedSwapchainsKHR' = mkVkCreateSharedSwapchainsKHR vkCreateSharedSwapchainsKHRPtr

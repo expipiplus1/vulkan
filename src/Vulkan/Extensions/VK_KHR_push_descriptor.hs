@@ -173,6 +173,7 @@ import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core11.Handles (DescriptorUpdateTemplate)
 import Vulkan.Core11.Handles (DescriptorUpdateTemplate(..))
@@ -341,7 +342,7 @@ cmdPushDescriptorSetKHR :: forall io
                            ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
                         -> io ()
 cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
-  let vkCmdPushDescriptorSetKHRPtr = pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPushDescriptorSetKHRPtr = pVkCmdPushDescriptorSetKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPushDescriptorSetKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetKHR is null" Nothing Nothing
   let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHRPtr
@@ -497,7 +498,7 @@ cmdPushDescriptorSetWithTemplateKHR :: forall io
                                        ("data" ::: Ptr ())
                                     -> io ()
 cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = liftIO $ do
-  let vkCmdPushDescriptorSetWithTemplateKHRPtr = pVkCmdPushDescriptorSetWithTemplateKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPushDescriptorSetWithTemplateKHRPtr = pVkCmdPushDescriptorSetWithTemplateKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdPushDescriptorSetWithTemplateKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetWithTemplateKHR is null" Nothing Nothing
   let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHRPtr

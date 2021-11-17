@@ -224,6 +224,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayPlaneProperties2K
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayProperties2KHR))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -301,7 +302,7 @@ getPhysicalDeviceDisplayProperties2KHR :: forall io
                                           PhysicalDevice
                                        -> io (Result, ("properties" ::: Vector DisplayProperties2KHR))
 getPhysicalDeviceDisplayProperties2KHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayProperties2KHRPtr = pVkGetPhysicalDeviceDisplayProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceDisplayProperties2KHRPtr = pVkGetPhysicalDeviceDisplayProperties2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceDisplayProperties2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayProperties2KHR is null" Nothing Nothing
   let vkGetPhysicalDeviceDisplayProperties2KHR' = mkVkGetPhysicalDeviceDisplayProperties2KHR vkGetPhysicalDeviceDisplayProperties2KHRPtr
@@ -375,7 +376,7 @@ getPhysicalDeviceDisplayPlaneProperties2KHR :: forall io
                                                PhysicalDevice
                                             -> io (Result, ("properties" ::: Vector DisplayPlaneProperties2KHR))
 getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr = pVkGetPhysicalDeviceDisplayPlaneProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr = pVkGetPhysicalDeviceDisplayPlaneProperties2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayPlaneProperties2KHR is null" Nothing Nothing
   let vkGetPhysicalDeviceDisplayPlaneProperties2KHR' = mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr
@@ -457,7 +458,7 @@ getDisplayModeProperties2KHR :: forall io
                                 DisplayKHR
                              -> io (Result, ("properties" ::: Vector DisplayModeProperties2KHR))
 getDisplayModeProperties2KHR physicalDevice display = liftIO . evalContT $ do
-  let vkGetDisplayModeProperties2KHRPtr = pVkGetDisplayModeProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDisplayModeProperties2KHRPtr = pVkGetDisplayModeProperties2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayModeProperties2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayModeProperties2KHR is null" Nothing Nothing
   let vkGetDisplayModeProperties2KHR' = mkVkGetDisplayModeProperties2KHR vkGetDisplayModeProperties2KHRPtr
@@ -527,7 +528,7 @@ getDisplayPlaneCapabilities2KHR :: forall io
                                    DisplayPlaneInfo2KHR
                                 -> io (DisplayPlaneCapabilities2KHR)
 getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalContT $ do
-  let vkGetDisplayPlaneCapabilities2KHRPtr = pVkGetDisplayPlaneCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDisplayPlaneCapabilities2KHRPtr = pVkGetDisplayPlaneCapabilities2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayPlaneCapabilities2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneCapabilities2KHR is null" Nothing Nothing
   let vkGetDisplayPlaneCapabilities2KHR' = mkVkGetDisplayPlaneCapabilities2KHR vkGetDisplayPlaneCapabilities2KHRPtr

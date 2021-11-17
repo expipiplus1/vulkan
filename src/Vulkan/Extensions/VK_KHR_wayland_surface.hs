@@ -250,11 +250,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateWaylandSurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceWaylandPresentationSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -324,7 +326,7 @@ createWaylandSurfaceKHR :: forall io
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (SurfaceKHR)
 createWaylandSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateWaylandSurfaceKHRPtr = pVkCreateWaylandSurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateWaylandSurfaceKHRPtr = pVkCreateWaylandSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateWaylandSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateWaylandSurfaceKHR is null" Nothing Nothing
   let vkCreateWaylandSurfaceKHR' = mkVkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHRPtr
@@ -384,7 +386,7 @@ getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                   (Ptr Wl_display)
                                                -> io (Bool)
 getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
-  let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceWaylandPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceWaylandPresentationSupportKHR' = mkVkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr

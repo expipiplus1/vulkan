@@ -224,6 +224,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkDisplayPowerControlEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSwapchainCounterEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkRegisterDeviceEventEXT))
@@ -302,7 +303,7 @@ displayPowerControlEXT :: forall io
                           DisplayPowerInfoEXT
                        -> io ()
 displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
-  let vkDisplayPowerControlEXTPtr = pVkDisplayPowerControlEXT (deviceCmds (device :: Device))
+  let vkDisplayPowerControlEXTPtr = pVkDisplayPowerControlEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDisplayPowerControlEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDisplayPowerControlEXT is null" Nothing Nothing
   let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT vkDisplayPowerControlEXTPtr
@@ -365,7 +366,7 @@ registerDeviceEventEXT :: forall io
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io (Fence)
 registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
-  let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (deviceCmds (device :: Device))
+  let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkRegisterDeviceEventEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDeviceEventEXT is null" Nothing Nothing
   let vkRegisterDeviceEventEXT' = mkVkRegisterDeviceEventEXT vkRegisterDeviceEventEXTPtr
@@ -444,7 +445,7 @@ registerDisplayEventEXT :: forall io
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (Fence)
 registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
-  let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (deviceCmds (device :: Device))
+  let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkRegisterDisplayEventEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDisplayEventEXT is null" Nothing Nothing
   let vkRegisterDisplayEventEXT' = mkVkRegisterDisplayEventEXT vkRegisterDisplayEventEXTPtr
@@ -533,7 +534,7 @@ getSwapchainCounterEXT :: forall io
                           SurfaceCounterFlagBitsEXT
                        -> io (("counterValue" ::: Word64))
 getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
-  let vkGetSwapchainCounterEXTPtr = pVkGetSwapchainCounterEXT (deviceCmds (device :: Device))
+  let vkGetSwapchainCounterEXTPtr = pVkGetSwapchainCounterEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSwapchainCounterEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainCounterEXT is null" Nothing Nothing
   let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT vkGetSwapchainCounterEXTPtr

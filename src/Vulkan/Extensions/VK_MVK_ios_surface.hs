@@ -167,6 +167,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateIOSSurfaceMVK))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -257,7 +258,7 @@ createIOSSurfaceMVK :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (SurfaceKHR)
 createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateIOSSurfaceMVKPtr = pVkCreateIOSSurfaceMVK (instanceCmds (instance' :: Instance))
+  let vkCreateIOSSurfaceMVKPtr = pVkCreateIOSSurfaceMVK (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateIOSSurfaceMVKPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateIOSSurfaceMVK is null" Nothing Nothing
   let vkCreateIOSSurfaceMVK' = mkVkCreateIOSSurfaceMVK vkCreateIOSSurfaceMVKPtr

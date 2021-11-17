@@ -54,6 +54,7 @@ import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..
 import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkResetCommandPool))
@@ -132,7 +133,7 @@ createCommandPool :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (CommandPool)
 createCommandPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateCommandPoolPtr = pVkCreateCommandPool (deviceCmds (device :: Device))
+  let vkCreateCommandPoolPtr = pVkCreateCommandPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateCommandPool is null" Nothing Nothing
   let vkCreateCommandPool' = mkVkCreateCommandPool vkCreateCommandPoolPtr
@@ -236,7 +237,7 @@ destroyCommandPool :: forall io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
 destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
-  let vkDestroyCommandPoolPtr = pVkDestroyCommandPool (deviceCmds (device :: Device))
+  let vkDestroyCommandPoolPtr = pVkDestroyCommandPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyCommandPool is null" Nothing Nothing
   let vkDestroyCommandPool' = mkVkDestroyCommandPool vkDestroyCommandPoolPtr
@@ -326,7 +327,7 @@ resetCommandPool :: forall io
                     CommandPoolResetFlags
                  -> io ()
 resetCommandPool device commandPool flags = liftIO $ do
-  let vkResetCommandPoolPtr = pVkResetCommandPool (deviceCmds (device :: Device))
+  let vkResetCommandPoolPtr = pVkResetCommandPool (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkResetCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandPool is null" Nothing Nothing
   let vkResetCommandPool' = mkVkResetCommandPool vkResetCommandPoolPtr

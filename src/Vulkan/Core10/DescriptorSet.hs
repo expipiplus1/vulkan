@@ -96,6 +96,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (De
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAllocateDescriptorSets))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDescriptorPool))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDescriptorSetLayout))
@@ -199,7 +200,7 @@ createDescriptorSetLayout :: forall a io
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (DescriptorSetLayout)
 createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (deviceCmds (device :: Device))
+  let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDescriptorSetLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorSetLayout is null" Nothing Nothing
   let vkCreateDescriptorSetLayout' = mkVkCreateDescriptorSetLayout vkCreateDescriptorSetLayoutPtr
@@ -290,7 +291,7 @@ destroyDescriptorSetLayout :: forall io
                               ("allocator" ::: Maybe AllocationCallbacks)
                            -> io ()
 destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorSetLayoutPtr = pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device))
+  let vkDestroyDescriptorSetLayoutPtr = pVkDestroyDescriptorSetLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDescriptorSetLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorSetLayout is null" Nothing Nothing
   let vkDestroyDescriptorSetLayout' = mkVkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayoutPtr
@@ -364,7 +365,7 @@ createDescriptorPool :: forall a io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DescriptorPool)
 createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (deviceCmds (device :: Device))
+  let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorPool is null" Nothing Nothing
   let vkCreateDescriptorPool' = mkVkCreateDescriptorPool vkCreateDescriptorPoolPtr
@@ -463,7 +464,7 @@ destroyDescriptorPool :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
 destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorPoolPtr = pVkDestroyDescriptorPool (deviceCmds (device :: Device))
+  let vkDestroyDescriptorPoolPtr = pVkDestroyDescriptorPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorPool is null" Nothing Nothing
   let vkDestroyDescriptorPool' = mkVkDestroyDescriptorPool vkDestroyDescriptorPoolPtr
@@ -538,7 +539,7 @@ resetDescriptorPool :: forall io
                        DescriptorPoolResetFlags
                     -> io ()
 resetDescriptorPool device descriptorPool flags = liftIO $ do
-  let vkResetDescriptorPoolPtr = pVkResetDescriptorPool (deviceCmds (device :: Device))
+  let vkResetDescriptorPoolPtr = pVkResetDescriptorPool (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkResetDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetDescriptorPool is null" Nothing Nothing
   let vkResetDescriptorPool' = mkVkResetDescriptorPool vkResetDescriptorPoolPtr
@@ -666,7 +667,7 @@ allocateDescriptorSets :: forall a io
                           (DescriptorSetAllocateInfo a)
                        -> io (("descriptorSets" ::: Vector DescriptorSet))
 allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
-  let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (deviceCmds (device :: Device))
+  let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAllocateDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAllocateDescriptorSets is null" Nothing Nothing
   let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets vkAllocateDescriptorSetsPtr
@@ -771,7 +772,7 @@ freeDescriptorSets :: forall io
                       ("descriptorSets" ::: Vector DescriptorSet)
                    -> io ()
 freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
-  let vkFreeDescriptorSetsPtr = pVkFreeDescriptorSets (deviceCmds (device :: Device))
+  let vkFreeDescriptorSetsPtr = pVkFreeDescriptorSets (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkFreeDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeDescriptorSets is null" Nothing Nothing
   let vkFreeDescriptorSets' = mkVkFreeDescriptorSets vkFreeDescriptorSetsPtr
@@ -920,7 +921,7 @@ updateDescriptorSets :: forall io
                         ("descriptorCopies" ::: Vector CopyDescriptorSet)
                      -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
-  let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (deviceCmds (device :: Device))
+  let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkUpdateDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSets is null" Nothing Nothing
   let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets vkUpdateDescriptorSetsPtr
@@ -1673,7 +1674,7 @@ deriving instance Show (Chain es) => Show (WriteDescriptorSet es)
 
 instance Extensible WriteDescriptorSet where
   extensibleTypeName = "WriteDescriptorSet"
-  setNext x next = x{next = next}
+  setNext WriteDescriptorSet{..} next' = WriteDescriptorSet{next = next', ..}
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
   extends _ f
@@ -2365,7 +2366,7 @@ deriving instance Show (Chain es) => Show (DescriptorSetLayoutCreateInfo es)
 
 instance Extensible DescriptorSetLayoutCreateInfo where
   extensibleTypeName = "DescriptorSetLayoutCreateInfo"
-  setNext x next = x{next = next}
+  setNext DescriptorSetLayoutCreateInfo{..} next' = DescriptorSetLayoutCreateInfo{next = next', ..}
   getNext DescriptorSetLayoutCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2661,7 +2662,7 @@ deriving instance Show (Chain es) => Show (DescriptorPoolCreateInfo es)
 
 instance Extensible DescriptorPoolCreateInfo where
   extensibleTypeName = "DescriptorPoolCreateInfo"
-  setNext x next = x{next = next}
+  setNext DescriptorPoolCreateInfo{..} next' = DescriptorPoolCreateInfo{next = next', ..}
   getNext DescriptorPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorPoolCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2789,7 +2790,7 @@ deriving instance Show (Chain es) => Show (DescriptorSetAllocateInfo es)
 
 instance Extensible DescriptorSetAllocateInfo where
   extensibleTypeName = "DescriptorSetAllocateInfo"
-  setNext x next = x{next = next}
+  setNext DescriptorSetAllocateInfo{..} next' = DescriptorSetAllocateInfo{next = next', ..}
   getNext DescriptorSetAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetAllocateInfo e => b) -> Maybe b
   extends _ f

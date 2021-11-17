@@ -276,11 +276,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateWin32SurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceWin32PresentationSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -349,7 +351,7 @@ createWin32SurfaceKHR :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateWin32SurfaceKHRPtr = pVkCreateWin32SurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateWin32SurfaceKHRPtr = pVkCreateWin32SurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateWin32SurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateWin32SurfaceKHR is null" Nothing Nothing
   let vkCreateWin32SurfaceKHR' = mkVkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHRPtr
@@ -403,7 +405,7 @@ getPhysicalDeviceWin32PresentationSupportKHR :: forall io
                                                 ("queueFamilyIndex" ::: Word32)
                                              -> io (Bool)
 getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = liftIO $ do
-  let vkGetPhysicalDeviceWin32PresentationSupportKHRPtr = pVkGetPhysicalDeviceWin32PresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceWin32PresentationSupportKHRPtr = pVkGetPhysicalDeviceWin32PresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceWin32PresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceWin32PresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceWin32PresentationSupportKHR' = mkVkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHRPtr

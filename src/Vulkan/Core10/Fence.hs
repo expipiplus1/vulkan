@@ -60,6 +60,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateFence))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyFence))
 import Vulkan.Dynamic (DeviceCmds(pVkGetFenceStatus))
@@ -143,7 +144,7 @@ createFence :: forall a io
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Fence)
 createFence device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateFencePtr = pVkCreateFence (deviceCmds (device :: Device))
+  let vkCreateFencePtr = pVkCreateFence (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateFencePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateFence is null" Nothing Nothing
   let vkCreateFence' = mkVkCreateFence vkCreateFencePtr
@@ -232,7 +233,7 @@ destroyFence :: forall io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
 destroyFence device fence allocator = liftIO . evalContT $ do
-  let vkDestroyFencePtr = pVkDestroyFence (deviceCmds (device :: Device))
+  let vkDestroyFencePtr = pVkDestroyFence (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyFencePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyFence is null" Nothing Nothing
   let vkDestroyFence' = mkVkDestroyFence vkDestroyFencePtr
@@ -316,7 +317,7 @@ resetFences :: forall io
                ("fences" ::: Vector Fence)
             -> io ()
 resetFences device fences = liftIO . evalContT $ do
-  let vkResetFencesPtr = pVkResetFences (deviceCmds (device :: Device))
+  let vkResetFencesPtr = pVkResetFences (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkResetFencesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetFences is null" Nothing Nothing
   let vkResetFences' = mkVkResetFences vkResetFencesPtr
@@ -402,7 +403,7 @@ getFenceStatus :: forall io
                   Fence
                -> io (Result)
 getFenceStatus device fence = liftIO $ do
-  let vkGetFenceStatusPtr = pVkGetFenceStatus (deviceCmds (device :: Device))
+  let vkGetFenceStatusPtr = pVkGetFenceStatus (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetFenceStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceStatus is null" Nothing Nothing
   let vkGetFenceStatus' = mkVkGetFenceStatus vkGetFenceStatusPtr
@@ -443,7 +444,7 @@ waitForFencesSafeOrUnsafe :: forall io
                              ("timeout" ::: Word64)
                           -> io (Result)
 waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = liftIO . evalContT $ do
-  let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
+  let vkWaitForFencesPtr = pVkWaitForFences (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForFences is null" Nothing Nothing
   let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
@@ -609,7 +610,7 @@ deriving instance Show (Chain es) => Show (FenceCreateInfo es)
 
 instance Extensible FenceCreateInfo where
   extensibleTypeName = "FenceCreateInfo"
-  setNext x next = x{next = next}
+  setNext FenceCreateInfo{..} next' = FenceCreateInfo{next = next', ..}
   getNext FenceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FenceCreateInfo e => b) -> Maybe b
   extends _ f

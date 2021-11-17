@@ -390,9 +390,11 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSubpassShadingHUAWEI))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI))
 import Vulkan.Core10.Handles (Device_T)
@@ -459,7 +461,7 @@ getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI :: forall io
                                                  RenderPass
                                               -> io (Result, ("maxWorkgroupSize" ::: Extent2D))
 getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI device renderpass = liftIO . evalContT $ do
-  let vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr = pVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI (deviceCmds (device :: Device))
+  let vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr = pVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI is null" Nothing Nothing
   let vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI' = mkVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr
@@ -780,7 +782,7 @@ cmdSubpassShadingHUAWEI :: forall io
                            CommandBuffer
                         -> io ()
 cmdSubpassShadingHUAWEI commandBuffer = liftIO $ do
-  let vkCmdSubpassShadingHUAWEIPtr = pVkCmdSubpassShadingHUAWEI (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSubpassShadingHUAWEIPtr = pVkCmdSubpassShadingHUAWEI (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSubpassShadingHUAWEIPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSubpassShadingHUAWEI is null" Nothing Nothing
   let vkCmdSubpassShadingHUAWEI' = mkVkCmdSubpassShadingHUAWEI vkCmdSubpassShadingHUAWEIPtr

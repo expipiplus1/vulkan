@@ -135,6 +135,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewAddressNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandleNVX))
@@ -180,7 +181,7 @@ getImageViewHandleNVX :: forall io
                          ImageViewHandleInfoNVX
                       -> io (Word32)
 getImageViewHandleNVX device info = liftIO . evalContT $ do
-  let vkGetImageViewHandleNVXPtr = pVkGetImageViewHandleNVX (deviceCmds (device :: Device))
+  let vkGetImageViewHandleNVXPtr = pVkGetImageViewHandleNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageViewHandleNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageViewHandleNVX is null" Nothing Nothing
   let vkGetImageViewHandleNVX' = mkVkGetImageViewHandleNVX vkGetImageViewHandleNVXPtr
@@ -232,7 +233,7 @@ getImageViewAddressNVX :: forall io
                           ImageView
                        -> io (ImageViewAddressPropertiesNVX)
 getImageViewAddressNVX device imageView = liftIO . evalContT $ do
-  let vkGetImageViewAddressNVXPtr = pVkGetImageViewAddressNVX (deviceCmds (device :: Device))
+  let vkGetImageViewAddressNVXPtr = pVkGetImageViewAddressNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageViewAddressNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageViewAddressNVX is null" Nothing Nothing
   let vkGetImageViewAddressNVX' = mkVkGetImageViewAddressNVX vkGetImageViewAddressNVXPtr

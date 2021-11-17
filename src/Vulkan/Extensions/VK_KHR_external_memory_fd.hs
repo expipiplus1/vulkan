@@ -178,6 +178,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryFdKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryFdPropertiesKHR))
 import Vulkan.Core10.Handles (DeviceMemory)
@@ -244,7 +245,7 @@ getMemoryFdKHR :: forall io
                   MemoryGetFdInfoKHR
                -> io (("fd" ::: Int32))
 getMemoryFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetMemoryFdKHRPtr = pVkGetMemoryFdKHR (deviceCmds (device :: Device))
+  let vkGetMemoryFdKHRPtr = pVkGetMemoryFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryFdKHR is null" Nothing Nothing
   let vkGetMemoryFdKHR' = mkVkGetMemoryFdKHR vkGetMemoryFdKHRPtr
@@ -311,7 +312,7 @@ getMemoryFdPropertiesKHR :: forall io
                             ("fd" ::: Int32)
                          -> io (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
-  let vkGetMemoryFdPropertiesKHRPtr = pVkGetMemoryFdPropertiesKHR (deviceCmds (device :: Device))
+  let vkGetMemoryFdPropertiesKHRPtr = pVkGetMemoryFdPropertiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryFdPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryFdPropertiesKHR is null" Nothing Nothing
   let vkGetMemoryFdPropertiesKHR' = mkVkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHRPtr

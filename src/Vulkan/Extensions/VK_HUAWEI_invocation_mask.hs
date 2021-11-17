@@ -189,6 +189,7 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBindInvocationMaskHUAWEI))
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
@@ -319,7 +320,7 @@ cmdBindInvocationMaskHUAWEI :: forall io
                                ImageLayout
                             -> io ()
 cmdBindInvocationMaskHUAWEI commandBuffer imageView imageLayout = liftIO $ do
-  let vkCmdBindInvocationMaskHUAWEIPtr = pVkCmdBindInvocationMaskHUAWEI (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindInvocationMaskHUAWEIPtr = pVkCmdBindInvocationMaskHUAWEI (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindInvocationMaskHUAWEIPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindInvocationMaskHUAWEI is null" Nothing Nothing
   let vkCmdBindInvocationMaskHUAWEI' = mkVkCmdBindInvocationMaskHUAWEI vkCmdBindInvocationMaskHUAWEIPtr

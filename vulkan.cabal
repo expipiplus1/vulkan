@@ -540,6 +540,7 @@ library
       InstanceSigs
       LambdaCase
       MagicHash
+      NamedFieldPuns
       NoMonomorphismRestriction
       OverloadedStrings
       PartialTypeSignatures
@@ -605,6 +606,7 @@ test-suite test
       InstanceSigs
       LambdaCase
       MagicHash
+      NamedFieldPuns
       NoMonomorphismRestriction
       OverloadedStrings
       PartialTypeSignatures
