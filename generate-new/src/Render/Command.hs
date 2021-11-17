@@ -895,7 +895,7 @@ getCCallDynamic c = do
                    _ -> throw "Trying to get a command pointer record from something which isn't a struct"
           cmdsMember <- getCmdsMember
           pure . Pure InlineOnce . CmdsDoc $
-            parens $ "case" <+> pretty paramName <+> "of" <+> pretty con
+            "case" <+> pretty paramName <+> "of" <+> pretty con
               <> "{" <> cmdsMember <> "}" <+> "->" <+> cmdsMember
         nameRef "cmds" cmdsRef
         stmt Nothing (Just (unCName (cName c) <> "Ptr")) $ do
