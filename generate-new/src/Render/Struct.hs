@@ -154,7 +154,12 @@ renderExtensibleInstance MarshaledStruct {..} = do
       2
       (vsep
         [ "extensibleTypeName =" <+> dquotes (pretty n)
-        , "setNext x next = x{next = next}"
+        , "setNext"
+        <+> pretty con
+        <>  "{..}"
+        <+> "next' ="
+        <+> pretty con
+        <>  "{next = next', ..}"
         , "getNext" <+> pretty con <> "{..} = next"
         , "extends :: forall e b proxy. Typeable e => proxy e -> (Extends"
         <+> pretty n
