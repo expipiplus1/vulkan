@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [3.13.4] - 2021-11-17
 - Support ghc-9.3.20211111
 - No more warnings under 9.2
 
