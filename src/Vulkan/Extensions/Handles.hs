@@ -267,7 +267,14 @@ instance Show PrivateDataSlotEXT where
   showsPrec p (PrivateDataSlotEXT x) = showParen (p >= 11) (showString "PrivateDataSlotEXT 0x" . showHex x)
 
 
--- No documentation found for TopLevel "VkCuModuleNVX"
+-- | VkCuModuleNVX - Stub description of VkCuModuleNVX
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
+-- 'Vulkan.Extensions.VK_NVX_binary_import.CuFunctionCreateInfoNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.createCuModuleNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.destroyCuModuleNVX'
 newtype CuModuleNVX = CuModuleNVX Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -277,7 +284,14 @@ instance Show CuModuleNVX where
   showsPrec p (CuModuleNVX x) = showParen (p >= 11) (showString "CuModuleNVX 0x" . showHex x)
 
 
--- No documentation found for TopLevel "VkCuFunctionNVX"
+-- | VkCuFunctionNVX - Stub description of VkCuFunctionNVX
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
+-- 'Vulkan.Extensions.VK_NVX_binary_import.CuLaunchInfoNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.createCuFunctionNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.destroyCuFunctionNVX'
 newtype CuFunctionNVX = CuFunctionNVX Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -457,6 +471,7 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getSwapchainImagesKHR',
 -- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.getSwapchainStatusKHR',
+-- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.releaseFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_hdr_metadata.setHdrMetadataEXT',
 -- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD',

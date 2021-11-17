@@ -607,23 +607,55 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- == Valid Usage
 --
--- -   #VUID-VkSubmitInfo-pCommandBuffers-00075# Each element of
---     @pCommandBuffers@ /must/ not have been allocated with
---     'Vulkan.Core10.Enums.CommandBufferLevel.COMMAND_BUFFER_LEVEL_SECONDARY'
---
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00076# If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00077# If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04091# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04092# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04093# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04094# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04095# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04096# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04097# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not be @0@
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-00075# Each element of
+--     @pCommandBuffers@ /must/ not have been allocated with
+--     'Vulkan.Core10.Enums.CommandBufferLevel.COMMAND_BUFFER_LEVEL_SECONDARY'
 --
 -- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00078# Each element of
 --     @pWaitDstStageMask@ /must/ not include
@@ -687,18 +719,6 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
---
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-02089# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
---
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-02090# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
 -- -   #VUID-VkSubmitInfo-pNext-04120# If the @pNext@ chain of this
 --     structure does not include a

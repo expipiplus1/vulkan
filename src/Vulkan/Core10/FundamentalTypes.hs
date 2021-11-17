@@ -465,6 +465,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.PhysicalDeviceHostQueryResetFeatures',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties',
 -- 'Vulkan.Extensions.VK_EXT_image_robustness.PhysicalDeviceImageRobustnessFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_image_view_min_lod.PhysicalDeviceImageViewMinLodFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.PhysicalDeviceImagelessFramebufferFeatures',
 -- 'Vulkan.Extensions.VK_EXT_index_type_uint8.PhysicalDeviceIndexTypeUint8FeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.PhysicalDeviceInheritedViewportScissorFeaturesNV',
@@ -664,11 +665,55 @@ type SampleMask = Word32
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags'
+-- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags',
+-- 'Flags64'
 type Flags = Word32
 
 
--- No documentation found for TopLevel "VkFlags64"
+-- | VkFlags64 - Vulkan 64-bit bitmasks
+--
+-- = Description
+--
+-- When the 31 bits available in 'Flags' are insufficient, the 'Flags64'
+-- type can be passed to commands and structures to represent up to 64
+-- options. 'Flags64' is not used directly in the API. Instead, a
+-- @Vk*Flags2@ type which is an alias of 'Flags64', and whose name matches
+-- the corresponding @Vk*FlagBits2@ that are valid for that type, is used.
+--
+-- Any @Vk*Flags2@ member or parameter used in the API as an input /must/
+-- be a valid combination of bit flags. A valid combination is either zero
+-- or the bitwise OR of valid bit flags. A bit flag is valid if:
+--
+-- -   The bit flag is defined as part of the @Vk*FlagBits2@ type, where
+--     the bits type is obtained by taking the flag type and replacing the
+--     trailing @Flags2@ with @FlagBits2@. For example, a flag value of
+--     type 'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlags2KHR'
+--     /must/ contain only bit flags defined by
+--     'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlagBits2KHR'.
+--
+-- -   The flag is allowed in the context in which it is being used. For
+--     example, in some cases, certain bit flags or combinations of bit
+--     flags are mutually exclusive.
+--
+-- Any @Vk*Flags2@ member or parameter returned from a query command or
+-- otherwise output from Vulkan to the application /may/ contain bit flags
+-- undefined in its corresponding @Vk*FlagBits2@ type. An application
+-- /cannot/ rely on the state of these unspecified bits.
+--
+-- Note
+--
+-- Both the @Vk*FlagBits2@ type, and the individual bits defined for that
+-- type, are defined as @uint64_t@ integers in the C API. This is in
+-- contrast to the 32-bit types, where the @Vk*FlagBits@ type is defined as
+-- a C @enum@ and the individual bits as enumerants belonging to that
+-- @enum@. As a result, there is less compile-time type checking possible
+-- for the 64-bit types. This is unavoidable since there is no sufficiently
+-- portable way to define a 64-bit @enum@ type in C99.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
+-- 'Flags'
 type Flags64 = Word64
 
 

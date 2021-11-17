@@ -20,6 +20,7 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_MESA_TURNIP
                                               , DRIVER_ID_MESA_V3DV
                                               , DRIVER_ID_MESA_PANVK
+                                              , DRIVER_ID_SAMSUNG_PROPRIETARY
                                               , ..
                                               )) where
 
@@ -99,6 +100,8 @@ pattern DRIVER_ID_MESA_TURNIP               = DriverId 18
 pattern DRIVER_ID_MESA_V3DV                 = DriverId 19
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_PANVK"
 pattern DRIVER_ID_MESA_PANVK                = DriverId 20
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_SAMSUNG_PROPRIETARY"
+pattern DRIVER_ID_SAMSUNG_PROPRIETARY       = DriverId 21
 {-# complete DRIVER_ID_AMD_PROPRIETARY,
              DRIVER_ID_AMD_OPEN_SOURCE,
              DRIVER_ID_MESA_RADV,
@@ -118,7 +121,8 @@ pattern DRIVER_ID_MESA_PANVK                = DriverId 20
              DRIVER_ID_VERISILICON_PROPRIETARY,
              DRIVER_ID_MESA_TURNIP,
              DRIVER_ID_MESA_V3DV,
-             DRIVER_ID_MESA_PANVK :: DriverId #-}
+             DRIVER_ID_MESA_PANVK,
+             DRIVER_ID_SAMSUNG_PROPRIETARY :: DriverId #-}
 
 conNameDriverId :: String
 conNameDriverId = "DriverId"
@@ -148,6 +152,7 @@ showTableDriverId =
   , (DRIVER_ID_MESA_TURNIP              , "MESA_TURNIP")
   , (DRIVER_ID_MESA_V3DV                , "MESA_V3DV")
   , (DRIVER_ID_MESA_PANVK               , "MESA_PANVK")
+  , (DRIVER_ID_SAMSUNG_PROPRIETARY      , "SAMSUNG_PROPRIETARY")
   ]
 
 instance Show DriverId where

@@ -123,6 +123,9 @@ type LUID_SIZE = 8
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_capabilities VK_KHR_external_fence_capabilities>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_capabilities VK_KHR_external_semaphore_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>
 pattern LUID_SIZE :: forall a . Integral a => a
 pattern LUID_SIZE = 8
@@ -269,6 +272,7 @@ type MAX_DEVICE_GROUP_SIZE = 32
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group_creation VK_KHR_device_group_creation>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>
 pattern MAX_DEVICE_GROUP_SIZE :: forall a . Integral a => a
 pattern MAX_DEVICE_GROUP_SIZE = 32
@@ -281,6 +285,7 @@ type MAX_DRIVER_NAME_SIZE = 256
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties VK_KHR_driver_properties>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>
 pattern MAX_DRIVER_NAME_SIZE :: forall a . Integral a => a
 pattern MAX_DRIVER_NAME_SIZE = 256
@@ -293,6 +298,7 @@ type MAX_DRIVER_INFO_SIZE = 256
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties VK_KHR_driver_properties>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>
 pattern MAX_DRIVER_INFO_SIZE :: forall a . Integral a => a
 pattern MAX_DRIVER_INFO_SIZE = 256

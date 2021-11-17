@@ -1561,6 +1561,16 @@ instance Zero DescriptorImageInfo where
 --     the new active descriptor type @descriptorType@ /must/ exist in the
 --     corresponding @pMutableDescriptorTypeLists@ list for @dstBinding@
 --
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-06450# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     the @imageView@ member of each element of @pImageInfo@ /must/ have
+--     either been created without a
+--     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT'
+--     present in the @pNext@ chain or with a
+--     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT'::@minLod@
+--     of @0.0@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkWriteDescriptorSet-sType-sType# @sType@ /must/ be

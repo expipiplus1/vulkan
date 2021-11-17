@@ -4903,6 +4903,14 @@ instance Zero PhysicalDeviceAccelerationStructureFeaturesKHR where
 --
 -- = Description
 --
+-- Due to the fact that the geometry, instance, and primitive counts are
+-- specified at acceleration structure creation as 32-bit values,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxGeometryCount maxGeometryCount>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxInstanceCount maxInstanceCount>,
+-- and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxPrimitiveCount maxPrimitiveCount>
+-- /must/ not exceed 232-1.
+--
 -- If the 'PhysicalDeviceAccelerationStructurePropertiesKHR' structure is
 -- included in the @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
@@ -4922,14 +4930,15 @@ instance Zero PhysicalDeviceAccelerationStructureFeaturesKHR where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceAccelerationStructurePropertiesKHR = PhysicalDeviceAccelerationStructurePropertiesKHR
-  { -- | @maxGeometryCount@ is the maximum number of geometries in the bottom
-    -- level acceleration structure.
-    maxGeometryCount :: Word64
-  , -- | @maxInstanceCount@ is the maximum number of instances in the top level
-    -- acceleration structure.
-    maxInstanceCount :: Word64
-  , -- | @maxPrimitiveCount@ is the maximum number of triangles or AABBs in all
+  { -- | #limits-maxGeometryCount# @maxGeometryCount@ is the maximum number of
     -- geometries in the bottom level acceleration structure.
+    maxGeometryCount :: Word64
+  , -- | #limits-maxInstanceCount# @maxInstanceCount@ is the maximum number of
+    -- instances in the top level acceleration structure.
+    maxInstanceCount :: Word64
+  , -- | #limits-maxPrimitiveCount# @maxPrimitiveCount@ is the maximum number of
+    -- triangles or AABBs in all geometries in the bottom level acceleration
+    -- structure.
     maxPrimitiveCount :: Word64
   , -- | #limits-maxPerStageDescriptorAccelerationStructures#
     -- @maxPerStageDescriptorAccelerationStructures@ is the maximum number of

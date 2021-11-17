@@ -9111,17 +9111,17 @@ foreign import ccall
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdSetEvent-stageMask-04098# Any pipeline stage included in
+-- -   #VUID-vkCmdSetEvent-stageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @stageMask@ /must/ not be @0@
+--
+-- -   #VUID-vkCmdSetEvent-stageMask-06457# Any pipeline stage included in
 --     @stageMask@ /must/ be supported by the capabilities of the queue
 --     family specified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
---
--- -   #VUID-vkCmdSetEvent-stageMask-03937# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
---     feature is not enabled, @stageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdSetEvent-stageMask-01149# @stageMask@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
@@ -9260,17 +9260,17 @@ foreign import ccall
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdResetEvent-stageMask-04098# Any pipeline stage included
+-- -   #VUID-vkCmdResetEvent-stageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @stageMask@ /must/ not be @0@
+--
+-- -   #VUID-vkCmdResetEvent-stageMask-06458# Any pipeline stage included
 --     in @stageMask@ /must/ be supported by the capabilities of the queue
 --     family specified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
---
--- -   #VUID-vkCmdResetEvent-stageMask-03937# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
---     feature is not enabled, @stageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdResetEvent-stageMask-01153# @stageMask@ /must/ not
 --     include
@@ -9539,14 +9539,6 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdWaitEvents-srcStageMask-04098# Any pipeline stage
---     included in @srcStageMask@ /must/ be supported by the capabilities
---     of the queue family specified by the @queueFamilyIndex@ member of
---     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
---     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
---
 -- -   #VUID-vkCmdWaitEvents-srcStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
@@ -9592,14 +9584,6 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
---
--- -   #VUID-vkCmdWaitEvents-dstStageMask-04098# Any pipeline stage
---     included in @dstStageMask@ /must/ be supported by the capabilities
---     of the queue family specified by the @queueFamilyIndex@ member of
---     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
---     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   #VUID-vkCmdWaitEvents-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -9656,6 +9640,22 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     that are supported by one or more of the pipeline stages in
 --     @dstStageMask@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
+-- -   #VUID-vkCmdWaitEvents-srcStageMask-06459# Any pipeline stage
+--     included in @srcStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   #VUID-vkCmdWaitEvents-dstStageMask-06460# Any pipeline stage
+--     included in @dstStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   #VUID-vkCmdWaitEvents-srcStageMask-01158# @srcStageMask@ /must/ be
 --     the bitwise OR of the @stageMask@ parameter used in previous calls
@@ -9940,14 +9940,6 @@ foreign import ccall
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdPipelineBarrier-srcStageMask-04098# Any pipeline stage
---     included in @srcStageMask@ /must/ be supported by the capabilities
---     of the queue family specified by the @queueFamilyIndex@ member of
---     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
---     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
---
 -- -   #VUID-vkCmdPipelineBarrier-srcStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
@@ -9993,14 +9985,6 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
---
--- -   #VUID-vkCmdPipelineBarrier-dstStageMask-04098# Any pipeline stage
---     included in @dstStageMask@ /must/ be supported by the capabilities
---     of the queue family specified by the @queueFamilyIndex@ member of
---     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
---     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   #VUID-vkCmdPipelineBarrier-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -10098,6 +10082,22 @@ foreign import ccall
 --     called within a render pass instance, the render pass /must/ not
 --     have been started with
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--
+-- -   #VUID-vkCmdPipelineBarrier-srcStageMask-06461# Any pipeline stage
+--     included in @srcStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   #VUID-vkCmdPipelineBarrier-dstStageMask-06462# Any pipeline stage
+--     included in @dstStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- == Valid Usage (Implicit)
 --
@@ -11387,9 +11387,17 @@ foreign import ccall
 --     corresponding attachment image subresource of the framebuffer
 --     specified in the @framebuffer@ member of @pRenderPassBegin@
 --
--- -   #VUID-vkCmdBeginRenderPass-srcStageMask-00901# The @srcStageMask@
---     and @dstStageMask@ members of any element of the @pDependencies@
---     member of 'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
+-- -   #VUID-vkCmdBeginRenderPass-srcStageMask-06451# The @srcStageMask@
+--     members of any element of the @pDependencies@ member of
+--     'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
+--     @renderPass@ /must/ be supported by the capabilities of the queue
+--     family identified by the @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' used to create the
+--     command pool which @commandBuffer@ was allocated from
+--
+-- -   #VUID-vkCmdBeginRenderPass-dstStageMask-06452# The @dstStageMask@
+--     members of any element of the @pDependencies@ member of
+--     'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
 --     @renderPass@ /must/ be supported by the capabilities of the queue
 --     family identified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' used to create the

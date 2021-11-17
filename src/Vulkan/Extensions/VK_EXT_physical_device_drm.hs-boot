@@ -47,9 +47,10 @@
 -- DRM nodes on Linux.
 --
 -- Its functionality closely overlaps with
--- @EGL_EXT_device_drm@<VK_EXT_physical_device_drm-fn1.html 1>^. Unlike the
--- EGL extension, this extension does not expose a string containing the
--- name of the device file and instead exposes device minor numbers.
+-- @EGL_EXT_device_drm@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_physical_device_drm-fn1 1>^.
+-- Unlike the EGL extension, this extension does not expose a string
+-- containing the name of the device file and instead exposes device minor
+-- numbers.
 --
 -- DRM defines multiple device node types. Each physical device may have
 -- one primary node and one render node associated. Physical devices may
