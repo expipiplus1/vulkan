@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+- Support ghc-9.3.20211111
+- No more warnings under 9.2
 
 ## [3.13.3] - 2021-11-17
 - Bump API version to v1.2.199
