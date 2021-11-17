@@ -2,7 +2,7 @@
 
 f=$1
 exe_name=$(sed -n 's|^.*generate-new/\([^/]*\)/.*$|\1|p' <<< "$f")
-p=/home/j/projects/vulkan/generate-new/package.yaml
+p=package.yaml
 {
   printf "%s\n" "$(yq < "$p" ".executables.$exe_name.\"source-dirs\"" --raw-output | sed 's|^|-i|')"
   printf "%s\n" "$(yq < "$p" '.library."source-dirs"' --raw-output | sed 's|^|-i|')"
