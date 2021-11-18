@@ -61,6 +61,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreatePipelineCache))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipelineCache))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineCacheData))
@@ -170,7 +171,7 @@ createPipelineCache :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (PipelineCache)
 createPipelineCache device createInfo allocator = liftIO . evalContT $ do
-  let vkCreatePipelineCachePtr = pVkCreatePipelineCache (deviceCmds (device :: Device))
+  let vkCreatePipelineCachePtr = pVkCreatePipelineCache (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreatePipelineCachePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreatePipelineCache is null" Nothing Nothing
   let vkCreatePipelineCache' = mkVkCreatePipelineCache vkCreatePipelineCachePtr
@@ -258,7 +259,7 @@ destroyPipelineCache :: forall io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io ()
 destroyPipelineCache device pipelineCache allocator = liftIO . evalContT $ do
-  let vkDestroyPipelineCachePtr = pVkDestroyPipelineCache (deviceCmds (device :: Device))
+  let vkDestroyPipelineCachePtr = pVkDestroyPipelineCache (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyPipelineCachePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPipelineCache is null" Nothing Nothing
   let vkDestroyPipelineCache' = mkVkDestroyPipelineCache vkDestroyPipelineCachePtr
@@ -353,7 +354,7 @@ getPipelineCacheData :: forall io
                         PipelineCache
                      -> io (Result, ("data" ::: ByteString))
 getPipelineCacheData device pipelineCache = liftIO . evalContT $ do
-  let vkGetPipelineCacheDataPtr = pVkGetPipelineCacheData (deviceCmds (device :: Device))
+  let vkGetPipelineCacheDataPtr = pVkGetPipelineCacheData (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelineCacheDataPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineCacheData is null" Nothing Nothing
   let vkGetPipelineCacheData' = mkVkGetPipelineCacheData vkGetPipelineCacheDataPtr
@@ -446,7 +447,7 @@ mergePipelineCaches :: forall io
                        ("srcCaches" ::: Vector PipelineCache)
                     -> io ()
 mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
-  let vkMergePipelineCachesPtr = pVkMergePipelineCaches (deviceCmds (device :: Device))
+  let vkMergePipelineCachesPtr = pVkMergePipelineCaches (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkMergePipelineCachesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMergePipelineCaches is null" Nothing Nothing
   let vkMergePipelineCaches' = mkVkMergePipelineCaches vkMergePipelineCachesPtr

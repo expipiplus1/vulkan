@@ -155,11 +155,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateScreenSurfaceQNX))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceScreenPresentationSupportQNX))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -228,7 +230,7 @@ createScreenSurfaceQNX :: forall io
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io (SurfaceKHR)
 createScreenSurfaceQNX instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateScreenSurfaceQNXPtr = pVkCreateScreenSurfaceQNX (instanceCmds (instance' :: Instance))
+  let vkCreateScreenSurfaceQNXPtr = pVkCreateScreenSurfaceQNX (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateScreenSurfaceQNXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateScreenSurfaceQNX is null" Nothing Nothing
   let vkCreateScreenSurfaceQNX' = mkVkCreateScreenSurfaceQNX vkCreateScreenSurfaceQNXPtr
@@ -287,7 +289,7 @@ getPhysicalDeviceScreenPresentationSupportQNX :: forall io
                                                  (Ptr Screen_window)
                                               -> io (Bool)
 getPhysicalDeviceScreenPresentationSupportQNX physicalDevice queueFamilyIndex window = liftIO $ do
-  let vkGetPhysicalDeviceScreenPresentationSupportQNXPtr = pVkGetPhysicalDeviceScreenPresentationSupportQNX (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceScreenPresentationSupportQNXPtr = pVkGetPhysicalDeviceScreenPresentationSupportQNX (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceScreenPresentationSupportQNXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceScreenPresentationSupportQNX is null" Nothing Nothing
   let vkGetPhysicalDeviceScreenPresentationSupportQNX' = mkVkGetPhysicalDeviceScreenPresentationSupportQNX vkGetPhysicalDeviceScreenPresentationSupportQNXPtr

@@ -202,6 +202,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateValidationCacheEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyValidationCacheEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetValidationCacheDataEXT))
@@ -304,7 +305,7 @@ createValidationCacheEXT :: forall io
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (ValidationCacheEXT)
 createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateValidationCacheEXTPtr = pVkCreateValidationCacheEXT (deviceCmds (device :: Device))
+  let vkCreateValidationCacheEXTPtr = pVkCreateValidationCacheEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateValidationCacheEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateValidationCacheEXT is null" Nothing Nothing
   let vkCreateValidationCacheEXT' = mkVkCreateValidationCacheEXT vkCreateValidationCacheEXTPtr
@@ -395,7 +396,7 @@ destroyValidationCacheEXT :: forall io
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io ()
 destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT $ do
-  let vkDestroyValidationCacheEXTPtr = pVkDestroyValidationCacheEXT (deviceCmds (device :: Device))
+  let vkDestroyValidationCacheEXTPtr = pVkDestroyValidationCacheEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyValidationCacheEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyValidationCacheEXT is null" Nothing Nothing
   let vkDestroyValidationCacheEXT' = mkVkDestroyValidationCacheEXT vkDestroyValidationCacheEXTPtr
@@ -527,7 +528,7 @@ getValidationCacheDataEXT :: forall io
                              ValidationCacheEXT
                           -> io (Result, ("data" ::: ByteString))
 getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
-  let vkGetValidationCacheDataEXTPtr = pVkGetValidationCacheDataEXT (deviceCmds (device :: Device))
+  let vkGetValidationCacheDataEXTPtr = pVkGetValidationCacheDataEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetValidationCacheDataEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetValidationCacheDataEXT is null" Nothing Nothing
   let vkGetValidationCacheDataEXT' = mkVkGetValidationCacheDataEXT vkGetValidationCacheDataEXTPtr
@@ -623,7 +624,7 @@ mergeValidationCachesEXT :: forall io
                             ("srcCaches" ::: Vector ValidationCacheEXT)
                          -> io ()
 mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
-  let vkMergeValidationCachesEXTPtr = pVkMergeValidationCachesEXT (deviceCmds (device :: Device))
+  let vkMergeValidationCachesEXTPtr = pVkMergeValidationCachesEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkMergeValidationCachesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMergeValidationCachesEXT is null" Nothing Nothing
   let vkMergeValidationCachesEXT' = mkVkMergeValidationCachesEXT vkMergeValidationCachesEXTPtr

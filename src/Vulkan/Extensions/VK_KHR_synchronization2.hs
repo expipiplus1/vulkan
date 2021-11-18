@@ -599,6 +599,7 @@ import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdPipelineBarrier2KHR))
@@ -631,6 +632,7 @@ import Vulkan.Core10.Handles (QueryPool)
 import Vulkan.Core10.Handles (QueryPool(..))
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -807,7 +809,7 @@ cmdSetEvent2KHR :: forall io
                    DependencyInfoKHR
                 -> io ()
 cmdSetEvent2KHR commandBuffer event dependencyInfo = liftIO . evalContT $ do
-  let vkCmdSetEvent2KHRPtr = pVkCmdSetEvent2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetEvent2KHRPtr = pVkCmdSetEvent2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetEvent2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetEvent2KHR is null" Nothing Nothing
   let vkCmdSetEvent2KHR' = mkVkCmdSetEvent2KHR vkCmdSetEvent2KHRPtr
@@ -986,7 +988,7 @@ cmdResetEvent2KHR :: forall io
                      ("stageMask" ::: PipelineStageFlags2KHR)
                   -> io ()
 cmdResetEvent2KHR commandBuffer event stageMask = liftIO $ do
-  let vkCmdResetEvent2KHRPtr = pVkCmdResetEvent2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResetEvent2KHRPtr = pVkCmdResetEvent2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdResetEvent2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetEvent2KHR is null" Nothing Nothing
   let vkCmdResetEvent2KHR' = mkVkCmdResetEvent2KHR vkCmdResetEvent2KHRPtr
@@ -1020,7 +1022,7 @@ cmdWaitEvents2KHRSafeOrUnsafe :: forall io
                                  ("dependencyInfos" ::: Vector DependencyInfoKHR)
                               -> io ()
 cmdWaitEvents2KHRSafeOrUnsafe mkVkCmdWaitEvents2KHR commandBuffer events dependencyInfos = liftIO . evalContT $ do
-  let vkCmdWaitEvents2KHRPtr = pVkCmdWaitEvents2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWaitEvents2KHRPtr = pVkCmdWaitEvents2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWaitEvents2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents2KHR is null" Nothing Nothing
   let vkCmdWaitEvents2KHR' = mkVkCmdWaitEvents2KHR vkCmdWaitEvents2KHRPtr
@@ -1389,7 +1391,7 @@ cmdPipelineBarrier2KHR :: forall io
                           DependencyInfoKHR
                        -> io ()
 cmdPipelineBarrier2KHR commandBuffer dependencyInfo = liftIO . evalContT $ do
-  let vkCmdPipelineBarrier2KHRPtr = pVkCmdPipelineBarrier2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPipelineBarrier2KHRPtr = pVkCmdPipelineBarrier2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPipelineBarrier2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPipelineBarrier2KHR is null" Nothing Nothing
   let vkCmdPipelineBarrier2KHR' = mkVkCmdPipelineBarrier2KHR vkCmdPipelineBarrier2KHRPtr
@@ -1636,7 +1638,7 @@ queueSubmit2KHR :: forall io
                    Fence
                 -> io ()
 queueSubmit2KHR queue submits fence = liftIO . evalContT $ do
-  let vkQueueSubmit2KHRPtr = pVkQueueSubmit2KHR (deviceCmds (queue :: Queue))
+  let vkQueueSubmit2KHRPtr = pVkQueueSubmit2KHR (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueSubmit2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSubmit2KHR is null" Nothing Nothing
   let vkQueueSubmit2KHR' = mkVkQueueSubmit2KHR vkQueueSubmit2KHRPtr
@@ -1863,7 +1865,7 @@ cmdWriteTimestamp2KHR :: forall io
                          ("query" ::: Word32)
                       -> io ()
 cmdWriteTimestamp2KHR commandBuffer stage queryPool query = liftIO $ do
-  let vkCmdWriteTimestamp2KHRPtr = pVkCmdWriteTimestamp2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteTimestamp2KHRPtr = pVkCmdWriteTimestamp2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdWriteTimestamp2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteTimestamp2KHR is null" Nothing Nothing
   let vkCmdWriteTimestamp2KHR' = mkVkCmdWriteTimestamp2KHR vkCmdWriteTimestamp2KHRPtr
@@ -2061,7 +2063,7 @@ cmdWriteBufferMarker2AMD :: forall io
                             ("marker" ::: Word32)
                          -> io ()
 cmdWriteBufferMarker2AMD commandBuffer stage dstBuffer dstOffset marker = liftIO $ do
-  let vkCmdWriteBufferMarker2AMDPtr = pVkCmdWriteBufferMarker2AMD (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteBufferMarker2AMDPtr = pVkCmdWriteBufferMarker2AMD (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdWriteBufferMarker2AMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteBufferMarker2AMD is null" Nothing Nothing
   let vkCmdWriteBufferMarker2AMD' = mkVkCmdWriteBufferMarker2AMD vkCmdWriteBufferMarker2AMDPtr
@@ -2122,7 +2124,7 @@ getQueueCheckpointData2NV :: forall io
                              Queue
                           -> io (("checkpointData" ::: Vector CheckpointData2NV))
 getQueueCheckpointData2NV queue = liftIO . evalContT $ do
-  let vkGetQueueCheckpointData2NVPtr = pVkGetQueueCheckpointData2NV (deviceCmds (queue :: Queue))
+  let vkGetQueueCheckpointData2NVPtr = pVkGetQueueCheckpointData2NV (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetQueueCheckpointData2NVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueueCheckpointData2NV is null" Nothing Nothing
   let vkGetQueueCheckpointData2NV' = mkVkGetQueueCheckpointData2NV vkGetQueueCheckpointData2NVPtr
@@ -3784,7 +3786,7 @@ deriving instance Show (Chain es) => Show (ImageMemoryBarrier2KHR es)
 
 instance Extensible ImageMemoryBarrier2KHR where
   extensibleTypeName = "ImageMemoryBarrier2KHR"
-  setNext x next = x{next = next}
+  setNext ImageMemoryBarrier2KHR{..} next' = ImageMemoryBarrier2KHR{next = next', ..}
   getNext ImageMemoryBarrier2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryBarrier2KHR e => b) -> Maybe b
   extends _ f
@@ -5133,7 +5135,7 @@ deriving instance Show (Chain es) => Show (SubmitInfo2KHR es)
 
 instance Extensible SubmitInfo2KHR where
   extensibleTypeName = "SubmitInfo2KHR"
-  setNext x next = x{next = next}
+  setNext SubmitInfo2KHR{..} next' = SubmitInfo2KHR{next = next', ..}
   getNext SubmitInfo2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubmitInfo2KHR e => b) -> Maybe b
   extends _ f

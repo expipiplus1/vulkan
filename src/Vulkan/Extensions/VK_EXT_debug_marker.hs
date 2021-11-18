@@ -334,10 +334,12 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDebugMarkerBeginEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDebugMarkerEndEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDebugMarkerInsertEXT))
@@ -400,7 +402,7 @@ debugMarkerSetObjectNameEXT :: forall io
                                DebugMarkerObjectNameInfoEXT
                             -> io ()
 debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
-  let vkDebugMarkerSetObjectNameEXTPtr = pVkDebugMarkerSetObjectNameEXT (deviceCmds (device :: Device))
+  let vkDebugMarkerSetObjectNameEXTPtr = pVkDebugMarkerSetObjectNameEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDebugMarkerSetObjectNameEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectNameEXT is null" Nothing Nothing
   let vkDebugMarkerSetObjectNameEXT' = mkVkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXTPtr
@@ -456,7 +458,7 @@ debugMarkerSetObjectTagEXT :: forall io
                               DebugMarkerObjectTagInfoEXT
                            -> io ()
 debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
-  let vkDebugMarkerSetObjectTagEXTPtr = pVkDebugMarkerSetObjectTagEXT (deviceCmds (device :: Device))
+  let vkDebugMarkerSetObjectTagEXTPtr = pVkDebugMarkerSetObjectTagEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDebugMarkerSetObjectTagEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectTagEXT is null" Nothing Nothing
   let vkDebugMarkerSetObjectTagEXT' = mkVkDebugMarkerSetObjectTagEXT vkDebugMarkerSetObjectTagEXTPtr
@@ -524,7 +526,7 @@ cmdDebugMarkerBeginEXT :: forall io
                           DebugMarkerMarkerInfoEXT
                        -> io ()
 cmdDebugMarkerBeginEXT commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdDebugMarkerBeginEXTPtr = pVkCmdDebugMarkerBeginEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDebugMarkerBeginEXTPtr = pVkCmdDebugMarkerBeginEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDebugMarkerBeginEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerBeginEXT is null" Nothing Nothing
   let vkCmdDebugMarkerBeginEXT' = mkVkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXTPtr
@@ -606,7 +608,7 @@ cmdDebugMarkerEndEXT :: forall io
                         CommandBuffer
                      -> io ()
 cmdDebugMarkerEndEXT commandBuffer = liftIO $ do
-  let vkCmdDebugMarkerEndEXTPtr = pVkCmdDebugMarkerEndEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDebugMarkerEndEXTPtr = pVkCmdDebugMarkerEndEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDebugMarkerEndEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerEndEXT is null" Nothing Nothing
   let vkCmdDebugMarkerEndEXT' = mkVkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXTPtr
@@ -673,7 +675,7 @@ cmdDebugMarkerInsertEXT :: forall io
                            DebugMarkerMarkerInfoEXT
                         -> io ()
 cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdDebugMarkerInsertEXTPtr = pVkCmdDebugMarkerInsertEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDebugMarkerInsertEXTPtr = pVkCmdDebugMarkerInsertEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDebugMarkerInsertEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerInsertEXT is null" Nothing Nothing
   let vkCmdDebugMarkerInsertEXT' = mkVkCmdDebugMarkerInsertEXT vkCmdDebugMarkerInsertEXTPtr

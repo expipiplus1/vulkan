@@ -136,6 +136,7 @@ import Vulkan.Core10.Enums.CompareOp (CompareOp)
 import Vulkan.Core10.Enums.CullModeFlagBits (CullModeFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateComputePipelines))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateGraphicsPipelines))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipeline))
@@ -376,7 +377,7 @@ createGraphicsPipelines :: forall io
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (Result, ("pipelines" ::: Vector Pipeline))
 createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateGraphicsPipelinesPtr = pVkCreateGraphicsPipelines (deviceCmds (device :: Device))
+  let vkCreateGraphicsPipelinesPtr = pVkCreateGraphicsPipelines (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateGraphicsPipelinesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateGraphicsPipelines is null" Nothing Nothing
   let vkCreateGraphicsPipelines' = mkVkCreateGraphicsPipelines vkCreateGraphicsPipelinesPtr
@@ -506,7 +507,7 @@ createComputePipelines :: forall io
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io (Result, ("pipelines" ::: Vector Pipeline))
 createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateComputePipelinesPtr = pVkCreateComputePipelines (deviceCmds (device :: Device))
+  let vkCreateComputePipelinesPtr = pVkCreateComputePipelines (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateComputePipelinesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateComputePipelines is null" Nothing Nothing
   let vkCreateComputePipelines' = mkVkCreateComputePipelines vkCreateComputePipelinesPtr
@@ -596,7 +597,7 @@ destroyPipeline :: forall io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io ()
 destroyPipeline device pipeline allocator = liftIO . evalContT $ do
-  let vkDestroyPipelinePtr = pVkDestroyPipeline (deviceCmds (device :: Device))
+  let vkDestroyPipelinePtr = pVkDestroyPipeline (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyPipelinePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPipeline is null" Nothing Nothing
   let vkDestroyPipeline' = mkVkDestroyPipeline vkDestroyPipelinePtr
@@ -1204,7 +1205,7 @@ deriving instance Show (Chain es) => Show (PipelineShaderStageCreateInfo es)
 
 instance Extensible PipelineShaderStageCreateInfo where
   extensibleTypeName = "PipelineShaderStageCreateInfo"
-  setNext x next = x{next = next}
+  setNext PipelineShaderStageCreateInfo{..} next' = PipelineShaderStageCreateInfo{next = next', ..}
   getNext PipelineShaderStageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineShaderStageCreateInfo e => b) -> Maybe b
   extends _ f
@@ -1434,7 +1435,7 @@ deriving instance Show (Chain es) => Show (ComputePipelineCreateInfo es)
 
 instance Extensible ComputePipelineCreateInfo where
   extensibleTypeName = "ComputePipelineCreateInfo"
-  setNext x next = x{next = next}
+  setNext ComputePipelineCreateInfo{..} next' = ComputePipelineCreateInfo{next = next', ..}
   getNext ComputePipelineCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ComputePipelineCreateInfo e => b) -> Maybe b
   extends _ f
@@ -1754,7 +1755,7 @@ deriving instance Show (Chain es) => Show (PipelineVertexInputStateCreateInfo es
 
 instance Extensible PipelineVertexInputStateCreateInfo where
   extensibleTypeName = "PipelineVertexInputStateCreateInfo"
-  setNext x next = x{next = next}
+  setNext PipelineVertexInputStateCreateInfo{..} next' = PipelineVertexInputStateCreateInfo{next = next', ..}
   getNext PipelineVertexInputStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineVertexInputStateCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2007,7 +2008,7 @@ deriving instance Show (Chain es) => Show (PipelineTessellationStateCreateInfo e
 
 instance Extensible PipelineTessellationStateCreateInfo where
   extensibleTypeName = "PipelineTessellationStateCreateInfo"
-  setNext x next = x{next = next}
+  setNext PipelineTessellationStateCreateInfo{..} next' = PipelineTessellationStateCreateInfo{next = next', ..}
   getNext PipelineTessellationStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineTessellationStateCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2170,7 +2171,7 @@ deriving instance Show (Chain es) => Show (PipelineViewportStateCreateInfo es)
 
 instance Extensible PipelineViewportStateCreateInfo where
   extensibleTypeName = "PipelineViewportStateCreateInfo"
-  setNext x next = x{next = next}
+  setNext PipelineViewportStateCreateInfo{..} next' = PipelineViewportStateCreateInfo{next = next', ..}
   getNext PipelineViewportStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineViewportStateCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2387,7 +2388,7 @@ deriving instance Show (Chain es) => Show (PipelineRasterizationStateCreateInfo 
 
 instance Extensible PipelineRasterizationStateCreateInfo where
   extensibleTypeName = "PipelineRasterizationStateCreateInfo"
-  setNext x next = x{next = next}
+  setNext PipelineRasterizationStateCreateInfo{..} next' = PipelineRasterizationStateCreateInfo{next = next', ..}
   getNext PipelineRasterizationStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineRasterizationStateCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2585,7 +2586,7 @@ deriving instance Show (Chain es) => Show (PipelineMultisampleStateCreateInfo es
 
 instance Extensible PipelineMultisampleStateCreateInfo where
   extensibleTypeName = "PipelineMultisampleStateCreateInfo"
-  setNext x next = x{next = next}
+  setNext PipelineMultisampleStateCreateInfo{..} next' = PipelineMultisampleStateCreateInfo{next = next', ..}
   getNext PipelineMultisampleStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineMultisampleStateCreateInfo e => b) -> Maybe b
   extends _ f
@@ -3007,7 +3008,7 @@ deriving instance Show (Chain es) => Show (PipelineColorBlendStateCreateInfo es)
 
 instance Extensible PipelineColorBlendStateCreateInfo where
   extensibleTypeName = "PipelineColorBlendStateCreateInfo"
-  setNext x next = x{next = next}
+  setNext PipelineColorBlendStateCreateInfo{..} next' = PipelineColorBlendStateCreateInfo{next = next', ..}
   getNext PipelineColorBlendStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineColorBlendStateCreateInfo e => b) -> Maybe b
   extends _ f
@@ -4861,7 +4862,7 @@ deriving instance Show (Chain es) => Show (GraphicsPipelineCreateInfo es)
 
 instance Extensible GraphicsPipelineCreateInfo where
   extensibleTypeName = "GraphicsPipelineCreateInfo"
-  setNext x next = x{next = next}
+  setNext GraphicsPipelineCreateInfo{..} next' = GraphicsPipelineCreateInfo{next = next', ..}
   getNext GraphicsPipelineCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends GraphicsPipelineCreateInfo e => b) -> Maybe b
   extends _ f

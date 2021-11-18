@@ -151,6 +151,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkAcquireXlibDisplayEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkGetRandROutputDisplayEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -225,7 +226,7 @@ acquireXlibDisplayEXT :: forall io
                          DisplayKHR
                       -> io ()
 acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
-  let vkAcquireXlibDisplayEXTPtr = pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkAcquireXlibDisplayEXTPtr = pVkAcquireXlibDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkAcquireXlibDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireXlibDisplayEXT is null" Nothing Nothing
   let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT vkAcquireXlibDisplayEXTPtr
@@ -281,7 +282,7 @@ getRandROutputDisplayEXT :: forall io
                             RROutput
                          -> io (DisplayKHR)
 getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
-  let vkGetRandROutputDisplayEXTPtr = pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetRandROutputDisplayEXTPtr = pVkGetRandROutputDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetRandROutputDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRandROutputDisplayEXT is null" Nothing Nothing
   let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT vkGetRandROutputDisplayEXTPtr

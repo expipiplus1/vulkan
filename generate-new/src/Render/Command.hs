@@ -884,12 +884,19 @@ getCCallDynamic c = do
           <+> parens ("Ptr" <+> dquotes (pretty (unCName (cName c))) <> "#")
 
       -- What do do if we need to extract the command pointer from a parameter
-      cmdsFunPtr ptrRecTyName getCmdsFun paramName paramType = do
+      cmdsFunPtr ptrRecTyName getCmdsMember paramName paramType = do
         cmdsRef <- stmt Nothing (Just "cmds") $ do
-          paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
-          getCmds   <- getCmdsFun
-          pure . Pure InlineOnce . CmdsDoc $ getCmds <+> parens
-            (pretty paramName <+> "::" <+> paramTDoc)
+          con <- case paramType of
+                   TypeName t -> do
+                     let con = mkConName t t
+                     let paramTName = mkTyName t
+                     tellImportWith paramTName con
+                     pure con
+                   _ -> throw "Trying to get a command pointer record from something which isn't a struct"
+          cmdsMember <- getCmdsMember
+          pure . Pure InlineOnce . CmdsDoc $
+            "case" <+> pretty paramName <+> "of" <+> pretty con
+              <> "{" <> cmdsMember <> "}" <+> "->" <+> cmdsMember
         nameRef "cmds" cmdsRef
         stmt Nothing (Just (unCName (cName c) <> "Ptr")) $ do
           let memberName = mkFuncPointerMemberName (cName c)

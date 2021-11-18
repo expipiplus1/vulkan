@@ -41,6 +41,7 @@ import           Render.Struct
 import           Render.Union
 import           Render.VkException
 import           Spec.Parse
+import qualified Data.HashMap.Strict as HashMap
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
@@ -141,11 +142,13 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
                                   SSpecXr -> Xr.specVersions spec
                              <> V.singleton (structExtends spec)
                              <> case specFlavor @t of
-                                  SpecVk ->
-                                    V.singleton
-                                      (renderSPIRVElements specSPIRVExtensions
-                                                           specSPIRVCapabilities
+                                  SpecVk -> V.singleton
+                                    (renderSPIRVElements
+                                      specSPIRVExtensions
+                                      specSPIRVCapabilities
+                                      (HashMap.fromList [ (msName s, s) | s <- V.toList ss ]
                                       )
+                                    )
                                   SpecXr -> mempty
                              <> V.singleton (renderExtensionDepElements specExtensions)
     }

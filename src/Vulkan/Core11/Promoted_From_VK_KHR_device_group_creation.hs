@@ -56,6 +56,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkEnumeratePhysicalDeviceGroups))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.APIConstants (MAX_DEVICE_GROUP_SIZE)
@@ -142,7 +143,7 @@ enumeratePhysicalDeviceGroups :: forall io
                                  Instance
                               -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
 enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
-  let vkEnumeratePhysicalDeviceGroupsPtr = pVkEnumeratePhysicalDeviceGroups (instanceCmds (instance' :: Instance))
+  let vkEnumeratePhysicalDeviceGroupsPtr = pVkEnumeratePhysicalDeviceGroups (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkEnumeratePhysicalDeviceGroupsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDeviceGroups is null" Nothing Nothing
   let vkEnumeratePhysicalDeviceGroups' = mkVkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroupsPtr

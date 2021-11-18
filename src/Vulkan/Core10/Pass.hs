@@ -86,6 +86,7 @@ import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateFramebuffer))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateRenderPass))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyFramebuffer))
@@ -207,7 +208,7 @@ createFramebuffer :: forall a io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (Framebuffer)
 createFramebuffer device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateFramebufferPtr = pVkCreateFramebuffer (deviceCmds (device :: Device))
+  let vkCreateFramebufferPtr = pVkCreateFramebuffer (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateFramebufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateFramebuffer is null" Nothing Nothing
   let vkCreateFramebuffer' = mkVkCreateFramebuffer vkCreateFramebufferPtr
@@ -297,7 +298,7 @@ destroyFramebuffer :: forall io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
 destroyFramebuffer device framebuffer allocator = liftIO . evalContT $ do
-  let vkDestroyFramebufferPtr = pVkDestroyFramebuffer (deviceCmds (device :: Device))
+  let vkDestroyFramebufferPtr = pVkDestroyFramebuffer (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyFramebufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyFramebuffer is null" Nothing Nothing
   let vkDestroyFramebuffer' = mkVkDestroyFramebuffer vkDestroyFramebufferPtr
@@ -363,7 +364,7 @@ createRenderPass :: forall a io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io (RenderPass)
 createRenderPass device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateRenderPassPtr = pVkCreateRenderPass (deviceCmds (device :: Device))
+  let vkCreateRenderPassPtr = pVkCreateRenderPass (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRenderPass is null" Nothing Nothing
   let vkCreateRenderPass' = mkVkCreateRenderPass vkCreateRenderPassPtr
@@ -453,7 +454,7 @@ destroyRenderPass :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroyRenderPass device renderPass allocator = liftIO . evalContT $ do
-  let vkDestroyRenderPassPtr = pVkDestroyRenderPass (deviceCmds (device :: Device))
+  let vkDestroyRenderPassPtr = pVkDestroyRenderPass (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyRenderPass is null" Nothing Nothing
   let vkDestroyRenderPass' = mkVkDestroyRenderPass vkDestroyRenderPassPtr
@@ -532,7 +533,7 @@ getRenderAreaGranularity :: forall io
                             RenderPass
                          -> io (("granularity" ::: Extent2D))
 getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
-  let vkGetRenderAreaGranularityPtr = pVkGetRenderAreaGranularity (deviceCmds (device :: Device))
+  let vkGetRenderAreaGranularityPtr = pVkGetRenderAreaGranularity (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetRenderAreaGranularityPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRenderAreaGranularity is null" Nothing Nothing
   let vkGetRenderAreaGranularity' = mkVkGetRenderAreaGranularity vkGetRenderAreaGranularityPtr
@@ -1978,7 +1979,7 @@ deriving instance Show (Chain es) => Show (RenderPassCreateInfo es)
 
 instance Extensible RenderPassCreateInfo where
   extensibleTypeName = "RenderPassCreateInfo"
-  setNext x next = x{next = next}
+  setNext RenderPassCreateInfo{..} next' = RenderPassCreateInfo{next = next', ..}
   getNext RenderPassCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2609,7 +2610,7 @@ deriving instance Show (Chain es) => Show (FramebufferCreateInfo es)
 
 instance Extensible FramebufferCreateInfo where
   extensibleTypeName = "FramebufferCreateInfo"
-  setNext x next = x{next = next}
+  setNext FramebufferCreateInfo{..} next' = FramebufferCreateInfo{next = next', ..}
   getNext FramebufferCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FramebufferCreateInfo e => b) -> Maybe b
   extends _ f

@@ -266,6 +266,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineExecutableInternalRepresentationsKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineExecutablePropertiesKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineExecutableStatisticsKHR))
@@ -363,7 +364,7 @@ getPipelineExecutablePropertiesKHR :: forall io
                                       PipelineInfoKHR
                                    -> io (Result, ("properties" ::: Vector PipelineExecutablePropertiesKHR))
 getPipelineExecutablePropertiesKHR device pipelineInfo = liftIO . evalContT $ do
-  let vkGetPipelineExecutablePropertiesKHRPtr = pVkGetPipelineExecutablePropertiesKHR (deviceCmds (device :: Device))
+  let vkGetPipelineExecutablePropertiesKHRPtr = pVkGetPipelineExecutablePropertiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelineExecutablePropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutablePropertiesKHR is null" Nothing Nothing
   let vkGetPipelineExecutablePropertiesKHR' = mkVkGetPipelineExecutablePropertiesKHR vkGetPipelineExecutablePropertiesKHRPtr
@@ -465,7 +466,7 @@ getPipelineExecutableStatisticsKHR :: forall io
                                       PipelineExecutableInfoKHR
                                    -> io (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
 getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ do
-  let vkGetPipelineExecutableStatisticsKHRPtr = pVkGetPipelineExecutableStatisticsKHR (deviceCmds (device :: Device))
+  let vkGetPipelineExecutableStatisticsKHRPtr = pVkGetPipelineExecutableStatisticsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelineExecutableStatisticsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutableStatisticsKHR is null" Nothing Nothing
   let vkGetPipelineExecutableStatisticsKHR' = mkVkGetPipelineExecutableStatisticsKHR vkGetPipelineExecutableStatisticsKHRPtr
@@ -576,7 +577,7 @@ getPipelineExecutableInternalRepresentationsKHR :: forall io
                                                    PipelineExecutableInfoKHR
                                                 -> io (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
 getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO . evalContT $ do
-  let vkGetPipelineExecutableInternalRepresentationsKHRPtr = pVkGetPipelineExecutableInternalRepresentationsKHR (deviceCmds (device :: Device))
+  let vkGetPipelineExecutableInternalRepresentationsKHRPtr = pVkGetPipelineExecutableInternalRepresentationsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelineExecutableInternalRepresentationsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutableInternalRepresentationsKHR is null" Nothing Nothing
   let vkGetPipelineExecutableInternalRepresentationsKHR' = mkVkGetPipelineExecutableInternalRepresentationsKHR vkGetPipelineExecutableInternalRepresentationsKHRPtr

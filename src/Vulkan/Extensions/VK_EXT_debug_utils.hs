@@ -594,11 +594,13 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.Handles (DebugUtilsMessengerEXT)
 import Vulkan.Extensions.Handles (DebugUtilsMessengerEXT(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdInsertDebugUtilsLabelEXT))
@@ -611,6 +613,7 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDebugUtilsMessengerEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkDestroyDebugUtilsMessengerEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkSubmitDebugUtilsMessageEXT))
@@ -618,6 +621,7 @@ import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.ObjectType (ObjectType)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -688,7 +692,7 @@ setDebugUtilsObjectNameEXT :: forall io
                               DebugUtilsObjectNameInfoEXT
                            -> io ()
 setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
-  let vkSetDebugUtilsObjectNameEXTPtr = pVkSetDebugUtilsObjectNameEXT (deviceCmds (device :: Device))
+  let vkSetDebugUtilsObjectNameEXTPtr = pVkSetDebugUtilsObjectNameEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetDebugUtilsObjectNameEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectNameEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXTPtr
@@ -745,7 +749,7 @@ setDebugUtilsObjectTagEXT :: forall io
                              DebugUtilsObjectTagInfoEXT
                           -> io ()
 setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
-  let vkSetDebugUtilsObjectTagEXTPtr = pVkSetDebugUtilsObjectTagEXT (deviceCmds (device :: Device))
+  let vkSetDebugUtilsObjectTagEXTPtr = pVkSetDebugUtilsObjectTagEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetDebugUtilsObjectTagEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectTagEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXTPtr
@@ -792,7 +796,7 @@ queueBeginDebugUtilsLabelEXT :: forall io
                                 ("labelInfo" ::: DebugUtilsLabelEXT)
                              -> io ()
 queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
-  let vkQueueBeginDebugUtilsLabelEXTPtr = pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  let vkQueueBeginDebugUtilsLabelEXTPtr = pVkQueueBeginDebugUtilsLabelEXT (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXTPtr
@@ -846,7 +850,7 @@ queueEndDebugUtilsLabelEXT :: forall io
                               Queue
                            -> io ()
 queueEndDebugUtilsLabelEXT queue = liftIO $ do
-  let vkQueueEndDebugUtilsLabelEXTPtr = pVkQueueEndDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  let vkQueueEndDebugUtilsLabelEXTPtr = pVkQueueEndDebugUtilsLabelEXT (case queue of Queue{deviceCmds} -> deviceCmds)
   unless (vkQueueEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT vkQueueEndDebugUtilsLabelEXTPtr
@@ -892,7 +896,7 @@ queueInsertDebugUtilsLabelEXT :: forall io
                                  ("labelInfo" ::: DebugUtilsLabelEXT)
                               -> io ()
 queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
-  let vkQueueInsertDebugUtilsLabelEXTPtr = pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  let vkQueueInsertDebugUtilsLabelEXTPtr = pVkQueueInsertDebugUtilsLabelEXT (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT vkQueueInsertDebugUtilsLabelEXTPtr
@@ -960,7 +964,7 @@ cmdBeginDebugUtilsLabelEXT :: forall io
                               ("labelInfo" ::: DebugUtilsLabelEXT)
                            -> io ()
 cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
-  let vkCmdBeginDebugUtilsLabelEXTPtr = pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginDebugUtilsLabelEXTPtr = pVkCmdBeginDebugUtilsLabelEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXTPtr
@@ -1063,7 +1067,7 @@ cmdEndDebugUtilsLabelEXT :: forall io
                             CommandBuffer
                          -> io ()
 cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
-  let vkCmdEndDebugUtilsLabelEXTPtr = pVkCmdEndDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndDebugUtilsLabelEXTPtr = pVkCmdEndDebugUtilsLabelEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXTPtr
@@ -1129,7 +1133,7 @@ cmdInsertDebugUtilsLabelEXT :: forall io
                                ("labelInfo" ::: DebugUtilsLabelEXT)
                             -> io ()
 cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
-  let vkCmdInsertDebugUtilsLabelEXTPtr = pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdInsertDebugUtilsLabelEXTPtr = pVkCmdInsertDebugUtilsLabelEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXTPtr
@@ -1200,7 +1204,7 @@ createDebugUtilsMessengerEXT :: forall io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugUtilsMessengerEXT)
 createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
+  let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugUtilsMessengerEXT is null" Nothing Nothing
   let vkCreateDebugUtilsMessengerEXT' = mkVkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXTPtr
@@ -1297,7 +1301,7 @@ destroyDebugUtilsMessengerEXT :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
 destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
-  let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
+  let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugUtilsMessengerEXT is null" Nothing Nothing
   let vkDestroyDebugUtilsMessengerEXT' = mkVkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXTPtr
@@ -1370,7 +1374,7 @@ submitDebugUtilsMessageEXT :: forall io
                               DebugUtilsMessengerCallbackDataEXT
                            -> io ()
 submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
-  let vkSubmitDebugUtilsMessageEXTPtr = pVkSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance))
+  let vkSubmitDebugUtilsMessageEXTPtr = pVkSubmitDebugUtilsMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkSubmitDebugUtilsMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSubmitDebugUtilsMessageEXT is null" Nothing Nothing
   let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXTPtr

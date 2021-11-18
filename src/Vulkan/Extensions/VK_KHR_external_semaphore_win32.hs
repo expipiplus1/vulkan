@@ -206,6 +206,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreWin32HandleKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportSemaphoreWin32HandleKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -282,7 +283,7 @@ getSemaphoreWin32HandleKHR :: forall io
                               SemaphoreGetWin32HandleInfoKHR
                            -> io (HANDLE)
 getSemaphoreWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
-  let vkGetSemaphoreWin32HandleKHRPtr = pVkGetSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
+  let vkGetSemaphoreWin32HandleKHRPtr = pVkGetSemaphoreWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreWin32HandleKHR is null" Nothing Nothing
   let vkGetSemaphoreWin32HandleKHR' = mkVkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHRPtr
@@ -348,7 +349,7 @@ importSemaphoreWin32HandleKHR :: forall io
                                  ImportSemaphoreWin32HandleInfoKHR
                               -> io ()
 importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . evalContT $ do
-  let vkImportSemaphoreWin32HandleKHRPtr = pVkImportSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
+  let vkImportSemaphoreWin32HandleKHRPtr = pVkImportSemaphoreWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreWin32HandleKHR is null" Nothing Nothing
   let vkImportSemaphoreWin32HandleKHR' = mkVkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHRPtr

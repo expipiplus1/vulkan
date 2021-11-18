@@ -14,65 +14,37 @@ import Data.Bits (Bits)
 import Data.ByteString (ByteString)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (PhysicalDevice)
-import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures)
 import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures(..))
-import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT(..))
-import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV(..))
-import Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV)
 import Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV(..))
-import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures)
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures(..))
-import Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT(..))
-import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
 import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV(..))
-import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT(..))
-import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR(..))
-import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
 import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
-import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
-import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
-import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
-import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
-import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT(..))
-import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures)
 import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures(..))
-import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT(..))
-import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
 import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR(..))
-import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL)
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(..))
-import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV(..))
-import Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImageFeaturesNV)
 import Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImageFeaturesNV(..))
-import Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackFeaturesEXT)
 import Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackFeaturesEXT(..))
-import Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures)
 import Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures(..))
-import Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import Vulkan.Core12 (PhysicalDeviceVulkan11Features(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan11Properties)
 import Vulkan.Core12 (PhysicalDeviceVulkan11Properties(..))
-import Vulkan.Core12 (PhysicalDeviceVulkan12Features)
 import Vulkan.Core12 (PhysicalDeviceVulkan12Features(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties(..))
-import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR)
 import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(..))
 import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME)
@@ -714,34 +686,38 @@ spirvCapabilityRequirements = \case
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 0 0]
   "Geometry" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "geometryShader"
-                           , checkFeature  = geometryShader :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { geometryShader = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "geometryShader"
+      , checkFeature  = \PhysicalDeviceFeatures { geometryShader } -> geometryShader
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { geometryShader = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Tessellation" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "tessellationShader"
-                           , checkFeature  = tessellationShader :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { tessellationShader = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "tessellationShader"
+      , checkFeature  = \PhysicalDeviceFeatures { tessellationShader } -> tessellationShader
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { tessellationShader = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Float64" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderFloat64"
-                           , checkFeature  = shaderFloat64 :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderFloat64 = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderFloat64"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderFloat64 } -> shaderFloat64
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderFloat64 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Int64" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderInt64"
-                           , checkFeature  = shaderInt64 :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderInt64 = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderInt64"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderInt64 } -> shaderInt64
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderInt64 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "Int64Atomics" -> (,)
@@ -753,8 +729,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderBufferInt64Atomics"
-      , checkFeature  = shaderBufferInt64Atomics :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { shaderBufferInt64Atomics = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderBufferInt64Atomics } -> shaderBufferInt64Atomics
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderBufferInt64Atomics = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -770,8 +747,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderBufferFloat16AtomicAdd"
-      , checkFeature  = shaderBufferFloat16AtomicAdd :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
-      , enableFeature = \f -> f { shaderBufferFloat16AtomicAdd = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      , checkFeature  = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat16AtomicAdd } ->
+                          shaderBufferFloat16AtomicAdd
+      , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT {..} ->
+                          PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat16AtomicAdd = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
@@ -790,8 +769,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderBufferFloat32AtomicAdd"
-      , checkFeature  = shaderBufferFloat32AtomicAdd :: PhysicalDeviceShaderAtomicFloatFeaturesEXT -> Bool
-      , enableFeature = \f -> f { shaderBufferFloat32AtomicAdd = True } :: PhysicalDeviceShaderAtomicFloatFeaturesEXT
+      , checkFeature  = \PhysicalDeviceShaderAtomicFloatFeaturesEXT { shaderBufferFloat32AtomicAdd } ->
+                          shaderBufferFloat32AtomicAdd
+      , enableFeature = \PhysicalDeviceShaderAtomicFloatFeaturesEXT {..} ->
+                          PhysicalDeviceShaderAtomicFloatFeaturesEXT { shaderBufferFloat32AtomicAdd = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
@@ -806,8 +787,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderBufferFloat64AtomicAdd"
-      , checkFeature  = shaderBufferFloat64AtomicAdd :: PhysicalDeviceShaderAtomicFloatFeaturesEXT -> Bool
-      , enableFeature = \f -> f { shaderBufferFloat64AtomicAdd = True } :: PhysicalDeviceShaderAtomicFloatFeaturesEXT
+      , checkFeature  = \PhysicalDeviceShaderAtomicFloatFeaturesEXT { shaderBufferFloat64AtomicAdd } ->
+                          shaderBufferFloat64AtomicAdd
+      , enableFeature = \PhysicalDeviceShaderAtomicFloatFeaturesEXT {..} ->
+                          PhysicalDeviceShaderAtomicFloatFeaturesEXT { shaderBufferFloat64AtomicAdd = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
@@ -822,9 +805,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderBufferFloat16AtomicMinMax"
-      , checkFeature  = shaderBufferFloat16AtomicMinMax :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
-      , enableFeature = \f ->
-                          f { shaderBufferFloat16AtomicMinMax = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      , checkFeature  = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat16AtomicMinMax } ->
+                          shaderBufferFloat16AtomicMinMax
+      , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT {..} ->
+                          PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat16AtomicMinMax = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
@@ -843,9 +827,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderBufferFloat32AtomicMinMax"
-      , checkFeature  = shaderBufferFloat32AtomicMinMax :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
-      , enableFeature = \f ->
-                          f { shaderBufferFloat32AtomicMinMax = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      , checkFeature  = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat32AtomicMinMax } ->
+                          shaderBufferFloat32AtomicMinMax
+      , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT {..} ->
+                          PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat32AtomicMinMax = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
@@ -864,9 +849,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderBufferFloat64AtomicMinMax"
-      , checkFeature  = shaderBufferFloat64AtomicMinMax :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT -> Bool
-      , enableFeature = \f ->
-                          f { shaderBufferFloat64AtomicMinMax = True } :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT
+      , checkFeature  = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat64AtomicMinMax } ->
+                          shaderBufferFloat64AtomicMinMax
+      , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT {..} ->
+                          PhysicalDeviceShaderAtomicFloat2FeaturesEXT { shaderBufferFloat64AtomicMinMax = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
@@ -885,8 +871,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderImageInt64Atomics"
-      , checkFeature  = shaderImageInt64Atomics :: PhysicalDeviceShaderImageAtomicInt64FeaturesEXT -> Bool
-      , enableFeature = \f -> f { shaderImageInt64Atomics = True } :: PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
+      , checkFeature  = \PhysicalDeviceShaderImageAtomicInt64FeaturesEXT { shaderImageInt64Atomics } ->
+                          shaderImageInt64Atomics
+      , enableFeature = \PhysicalDeviceShaderImageAtomicInt64FeaturesEXT {..} ->
+                          PhysicalDeviceShaderImageAtomicInt64FeaturesEXT { shaderImageInt64Atomics = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME
@@ -895,18 +883,21 @@ spirvCapabilityRequirements = \case
     ]
   "Int16" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderInt16"
-                           , checkFeature  = shaderInt16 :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderInt16 = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderInt16"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderInt16 } -> shaderInt16
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderInt16 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "TessellationPointSize" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderTessellationAndGeometryPointSize"
-      , checkFeature  = shaderTessellationAndGeometryPointSize :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderTessellationAndGeometryPointSize = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderTessellationAndGeometryPointSize } ->
+                          shaderTessellationAndGeometryPointSize
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderTessellationAndGeometryPointSize = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
@@ -914,33 +905,40 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderTessellationAndGeometryPointSize"
-      , checkFeature  = shaderTessellationAndGeometryPointSize :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderTessellationAndGeometryPointSize = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderTessellationAndGeometryPointSize } ->
+                          shaderTessellationAndGeometryPointSize
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderTessellationAndGeometryPointSize = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ImageGatherExtended" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderImageGatherExtended"
-                           , checkFeature  = shaderImageGatherExtended :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderImageGatherExtended = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderImageGatherExtended"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderImageGatherExtended } -> shaderImageGatherExtended
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderImageGatherExtended = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageMultisample" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderStorageImageMultisample"
-                           , checkFeature  = shaderStorageImageMultisample :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderStorageImageMultisample = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderStorageImageMultisample"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderStorageImageMultisample } -> shaderStorageImageMultisample
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderStorageImageMultisample = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "UniformBufferArrayDynamicIndexing" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderUniformBufferArrayDynamicIndexing"
-      , checkFeature  = shaderUniformBufferArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderUniformBufferArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderUniformBufferArrayDynamicIndexing } ->
+                          shaderUniformBufferArrayDynamicIndexing
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderUniformBufferArrayDynamicIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
@@ -948,8 +946,10 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderSampledImageArrayDynamicIndexing"
-      , checkFeature  = shaderSampledImageArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderSampledImageArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderSampledImageArrayDynamicIndexing } ->
+                          shaderSampledImageArrayDynamicIndexing
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderSampledImageArrayDynamicIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
@@ -957,8 +957,10 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageBufferArrayDynamicIndexing"
-      , checkFeature  = shaderStorageBufferArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderStorageBufferArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderStorageBufferArrayDynamicIndexing } ->
+                          shaderStorageBufferArrayDynamicIndexing
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderStorageBufferArrayDynamicIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
@@ -966,91 +968,105 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageImageArrayDynamicIndexing"
-      , checkFeature  = shaderStorageImageArrayDynamicIndexing :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderStorageImageArrayDynamicIndexing = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderStorageImageArrayDynamicIndexing } ->
+                          shaderStorageImageArrayDynamicIndexing
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderStorageImageArrayDynamicIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ClipDistance" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderClipDistance"
-                           , checkFeature  = shaderClipDistance :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderClipDistance = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderClipDistance"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderClipDistance } -> shaderClipDistance
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderClipDistance = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "CullDistance" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderCullDistance"
-                           , checkFeature  = shaderCullDistance :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderCullDistance = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderCullDistance"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderCullDistance } -> shaderCullDistance
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderCullDistance = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ImageCubeArray" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "imageCubeArray"
-                           , checkFeature  = imageCubeArray :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { imageCubeArray = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "imageCubeArray"
+      , checkFeature  = \PhysicalDeviceFeatures { imageCubeArray } -> imageCubeArray
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { imageCubeArray = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "SampleRateShading" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "sampleRateShading"
-                           , checkFeature  = sampleRateShading :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { sampleRateShading = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "sampleRateShading"
+      , checkFeature  = \PhysicalDeviceFeatures { sampleRateShading } -> sampleRateShading
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { sampleRateShading = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "SparseResidency" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderResourceResidency"
-                           , checkFeature  = shaderResourceResidency :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderResourceResidency = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderResourceResidency"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderResourceResidency } -> shaderResourceResidency
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderResourceResidency = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "MinLod" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderResourceMinLod"
-                           , checkFeature  = shaderResourceMinLod :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderResourceMinLod = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderResourceMinLod"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderResourceMinLod } -> shaderResourceMinLod
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { shaderResourceMinLod = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "SampledCubeArray" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "imageCubeArray"
-                           , checkFeature  = imageCubeArray :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { imageCubeArray = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "imageCubeArray"
+      , checkFeature  = \PhysicalDeviceFeatures { imageCubeArray } -> imageCubeArray
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { imageCubeArray = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "ImageMSArray" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "shaderStorageImageMultisample"
-                           , checkFeature  = shaderStorageImageMultisample :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { shaderStorageImageMultisample = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderStorageImageMultisample"
+      , checkFeature  = \PhysicalDeviceFeatures { shaderStorageImageMultisample } -> shaderStorageImageMultisample
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderStorageImageMultisample = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageExtendedFormats" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 0 0]
   "InterpolationFunction" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "sampleRateShading"
-                           , checkFeature  = sampleRateShading :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { sampleRateShading = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "sampleRateShading"
+      , checkFeature  = \PhysicalDeviceFeatures { sampleRateShading } -> sampleRateShading
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { sampleRateShading = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "StorageImageReadWithoutFormat" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageImageReadWithoutFormat"
-      , checkFeature  = shaderStorageImageReadWithoutFormat :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderStorageImageReadWithoutFormat = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderStorageImageReadWithoutFormat } ->
+                          shaderStorageImageReadWithoutFormat
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderStorageImageReadWithoutFormat = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
@@ -1058,33 +1074,39 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageImageWriteWithoutFormat"
-      , checkFeature  = shaderStorageImageWriteWithoutFormat :: PhysicalDeviceFeatures -> Bool
-      , enableFeature = \f -> f { shaderStorageImageWriteWithoutFormat = True } :: PhysicalDeviceFeatures
+      , checkFeature  = \PhysicalDeviceFeatures { shaderStorageImageWriteWithoutFormat } ->
+                          shaderStorageImageWriteWithoutFormat
+      , enableFeature = \PhysicalDeviceFeatures {..} ->
+                          PhysicalDeviceFeatures { shaderStorageImageWriteWithoutFormat = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "MultiViewport" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
-    [ RequireDeviceFeature { featureName   = "multiViewport"
-                           , checkFeature  = multiViewport :: PhysicalDeviceFeatures -> Bool
-                           , enableFeature = \f -> f { multiViewport = True } :: PhysicalDeviceFeatures
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "multiViewport"
+      , checkFeature  = \PhysicalDeviceFeatures { multiViewport } -> multiViewport
+      , enableFeature = \PhysicalDeviceFeatures {..} -> PhysicalDeviceFeatures { multiViewport = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
     ]
   "DrawParameters" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-    [ RequireDeviceFeature { featureName   = "shaderDrawParameters"
-                           , checkFeature  = shaderDrawParameters :: PhysicalDeviceVulkan11Features -> Bool
-                           , enableFeature = \f -> f { shaderDrawParameters = True } :: PhysicalDeviceVulkan11Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderDrawParameters"
+      , checkFeature  = \PhysicalDeviceVulkan11Features { shaderDrawParameters } -> shaderDrawParameters
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} ->
+                          PhysicalDeviceVulkan11Features { shaderDrawParameters = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "MultiView" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-    [ RequireDeviceFeature { featureName   = "multiview"
-                           , checkFeature  = multiview :: PhysicalDeviceVulkan11Features -> Bool
-                           , enableFeature = \f -> f { multiview = True } :: PhysicalDeviceVulkan11Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "multiview"
+      , checkFeature  = \PhysicalDeviceVulkan11Features { multiview } -> multiview
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} -> PhysicalDeviceVulkan11Features { multiview = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "DeviceGroup" ->
@@ -1093,17 +1115,21 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "variablePointersStorageBuffer"
-      , checkFeature  = variablePointersStorageBuffer :: PhysicalDeviceVulkan11Features -> Bool
-      , enableFeature = \f -> f { variablePointersStorageBuffer = True } :: PhysicalDeviceVulkan11Features
+      , checkFeature  = \PhysicalDeviceVulkan11Features { variablePointersStorageBuffer } ->
+                          variablePointersStorageBuffer
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} ->
+                          PhysicalDeviceVulkan11Features { variablePointersStorageBuffer = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "VariablePointers" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-    [ RequireDeviceFeature { featureName   = "variablePointers"
-                           , checkFeature  = variablePointers :: PhysicalDeviceVulkan11Features -> Bool
-                           , enableFeature = \f -> f { variablePointers = True } :: PhysicalDeviceVulkan11Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "variablePointers"
+      , checkFeature  = \PhysicalDeviceVulkan11Features { variablePointers } -> variablePointers
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} ->
+                          PhysicalDeviceVulkan11Features { variablePointers = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "ShaderClockKHR" -> (,)
@@ -1181,17 +1207,20 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "shaderOutputViewportIndex"
-      , checkFeature  = shaderOutputViewportIndex :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { shaderOutputViewportIndex = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderOutputViewportIndex } -> shaderOutputViewportIndex
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderOutputViewportIndex = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "ShaderLayer" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-    [ RequireDeviceFeature { featureName   = "shaderOutputLayer"
-                           , checkFeature  = shaderOutputLayer :: PhysicalDeviceVulkan12Features -> Bool
-                           , enableFeature = \f -> f { shaderOutputLayer = True } :: PhysicalDeviceVulkan12Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderOutputLayer"
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderOutputLayer } -> shaderOutputLayer
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderOutputLayer = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "ShaderViewportIndexLayerEXT" -> (,)
@@ -1234,8 +1263,9 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "storageBuffer16BitAccess"
-      , checkFeature  = storageBuffer16BitAccess :: PhysicalDeviceVulkan11Features -> Bool
-      , enableFeature = \f -> f { storageBuffer16BitAccess = True } :: PhysicalDeviceVulkan11Features
+      , checkFeature  = \PhysicalDeviceVulkan11Features { storageBuffer16BitAccess } -> storageBuffer16BitAccess
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} ->
+                          PhysicalDeviceVulkan11Features { storageBuffer16BitAccess = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
@@ -1243,25 +1273,31 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "uniformAndStorageBuffer16BitAccess"
-      , checkFeature  = uniformAndStorageBuffer16BitAccess :: PhysicalDeviceVulkan11Features -> Bool
-      , enableFeature = \f -> f { uniformAndStorageBuffer16BitAccess = True } :: PhysicalDeviceVulkan11Features
+      , checkFeature  = \PhysicalDeviceVulkan11Features { uniformAndStorageBuffer16BitAccess } ->
+                          uniformAndStorageBuffer16BitAccess
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} ->
+                          PhysicalDeviceVulkan11Features { uniformAndStorageBuffer16BitAccess = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "StoragePushConstant16" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-    [ RequireDeviceFeature { featureName   = "storagePushConstant16"
-                           , checkFeature  = storagePushConstant16 :: PhysicalDeviceVulkan11Features -> Bool
-                           , enableFeature = \f -> f { storagePushConstant16 = True } :: PhysicalDeviceVulkan11Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "storagePushConstant16"
+      , checkFeature  = \PhysicalDeviceVulkan11Features { storagePushConstant16 } -> storagePushConstant16
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} ->
+                          PhysicalDeviceVulkan11Features { storagePushConstant16 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "StorageInputOutput16" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-    [ RequireDeviceFeature { featureName   = "storageInputOutput16"
-                           , checkFeature  = storageInputOutput16 :: PhysicalDeviceVulkan11Features -> Bool
-                           , enableFeature = \f -> f { storageInputOutput16 = True } :: PhysicalDeviceVulkan11Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "storageInputOutput16"
+      , checkFeature  = \PhysicalDeviceVulkan11Features { storageInputOutput16 } -> storageInputOutput16
+      , enableFeature = \PhysicalDeviceVulkan11Features {..} ->
+                          PhysicalDeviceVulkan11Features { storageInputOutput16 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     ]
   "GroupNonUniform" -> (,)
@@ -1364,10 +1400,12 @@ spirvCapabilityRequirements = \case
                                , instanceExtensionMinVersion = 0
                                }
     ]
-    [ RequireDeviceFeature { featureName   = "runtimeDescriptorArray"
-                           , checkFeature  = runtimeDescriptorArray :: PhysicalDeviceVulkan12Features -> Bool
-                           , enableFeature = \f -> f { runtimeDescriptorArray = True } :: PhysicalDeviceVulkan12Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "runtimeDescriptorArray"
+      , checkFeature  = \PhysicalDeviceVulkan12Features { runtimeDescriptorArray } -> runtimeDescriptorArray
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { runtimeDescriptorArray = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
@@ -1387,8 +1425,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderInputAttachmentArrayDynamicIndexing"
-      , checkFeature  = shaderInputAttachmentArrayDynamicIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { shaderInputAttachmentArrayDynamicIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderInputAttachmentArrayDynamicIndexing } ->
+                          shaderInputAttachmentArrayDynamicIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderInputAttachmentArrayDynamicIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1409,9 +1449,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderUniformTexelBufferArrayDynamicIndexing"
-      , checkFeature  = shaderUniformTexelBufferArrayDynamicIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f ->
-                          f { shaderUniformTexelBufferArrayDynamicIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderUniformTexelBufferArrayDynamicIndexing } ->
+                          shaderUniformTexelBufferArrayDynamicIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderUniformTexelBufferArrayDynamicIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1432,9 +1473,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageTexelBufferArrayDynamicIndexing"
-      , checkFeature  = shaderStorageTexelBufferArrayDynamicIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f ->
-                          f { shaderStorageTexelBufferArrayDynamicIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderStorageTexelBufferArrayDynamicIndexing } ->
+                          shaderStorageTexelBufferArrayDynamicIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderStorageTexelBufferArrayDynamicIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1455,8 +1497,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderUniformBufferArrayNonUniformIndexing"
-      , checkFeature  = shaderUniformBufferArrayNonUniformIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { shaderUniformBufferArrayNonUniformIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderUniformBufferArrayNonUniformIndexing } ->
+                          shaderUniformBufferArrayNonUniformIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderUniformBufferArrayNonUniformIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1477,8 +1521,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderSampledImageArrayNonUniformIndexing"
-      , checkFeature  = shaderSampledImageArrayNonUniformIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { shaderSampledImageArrayNonUniformIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderSampledImageArrayNonUniformIndexing } ->
+                          shaderSampledImageArrayNonUniformIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderSampledImageArrayNonUniformIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1499,8 +1545,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageBufferArrayNonUniformIndexing"
-      , checkFeature  = shaderStorageBufferArrayNonUniformIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { shaderStorageBufferArrayNonUniformIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderStorageBufferArrayNonUniformIndexing } ->
+                          shaderStorageBufferArrayNonUniformIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderStorageBufferArrayNonUniformIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1521,8 +1569,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageImageArrayNonUniformIndexing"
-      , checkFeature  = shaderStorageImageArrayNonUniformIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { shaderStorageImageArrayNonUniformIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderStorageImageArrayNonUniformIndexing } ->
+                          shaderStorageImageArrayNonUniformIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderStorageImageArrayNonUniformIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1543,9 +1593,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderInputAttachmentArrayNonUniformIndexing"
-      , checkFeature  = shaderInputAttachmentArrayNonUniformIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f ->
-                          f { shaderInputAttachmentArrayNonUniformIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderInputAttachmentArrayNonUniformIndexing } ->
+                          shaderInputAttachmentArrayNonUniformIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderInputAttachmentArrayNonUniformIndexing = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1566,9 +1617,12 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderUniformTexelBufferArrayNonUniformIndexing"
-      , checkFeature  = shaderUniformTexelBufferArrayNonUniformIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f ->
-                          f { shaderUniformTexelBufferArrayNonUniformIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderUniformTexelBufferArrayNonUniformIndexing } ->
+                          shaderUniformTexelBufferArrayNonUniformIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} -> PhysicalDeviceVulkan12Features
+                          { shaderUniformTexelBufferArrayNonUniformIndexing = True
+                          , ..
+                          }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1589,9 +1643,12 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderStorageTexelBufferArrayNonUniformIndexing"
-      , checkFeature  = shaderStorageTexelBufferArrayNonUniformIndexing :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f ->
-                          f { shaderStorageTexelBufferArrayNonUniformIndexing = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderStorageTexelBufferArrayNonUniformIndexing } ->
+                          shaderStorageTexelBufferArrayNonUniformIndexing
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} -> PhysicalDeviceVulkan12Features
+                          { shaderStorageTexelBufferArrayNonUniformIndexing = True
+                          , ..
+                          }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1610,10 +1667,12 @@ spirvCapabilityRequirements = \case
                                , instanceExtensionMinVersion = 0
                                }
     ]
-    [ RequireDeviceFeature { featureName   = "shaderFloat16"
-                           , checkFeature  = shaderFloat16 :: PhysicalDeviceVulkan12Features -> Bool
-                           , enableFeature = \f -> f { shaderFloat16 = True } :: PhysicalDeviceVulkan12Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderFloat16"
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderFloat16 } -> shaderFloat16
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { shaderFloat16 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
@@ -1627,10 +1686,11 @@ spirvCapabilityRequirements = \case
                                , instanceExtensionMinVersion = 0
                                }
     ]
-    [ RequireDeviceFeature { featureName   = "shaderInt8"
-                           , checkFeature  = shaderInt8 :: PhysicalDeviceVulkan12Features -> Bool
-                           , enableFeature = \f -> f { shaderInt8 = True } :: PhysicalDeviceVulkan12Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "shaderInt8"
+      , checkFeature  = \PhysicalDeviceVulkan12Features { shaderInt8 } -> shaderInt8
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} -> PhysicalDeviceVulkan12Features { shaderInt8 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
@@ -1646,8 +1706,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "storageBuffer8BitAccess"
-      , checkFeature  = storageBuffer8BitAccess :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { storageBuffer8BitAccess = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { storageBuffer8BitAccess } -> storageBuffer8BitAccess
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { storageBuffer8BitAccess = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1668,8 +1729,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "uniformAndStorageBuffer8BitAccess"
-      , checkFeature  = uniformAndStorageBuffer8BitAccess :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { uniformAndStorageBuffer8BitAccess = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { uniformAndStorageBuffer8BitAccess } ->
+                          uniformAndStorageBuffer8BitAccess
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { uniformAndStorageBuffer8BitAccess = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1688,10 +1751,12 @@ spirvCapabilityRequirements = \case
                                , instanceExtensionMinVersion = 0
                                }
     ]
-    [ RequireDeviceFeature { featureName   = "storagePushConstant8"
-                           , checkFeature  = storagePushConstant8 :: PhysicalDeviceVulkan12Features -> Bool
-                           , enableFeature = \f -> f { storagePushConstant8 = True } :: PhysicalDeviceVulkan12Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "storagePushConstant8"
+      , checkFeature  = \PhysicalDeviceVulkan12Features { storagePushConstant8 } -> storagePushConstant8
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { storagePushConstant8 = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_8BIT_STORAGE_EXTENSION_NAME
@@ -1704,10 +1769,12 @@ spirvCapabilityRequirements = \case
     ]
   "VulkanMemoryModel" -> (,)
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-    [ RequireDeviceFeature { featureName   = "vulkanMemoryModel"
-                           , checkFeature  = vulkanMemoryModel :: PhysicalDeviceVulkan12Features -> Bool
-                           , enableFeature = \f -> f { vulkanMemoryModel = True } :: PhysicalDeviceVulkan12Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "vulkanMemoryModel"
+      , checkFeature  = \PhysicalDeviceVulkan12Features { vulkanMemoryModel } -> vulkanMemoryModel
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { vulkanMemoryModel = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
@@ -1718,8 +1785,9 @@ spirvCapabilityRequirements = \case
     [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
     [ RequireDeviceFeature
       { featureName   = "vulkanMemoryModelDeviceScope"
-      , checkFeature  = vulkanMemoryModelDeviceScope :: PhysicalDeviceVulkan12Features -> Bool
-      , enableFeature = \f -> f { vulkanMemoryModelDeviceScope = True } :: PhysicalDeviceVulkan12Features
+      , checkFeature  = \PhysicalDeviceVulkan12Features { vulkanMemoryModelDeviceScope } -> vulkanMemoryModelDeviceScope
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { vulkanMemoryModelDeviceScope = True, .. }
       }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -1817,9 +1885,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "computeDerivativeGroupQuads"
-      , checkFeature  = computeDerivativeGroupQuads :: PhysicalDeviceComputeShaderDerivativesFeaturesNV -> Bool
-      , enableFeature = \f ->
-                          f { computeDerivativeGroupQuads = True } :: PhysicalDeviceComputeShaderDerivativesFeaturesNV
+      , checkFeature  = \PhysicalDeviceComputeShaderDerivativesFeaturesNV { computeDerivativeGroupQuads } ->
+                          computeDerivativeGroupQuads
+      , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesNV {..} ->
+                          PhysicalDeviceComputeShaderDerivativesFeaturesNV { computeDerivativeGroupQuads = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
@@ -1834,9 +1903,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "computeDerivativeGroupLinear"
-      , checkFeature  = computeDerivativeGroupLinear :: PhysicalDeviceComputeShaderDerivativesFeaturesNV -> Bool
-      , enableFeature = \f ->
-                          f { computeDerivativeGroupLinear = True } :: PhysicalDeviceComputeShaderDerivativesFeaturesNV
+      , checkFeature  = \PhysicalDeviceComputeShaderDerivativesFeaturesNV { computeDerivativeGroupLinear } ->
+                          computeDerivativeGroupLinear
+      , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesNV {..} ->
+                          PhysicalDeviceComputeShaderDerivativesFeaturesNV { computeDerivativeGroupLinear = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
@@ -1851,9 +1921,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "fragmentShaderBarycentric"
-      , checkFeature  = fragmentShaderBarycentric :: PhysicalDeviceFragmentShaderBarycentricFeaturesNV -> Bool
-      , enableFeature = \f ->
-                          f { fragmentShaderBarycentric = True } :: PhysicalDeviceFragmentShaderBarycentricFeaturesNV
+      , checkFeature  = \PhysicalDeviceFragmentShaderBarycentricFeaturesNV { fragmentShaderBarycentric } ->
+                          fragmentShaderBarycentric
+      , enableFeature = \_ -> PhysicalDeviceFragmentShaderBarycentricFeaturesNV { fragmentShaderBarycentric = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
@@ -1868,8 +1938,8 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "imageFootprint"
-      , checkFeature  = imageFootprint :: PhysicalDeviceShaderImageFootprintFeaturesNV -> Bool
-      , enableFeature = \f -> f { imageFootprint = True } :: PhysicalDeviceShaderImageFootprintFeaturesNV
+      , checkFeature  = \PhysicalDeviceShaderImageFootprintFeaturesNV { imageFootprint } -> imageFootprint
+      , enableFeature = \_ -> PhysicalDeviceShaderImageFootprintFeaturesNV { imageFootprint = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
@@ -1884,8 +1954,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shadingRateImage"
-      , checkFeature  = shadingRateImage :: PhysicalDeviceShadingRateImageFeaturesNV -> Bool
-      , enableFeature = \f -> f { shadingRateImage = True } :: PhysicalDeviceShadingRateImageFeaturesNV
+      , checkFeature  = \PhysicalDeviceShadingRateImageFeaturesNV { shadingRateImage } -> shadingRateImage
+      , enableFeature = \PhysicalDeviceShadingRateImageFeaturesNV {..} ->
+                          PhysicalDeviceShadingRateImageFeaturesNV { shadingRateImage = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADING_RATE_IMAGE_EXTENSION_NAME
@@ -1911,8 +1982,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "rayTracingPipeline"
-      , checkFeature  = rayTracingPipeline :: PhysicalDeviceRayTracingPipelineFeaturesKHR -> Bool
-      , enableFeature = \f -> f { rayTracingPipeline = True } :: PhysicalDeviceRayTracingPipelineFeaturesKHR
+      , checkFeature  = \PhysicalDeviceRayTracingPipelineFeaturesKHR { rayTracingPipeline } -> rayTracingPipeline
+      , enableFeature = \PhysicalDeviceRayTracingPipelineFeaturesKHR {..} ->
+                          PhysicalDeviceRayTracingPipelineFeaturesKHR { rayTracingPipeline = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
@@ -1954,8 +2026,8 @@ spirvCapabilityRequirements = \case
                                }
     ]
     [ RequireDeviceFeature { featureName   = "rayQuery"
-                           , checkFeature  = rayQuery :: PhysicalDeviceRayQueryFeaturesKHR -> Bool
-                           , enableFeature = \f -> f { rayQuery = True } :: PhysicalDeviceRayQueryFeaturesKHR
+                           , checkFeature  = \PhysicalDeviceRayQueryFeaturesKHR { rayQuery } -> rayQuery
+                           , enableFeature = \_ -> PhysicalDeviceRayQueryFeaturesKHR { rayQuery = True }
                            }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_QUERY_EXTENSION_NAME
@@ -1998,8 +2070,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "rayTraversalPrimitiveCulling"
-      , checkFeature  = rayTraversalPrimitiveCulling :: PhysicalDeviceRayTracingPipelineFeaturesKHR -> Bool
-      , enableFeature = \f -> f { rayTraversalPrimitiveCulling = True } :: PhysicalDeviceRayTracingPipelineFeaturesKHR
+      , checkFeature  = \PhysicalDeviceRayTracingPipelineFeaturesKHR { rayTraversalPrimitiveCulling } ->
+                          rayTraversalPrimitiveCulling
+      , enableFeature = \PhysicalDeviceRayTracingPipelineFeaturesKHR {..} ->
+                          PhysicalDeviceRayTracingPipelineFeaturesKHR { rayTraversalPrimitiveCulling = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
@@ -2057,8 +2131,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "rayTracingMotionBlur"
-      , checkFeature  = rayTracingMotionBlur :: PhysicalDeviceRayTracingMotionBlurFeaturesNV -> Bool
-      , enableFeature = \f -> f { rayTracingMotionBlur = True } :: PhysicalDeviceRayTracingMotionBlurFeaturesNV
+      , checkFeature  = \PhysicalDeviceRayTracingMotionBlurFeaturesNV { rayTracingMotionBlur } -> rayTracingMotionBlur
+      , enableFeature = \PhysicalDeviceRayTracingMotionBlurFeaturesNV {..} ->
+                          PhysicalDeviceRayTracingMotionBlurFeaturesNV { rayTracingMotionBlur = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME
@@ -2105,8 +2180,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "transformFeedback"
-      , checkFeature  = transformFeedback :: PhysicalDeviceTransformFeedbackFeaturesEXT -> Bool
-      , enableFeature = \f -> f { transformFeedback = True } :: PhysicalDeviceTransformFeedbackFeaturesEXT
+      , checkFeature  = \PhysicalDeviceTransformFeedbackFeaturesEXT { transformFeedback } -> transformFeedback
+      , enableFeature = \PhysicalDeviceTransformFeedbackFeaturesEXT {..} ->
+                          PhysicalDeviceTransformFeedbackFeaturesEXT { transformFeedback = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
@@ -2121,8 +2197,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "geometryStreams"
-      , checkFeature  = geometryStreams :: PhysicalDeviceTransformFeedbackFeaturesEXT -> Bool
-      , enableFeature = \f -> f { geometryStreams = True } :: PhysicalDeviceTransformFeedbackFeaturesEXT
+      , checkFeature  = \PhysicalDeviceTransformFeedbackFeaturesEXT { geometryStreams } -> geometryStreams
+      , enableFeature = \PhysicalDeviceTransformFeedbackFeaturesEXT {..} ->
+                          PhysicalDeviceTransformFeedbackFeaturesEXT { geometryStreams = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
@@ -2137,8 +2214,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "fragmentDensityMap"
-      , checkFeature  = fragmentDensityMap :: PhysicalDeviceFragmentDensityMapFeaturesEXT -> Bool
-      , enableFeature = \f -> f { fragmentDensityMap = True } :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+      , checkFeature  = \PhysicalDeviceFragmentDensityMapFeaturesEXT { fragmentDensityMap } -> fragmentDensityMap
+      , enableFeature = \PhysicalDeviceFragmentDensityMapFeaturesEXT {..} ->
+                          PhysicalDeviceFragmentDensityMapFeaturesEXT { fragmentDensityMap = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
@@ -2152,10 +2230,12 @@ spirvCapabilityRequirements = \case
                                , instanceExtensionMinVersion = 0
                                }
     ]
-    [ RequireDeviceFeature { featureName   = "bufferDeviceAddress"
-                           , checkFeature  = bufferDeviceAddress :: PhysicalDeviceVulkan12Features -> Bool
-                           , enableFeature = \f -> f { bufferDeviceAddress = True } :: PhysicalDeviceVulkan12Features
-                           }
+    [ RequireDeviceFeature
+      { featureName   = "bufferDeviceAddress"
+      , checkFeature  = \PhysicalDeviceVulkan12Features { bufferDeviceAddress } -> bufferDeviceAddress
+      , enableFeature = \PhysicalDeviceVulkan12Features {..} ->
+                          PhysicalDeviceVulkan12Features { bufferDeviceAddress = True, .. }
+      }
     , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
@@ -2170,8 +2250,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "cooperativeMatrix"
-      , checkFeature  = cooperativeMatrix :: PhysicalDeviceCooperativeMatrixFeaturesNV -> Bool
-      , enableFeature = \f -> f { cooperativeMatrix = True } :: PhysicalDeviceCooperativeMatrixFeaturesNV
+      , checkFeature  = \PhysicalDeviceCooperativeMatrixFeaturesNV { cooperativeMatrix } -> cooperativeMatrix
+      , enableFeature = \PhysicalDeviceCooperativeMatrixFeaturesNV {..} ->
+                          PhysicalDeviceCooperativeMatrixFeaturesNV { cooperativeMatrix = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_COOPERATIVE_MATRIX_EXTENSION_NAME
@@ -2186,8 +2267,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerFunctions2"
-      , checkFeature  = shaderIntegerFunctions2 :: PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL -> Bool
-      , enableFeature = \f -> f { shaderIntegerFunctions2 = True } :: PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
+      , checkFeature  = \PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL { shaderIntegerFunctions2 } ->
+                          shaderIntegerFunctions2
+      , enableFeature = \_ -> PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL { shaderIntegerFunctions2 = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME
@@ -2198,8 +2280,8 @@ spirvCapabilityRequirements = \case
     []
     [ RequireDeviceFeature
       { featureName   = "shaderSMBuiltins"
-      , checkFeature  = shaderSMBuiltins :: PhysicalDeviceShaderSMBuiltinsFeaturesNV -> Bool
-      , enableFeature = \f -> f { shaderSMBuiltins = True } :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+      , checkFeature  = \PhysicalDeviceShaderSMBuiltinsFeaturesNV { shaderSMBuiltins } -> shaderSMBuiltins
+      , enableFeature = \_ -> PhysicalDeviceShaderSMBuiltinsFeaturesNV { shaderSMBuiltins = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_SHADER_SM_BUILTINS_EXTENSION_NAME
@@ -2214,9 +2296,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "fragmentShaderSampleInterlock"
-      , checkFeature  = fragmentShaderSampleInterlock :: PhysicalDeviceFragmentShaderInterlockFeaturesEXT -> Bool
-      , enableFeature = \f ->
-                          f { fragmentShaderSampleInterlock = True } :: PhysicalDeviceFragmentShaderInterlockFeaturesEXT
+      , checkFeature  = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT { fragmentShaderSampleInterlock } ->
+                          fragmentShaderSampleInterlock
+      , enableFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT {..} ->
+                          PhysicalDeviceFragmentShaderInterlockFeaturesEXT { fragmentShaderSampleInterlock = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
@@ -2231,9 +2314,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "fragmentShaderPixelInterlock"
-      , checkFeature  = fragmentShaderPixelInterlock :: PhysicalDeviceFragmentShaderInterlockFeaturesEXT -> Bool
-      , enableFeature = \f ->
-                          f { fragmentShaderPixelInterlock = True } :: PhysicalDeviceFragmentShaderInterlockFeaturesEXT
+      , checkFeature  = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT { fragmentShaderPixelInterlock } ->
+                          fragmentShaderPixelInterlock
+      , enableFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT {..} ->
+                          PhysicalDeviceFragmentShaderInterlockFeaturesEXT { fragmentShaderPixelInterlock = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
@@ -2248,9 +2332,12 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "fragmentShaderShadingRateInterlock"
-      , checkFeature  = fragmentShaderShadingRateInterlock :: PhysicalDeviceFragmentShaderInterlockFeaturesEXT -> Bool
-      , enableFeature = \f ->
-        f { fragmentShaderShadingRateInterlock = True } :: PhysicalDeviceFragmentShaderInterlockFeaturesEXT
+      , checkFeature  = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT { fragmentShaderShadingRateInterlock } ->
+                          fragmentShaderShadingRateInterlock
+      , enableFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT {..} ->
+                          PhysicalDeviceFragmentShaderInterlockFeaturesEXT { fragmentShaderShadingRateInterlock = True
+                                                                           , ..
+                                                                           }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
@@ -2264,10 +2351,11 @@ spirvCapabilityRequirements = \case
                                }
     ]
     [ RequireDeviceFeature
-      { featureName = "shaderDemoteToHelperInvocation"
-      , checkFeature = shaderDemoteToHelperInvocation :: PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT -> Bool
-      , enableFeature = \f ->
-        f { shaderDemoteToHelperInvocation = True } :: PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
+      { featureName   = "shaderDemoteToHelperInvocation"
+      , checkFeature  = \PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT { shaderDemoteToHelperInvocation } ->
+                          shaderDemoteToHelperInvocation
+      , enableFeature = \_ ->
+        PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT { shaderDemoteToHelperInvocation = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
@@ -2282,8 +2370,10 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "pipelineFragmentShadingRate"
-      , checkFeature  = pipelineFragmentShadingRate :: PhysicalDeviceFragmentShadingRateFeaturesKHR -> Bool
-      , enableFeature = \f -> f { pipelineFragmentShadingRate = True } :: PhysicalDeviceFragmentShadingRateFeaturesKHR
+      , checkFeature  = \PhysicalDeviceFragmentShadingRateFeaturesKHR { pipelineFragmentShadingRate } ->
+                          pipelineFragmentShadingRate
+      , enableFeature = \PhysicalDeviceFragmentShadingRateFeaturesKHR {..} ->
+                          PhysicalDeviceFragmentShadingRateFeaturesKHR { pipelineFragmentShadingRate = True, .. }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME
@@ -2310,9 +2400,12 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "workgroupMemoryExplicitLayout"
-      , checkFeature  = workgroupMemoryExplicitLayout :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR -> Bool
-      , enableFeature = \f ->
-        f { workgroupMemoryExplicitLayout = True } :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+      , checkFeature  = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR { workgroupMemoryExplicitLayout } ->
+                          workgroupMemoryExplicitLayout
+      , enableFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR {..} ->
+                          PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR { workgroupMemoryExplicitLayout = True
+                                                                                 , ..
+                                                                                 }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
@@ -2326,12 +2419,15 @@ spirvCapabilityRequirements = \case
                                }
     ]
     [ RequireDeviceFeature
-      { featureName = "workgroupMemoryExplicitLayout8BitAccess"
-      , checkFeature = workgroupMemoryExplicitLayout8BitAccess :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
-                       -> Bool
-      , enableFeature =
-        \f ->
-          f { workgroupMemoryExplicitLayout8BitAccess = True } :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+      { featureName   = "workgroupMemoryExplicitLayout8BitAccess"
+      , checkFeature  =
+        \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR { workgroupMemoryExplicitLayout8BitAccess } ->
+          workgroupMemoryExplicitLayout8BitAccess
+      , enableFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR {..} ->
+                          PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+                            { workgroupMemoryExplicitLayout8BitAccess = True
+                            , ..
+                            }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
@@ -2347,9 +2443,13 @@ spirvCapabilityRequirements = \case
     [ RequireDeviceFeature
       { featureName   = "workgroupMemoryExplicitLayout16BitAccess"
       , checkFeature  =
-        workgroupMemoryExplicitLayout16BitAccess :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR -> Bool
-      , enableFeature = \f ->
-        f { workgroupMemoryExplicitLayout16BitAccess = True } :: PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+        \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR { workgroupMemoryExplicitLayout16BitAccess } ->
+          workgroupMemoryExplicitLayout16BitAccess
+      , enableFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR {..} ->
+                          PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
+                            { workgroupMemoryExplicitLayout16BitAccess = True
+                            , ..
+                            }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
@@ -2364,8 +2464,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
-      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
+                          shaderIntegerDotProduct
+      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
@@ -2380,8 +2481,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
-      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
+                          shaderIntegerDotProduct
+      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
@@ -2396,8 +2498,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
-      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
+                          shaderIntegerDotProduct
+      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
@@ -2412,8 +2515,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = shaderIntegerDotProduct :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR -> Bool
-      , enableFeature = \f -> f { shaderIntegerDotProduct = True } :: PhysicalDeviceShaderIntegerDotProductFeaturesKHR
+      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
+                          shaderIntegerDotProduct
+      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME

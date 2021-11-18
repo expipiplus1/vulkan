@@ -65,6 +65,7 @@ import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationBufferCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateBuffer))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBuffer))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
@@ -167,7 +168,7 @@ createBuffer :: forall a io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io (Buffer)
 createBuffer device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateBufferPtr = pVkCreateBuffer (deviceCmds (device :: Device))
+  let vkCreateBufferPtr = pVkCreateBuffer (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBuffer is null" Nothing Nothing
   let vkCreateBuffer' = mkVkCreateBuffer vkCreateBufferPtr
@@ -256,7 +257,7 @@ destroyBuffer :: forall io
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io ()
 destroyBuffer device buffer allocator = liftIO . evalContT $ do
-  let vkDestroyBufferPtr = pVkDestroyBuffer (deviceCmds (device :: Device))
+  let vkDestroyBufferPtr = pVkDestroyBuffer (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBuffer is null" Nothing Nothing
   let vkDestroyBuffer' = mkVkDestroyBuffer vkDestroyBufferPtr
@@ -452,7 +453,7 @@ deriving instance Show (Chain es) => Show (BufferCreateInfo es)
 
 instance Extensible BufferCreateInfo where
   extensibleTypeName = "BufferCreateInfo"
-  setNext x next = x{next = next}
+  setNext BufferCreateInfo{..} next' = BufferCreateInfo{next = next', ..}
   getNext BufferCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferCreateInfo e => b) -> Maybe b
   extends _ f

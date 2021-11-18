@@ -303,6 +303,7 @@ import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.ImageView (ComponentMapping)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateBufferCollectionFUCHSIA))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBufferCollectionFUCHSIA))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferCollectionPropertiesFUCHSIA))
@@ -406,7 +407,7 @@ createBufferCollectionFUCHSIA :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (BufferCollectionFUCHSIA)
 createBufferCollectionFUCHSIA device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateBufferCollectionFUCHSIAPtr = pVkCreateBufferCollectionFUCHSIA (deviceCmds (device :: Device))
+  let vkCreateBufferCollectionFUCHSIAPtr = pVkCreateBufferCollectionFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateBufferCollectionFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBufferCollectionFUCHSIA is null" Nothing Nothing
   let vkCreateBufferCollectionFUCHSIA' = mkVkCreateBufferCollectionFUCHSIA vkCreateBufferCollectionFUCHSIAPtr
@@ -498,7 +499,7 @@ setBufferCollectionBufferConstraintsFUCHSIA :: forall io
                                                BufferConstraintsInfoFUCHSIA
                                             -> io ()
 setBufferCollectionBufferConstraintsFUCHSIA device collection bufferConstraintsInfo = liftIO . evalContT $ do
-  let vkSetBufferCollectionBufferConstraintsFUCHSIAPtr = pVkSetBufferCollectionBufferConstraintsFUCHSIA (deviceCmds (device :: Device))
+  let vkSetBufferCollectionBufferConstraintsFUCHSIAPtr = pVkSetBufferCollectionBufferConstraintsFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetBufferCollectionBufferConstraintsFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetBufferCollectionBufferConstraintsFUCHSIA is null" Nothing Nothing
   let vkSetBufferCollectionBufferConstraintsFUCHSIA' = mkVkSetBufferCollectionBufferConstraintsFUCHSIA vkSetBufferCollectionBufferConstraintsFUCHSIAPtr
@@ -577,7 +578,7 @@ setBufferCollectionImageConstraintsFUCHSIA :: forall io
                                               ImageConstraintsInfoFUCHSIA
                                            -> io ()
 setBufferCollectionImageConstraintsFUCHSIA device collection imageConstraintsInfo = liftIO . evalContT $ do
-  let vkSetBufferCollectionImageConstraintsFUCHSIAPtr = pVkSetBufferCollectionImageConstraintsFUCHSIA (deviceCmds (device :: Device))
+  let vkSetBufferCollectionImageConstraintsFUCHSIAPtr = pVkSetBufferCollectionImageConstraintsFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetBufferCollectionImageConstraintsFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetBufferCollectionImageConstraintsFUCHSIA is null" Nothing Nothing
   let vkSetBufferCollectionImageConstraintsFUCHSIA' = mkVkSetBufferCollectionImageConstraintsFUCHSIA vkSetBufferCollectionImageConstraintsFUCHSIAPtr
@@ -646,7 +647,7 @@ destroyBufferCollectionFUCHSIA :: forall io
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io ()
 destroyBufferCollectionFUCHSIA device collection allocator = liftIO . evalContT $ do
-  let vkDestroyBufferCollectionFUCHSIAPtr = pVkDestroyBufferCollectionFUCHSIA (deviceCmds (device :: Device))
+  let vkDestroyBufferCollectionFUCHSIAPtr = pVkDestroyBufferCollectionFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyBufferCollectionFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBufferCollectionFUCHSIA is null" Nothing Nothing
   let vkDestroyBufferCollectionFUCHSIA' = mkVkDestroyBufferCollectionFUCHSIA vkDestroyBufferCollectionFUCHSIAPtr
@@ -738,7 +739,7 @@ getBufferCollectionPropertiesFUCHSIA :: forall io
                                         BufferCollectionFUCHSIA
                                      -> io (BufferCollectionPropertiesFUCHSIA)
 getBufferCollectionPropertiesFUCHSIA device collection = liftIO . evalContT $ do
-  let vkGetBufferCollectionPropertiesFUCHSIAPtr = pVkGetBufferCollectionPropertiesFUCHSIA (deviceCmds (device :: Device))
+  let vkGetBufferCollectionPropertiesFUCHSIAPtr = pVkGetBufferCollectionPropertiesFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferCollectionPropertiesFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferCollectionPropertiesFUCHSIA is null" Nothing Nothing
   let vkGetBufferCollectionPropertiesFUCHSIA' = mkVkGetBufferCollectionPropertiesFUCHSIA vkGetBufferCollectionPropertiesFUCHSIAPtr

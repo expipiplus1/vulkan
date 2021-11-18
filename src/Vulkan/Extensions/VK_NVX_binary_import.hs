@@ -479,6 +479,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.Handles (CuFunctionNVX)
 import Vulkan.Extensions.Handles (CuFunctionNVX(..))
@@ -486,6 +487,7 @@ import Vulkan.Extensions.Handles (CuModuleNVX)
 import Vulkan.Extensions.Handles (CuModuleNVX(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCuLaunchKernelNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateCuFunctionNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateCuModuleNVX))
@@ -556,7 +558,7 @@ createCuModuleNVX :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (CuModuleNVX)
 createCuModuleNVX device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateCuModuleNVXPtr = pVkCreateCuModuleNVX (deviceCmds (device :: Device))
+  let vkCreateCuModuleNVXPtr = pVkCreateCuModuleNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateCuModuleNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateCuModuleNVX is null" Nothing Nothing
   let vkCreateCuModuleNVX' = mkVkCreateCuModuleNVX vkCreateCuModuleNVXPtr
@@ -638,7 +640,7 @@ createCuFunctionNVX :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (CuFunctionNVX)
 createCuFunctionNVX device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateCuFunctionNVXPtr = pVkCreateCuFunctionNVX (deviceCmds (device :: Device))
+  let vkCreateCuFunctionNVXPtr = pVkCreateCuFunctionNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateCuFunctionNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateCuFunctionNVX is null" Nothing Nothing
   let vkCreateCuFunctionNVX' = mkVkCreateCuFunctionNVX vkCreateCuFunctionNVXPtr
@@ -705,7 +707,7 @@ destroyCuModuleNVX :: forall io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
 destroyCuModuleNVX device module' allocator = liftIO . evalContT $ do
-  let vkDestroyCuModuleNVXPtr = pVkDestroyCuModuleNVX (deviceCmds (device :: Device))
+  let vkDestroyCuModuleNVXPtr = pVkDestroyCuModuleNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyCuModuleNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyCuModuleNVX is null" Nothing Nothing
   let vkDestroyCuModuleNVX' = mkVkDestroyCuModuleNVX vkDestroyCuModuleNVXPtr
@@ -756,7 +758,7 @@ destroyCuFunctionNVX :: forall io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io ()
 destroyCuFunctionNVX device function allocator = liftIO . evalContT $ do
-  let vkDestroyCuFunctionNVXPtr = pVkDestroyCuFunctionNVX (deviceCmds (device :: Device))
+  let vkDestroyCuFunctionNVXPtr = pVkDestroyCuFunctionNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyCuFunctionNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyCuFunctionNVX is null" Nothing Nothing
   let vkDestroyCuFunctionNVX' = mkVkDestroyCuFunctionNVX vkDestroyCuFunctionNVXPtr
@@ -821,7 +823,7 @@ cmdCuLaunchKernelNVX :: forall io
                         CuLaunchInfoNVX
                      -> io ()
 cmdCuLaunchKernelNVX commandBuffer launchInfo = liftIO . evalContT $ do
-  let vkCmdCuLaunchKernelNVXPtr = pVkCmdCuLaunchKernelNVX (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCuLaunchKernelNVXPtr = pVkCmdCuLaunchKernelNVX (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCuLaunchKernelNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCuLaunchKernelNVX is null" Nothing Nothing
   let vkCmdCuLaunchKernelNVX' = mkVkCmdCuLaunchKernelNVX vkCmdCuLaunchKernelNVXPtr

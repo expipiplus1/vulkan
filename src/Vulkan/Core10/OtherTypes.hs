@@ -760,7 +760,7 @@ deriving instance Show (Chain es) => Show (ImageMemoryBarrier es)
 
 instance Extensible ImageMemoryBarrier where
   extensibleTypeName = "ImageMemoryBarrier"
-  setNext x next = x{next = next}
+  setNext ImageMemoryBarrier{..} next' = ImageMemoryBarrier{next = next', ..}
   getNext ImageMemoryBarrier{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryBarrier e => b) -> Maybe b
   extends _ f

@@ -47,6 +47,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSemaphore))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySemaphore))
 import Vulkan.Core10.Handles (Device_T)
@@ -127,7 +128,7 @@ createSemaphore :: forall a io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (Semaphore)
 createSemaphore device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSemaphorePtr = pVkCreateSemaphore (deviceCmds (device :: Device))
+  let vkCreateSemaphorePtr = pVkCreateSemaphore (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSemaphorePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSemaphore is null" Nothing Nothing
   let vkCreateSemaphore' = mkVkCreateSemaphore vkCreateSemaphorePtr
@@ -216,7 +217,7 @@ destroySemaphore :: forall io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroySemaphore device semaphore allocator = liftIO . evalContT $ do
-  let vkDestroySemaphorePtr = pVkDestroySemaphore (deviceCmds (device :: Device))
+  let vkDestroySemaphorePtr = pVkDestroySemaphore (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySemaphorePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySemaphore is null" Nothing Nothing
   let vkDestroySemaphore' = mkVkDestroySemaphore vkDestroySemaphorePtr
@@ -267,7 +268,7 @@ deriving instance Show (Chain es) => Show (SemaphoreCreateInfo es)
 
 instance Extensible SemaphoreCreateInfo where
   extensibleTypeName = "SemaphoreCreateInfo"
-  setNext x next = x{next = next}
+  setNext SemaphoreCreateInfo{..} next' = SemaphoreCreateInfo{next = next', ..}
   getNext SemaphoreCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SemaphoreCreateInfo e => b) -> Maybe b
   extends _ f

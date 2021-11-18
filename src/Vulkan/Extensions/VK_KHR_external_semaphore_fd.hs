@@ -159,6 +159,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreFdKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportSemaphoreFdKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -235,7 +236,7 @@ getSemaphoreFdKHR :: forall io
                      SemaphoreGetFdInfoKHR
                   -> io (("fd" ::: Int32))
 getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetSemaphoreFdKHRPtr = pVkGetSemaphoreFdKHR (deviceCmds (device :: Device))
+  let vkGetSemaphoreFdKHRPtr = pVkGetSemaphoreFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreFdKHR is null" Nothing Nothing
   let vkGetSemaphoreFdKHR' = mkVkGetSemaphoreFdKHR vkGetSemaphoreFdKHRPtr
@@ -299,7 +300,7 @@ importSemaphoreFdKHR :: forall io
                         ImportSemaphoreFdInfoKHR
                      -> io ()
 importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
-  let vkImportSemaphoreFdKHRPtr = pVkImportSemaphoreFdKHR (deviceCmds (device :: Device))
+  let vkImportSemaphoreFdKHRPtr = pVkImportSemaphoreFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportSemaphoreFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreFdKHR is null" Nothing Nothing
   let vkImportSemaphoreFdKHR' = mkVkImportSemaphoreFdKHR vkImportSemaphoreFdKHRPtr

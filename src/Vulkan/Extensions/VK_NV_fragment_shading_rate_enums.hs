@@ -248,6 +248,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetFragmentShadingRateEnumNV))
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentShadingRateCombinerOpKHR)
@@ -410,7 +411,7 @@ cmdSetFragmentShadingRateEnumNV :: forall io
                                    ("combinerOps" ::: (FragmentShadingRateCombinerOpKHR, FragmentShadingRateCombinerOpKHR))
                                 -> io ()
 cmdSetFragmentShadingRateEnumNV commandBuffer shadingRate combinerOps = liftIO . evalContT $ do
-  let vkCmdSetFragmentShadingRateEnumNVPtr = pVkCmdSetFragmentShadingRateEnumNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetFragmentShadingRateEnumNVPtr = pVkCmdSetFragmentShadingRateEnumNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetFragmentShadingRateEnumNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetFragmentShadingRateEnumNV is null" Nothing Nothing
   let vkCmdSetFragmentShadingRateEnumNV' = mkVkCmdSetFragmentShadingRateEnumNV vkCmdSetFragmentShadingRateEnumNVPtr

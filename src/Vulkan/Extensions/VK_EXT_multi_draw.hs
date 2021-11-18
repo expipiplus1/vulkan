@@ -174,6 +174,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawMultiEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawMultiIndexedEXT))
@@ -1056,7 +1057,7 @@ cmdDrawMultiEXT :: forall io
                    ("stride" ::: Word32)
                 -> io ()
 cmdDrawMultiEXT commandBuffer vertexInfo instanceCount firstInstance stride = liftIO . evalContT $ do
-  let vkCmdDrawMultiEXTPtr = pVkCmdDrawMultiEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawMultiEXTPtr = pVkCmdDrawMultiEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDrawMultiEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMultiEXT is null" Nothing Nothing
   let vkCmdDrawMultiEXT' = mkVkCmdDrawMultiEXT vkCmdDrawMultiEXTPtr
@@ -1961,7 +1962,7 @@ cmdDrawMultiIndexedEXT :: forall io
                           ("vertexOffset" ::: Maybe Int32)
                        -> io ()
 cmdDrawMultiIndexedEXT commandBuffer indexInfo instanceCount firstInstance stride vertexOffset = liftIO . evalContT $ do
-  let vkCmdDrawMultiIndexedEXTPtr = pVkCmdDrawMultiIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawMultiIndexedEXTPtr = pVkCmdDrawMultiIndexedEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDrawMultiIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMultiIndexedEXT is null" Nothing Nothing
   let vkCmdDrawMultiIndexedEXT' = mkVkCmdDrawMultiIndexedEXT vkCmdDrawMultiIndexedEXTPtr

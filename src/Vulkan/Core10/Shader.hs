@@ -60,6 +60,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateShaderModule))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyShaderModule))
 import Vulkan.Core10.Handles (Device_T)
@@ -149,7 +150,7 @@ createShaderModule :: forall a io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (ShaderModule)
 createShaderModule device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateShaderModulePtr = pVkCreateShaderModule (deviceCmds (device :: Device))
+  let vkCreateShaderModulePtr = pVkCreateShaderModule (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateShaderModulePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateShaderModule is null" Nothing Nothing
   let vkCreateShaderModule' = mkVkCreateShaderModule vkCreateShaderModulePtr
@@ -242,7 +243,7 @@ destroyShaderModule :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
 destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
-  let vkDestroyShaderModulePtr = pVkDestroyShaderModule (deviceCmds (device :: Device))
+  let vkDestroyShaderModulePtr = pVkDestroyShaderModule (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyShaderModulePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyShaderModule is null" Nothing Nothing
   let vkDestroyShaderModule' = mkVkDestroyShaderModule vkDestroyShaderModulePtr
@@ -353,7 +354,7 @@ deriving instance Show (Chain es) => Show (ShaderModuleCreateInfo es)
 
 instance Extensible ShaderModuleCreateInfo where
   extensibleTypeName = "ShaderModuleCreateInfo"
-  setNext x next = x{next = next}
+  setNext ShaderModuleCreateInfo{..} next' = ShaderModuleCreateInfo{next = next', ..}
   getNext ShaderModuleCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ShaderModuleCreateInfo e => b) -> Maybe b
   extends _ f

@@ -285,9 +285,9 @@ classes Spec {..} = do
       else do
         baseOut <- peek p
         join
-          $ peekChainHead @a ({estmn} (baseOut :: BaseOutStructure))
+          $ peekChainHead @a (case baseOut of BaseOutStructure\{{estmn}} -> {estmn})
                              (castPtr @BaseOutStructure @() p)
-          $ \\head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
+          $ \\head' -> peekSomeChain @a (case baseOut of BaseOutStructure\{next} -> next)
                                       (\\tail' -> c (head', tail'))
 
     peekChainHead

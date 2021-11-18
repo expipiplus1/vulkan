@@ -293,12 +293,14 @@ import Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (AttachmentReferenc
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetFragmentShadingRateKHR))
 import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceFragmentShadingRatesKHR))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -461,7 +463,7 @@ cmdSetFragmentShadingRateKHR :: forall io
                                 ("combinerOps" ::: (FragmentShadingRateCombinerOpKHR, FragmentShadingRateCombinerOpKHR))
                              -> io ()
 cmdSetFragmentShadingRateKHR commandBuffer fragmentSize combinerOps = liftIO . evalContT $ do
-  let vkCmdSetFragmentShadingRateKHRPtr = pVkCmdSetFragmentShadingRateKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetFragmentShadingRateKHRPtr = pVkCmdSetFragmentShadingRateKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetFragmentShadingRateKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetFragmentShadingRateKHR is null" Nothing Nothing
   let vkCmdSetFragmentShadingRateKHR' = mkVkCmdSetFragmentShadingRateKHR vkCmdSetFragmentShadingRateKHRPtr
@@ -620,7 +622,7 @@ getPhysicalDeviceFragmentShadingRatesKHR :: forall io
                                             PhysicalDevice
                                          -> io (Result, ("fragmentShadingRates" ::: Vector PhysicalDeviceFragmentShadingRateKHR))
 getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFragmentShadingRatesKHRPtr = pVkGetPhysicalDeviceFragmentShadingRatesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceFragmentShadingRatesKHRPtr = pVkGetPhysicalDeviceFragmentShadingRatesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFragmentShadingRatesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFragmentShadingRatesKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceFragmentShadingRatesKHR' = mkVkGetPhysicalDeviceFragmentShadingRatesKHR vkGetPhysicalDeviceFragmentShadingRatesKHRPtr

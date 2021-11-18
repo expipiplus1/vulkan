@@ -25,6 +25,7 @@ import Vulkan.Core11.Enums.CommandPoolTrimFlags (CommandPoolTrimFlags)
 import Vulkan.Core11.Enums.CommandPoolTrimFlags (CommandPoolTrimFlags(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkTrimCommandPool))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core11.Enums.CommandPoolTrimFlags (CommandPoolTrimFlags(..))
@@ -116,7 +117,7 @@ trimCommandPool :: forall io
                    CommandPoolTrimFlags
                 -> io ()
 trimCommandPool device commandPool flags = liftIO $ do
-  let vkTrimCommandPoolPtr = pVkTrimCommandPool (deviceCmds (device :: Device))
+  let vkTrimCommandPoolPtr = pVkTrimCommandPool (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkTrimCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkTrimCommandPool is null" Nothing Nothing
   let vkTrimCommandPool' = mkVkTrimCommandPool vkTrimCommandPoolPtr

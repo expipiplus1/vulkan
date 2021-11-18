@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.13.3
+version:        3.13.4
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -540,6 +540,7 @@ library
       InstanceSigs
       LambdaCase
       MagicHash
+      NamedFieldPuns
       NoMonomorphismRestriction
       OverloadedStrings
       PartialTypeSignatures
@@ -605,6 +606,7 @@ test-suite test
       InstanceSigs
       LambdaCase
       MagicHash
+      NamedFieldPuns
       NoMonomorphismRestriction
       OverloadedStrings
       PartialTypeSignatures

@@ -176,6 +176,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateStreamDescriptorSurfaceGGP))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -251,7 +252,7 @@ createStreamDescriptorSurfaceGGP :: forall io
                                     ("allocator" ::: Maybe AllocationCallbacks)
                                  -> io (SurfaceKHR)
 createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateStreamDescriptorSurfaceGGPPtr = pVkCreateStreamDescriptorSurfaceGGP (instanceCmds (instance' :: Instance))
+  let vkCreateStreamDescriptorSurfaceGGPPtr = pVkCreateStreamDescriptorSurfaceGGP (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateStreamDescriptorSurfaceGGPPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateStreamDescriptorSurfaceGGP is null" Nothing Nothing
   let vkCreateStreamDescriptorSurfaceGGP' = mkVkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGPPtr

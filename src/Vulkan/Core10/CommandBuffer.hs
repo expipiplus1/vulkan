@@ -87,6 +87,7 @@ import Vulkan.Core10.Handles (CommandPool)
 import Vulkan.Core10.Handles (CommandPool(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAllocateCommandBuffers))
 import Vulkan.Dynamic (DeviceCmds(pVkBeginCommandBuffer))
 import Vulkan.Dynamic (DeviceCmds(pVkEndCommandBuffer))
@@ -198,7 +199,7 @@ allocateCommandBuffers :: forall io
                           CommandBufferAllocateInfo
                        -> io (("commandBuffers" ::: Vector CommandBuffer))
 allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
-  let cmds = deviceCmds (device :: Device)
+  let cmds = case device of Device{deviceCmds} -> deviceCmds
   let vkAllocateCommandBuffersPtr = pVkAllocateCommandBuffers cmds
   lift $ unless (vkAllocateCommandBuffersPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAllocateCommandBuffers is null" Nothing Nothing
@@ -295,7 +296,7 @@ freeCommandBuffers :: forall io
                       ("commandBuffers" ::: Vector CommandBuffer)
                    -> io ()
 freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
-  let vkFreeCommandBuffersPtr = pVkFreeCommandBuffers (deviceCmds (device :: Device))
+  let vkFreeCommandBuffersPtr = pVkFreeCommandBuffers (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkFreeCommandBuffersPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeCommandBuffers is null" Nothing Nothing
   let vkFreeCommandBuffers' = mkVkFreeCommandBuffers vkFreeCommandBuffersPtr
@@ -390,7 +391,7 @@ beginCommandBuffer :: forall a io
                       (CommandBufferBeginInfo a)
                    -> io ()
 beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
-  let vkBeginCommandBufferPtr = pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkBeginCommandBufferPtr = pVkBeginCommandBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkBeginCommandBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBeginCommandBuffer is null" Nothing Nothing
   let vkBeginCommandBuffer' = mkVkBeginCommandBuffer vkBeginCommandBufferPtr
@@ -496,7 +497,7 @@ endCommandBuffer :: forall io
                     CommandBuffer
                  -> io ()
 endCommandBuffer commandBuffer = liftIO $ do
-  let vkEndCommandBufferPtr = pVkEndCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkEndCommandBufferPtr = pVkEndCommandBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkEndCommandBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEndCommandBuffer is null" Nothing Nothing
   let vkEndCommandBuffer' = mkVkEndCommandBuffer vkEndCommandBufferPtr
@@ -576,7 +577,7 @@ resetCommandBuffer :: forall io
                       CommandBufferResetFlags
                    -> io ()
 resetCommandBuffer commandBuffer flags = liftIO $ do
-  let vkResetCommandBufferPtr = pVkResetCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkResetCommandBufferPtr = pVkResetCommandBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkResetCommandBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandBuffer is null" Nothing Nothing
   let vkResetCommandBuffer' = mkVkResetCommandBuffer vkResetCommandBufferPtr
@@ -792,7 +793,7 @@ deriving instance Show (Chain es) => Show (CommandBufferInheritanceInfo es)
 
 instance Extensible CommandBufferInheritanceInfo where
   extensibleTypeName = "CommandBufferInheritanceInfo"
-  setNext x next = x{next = next}
+  setNext CommandBufferInheritanceInfo{..} next' = CommandBufferInheritanceInfo{next = next', ..}
   getNext CommandBufferInheritanceInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferInheritanceInfo e => b) -> Maybe b
   extends _ f
@@ -939,7 +940,7 @@ deriving instance Show (Chain es) => Show (CommandBufferBeginInfo es)
 
 instance Extensible CommandBufferBeginInfo where
   extensibleTypeName = "CommandBufferBeginInfo"
-  setNext x next = x{next = next}
+  setNext CommandBufferBeginInfo{..} next' = CommandBufferBeginInfo{next = next', ..}
   getNext CommandBufferBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferBeginInfo e => b) -> Maybe b
   extends _ f

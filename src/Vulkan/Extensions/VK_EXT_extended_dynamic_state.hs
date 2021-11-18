@@ -219,6 +219,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Enums.CompareOp (CompareOp)
 import Vulkan.Core10.Enums.CompareOp (CompareOp(..))
@@ -323,7 +324,7 @@ cmdSetCullModeEXT :: forall io
                      CullModeFlags
                   -> io ()
 cmdSetCullModeEXT commandBuffer cullMode = liftIO $ do
-  let vkCmdSetCullModeEXTPtr = pVkCmdSetCullModeEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetCullModeEXTPtr = pVkCmdSetCullModeEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetCullModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCullModeEXT is null" Nothing Nothing
   let vkCmdSetCullModeEXT' = mkVkCmdSetCullModeEXT vkCmdSetCullModeEXTPtr
@@ -406,7 +407,7 @@ cmdSetFrontFaceEXT :: forall io
                       FrontFace
                    -> io ()
 cmdSetFrontFaceEXT commandBuffer frontFace = liftIO $ do
-  let vkCmdSetFrontFaceEXTPtr = pVkCmdSetFrontFaceEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetFrontFaceEXTPtr = pVkCmdSetFrontFaceEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetFrontFaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetFrontFaceEXT is null" Nothing Nothing
   let vkCmdSetFrontFaceEXT' = mkVkCmdSetFrontFaceEXT vkCmdSetFrontFaceEXTPtr
@@ -491,7 +492,7 @@ cmdSetPrimitiveTopologyEXT :: forall io
                               PrimitiveTopology
                            -> io ()
 cmdSetPrimitiveTopologyEXT commandBuffer primitiveTopology = liftIO $ do
-  let vkCmdSetPrimitiveTopologyEXTPtr = pVkCmdSetPrimitiveTopologyEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPrimitiveTopologyEXTPtr = pVkCmdSetPrimitiveTopologyEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetPrimitiveTopologyEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPrimitiveTopologyEXT is null" Nothing Nothing
   let vkCmdSetPrimitiveTopologyEXT' = mkVkCmdSetPrimitiveTopologyEXT vkCmdSetPrimitiveTopologyEXTPtr
@@ -592,7 +593,7 @@ cmdSetViewportWithCountEXT :: forall io
                               ("viewports" ::: Vector Viewport)
                            -> io ()
 cmdSetViewportWithCountEXT commandBuffer viewports = liftIO . evalContT $ do
-  let vkCmdSetViewportWithCountEXTPtr = pVkCmdSetViewportWithCountEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetViewportWithCountEXTPtr = pVkCmdSetViewportWithCountEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetViewportWithCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWithCountEXT is null" Nothing Nothing
   let vkCmdSetViewportWithCountEXT' = mkVkCmdSetViewportWithCountEXT vkCmdSetViewportWithCountEXTPtr
@@ -709,7 +710,7 @@ cmdSetScissorWithCountEXT :: forall io
                              ("scissors" ::: Vector Rect2D)
                           -> io ()
 cmdSetScissorWithCountEXT commandBuffer scissors = liftIO . evalContT $ do
-  let vkCmdSetScissorWithCountEXTPtr = pVkCmdSetScissorWithCountEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetScissorWithCountEXTPtr = pVkCmdSetScissorWithCountEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetScissorWithCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetScissorWithCountEXT is null" Nothing Nothing
   let vkCmdSetScissorWithCountEXT' = mkVkCmdSetScissorWithCountEXT vkCmdSetScissorWithCountEXTPtr
@@ -899,7 +900,7 @@ cmdBindVertexBuffers2EXT :: forall io
                             ("strides" ::: Vector DeviceSize)
                          -> io ()
 cmdBindVertexBuffers2EXT commandBuffer firstBinding buffers offsets sizes strides = liftIO . evalContT $ do
-  let vkCmdBindVertexBuffers2EXTPtr = pVkCmdBindVertexBuffers2EXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindVertexBuffers2EXTPtr = pVkCmdBindVertexBuffers2EXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindVertexBuffers2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindVertexBuffers2EXT is null" Nothing Nothing
   let vkCmdBindVertexBuffers2EXT' = mkVkCmdBindVertexBuffers2EXT vkCmdBindVertexBuffers2EXTPtr
@@ -1005,7 +1006,7 @@ cmdSetDepthTestEnableEXT :: forall io
                             ("depthTestEnable" ::: Bool)
                          -> io ()
 cmdSetDepthTestEnableEXT commandBuffer depthTestEnable = liftIO $ do
-  let vkCmdSetDepthTestEnableEXTPtr = pVkCmdSetDepthTestEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthTestEnableEXTPtr = pVkCmdSetDepthTestEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthTestEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthTestEnableEXT is null" Nothing Nothing
   let vkCmdSetDepthTestEnableEXT' = mkVkCmdSetDepthTestEnableEXT vkCmdSetDepthTestEnableEXTPtr
@@ -1086,7 +1087,7 @@ cmdSetDepthWriteEnableEXT :: forall io
                              ("depthWriteEnable" ::: Bool)
                           -> io ()
 cmdSetDepthWriteEnableEXT commandBuffer depthWriteEnable = liftIO $ do
-  let vkCmdSetDepthWriteEnableEXTPtr = pVkCmdSetDepthWriteEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthWriteEnableEXTPtr = pVkCmdSetDepthWriteEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthWriteEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthWriteEnableEXT is null" Nothing Nothing
   let vkCmdSetDepthWriteEnableEXT' = mkVkCmdSetDepthWriteEnableEXT vkCmdSetDepthWriteEnableEXTPtr
@@ -1171,7 +1172,7 @@ cmdSetDepthCompareOpEXT :: forall io
                            ("depthCompareOp" ::: CompareOp)
                         -> io ()
 cmdSetDepthCompareOpEXT commandBuffer depthCompareOp = liftIO $ do
-  let vkCmdSetDepthCompareOpEXTPtr = pVkCmdSetDepthCompareOpEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthCompareOpEXTPtr = pVkCmdSetDepthCompareOpEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthCompareOpEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthCompareOpEXT is null" Nothing Nothing
   let vkCmdSetDepthCompareOpEXT' = mkVkCmdSetDepthCompareOpEXT vkCmdSetDepthCompareOpEXTPtr
@@ -1252,7 +1253,7 @@ cmdSetDepthBoundsTestEnableEXT :: forall io
                                   ("depthBoundsTestEnable" ::: Bool)
                                -> io ()
 cmdSetDepthBoundsTestEnableEXT commandBuffer depthBoundsTestEnable = liftIO $ do
-  let vkCmdSetDepthBoundsTestEnableEXTPtr = pVkCmdSetDepthBoundsTestEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthBoundsTestEnableEXTPtr = pVkCmdSetDepthBoundsTestEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthBoundsTestEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBoundsTestEnableEXT is null" Nothing Nothing
   let vkCmdSetDepthBoundsTestEnableEXT' = mkVkCmdSetDepthBoundsTestEnableEXT vkCmdSetDepthBoundsTestEnableEXTPtr
@@ -1333,7 +1334,7 @@ cmdSetStencilTestEnableEXT :: forall io
                               ("stencilTestEnable" ::: Bool)
                            -> io ()
 cmdSetStencilTestEnableEXT commandBuffer stencilTestEnable = liftIO $ do
-  let vkCmdSetStencilTestEnableEXTPtr = pVkCmdSetStencilTestEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilTestEnableEXTPtr = pVkCmdSetStencilTestEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilTestEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilTestEnableEXT is null" Nothing Nothing
   let vkCmdSetStencilTestEnableEXT' = mkVkCmdSetStencilTestEnableEXT vkCmdSetStencilTestEnableEXTPtr
@@ -1450,7 +1451,7 @@ cmdSetStencilOpEXT :: forall io
                       CompareOp
                    -> io ()
 cmdSetStencilOpEXT commandBuffer faceMask failOp passOp depthFailOp compareOp = liftIO $ do
-  let vkCmdSetStencilOpEXTPtr = pVkCmdSetStencilOpEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilOpEXTPtr = pVkCmdSetStencilOpEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilOpEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilOpEXT is null" Nothing Nothing
   let vkCmdSetStencilOpEXT' = mkVkCmdSetStencilOpEXT vkCmdSetStencilOpEXTPtr

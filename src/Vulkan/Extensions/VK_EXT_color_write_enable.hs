@@ -162,6 +162,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetColorWriteEnableEXT))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -254,7 +255,7 @@ cmdSetColorWriteEnableEXT :: forall io
                              ("colorWriteEnables" ::: Vector Bool)
                           -> io ()
 cmdSetColorWriteEnableEXT commandBuffer colorWriteEnables = liftIO . evalContT $ do
-  let vkCmdSetColorWriteEnableEXTPtr = pVkCmdSetColorWriteEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetColorWriteEnableEXTPtr = pVkCmdSetColorWriteEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetColorWriteEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetColorWriteEnableEXT is null" Nothing Nothing
   let vkCmdSetColorWriteEnableEXT' = mkVkCmdSetColorWriteEnableEXT vkCmdSetColorWriteEnableEXTPtr

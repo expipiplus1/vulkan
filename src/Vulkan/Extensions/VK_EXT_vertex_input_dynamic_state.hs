@@ -165,6 +165,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetVertexInputEXT))
 import Vulkan.Core10.Enums.Format (Format)
@@ -291,7 +292,7 @@ cmdSetVertexInputEXT :: forall io
                         ("vertexAttributeDescriptions" ::: Vector VertexInputAttributeDescription2EXT)
                      -> io ()
 cmdSetVertexInputEXT commandBuffer vertexBindingDescriptions vertexAttributeDescriptions = liftIO . evalContT $ do
-  let vkCmdSetVertexInputEXTPtr = pVkCmdSetVertexInputEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetVertexInputEXTPtr = pVkCmdSetVertexInputEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetVertexInputEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetVertexInputEXT is null" Nothing Nothing
   let vkCmdSetVertexInputEXT' = mkVkCmdSetVertexInputEXT vkCmdSetVertexInputEXTPtr

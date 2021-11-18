@@ -57,6 +57,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkEnumerateDeviceExtensionProperties))
 import Vulkan.Core10.APIConstants (MAX_EXTENSION_NAME_SIZE)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -230,7 +231,7 @@ enumerateDeviceExtensionProperties :: forall io
                                       ("layerName" ::: Maybe ByteString)
                                    -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT $ do
-  let vkEnumerateDeviceExtensionPropertiesPtr = pVkEnumerateDeviceExtensionProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkEnumerateDeviceExtensionPropertiesPtr = pVkEnumerateDeviceExtensionProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkEnumerateDeviceExtensionPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateDeviceExtensionProperties is null" Nothing Nothing
   let vkEnumerateDeviceExtensionProperties' = mkVkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionPropertiesPtr

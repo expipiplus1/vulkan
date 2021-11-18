@@ -452,6 +452,7 @@ import Vulkan.Extensions.Handles (DebugReportCallbackEXT(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDebugReportCallbackEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkDebugReportMessageEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkDestroyDebugReportCallbackEXT))
@@ -521,7 +522,7 @@ createDebugReportCallbackEXT :: forall io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugReportCallbackEXT)
 createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
+  let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDebugReportCallbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugReportCallbackEXT is null" Nothing Nothing
   let vkCreateDebugReportCallbackEXT' = mkVkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXTPtr
@@ -614,7 +615,7 @@ destroyDebugReportCallbackEXT :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
 destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
-  let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
+  let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyDebugReportCallbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugReportCallbackEXT is null" Nothing Nothing
   let vkDestroyDebugReportCallbackEXT' = mkVkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXTPtr
@@ -703,7 +704,7 @@ debugReportMessageEXT :: forall io
                          ("message" ::: ByteString)
                       -> io ()
 debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
-  let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance))
+  let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDebugReportMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugReportMessageEXT is null" Nothing Nothing
   let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT vkDebugReportMessageEXTPtr

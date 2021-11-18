@@ -206,6 +206,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkAcquireWinrtDisplayNV))
 import Vulkan.Dynamic (InstanceCmds(pVkGetWinrtDisplayNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -292,7 +293,7 @@ acquireWinrtDisplayNV :: forall io
                          DisplayKHR
                       -> io ()
 acquireWinrtDisplayNV physicalDevice display = liftIO $ do
-  let vkAcquireWinrtDisplayNVPtr = pVkAcquireWinrtDisplayNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkAcquireWinrtDisplayNVPtr = pVkAcquireWinrtDisplayNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkAcquireWinrtDisplayNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireWinrtDisplayNV is null" Nothing Nothing
   let vkAcquireWinrtDisplayNV' = mkVkAcquireWinrtDisplayNV vkAcquireWinrtDisplayNVPtr
@@ -358,7 +359,7 @@ getWinrtDisplayNV :: forall io
                      ("deviceRelativeId" ::: Word32)
                   -> io (DisplayKHR)
 getWinrtDisplayNV physicalDevice deviceRelativeId = liftIO . evalContT $ do
-  let vkGetWinrtDisplayNVPtr = pVkGetWinrtDisplayNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetWinrtDisplayNVPtr = pVkGetWinrtDisplayNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetWinrtDisplayNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetWinrtDisplayNV is null" Nothing Nothing
   let vkGetWinrtDisplayNV' = mkVkGetWinrtDisplayNV vkGetWinrtDisplayNVPtr

@@ -56,6 +56,7 @@ import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Enums.ComponentSwizzle (ComponentSwizzle)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateImageView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyImageView))
 import Vulkan.Core10.Handles (Device_T)
@@ -144,7 +145,7 @@ createImageView :: forall a io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (ImageView)
 createImageView device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateImageViewPtr = pVkCreateImageView (deviceCmds (device :: Device))
+  let vkCreateImageViewPtr = pVkCreateImageView (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateImageViewPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImageView is null" Nothing Nothing
   let vkCreateImageView' = mkVkCreateImageView vkCreateImageViewPtr
@@ -233,7 +234,7 @@ destroyImageView :: forall io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroyImageView device imageView allocator = liftIO . evalContT $ do
-  let vkDestroyImageViewPtr = pVkDestroyImageView (deviceCmds (device :: Device))
+  let vkDestroyImageViewPtr = pVkDestroyImageView (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyImageViewPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyImageView is null" Nothing Nothing
   let vkDestroyImageView' = mkVkDestroyImageView vkDestroyImageViewPtr
@@ -1193,7 +1194,7 @@ deriving instance Show (Chain es) => Show (ImageViewCreateInfo es)
 
 instance Extensible ImageViewCreateInfo where
   extensibleTypeName = "ImageViewCreateInfo"
-  setNext x next = x{next = next}
+  setNext ImageViewCreateInfo{..} next' = ImageViewCreateInfo{next = next', ..}
   getNext ImageViewCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageViewCreateInfo e => b) -> Maybe b
   extends _ f

@@ -158,6 +158,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDepthBiasEnableEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetLogicOpEXT))
@@ -245,7 +246,7 @@ cmdSetPatchControlPointsEXT :: forall io
                                ("patchControlPoints" ::: Word32)
                             -> io ()
 cmdSetPatchControlPointsEXT commandBuffer patchControlPoints = liftIO $ do
-  let vkCmdSetPatchControlPointsEXTPtr = pVkCmdSetPatchControlPointsEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPatchControlPointsEXTPtr = pVkCmdSetPatchControlPointsEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetPatchControlPointsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPatchControlPointsEXT is null" Nothing Nothing
   let vkCmdSetPatchControlPointsEXT' = mkVkCmdSetPatchControlPointsEXT vkCmdSetPatchControlPointsEXTPtr
@@ -328,7 +329,7 @@ cmdSetRasterizerDiscardEnableEXT :: forall io
                                     ("rasterizerDiscardEnable" ::: Bool)
                                  -> io ()
 cmdSetRasterizerDiscardEnableEXT commandBuffer rasterizerDiscardEnable = liftIO $ do
-  let vkCmdSetRasterizerDiscardEnableEXTPtr = pVkCmdSetRasterizerDiscardEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetRasterizerDiscardEnableEXTPtr = pVkCmdSetRasterizerDiscardEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetRasterizerDiscardEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRasterizerDiscardEnableEXT is null" Nothing Nothing
   let vkCmdSetRasterizerDiscardEnableEXT' = mkVkCmdSetRasterizerDiscardEnableEXT vkCmdSetRasterizerDiscardEnableEXTPtr
@@ -409,7 +410,7 @@ cmdSetDepthBiasEnableEXT :: forall io
                             ("depthBiasEnable" ::: Bool)
                          -> io ()
 cmdSetDepthBiasEnableEXT commandBuffer depthBiasEnable = liftIO $ do
-  let vkCmdSetDepthBiasEnableEXTPtr = pVkCmdSetDepthBiasEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthBiasEnableEXTPtr = pVkCmdSetDepthBiasEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthBiasEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBiasEnableEXT is null" Nothing Nothing
   let vkCmdSetDepthBiasEnableEXT' = mkVkCmdSetDepthBiasEnableEXT vkCmdSetDepthBiasEnableEXTPtr
@@ -491,7 +492,7 @@ cmdSetLogicOpEXT :: forall io
                     LogicOp
                  -> io ()
 cmdSetLogicOpEXT commandBuffer logicOp = liftIO $ do
-  let vkCmdSetLogicOpEXTPtr = pVkCmdSetLogicOpEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetLogicOpEXTPtr = pVkCmdSetLogicOpEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetLogicOpEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLogicOpEXT is null" Nothing Nothing
   let vkCmdSetLogicOpEXT' = mkVkCmdSetLogicOpEXT vkCmdSetLogicOpEXTPtr
@@ -575,7 +576,7 @@ cmdSetPrimitiveRestartEnableEXT :: forall io
                                    ("primitiveRestartEnable" ::: Bool)
                                 -> io ()
 cmdSetPrimitiveRestartEnableEXT commandBuffer primitiveRestartEnable = liftIO $ do
-  let vkCmdSetPrimitiveRestartEnableEXTPtr = pVkCmdSetPrimitiveRestartEnableEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPrimitiveRestartEnableEXTPtr = pVkCmdSetPrimitiveRestartEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetPrimitiveRestartEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPrimitiveRestartEnableEXT is null" Nothing Nothing
   let vkCmdSetPrimitiveRestartEnableEXT' = mkVkCmdSetPrimitiveRestartEnableEXT vkCmdSetPrimitiveRestartEnableEXTPtr

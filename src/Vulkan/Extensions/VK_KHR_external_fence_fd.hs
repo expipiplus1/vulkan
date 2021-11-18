@@ -155,6 +155,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetFenceFdKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportFenceFdKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -235,7 +236,7 @@ getFenceFdKHR :: forall io
                  FenceGetFdInfoKHR
               -> io (("fd" ::: Int32))
 getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetFenceFdKHRPtr = pVkGetFenceFdKHR (deviceCmds (device :: Device))
+  let vkGetFenceFdKHRPtr = pVkGetFenceFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetFenceFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceFdKHR is null" Nothing Nothing
   let vkGetFenceFdKHR' = mkVkGetFenceFdKHR vkGetFenceFdKHRPtr
@@ -299,7 +300,7 @@ importFenceFdKHR :: forall io
                     ImportFenceFdInfoKHR
                  -> io ()
 importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
-  let vkImportFenceFdKHRPtr = pVkImportFenceFdKHR (deviceCmds (device :: Device))
+  let vkImportFenceFdKHRPtr = pVkImportFenceFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportFenceFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceFdKHR is null" Nothing Nothing
   let vkImportFenceFdKHR' = mkVkImportFenceFdKHR vkImportFenceFdKHRPtr

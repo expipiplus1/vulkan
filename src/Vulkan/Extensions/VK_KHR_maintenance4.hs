@@ -217,6 +217,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Buffer (BufferCreateInfo)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceBufferMemoryRequirementsKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceImageMemoryRequirementsKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceImageSparseMemoryRequirementsKHR))
@@ -269,7 +270,7 @@ getDeviceBufferMemoryRequirementsKHR :: forall a io
                                         ("info" ::: DeviceBufferMemoryRequirementsKHR)
                                      -> io (MemoryRequirements2 a)
 getDeviceBufferMemoryRequirementsKHR device info = liftIO . evalContT $ do
-  let vkGetDeviceBufferMemoryRequirementsKHRPtr = pVkGetDeviceBufferMemoryRequirementsKHR (deviceCmds (device :: Device))
+  let vkGetDeviceBufferMemoryRequirementsKHRPtr = pVkGetDeviceBufferMemoryRequirementsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceBufferMemoryRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceBufferMemoryRequirementsKHR is null" Nothing Nothing
   let vkGetDeviceBufferMemoryRequirementsKHR' = mkVkGetDeviceBufferMemoryRequirementsKHR vkGetDeviceBufferMemoryRequirementsKHRPtr
@@ -313,7 +314,7 @@ getDeviceImageMemoryRequirementsKHR :: forall a io
                                        ("info" ::: DeviceImageMemoryRequirementsKHR)
                                     -> io (MemoryRequirements2 a)
 getDeviceImageMemoryRequirementsKHR device info = liftIO . evalContT $ do
-  let vkGetDeviceImageMemoryRequirementsKHRPtr = pVkGetDeviceImageMemoryRequirementsKHR (deviceCmds (device :: Device))
+  let vkGetDeviceImageMemoryRequirementsKHRPtr = pVkGetDeviceImageMemoryRequirementsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceImageMemoryRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceImageMemoryRequirementsKHR is null" Nothing Nothing
   let vkGetDeviceImageMemoryRequirementsKHR' = mkVkGetDeviceImageMemoryRequirementsKHR vkGetDeviceImageMemoryRequirementsKHRPtr
@@ -369,7 +370,7 @@ getDeviceImageSparseMemoryRequirementsKHR :: forall io
                                              ("info" ::: DeviceImageMemoryRequirementsKHR)
                                           -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
 getDeviceImageSparseMemoryRequirementsKHR device info = liftIO . evalContT $ do
-  let vkGetDeviceImageSparseMemoryRequirementsKHRPtr = pVkGetDeviceImageSparseMemoryRequirementsKHR (deviceCmds (device :: Device))
+  let vkGetDeviceImageSparseMemoryRequirementsKHRPtr = pVkGetDeviceImageSparseMemoryRequirementsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceImageSparseMemoryRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceImageSparseMemoryRequirementsKHR is null" Nothing Nothing
   let vkGetDeviceImageSparseMemoryRequirementsKHR' = mkVkGetDeviceImageSparseMemoryRequirementsKHR vkGetDeviceImageSparseMemoryRequirementsKHRPtr

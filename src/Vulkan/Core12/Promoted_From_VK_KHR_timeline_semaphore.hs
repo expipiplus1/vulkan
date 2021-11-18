@@ -62,6 +62,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreCounterValue))
 import Vulkan.Dynamic (DeviceCmds(pVkSignalSemaphore))
 import Vulkan.Dynamic (DeviceCmds(pVkWaitSemaphores))
@@ -145,7 +146,7 @@ getSemaphoreCounterValue :: forall io
                             Semaphore
                          -> io (("value" ::: Word64))
 getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
-  let vkGetSemaphoreCounterValuePtr = pVkGetSemaphoreCounterValue (deviceCmds (device :: Device))
+  let vkGetSemaphoreCounterValuePtr = pVkGetSemaphoreCounterValue (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreCounterValuePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreCounterValue is null" Nothing Nothing
   let vkGetSemaphoreCounterValue' = mkVkGetSemaphoreCounterValue vkGetSemaphoreCounterValuePtr
@@ -189,7 +190,7 @@ waitSemaphoresSafeOrUnsafe :: forall io
                               ("timeout" ::: Word64)
                            -> io (Result)
 waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO . evalContT $ do
-  let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
+  let vkWaitSemaphoresPtr = pVkWaitSemaphores (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitSemaphores is null" Nothing Nothing
   let vkWaitSemaphores' = mkVkWaitSemaphores vkWaitSemaphoresPtr
@@ -344,7 +345,7 @@ signalSemaphore :: forall io
                    SemaphoreSignalInfo
                 -> io ()
 signalSemaphore device signalInfo = liftIO . evalContT $ do
-  let vkSignalSemaphorePtr = pVkSignalSemaphore (deviceCmds (device :: Device))
+  let vkSignalSemaphorePtr = pVkSignalSemaphore (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSignalSemaphorePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSignalSemaphore is null" Nothing Nothing
   let vkSignalSemaphore' = mkVkSignalSemaphore vkSignalSemaphorePtr

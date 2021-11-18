@@ -59,6 +59,7 @@ import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationImageCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateImage))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyImage))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSubresourceLayout))
@@ -172,7 +173,7 @@ createImage :: forall a io
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Image)
 createImage device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateImagePtr = pVkCreateImage (deviceCmds (device :: Device))
+  let vkCreateImagePtr = pVkCreateImage (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImage is null" Nothing Nothing
   let vkCreateImage' = mkVkCreateImage vkCreateImagePtr
@@ -265,7 +266,7 @@ destroyImage :: forall io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
 destroyImage device image allocator = liftIO . evalContT $ do
-  let vkDestroyImagePtr = pVkDestroyImage (deviceCmds (device :: Device))
+  let vkDestroyImagePtr = pVkDestroyImage (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyImage is null" Nothing Nothing
   let vkDestroyImage' = mkVkDestroyImage vkDestroyImagePtr
@@ -427,7 +428,7 @@ getImageSubresourceLayout :: forall io
                              ImageSubresource
                           -> io (SubresourceLayout)
 getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
-  let vkGetImageSubresourceLayoutPtr = pVkGetImageSubresourceLayout (deviceCmds (device :: Device))
+  let vkGetImageSubresourceLayoutPtr = pVkGetImageSubresourceLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageSubresourceLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSubresourceLayout is null" Nothing Nothing
   let vkGetImageSubresourceLayout' = mkVkGetImageSubresourceLayout vkGetImageSubresourceLayoutPtr
@@ -1486,7 +1487,7 @@ deriving instance Show (Chain es) => Show (ImageCreateInfo es)
 
 instance Extensible ImageCreateInfo where
   extensibleTypeName = "ImageCreateInfo"
-  setNext x next = x{next = next}
+  setNext ImageCreateInfo{..} next' = ImageCreateInfo{next = next', ..}
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f

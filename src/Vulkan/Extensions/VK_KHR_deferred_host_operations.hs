@@ -309,6 +309,7 @@ import Vulkan.Extensions.Handles (DeferredOperationKHR)
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDeferredOperationKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkDeferredOperationJoinKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyDeferredOperationKHR))
@@ -369,7 +370,7 @@ createDeferredOperationKHR :: forall io
                               ("allocator" ::: Maybe AllocationCallbacks)
                            -> io (DeferredOperationKHR)
 createDeferredOperationKHR device allocator = liftIO . evalContT $ do
-  let vkCreateDeferredOperationKHRPtr = pVkCreateDeferredOperationKHR (deviceCmds (device :: Device))
+  let vkCreateDeferredOperationKHRPtr = pVkCreateDeferredOperationKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDeferredOperationKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDeferredOperationKHR is null" Nothing Nothing
   let vkCreateDeferredOperationKHR' = mkVkCreateDeferredOperationKHR vkCreateDeferredOperationKHRPtr
@@ -460,7 +461,7 @@ destroyDeferredOperationKHR :: forall io
                                ("allocator" ::: Maybe AllocationCallbacks)
                             -> io ()
 destroyDeferredOperationKHR device operation allocator = liftIO . evalContT $ do
-  let vkDestroyDeferredOperationKHRPtr = pVkDestroyDeferredOperationKHR (deviceCmds (device :: Device))
+  let vkDestroyDeferredOperationKHRPtr = pVkDestroyDeferredOperationKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDeferredOperationKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDeferredOperationKHR is null" Nothing Nothing
   let vkDestroyDeferredOperationKHR' = mkVkDestroyDeferredOperationKHR vkDestroyDeferredOperationKHRPtr
@@ -545,7 +546,7 @@ getDeferredOperationMaxConcurrencyKHR :: forall io
                                          DeferredOperationKHR
                                       -> io (Word32)
 getDeferredOperationMaxConcurrencyKHR device operation = liftIO $ do
-  let vkGetDeferredOperationMaxConcurrencyKHRPtr = pVkGetDeferredOperationMaxConcurrencyKHR (deviceCmds (device :: Device))
+  let vkGetDeferredOperationMaxConcurrencyKHRPtr = pVkGetDeferredOperationMaxConcurrencyKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetDeferredOperationMaxConcurrencyKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationMaxConcurrencyKHR is null" Nothing Nothing
   let vkGetDeferredOperationMaxConcurrencyKHR' = mkVkGetDeferredOperationMaxConcurrencyKHR vkGetDeferredOperationMaxConcurrencyKHRPtr
@@ -608,7 +609,7 @@ getDeferredOperationResultKHR :: forall io
                                  DeferredOperationKHR
                               -> io (Result)
 getDeferredOperationResultKHR device operation = liftIO $ do
-  let vkGetDeferredOperationResultKHRPtr = pVkGetDeferredOperationResultKHR (deviceCmds (device :: Device))
+  let vkGetDeferredOperationResultKHRPtr = pVkGetDeferredOperationResultKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetDeferredOperationResultKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationResultKHR is null" Nothing Nothing
   let vkGetDeferredOperationResultKHR' = mkVkGetDeferredOperationResultKHR vkGetDeferredOperationResultKHRPtr
@@ -710,7 +711,7 @@ deferredOperationJoinKHR :: forall io
                             DeferredOperationKHR
                          -> io (Result)
 deferredOperationJoinKHR device operation = liftIO $ do
-  let vkDeferredOperationJoinKHRPtr = pVkDeferredOperationJoinKHR (deviceCmds (device :: Device))
+  let vkDeferredOperationJoinKHRPtr = pVkDeferredOperationJoinKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkDeferredOperationJoinKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeferredOperationJoinKHR is null" Nothing Nothing
   let vkDeferredOperationJoinKHR' = mkVkDeferredOperationJoinKHR vkDeferredOperationJoinKHRPtr

@@ -173,6 +173,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetFenceWin32HandleKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportFenceWin32HandleKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -247,7 +248,7 @@ getFenceWin32HandleKHR :: forall io
                           FenceGetWin32HandleInfoKHR
                        -> io (HANDLE)
 getFenceWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
-  let vkGetFenceWin32HandleKHRPtr = pVkGetFenceWin32HandleKHR (deviceCmds (device :: Device))
+  let vkGetFenceWin32HandleKHRPtr = pVkGetFenceWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetFenceWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceWin32HandleKHR is null" Nothing Nothing
   let vkGetFenceWin32HandleKHR' = mkVkGetFenceWin32HandleKHR vkGetFenceWin32HandleKHRPtr
@@ -312,7 +313,7 @@ importFenceWin32HandleKHR :: forall io
                              ImportFenceWin32HandleInfoKHR
                           -> io ()
 importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT $ do
-  let vkImportFenceWin32HandleKHRPtr = pVkImportFenceWin32HandleKHR (deviceCmds (device :: Device))
+  let vkImportFenceWin32HandleKHRPtr = pVkImportFenceWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportFenceWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceWin32HandleKHR is null" Nothing Nothing
   let vkImportFenceWin32HandleKHR' = mkVkImportFenceWin32HandleKHR vkImportFenceWin32HandleKHRPtr

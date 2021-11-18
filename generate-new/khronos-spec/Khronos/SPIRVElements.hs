@@ -7,9 +7,9 @@ module Khronos.SPIRVElements
 import           CType                          ( CType(TypeName) )
 import           Data.Bits
 import           Data.Foldable
+import qualified Data.HashMap.Strict           as HM
 import           Data.List.Extra                ( nubOrd )
 import qualified Data.Text                     as T
-import           Prettyprinter
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Data.Version                   ( Version
@@ -19,14 +19,18 @@ import           Error
 import           Haskell                        ( HName(..)
                                                 , allTypeNames
                                                 , renderType
-                                                , (~>)
                                                 )
 import           Khronos.Utils
-import           Language.Haskell.TH            ( Type(ConT)
-                                                , mkName
+import           Language.Haskell.TH            ( mkName )
+import           Marshal.Scheme                 ( isElided )
+import           Marshal.Struct                 ( MarshaledStruct
+                                                , msMembers
+                                                , msmScheme
                                                 )
+import           Polysemy                       ( MemberWithError )
 import           Polysemy.Input
 import qualified Prelude
+import           Prettyprinter
 import           Relude
 import           Render.Element
 import           Render.SpecInfo                ( HasSpecInfo
@@ -41,16 +45,26 @@ renderSPIRVElements
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Vector SPIRVExtension
   -> Vector SPIRVCapability
+  -> HashMap CName (MarshaledStruct AStruct)
   -> Sem r RenderElement
-renderSPIRVElements exts caps = genRe "SPIR-V stuff" $ do
-  tellExplicitModule =<< mkModuleName ["SPIRVRequirements"]
-  tellCanFormat
-  bespokeStuff
-  renderExts exts
-  renderCaps caps
+renderSPIRVElements exts caps structs =
+  genRe "SPIR-V stuff" $ runInputConst (`HM.lookup` structs) $ do
+    tellExplicitModule =<< mkModuleName ["SPIRVRequirements"]
+    tellCanFormat
+    bespokeStuff
+    renderExts exts
+    renderCaps caps
+
+type HasMarshalledStructs r
+  = MemberWithError (Input (CName -> Maybe (MarshaledStruct AStruct))) r
 
 renderExts
-  :: (HasRenderElem r, HasRenderParams r, HasErr r, HasSpecInfo r)
+  :: ( HasRenderElem r
+     , HasRenderParams r
+     , HasErr r
+     , HasSpecInfo r
+     , HasMarshalledStructs r
+     )
   => Vector SPIRVExtension
   -> Sem r ()
 renderExts = renderSPIRVThing "spirvExtensionRequirements"
@@ -58,7 +72,12 @@ renderExts = renderSPIRVThing "spirvExtensionRequirements"
                               spirvExtensionReqs
 
 renderCaps
-  :: (HasRenderElem r, HasRenderParams r, HasErr r, HasSpecInfo r)
+  :: ( HasRenderElem r
+     , HasRenderParams r
+     , HasErr r
+     , HasSpecInfo r
+     , HasMarshalledStructs r
+     )
   => Vector SPIRVCapability
   -> Sem r ()
 renderCaps = renderSPIRVThing "spirvCapabilityRequirements"
@@ -66,7 +85,12 @@ renderCaps = renderSPIRVThing "spirvCapabilityRequirements"
                               spirvCapabilityReqs
 
 renderSPIRVThing
-  :: (HasRenderElem r, HasRenderParams r, HasErr r, HasSpecInfo r)
+  :: ( HasRenderElem r
+     , HasRenderParams r
+     , HasErr r
+     , HasSpecInfo r
+     , HasMarshalledStructs r
+     )
   => Text
   -> (a -> Text)
   -> (a -> Vector SPIRVRequirement)
@@ -95,7 +119,12 @@ renderSPIRVThing funName name reqs xs = do
     ]
 
 renderReq
-  :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
+  :: ( HasRenderParams r
+     , HasRenderElem r
+     , HasErr r
+     , HasSpecInfo r
+     , HasMarshalledStructs r
+     )
   => SPIRVRequirement
   -> Sem r ([Doc ()], [Doc ()])
 renderReq = \case
@@ -111,20 +140,49 @@ renderReq = \case
     sTy <- cToHsType DoNotPreserve (TypeName s)
     -- TODO: this is pretty lazy, import the accessors properly
     traverse_ tellImportWithAll (allTypeNames sTy)
-    checkTDoc                     <- renderType (sTy ~> ConT ''Bool)
-    sTyDoc                        <- renderType sTy
     (otherInstReqs, otherDevReqs) <- minVersionAndExtensionsReqs rs
+    getStruct                     <- input
+    oneMember                     <- case getStruct s of
+      Nothing -> throw "SPIRV features aren't in a struct"
+      Just str ->
+        pure
+          . null
+          . drop 1
+          $ [ ()
+            | m <- toList $ msMembers @AStruct str
+            , not $ isElided (msmScheme m)
+            ]
     let featureMemberName = mkMemberName s f
+    let con               = mkConName s s
     let xs =
-          [ ("featureName" , viaShow f)
-          , ("checkFeature", pretty featureMemberName <+> "::" <+> checkTDoc)
-          , ( "enableFeature"
-            , "\\f ->"
-              <+> "f"
-              <>  braces (pretty featureMemberName <+> "= True")
-              <+> "::"
-              <+> sTyDoc
+          [ ("featureName", viaShow f)
+          , ( "checkFeature"
+            , "\\"
+              <>  pretty con
+              <>  "{"
+              <>  pretty featureMemberName
+              <>  "} ->"
+              <+> pretty featureMemberName
             )
+          , if oneMember
+            then
+              ( "enableFeature"
+              , "\\_ ->"
+              <+> pretty con
+              <>  "{"
+              <>  pretty featureMemberName
+              <+> "= True}"
+              )
+            else
+              ( "enableFeature"
+              , "\\"
+              <>  pretty con
+              <>  "{..} ->"
+              <+> pretty con
+              <>  "{"
+              <>  pretty featureMemberName
+              <+> "= True, ..}"
+              )
           ]
     pure
       ( otherInstReqs

@@ -149,6 +149,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateMetalSurfaceEXT))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -219,7 +220,7 @@ createMetalSurfaceEXT :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateMetalSurfaceEXTPtr = pVkCreateMetalSurfaceEXT (instanceCmds (instance' :: Instance))
+  let vkCreateMetalSurfaceEXTPtr = pVkCreateMetalSurfaceEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateMetalSurfaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateMetalSurfaceEXT is null" Nothing Nothing
   let vkCreateMetalSurfaceEXT' = mkVkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXTPtr

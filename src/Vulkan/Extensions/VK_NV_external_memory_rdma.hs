@@ -218,6 +218,7 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryRemoteAddressNV))
 import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.Handles (Device_T)
@@ -278,7 +279,7 @@ getMemoryRemoteAddressNV :: forall io
                             MemoryGetRemoteAddressInfoNV
                          -> io (RemoteAddressNV)
 getMemoryRemoteAddressNV device memoryGetRemoteAddressInfo = liftIO . evalContT $ do
-  let vkGetMemoryRemoteAddressNVPtr = pVkGetMemoryRemoteAddressNV (deviceCmds (device :: Device))
+  let vkGetMemoryRemoteAddressNVPtr = pVkGetMemoryRemoteAddressNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryRemoteAddressNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryRemoteAddressNV is null" Nothing Nothing
   let vkGetMemoryRemoteAddressNV' = mkVkGetMemoryRemoteAddressNV vkGetMemoryRemoteAddressNVPtr

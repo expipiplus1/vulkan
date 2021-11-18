@@ -164,6 +164,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryZirconHandleFUCHSIA))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryZirconHandlePropertiesFUCHSIA))
 import Vulkan.Core10.Handles (DeviceMemory)
@@ -222,7 +223,7 @@ getMemoryZirconHandleFUCHSIA :: forall io
                                 MemoryGetZirconHandleInfoFUCHSIA
                              -> io (("zirconHandle" ::: Zx_handle_t))
 getMemoryZirconHandleFUCHSIA device getZirconHandleInfo = liftIO . evalContT $ do
-  let vkGetMemoryZirconHandleFUCHSIAPtr = pVkGetMemoryZirconHandleFUCHSIA (deviceCmds (device :: Device))
+  let vkGetMemoryZirconHandleFUCHSIAPtr = pVkGetMemoryZirconHandleFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryZirconHandleFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryZirconHandleFUCHSIA is null" Nothing Nothing
   let vkGetMemoryZirconHandleFUCHSIA' = mkVkGetMemoryZirconHandleFUCHSIA vkGetMemoryZirconHandleFUCHSIAPtr
@@ -288,7 +289,7 @@ getMemoryZirconHandlePropertiesFUCHSIA :: forall io
                                           ("zirconHandle" ::: Zx_handle_t)
                                        -> io (MemoryZirconHandlePropertiesFUCHSIA)
 getMemoryZirconHandlePropertiesFUCHSIA device handleType zirconHandle = liftIO . evalContT $ do
-  let vkGetMemoryZirconHandlePropertiesFUCHSIAPtr = pVkGetMemoryZirconHandlePropertiesFUCHSIA (deviceCmds (device :: Device))
+  let vkGetMemoryZirconHandlePropertiesFUCHSIAPtr = pVkGetMemoryZirconHandlePropertiesFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryZirconHandlePropertiesFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryZirconHandlePropertiesFUCHSIA is null" Nothing Nothing
   let vkGetMemoryZirconHandlePropertiesFUCHSIA' = mkVkGetMemoryZirconHandlePropertiesFUCHSIA vkGetMemoryZirconHandlePropertiesFUCHSIAPtr

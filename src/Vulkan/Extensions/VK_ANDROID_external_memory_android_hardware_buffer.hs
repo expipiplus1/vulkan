@@ -338,6 +338,7 @@ import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.ImageView (ComponentMapping)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetAndroidHardwareBufferPropertiesANDROID))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryAndroidHardwareBufferANDROID))
 import Vulkan.Core10.Handles (DeviceMemory)
@@ -416,7 +417,7 @@ getAndroidHardwareBufferPropertiesANDROID :: forall a io
                                              (Ptr AHardwareBuffer)
                                           -> io (AndroidHardwareBufferPropertiesANDROID a)
 getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
-  let vkGetAndroidHardwareBufferPropertiesANDROIDPtr = pVkGetAndroidHardwareBufferPropertiesANDROID (deviceCmds (device :: Device))
+  let vkGetAndroidHardwareBufferPropertiesANDROIDPtr = pVkGetAndroidHardwareBufferPropertiesANDROID (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAndroidHardwareBufferPropertiesANDROIDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAndroidHardwareBufferPropertiesANDROID is null" Nothing Nothing
   let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROIDPtr
@@ -485,7 +486,7 @@ getMemoryAndroidHardwareBufferANDROID :: forall io
                                          MemoryGetAndroidHardwareBufferInfoANDROID
                                       -> io (Ptr AHardwareBuffer)
 getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
-  let vkGetMemoryAndroidHardwareBufferANDROIDPtr = pVkGetMemoryAndroidHardwareBufferANDROID (deviceCmds (device :: Device))
+  let vkGetMemoryAndroidHardwareBufferANDROIDPtr = pVkGetMemoryAndroidHardwareBufferANDROID (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryAndroidHardwareBufferANDROIDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryAndroidHardwareBufferANDROID is null" Nothing Nothing
   let vkGetMemoryAndroidHardwareBufferANDROID' = mkVkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROIDPtr
@@ -692,7 +693,7 @@ deriving instance Show (Chain es) => Show (AndroidHardwareBufferPropertiesANDROI
 
 instance Extensible AndroidHardwareBufferPropertiesANDROID where
   extensibleTypeName = "AndroidHardwareBufferPropertiesANDROID"
-  setNext x next = x{next = next}
+  setNext AndroidHardwareBufferPropertiesANDROID{..} next' = AndroidHardwareBufferPropertiesANDROID{next = next', ..}
   getNext AndroidHardwareBufferPropertiesANDROID{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AndroidHardwareBufferPropertiesANDROID e => b) -> Maybe b
   extends _ f

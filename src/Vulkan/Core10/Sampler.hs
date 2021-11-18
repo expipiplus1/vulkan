@@ -61,6 +61,7 @@ import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Enums.CompareOp (CompareOp)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSampler))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySampler))
 import Vulkan.Core10.Handles (Device_T)
@@ -158,7 +159,7 @@ createSampler :: forall a io
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io (Sampler)
 createSampler device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSamplerPtr = pVkCreateSampler (deviceCmds (device :: Device))
+  let vkCreateSamplerPtr = pVkCreateSampler (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSamplerPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSampler is null" Nothing Nothing
   let vkCreateSampler' = mkVkCreateSampler vkCreateSamplerPtr
@@ -247,7 +248,7 @@ destroySampler :: forall io
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io ()
 destroySampler device sampler allocator = liftIO . evalContT $ do
-  let vkDestroySamplerPtr = pVkDestroySampler (deviceCmds (device :: Device))
+  let vkDestroySamplerPtr = pVkDestroySampler (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySamplerPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySampler is null" Nothing Nothing
   let vkDestroySampler' = mkVkDestroySampler vkDestroySamplerPtr
@@ -644,7 +645,7 @@ deriving instance Show (Chain es) => Show (SamplerCreateInfo es)
 
 instance Extensible SamplerCreateInfo where
   extensibleTypeName = "SamplerCreateInfo"
-  setNext x next = x{next = next}
+  setNext SamplerCreateInfo{..} next' = SamplerCreateInfo{next = next', ..}
   getNext SamplerCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerCreateInfo e => b) -> Maybe b
   extends _ f

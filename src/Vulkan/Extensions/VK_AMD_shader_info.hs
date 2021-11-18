@@ -223,6 +223,7 @@ import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetShaderInfoAMD))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Handles (Pipeline)
@@ -340,7 +341,7 @@ getShaderInfoAMD :: forall io
                     ShaderInfoTypeAMD
                  -> io (Result, ("info" ::: ByteString))
 getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
-  let vkGetShaderInfoAMDPtr = pVkGetShaderInfoAMD (deviceCmds (device :: Device))
+  let vkGetShaderInfoAMDPtr = pVkGetShaderInfoAMD (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetShaderInfoAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetShaderInfoAMD is null" Nothing Nothing
   let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD vkGetShaderInfoAMDPtr

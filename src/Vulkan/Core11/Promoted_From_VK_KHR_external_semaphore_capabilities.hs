@@ -54,6 +54,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
@@ -104,7 +105,7 @@ getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                                 (PhysicalDeviceExternalSemaphoreInfo a)
                                              -> io (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalSemaphorePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalSemaphoreProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalSemaphoreProperties' = mkVkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphorePropertiesPtr
@@ -160,7 +161,7 @@ deriving instance Show (Chain es) => Show (PhysicalDeviceExternalSemaphoreInfo e
 
 instance Extensible PhysicalDeviceExternalSemaphoreInfo where
   extensibleTypeName = "PhysicalDeviceExternalSemaphoreInfo"
-  setNext x next = x{next = next}
+  setNext PhysicalDeviceExternalSemaphoreInfo{..} next' = PhysicalDeviceExternalSemaphoreInfo{next = next', ..}
   getNext PhysicalDeviceExternalSemaphoreInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceExternalSemaphoreInfo e => b) -> Maybe b
   extends _ f
