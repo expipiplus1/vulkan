@@ -1260,16 +1260,16 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- of each memory dependency defined by any element i of @pDependencyInfos@
--- are applied to operations that occurred earlier in
+-- of each memory dependency defined by @pDependencyInfo@ are applied to
+-- operations that occurred earlier in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- of each memory dependency defined by any element i of @pDependencyInfos@
--- are applied to operations that occurred later in
+-- of each memory dependency defined by @pDependencyInfo@ are applied to
+-- operations that occurred later in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 --
 -- If 'cmdPipelineBarrier2KHR' is recorded within a render pass instance,
@@ -4689,15 +4689,15 @@ data DependencyInfoKHR = DependencyInfoKHR
     -- how execution and memory dependencies are formed.
     dependencyFlags :: DependencyFlags
   , -- | @pMemoryBarriers@ is a pointer to an array of 'MemoryBarrier2KHR'
-    -- structures that define memory dependencies between any memory accesses.
+    -- structures defining memory dependencies between any memory accesses.
     memoryBarriers :: Vector MemoryBarrier2KHR
   , -- | @pBufferMemoryBarriers@ is a pointer to an array of
-    -- 'BufferMemoryBarrier2KHR' structures that define memory dependencies
+    -- 'BufferMemoryBarrier2KHR' structures defining memory dependencies
     -- between buffer ranges.
     bufferMemoryBarriers :: Vector BufferMemoryBarrier2KHR
   , -- | @pImageMemoryBarriers@ is a pointer to an array of
-    -- 'ImageMemoryBarrier2KHR' structures that define memory dependencies
-    -- between image subresources.
+    -- 'ImageMemoryBarrier2KHR' structures defining memory dependencies between
+    -- image subresources.
     imageMemoryBarriers :: Vector (SomeStruct ImageMemoryBarrier2KHR)
   }
   deriving (Typeable)

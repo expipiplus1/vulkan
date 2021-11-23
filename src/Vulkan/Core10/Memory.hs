@@ -1037,7 +1037,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     import operation and the external handle specified was created by
 --     the Vulkan API, the device mask specified by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'
---     /must/ match that specified when the payload being imported was
+--     /must/ match the mask specified when the payload being imported was
 --     allocated
 --
 -- -   #VUID-VkMemoryAllocateInfo-None-00644# If the parameters define an

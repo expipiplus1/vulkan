@@ -48,11 +48,11 @@
 --
 -- This extension adds a new
 -- 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
--- 'ATTACHMENT_STORE_OP_NONE_QCOM' which specifies that the contents within
--- the render area /may/ not be written to memory, but that the prior
--- contents of the attachment in memory are preserved. However, if any
--- contents were generated within the render area during rendering, the
--- contents of the attachment will be undefined inside the render area.
+-- 'ATTACHMENT_STORE_OP_NONE_QCOM' specifying that the contents within the
+-- render area /may/ not be written to memory, but that the prior contents
+-- of the attachment in memory are preserved. However, if any contents were
+-- generated within the render area during rendering, the contents of the
+-- attachment will be undefined inside the render area.
 --
 -- Note
 --

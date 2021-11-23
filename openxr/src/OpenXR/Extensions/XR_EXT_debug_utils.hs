@@ -131,6 +131,7 @@ import OpenXR.Extensions.Handles (DebugUtilsMessengerEXT_T)
 import OpenXR.Core10.FundamentalTypes (Flags64)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateDebugUtilsMessengerEXT))
 import OpenXR.Dynamic (InstanceCmds(pXrDestroyDebugUtilsMessengerEXT))
 import OpenXR.Dynamic (InstanceCmds(pXrSessionBeginDebugUtilsLabelRegionEXT))
@@ -145,6 +146,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -229,7 +231,7 @@ setDebugUtilsObjectNameEXT :: forall io
                               DebugUtilsObjectNameInfoEXT
                            -> io ()
 setDebugUtilsObjectNameEXT instance' nameInfo = liftIO . evalContT $ do
-  let xrSetDebugUtilsObjectNameEXTPtr = pXrSetDebugUtilsObjectNameEXT (instanceCmds (instance' :: Instance))
+  let xrSetDebugUtilsObjectNameEXTPtr = pXrSetDebugUtilsObjectNameEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrSetDebugUtilsObjectNameEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetDebugUtilsObjectNameEXT is null" Nothing Nothing
   let xrSetDebugUtilsObjectNameEXT' = mkXrSetDebugUtilsObjectNameEXT xrSetDebugUtilsObjectNameEXTPtr
@@ -316,7 +318,7 @@ createDebugUtilsMessengerEXT :: forall io
                                 DebugUtilsMessengerCreateInfoEXT
                              -> io (DebugUtilsMessengerEXT)
 createDebugUtilsMessengerEXT instance' createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (instance' :: Instance)
+  let cmds = case instance' of Instance{instanceCmds} -> instanceCmds
   let xrCreateDebugUtilsMessengerEXTPtr = pXrCreateDebugUtilsMessengerEXT cmds
   lift $ unless (xrCreateDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateDebugUtilsMessengerEXT is null" Nothing Nothing
@@ -399,7 +401,7 @@ destroyDebugUtilsMessengerEXT :: forall io
                                  DebugUtilsMessengerEXT
                               -> io ()
 destroyDebugUtilsMessengerEXT messenger = liftIO $ do
-  let xrDestroyDebugUtilsMessengerEXTPtr = pXrDestroyDebugUtilsMessengerEXT (instanceCmds (messenger :: DebugUtilsMessengerEXT))
+  let xrDestroyDebugUtilsMessengerEXTPtr = pXrDestroyDebugUtilsMessengerEXT (case messenger of DebugUtilsMessengerEXT{instanceCmds} -> instanceCmds)
   unless (xrDestroyDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyDebugUtilsMessengerEXT is null" Nothing Nothing
   let xrDestroyDebugUtilsMessengerEXT' = mkXrDestroyDebugUtilsMessengerEXT xrDestroyDebugUtilsMessengerEXTPtr
@@ -495,7 +497,7 @@ submitDebugUtilsMessageEXT :: forall io
                               DebugUtilsMessengerCallbackDataEXT
                            -> io ()
 submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
-  let xrSubmitDebugUtilsMessageEXTPtr = pXrSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance))
+  let xrSubmitDebugUtilsMessageEXTPtr = pXrSubmitDebugUtilsMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrSubmitDebugUtilsMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSubmitDebugUtilsMessageEXT is null" Nothing Nothing
   let xrSubmitDebugUtilsMessageEXT' = mkXrSubmitDebugUtilsMessageEXT xrSubmitDebugUtilsMessageEXTPtr
@@ -563,7 +565,7 @@ sessionBeginDebugUtilsLabelRegionEXT :: forall io
                                         ("labelInfo" ::: DebugUtilsLabelEXT)
                                      -> io (Result)
 sessionBeginDebugUtilsLabelRegionEXT session labelInfo = liftIO . evalContT $ do
-  let xrSessionBeginDebugUtilsLabelRegionEXTPtr = pXrSessionBeginDebugUtilsLabelRegionEXT (instanceCmds (session :: Session))
+  let xrSessionBeginDebugUtilsLabelRegionEXTPtr = pXrSessionBeginDebugUtilsLabelRegionEXT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrSessionBeginDebugUtilsLabelRegionEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSessionBeginDebugUtilsLabelRegionEXT is null" Nothing Nothing
   let xrSessionBeginDebugUtilsLabelRegionEXT' = mkXrSessionBeginDebugUtilsLabelRegionEXT xrSessionBeginDebugUtilsLabelRegionEXTPtr
@@ -631,7 +633,7 @@ sessionEndDebugUtilsLabelRegionEXT :: forall io
                                       Session
                                    -> io (Result)
 sessionEndDebugUtilsLabelRegionEXT session = liftIO $ do
-  let xrSessionEndDebugUtilsLabelRegionEXTPtr = pXrSessionEndDebugUtilsLabelRegionEXT (instanceCmds (session :: Session))
+  let xrSessionEndDebugUtilsLabelRegionEXTPtr = pXrSessionEndDebugUtilsLabelRegionEXT (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrSessionEndDebugUtilsLabelRegionEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSessionEndDebugUtilsLabelRegionEXT is null" Nothing Nothing
   let xrSessionEndDebugUtilsLabelRegionEXT' = mkXrSessionEndDebugUtilsLabelRegionEXT xrSessionEndDebugUtilsLabelRegionEXTPtr
@@ -712,7 +714,7 @@ sessionInsertDebugUtilsLabelEXT :: forall io
                                    ("labelInfo" ::: DebugUtilsLabelEXT)
                                 -> io (Result)
 sessionInsertDebugUtilsLabelEXT session labelInfo = liftIO . evalContT $ do
-  let xrSessionInsertDebugUtilsLabelEXTPtr = pXrSessionInsertDebugUtilsLabelEXT (instanceCmds (session :: Session))
+  let xrSessionInsertDebugUtilsLabelEXTPtr = pXrSessionInsertDebugUtilsLabelEXT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrSessionInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSessionInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let xrSessionInsertDebugUtilsLabelEXT' = mkXrSessionInsertDebugUtilsLabelEXT xrSessionInsertDebugUtilsLabelEXTPtr

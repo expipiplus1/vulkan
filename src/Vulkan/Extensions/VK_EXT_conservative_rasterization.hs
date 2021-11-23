@@ -288,8 +288,8 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
   , -- | #limits-fullyCoveredFragmentShaderInputVariable#
     -- @fullyCoveredFragmentShaderInputVariable@ is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
-    -- SPIR-V builtin fragment shader input variable @FullyCoveredEXT@ which
-    -- specifies that conservative rasterization is enabled and the fragment
+    -- SPIR-V builtin fragment shader input variable @FullyCoveredEXT@
+    -- specifying that conservative rasterization is enabled and the fragment
     -- area is fully covered by the generating primitive.
     fullyCoveredFragmentShaderInputVariable :: Bool
   , -- | #limits-conservativeRasterizationPostDepthCoverage#

@@ -24,6 +24,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_AMD_shader_trinary_minmax
                           , module Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
                           , module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+                          , module Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
                           , module Vulkan.Extensions.VK_EXT_4444_formats
                           , module Vulkan.Extensions.VK_EXT_acquire_drm_display
                           , module Vulkan.Extensions.VK_EXT_acquire_xlib_display
@@ -39,6 +40,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_debug_marker
                           , module Vulkan.Extensions.VK_EXT_debug_report
                           , module Vulkan.Extensions.VK_EXT_debug_utils
+                          , module Vulkan.Extensions.VK_EXT_depth_clip_control
                           , module Vulkan.Extensions.VK_EXT_depth_clip_enable
                           , module Vulkan.Extensions.VK_EXT_depth_range_unrestricted
                           , module Vulkan.Extensions.VK_EXT_descriptor_indexing
@@ -286,6 +288,7 @@ import Vulkan.Extensions.VK_AMD_shader_info
 import Vulkan.Extensions.VK_AMD_shader_trinary_minmax
 import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
 import Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+import Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
 import Vulkan.Extensions.VK_EXT_4444_formats
 import Vulkan.Extensions.VK_EXT_acquire_drm_display
 import Vulkan.Extensions.VK_EXT_acquire_xlib_display
@@ -301,6 +304,7 @@ import Vulkan.Extensions.VK_EXT_custom_border_color
 import Vulkan.Extensions.VK_EXT_debug_marker
 import Vulkan.Extensions.VK_EXT_debug_report
 import Vulkan.Extensions.VK_EXT_debug_utils
+import Vulkan.Extensions.VK_EXT_depth_clip_control
 import Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Vulkan.Extensions.VK_EXT_depth_range_unrestricted
 import Vulkan.Extensions.VK_EXT_descriptor_indexing

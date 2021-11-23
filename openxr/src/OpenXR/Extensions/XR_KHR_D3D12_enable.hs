@@ -81,6 +81,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.Extensions.XR_KHR_D3D11_enable (D3D_FEATURE_LEVEL)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrGetD3D12GraphicsRequirementsKHR))
 import OpenXR.Core10.Handles (Instance_T)
 import OpenXR.Core10.Image (IsSwapchainImage(..))
@@ -173,7 +174,7 @@ getD3D12GraphicsRequirementsKHR :: forall io
                                    SystemId
                                 -> io (GraphicsRequirementsD3D12KHR)
 getD3D12GraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetD3D12GraphicsRequirementsKHRPtr = pXrGetD3D12GraphicsRequirementsKHR (instanceCmds (instance' :: Instance))
+  let xrGetD3D12GraphicsRequirementsKHRPtr = pXrGetD3D12GraphicsRequirementsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetD3D12GraphicsRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetD3D12GraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetD3D12GraphicsRequirementsKHR' = mkXrGetD3D12GraphicsRequirementsKHR xrGetD3D12GraphicsRequirementsKHRPtr

@@ -2433,7 +2433,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdDraw-imageView-06184# If the current render pass instance
 --     was begun with
@@ -2442,7 +2442,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdDraw-colorAttachmentCount-06185# If the currently bound
 --     pipeline was created with a
@@ -3317,7 +3317,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawIndexed-imageView-06184# If the current render pass
 --     instance was begun with
@@ -3326,7 +3326,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06185# If the currently
 --     bound pipeline was created with a
@@ -4195,7 +4195,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawIndirect-imageView-06184# If the current render pass
 --     instance was begun with
@@ -4204,7 +4204,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06185# If the currently
 --     bound pipeline was created with a
@@ -5096,7 +5096,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06184# If the current
 --     render pass instance was begun with
@@ -5105,7 +5105,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-06185# If the
 --     currently bound pipeline was created with a
@@ -12902,8 +12902,8 @@ instance Zero ImageResolve where
 --
 -- -   #VUID-VkRenderPassBeginInfo-clearValueCount-00902# @clearValueCount@
 --     /must/ be greater than the largest attachment index in @renderPass@
---     that specifies a @loadOp@ (or @stencilLoadOp@, if the attachment has
---     a depth\/stencil format) of
+--     specifying a @loadOp@ (or @stencilLoadOp@, if the attachment has a
+--     depth\/stencil format) of
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'
 --
 -- -   #VUID-VkRenderPassBeginInfo-clearValueCount-04962# If
@@ -13181,8 +13181,8 @@ data RenderPassBeginInfo (es :: [Type]) = RenderPassBeginInfo
     -- instance, and is described in more detail below.
     renderArea :: Rect2D
   , -- | @pClearValues@ is a pointer to an array of @clearValueCount@
-    -- 'ClearValue' structures that contains clear values for each attachment,
-    -- if the attachment uses a @loadOp@ value of
+    -- 'ClearValue' structures containing clear values for each attachment, if
+    -- the attachment uses a @loadOp@ value of
     -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' or if
     -- the attachment has a depth\/stencil format and uses a @stencilLoadOp@
     -- value of

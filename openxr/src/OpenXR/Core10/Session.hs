@@ -54,6 +54,7 @@ import OpenXR.Core10.Enums.Result (Result(..))
 import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_secondary_view_configuration (SecondaryViewConfigurationSessionBeginInfoMSFT)
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Enums.StructureType (StructureType)
@@ -160,7 +161,7 @@ beginSession :: forall a io
                 (SessionBeginInfo a)
              -> io (Result)
 beginSession session beginInfo = liftIO . evalContT $ do
-  let xrBeginSessionPtr = pXrBeginSession (instanceCmds (session :: Session))
+  let xrBeginSessionPtr = pXrBeginSession (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrBeginSessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrBeginSession is null" Nothing Nothing
   let xrBeginSession' = mkXrBeginSession xrBeginSessionPtr
@@ -266,7 +267,7 @@ endSession :: forall io
               Session
            -> io (Result)
 endSession session = liftIO $ do
-  let xrEndSessionPtr = pXrEndSession (instanceCmds (session :: Session))
+  let xrEndSessionPtr = pXrEndSession (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrEndSessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEndSession is null" Nothing Nothing
   let xrEndSession' = mkXrEndSession xrEndSessionPtr
@@ -339,7 +340,7 @@ requestExitSession :: forall io
                       Session
                    -> io (Result)
 requestExitSession session = liftIO $ do
-  let xrRequestExitSessionPtr = pXrRequestExitSession (instanceCmds (session :: Session))
+  let xrRequestExitSessionPtr = pXrRequestExitSession (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrRequestExitSessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrRequestExitSession is null" Nothing Nothing
   let xrRequestExitSession' = mkXrRequestExitSession xrRequestExitSessionPtr
@@ -385,7 +386,7 @@ deriving instance Show (Chain es) => Show (SessionBeginInfo es)
 
 instance Extensible SessionBeginInfo where
   extensibleTypeName = "SessionBeginInfo"
-  setNext x next = x{next = next}
+  setNext SessionBeginInfo{..} next' = SessionBeginInfo{next = next', ..}
   getNext SessionBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SessionBeginInfo e => b) -> Maybe b
   extends _ f

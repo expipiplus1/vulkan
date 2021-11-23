@@ -400,8 +400,8 @@ createBufferCollectionFUCHSIA :: forall io
                                  -- collection
                                  BufferCollectionCreateInfoFUCHSIA
                               -> -- | @pAllocator@ is a pointer to a
-                                 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure which
-                                 -- controls host memory allocation as described in the
+                                 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+                                 -- controlling host memory allocation as described in the
                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter
                                  ("allocator" ::: Maybe AllocationCallbacks)
@@ -640,8 +640,8 @@ destroyBufferCollectionFUCHSIA :: forall io
                                   -- handle
                                   BufferCollectionFUCHSIA
                                -> -- | @pAllocator@ is a pointer to a
-                                  -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure which
-                                  -- controls host memory allocation as described in the
+                                  -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+                                  -- controlling host memory allocation as described in the
                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter
                                   ("allocator" ::: Maybe AllocationCallbacks)
@@ -1383,8 +1383,8 @@ data ImageFormatConstraintsInfoFUCHSIA = ImageFormatConstraintsInfoFUCHSIA
     sysmemPixelFormat :: Word64
   , -- | @colorSpaceCount@ the element count of @pColorSpaces@
     colorSpaceCount :: Word32
-  , -- | @pColorSpaces@ is an array of 'SysmemColorSpaceFUCHSIA' structs of size
-    -- @colorSpaceCount@
+  , -- | @pColorSpaces@ is a pointer to an array of 'SysmemColorSpaceFUCHSIA'
+    -- structs of size @colorSpaceCount@
     --
     -- #VUID-VkImageFormatConstraintsInfoFUCHSIA-pColorSpaces-parameter#
     -- @pColorSpaces@ /must/ be a valid pointer to a valid
@@ -1526,10 +1526,10 @@ instance Zero ImageFormatConstraintsInfoFUCHSIA where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setBufferCollectionImageConstraintsFUCHSIA'
 data ImageConstraintsInfoFUCHSIA = ImageConstraintsInfoFUCHSIA
-  { -- | @pFormatConstraints@ is an array of 'ImageFormatConstraintsInfoFUCHSIA'
-    -- structures of size @formatConstraintsCount@ that is used to further
-    -- constrain buffer collection format selection for image-based buffer
-    -- collections.
+  { -- | @pFormatConstraints@ is a pointer to an array of
+    -- 'ImageFormatConstraintsInfoFUCHSIA' structures of size
+    -- @formatConstraintsCount@ that is used to further constrain buffer
+    -- collection format selection for image-based buffer collections.
     formatConstraints :: Vector ImageFormatConstraintsInfoFUCHSIA
   , -- | @bufferCollectionConstraints@ is a
     -- 'BufferCollectionConstraintsInfoFUCHSIA' structure used to supply

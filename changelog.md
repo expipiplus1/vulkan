@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump API version to v1.2.200
 
 ## [3.13.4] - 2021-11-17
 - Support ghc-9.3.20211111

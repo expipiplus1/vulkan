@@ -73,6 +73,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
@@ -149,7 +150,7 @@ setAndroidApplicationThreadKHR :: forall io
                                   ("threadId" ::: Word32)
                                -> io (Result)
 setAndroidApplicationThreadKHR session threadType threadId = liftIO $ do
-  let xrSetAndroidApplicationThreadKHRPtr = pXrSetAndroidApplicationThreadKHR (instanceCmds (session :: Session))
+  let xrSetAndroidApplicationThreadKHRPtr = pXrSetAndroidApplicationThreadKHR (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrSetAndroidApplicationThreadKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetAndroidApplicationThreadKHR is null" Nothing Nothing
   let xrSetAndroidApplicationThreadKHR' = mkXrSetAndroidApplicationThreadKHR xrSetAndroidApplicationThreadKHRPtr

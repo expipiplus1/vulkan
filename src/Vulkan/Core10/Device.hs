@@ -106,6 +106,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_corner_sampled_image (PhysicalDevi
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PhysicalDeviceCoverageReductionModeFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PhysicalDeviceDepthClipControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDeviceDepthClipEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
@@ -762,6 +763,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PhysicalDeviceCoverageReductionModeFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
+--     'Vulkan.Extensions.VK_EXT_depth_clip_control.PhysicalDeviceDepthClipControlFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
@@ -942,6 +944,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceColorWriteEnableFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryRDMAFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVertexInputDynamicStateFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDepthClipControlFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeaturesKHR = Just f

@@ -89,6 +89,7 @@ import OpenXR.Core10.Enums.Result (Result(..))
 import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_secondary_view_configuration (SecondaryViewConfigurationSwapchainCreateInfoMSFT)
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
 import OpenXR.CStruct.Extends (SomeChild(..))
@@ -208,7 +209,7 @@ enumerateSwapchainFormats :: forall io
                              Session
                           -> io (Result, ("formats" ::: Vector Int64))
 enumerateSwapchainFormats session = liftIO . evalContT $ do
-  let xrEnumerateSwapchainFormatsPtr = pXrEnumerateSwapchainFormats (instanceCmds (session :: Session))
+  let xrEnumerateSwapchainFormatsPtr = pXrEnumerateSwapchainFormats (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateSwapchainFormatsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateSwapchainFormats is null" Nothing Nothing
   let xrEnumerateSwapchainFormats' = mkXrEnumerateSwapchainFormats xrEnumerateSwapchainFormatsPtr
@@ -299,7 +300,7 @@ createSwapchain :: forall a io
                    (SwapchainCreateInfo a)
                 -> io (Result, Swapchain)
 createSwapchain session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSwapchainPtr = pXrCreateSwapchain cmds
   lift $ unless (xrCreateSwapchainPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSwapchain is null" Nothing Nothing
@@ -371,7 +372,7 @@ destroySwapchain :: forall io
                     Swapchain
                  -> io ()
 destroySwapchain swapchain = liftIO $ do
-  let xrDestroySwapchainPtr = pXrDestroySwapchain (instanceCmds (swapchain :: Swapchain))
+  let xrDestroySwapchainPtr = pXrDestroySwapchain (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   unless (xrDestroySwapchainPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySwapchain is null" Nothing Nothing
   let xrDestroySwapchain' = mkXrDestroySwapchain xrDestroySwapchainPtr
@@ -565,7 +566,7 @@ acquireSwapchainImage :: forall io
                          ("acquireInfo" ::: Maybe SwapchainImageAcquireInfo)
                       -> io (Result, ("index" ::: Word32))
 acquireSwapchainImage swapchain acquireInfo = liftIO . evalContT $ do
-  let xrAcquireSwapchainImagePtr = pXrAcquireSwapchainImage (instanceCmds (swapchain :: Swapchain))
+  let xrAcquireSwapchainImagePtr = pXrAcquireSwapchainImage (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   lift $ unless (xrAcquireSwapchainImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrAcquireSwapchainImage is null" Nothing Nothing
   let xrAcquireSwapchainImage' = mkXrAcquireSwapchainImage xrAcquireSwapchainImagePtr
@@ -606,7 +607,7 @@ waitSwapchainImageSafeOrUnsafe :: forall io
                                   SwapchainImageWaitInfo
                                -> io (Result)
 waitSwapchainImageSafeOrUnsafe mkXrWaitSwapchainImage swapchain waitInfo = liftIO . evalContT $ do
-  let xrWaitSwapchainImagePtr = pXrWaitSwapchainImage (instanceCmds (swapchain :: Swapchain))
+  let xrWaitSwapchainImagePtr = pXrWaitSwapchainImage (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   lift $ unless (xrWaitSwapchainImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrWaitSwapchainImage is null" Nothing Nothing
   let xrWaitSwapchainImage' = mkXrWaitSwapchainImage xrWaitSwapchainImagePtr
@@ -772,7 +773,7 @@ releaseSwapchainImage :: forall io
                          ("releaseInfo" ::: Maybe SwapchainImageReleaseInfo)
                       -> io (Result)
 releaseSwapchainImage swapchain releaseInfo = liftIO . evalContT $ do
-  let xrReleaseSwapchainImagePtr = pXrReleaseSwapchainImage (instanceCmds (swapchain :: Swapchain))
+  let xrReleaseSwapchainImagePtr = pXrReleaseSwapchainImage (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   lift $ unless (xrReleaseSwapchainImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrReleaseSwapchainImage is null" Nothing Nothing
   let xrReleaseSwapchainImage' = mkXrReleaseSwapchainImage xrReleaseSwapchainImagePtr
@@ -864,7 +865,7 @@ deriving instance Show (Chain es) => Show (SwapchainCreateInfo es)
 
 instance Extensible SwapchainCreateInfo where
   extensibleTypeName = "SwapchainCreateInfo"
-  setNext x next = x{next = next}
+  setNext SwapchainCreateInfo{..} next' = SwapchainCreateInfo{next = next', ..}
   getNext SwapchainCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfo e => b) -> Maybe b
   extends _ f

@@ -94,6 +94,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrGetOpenGLGraphicsRequirementsKHR))
 import OpenXR.Core10.Handles (Instance_T)
 import OpenXR.Core10.Image (IsSwapchainImage(..))
@@ -183,7 +184,7 @@ getOpenGLGraphicsRequirementsKHR :: forall io
                                     SystemId
                                  -> io (GraphicsRequirementsOpenGLKHR)
 getOpenGLGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetOpenGLGraphicsRequirementsKHRPtr = pXrGetOpenGLGraphicsRequirementsKHR (instanceCmds (instance' :: Instance))
+  let xrGetOpenGLGraphicsRequirementsKHRPtr = pXrGetOpenGLGraphicsRequirementsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetOpenGLGraphicsRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetOpenGLGraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetOpenGLGraphicsRequirementsKHR' = mkXrGetOpenGLGraphicsRequirementsKHR xrGetOpenGLGraphicsRequirementsKHRPtr

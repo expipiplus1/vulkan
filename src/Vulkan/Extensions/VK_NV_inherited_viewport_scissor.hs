@@ -317,8 +317,8 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --     and any secondary command buffer from index 0 to i-1 modifies the
 --     state, the inherited state is provisionally set to the final value
 --     set by the last such secondary command buffer. Binding a graphics
---     pipeline that defines the state statically is equivalent to setting
---     the state to an undefined value.
+--     pipeline defining the state statically is equivalent to setting the
+--     state to an undefined value.
 --
 -- -   Otherwise, the tentatative inherited state is that of the primary
 --     command buffer at the point the

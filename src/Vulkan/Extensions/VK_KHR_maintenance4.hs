@@ -15,7 +15,7 @@
 --     414
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -29,7 +29,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-08-18
+--     2021-10-25
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -52,6 +52,8 @@
 --     -   Tom Olson, Arm
 --
 --     -   Stu Smith, AMD
+--
+--     -   Yiwei Zhang, Google
 --
 -- == Description
 --
@@ -89,6 +91,10 @@
 -- -   Relax the interface matching rules to allow a larger output vector
 --     to match with a smaller input vector, with additional values being
 --     discarded.
+--
+-- -   Add a guarantee for buffer memory requirement that the size memory
+--     requirement is never greater than the result of aligning create size
+--     with the alignment memory requirement.
 --
 -- == New Commands
 --
@@ -140,6 +146,10 @@
 -- -   Revision 1, 2021-08-18 (Piers Daniell)
 --
 --     -   Internal revisions
+--
+-- -   Revision 2, 2021-10-25 (Yiwei Zhang)
+--
+--     -   More guarantees on buffer memory requirements
 --
 -- == See Also
 --
@@ -715,11 +725,11 @@ instance Zero PhysicalDeviceMaintenance4PropertiesKHR where
            zero
 
 
-type KHR_MAINTENANCE_4_SPEC_VERSION = 1
+type KHR_MAINTENANCE_4_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_KHR_MAINTENANCE_4_SPEC_VERSION"
 pattern KHR_MAINTENANCE_4_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_MAINTENANCE_4_SPEC_VERSION = 1
+pattern KHR_MAINTENANCE_4_SPEC_VERSION = 2
 
 
 type KHR_MAINTENANCE_4_EXTENSION_NAME = "VK_KHR_maintenance4"

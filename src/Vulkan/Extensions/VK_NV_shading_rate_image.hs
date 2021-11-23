@@ -700,7 +700,7 @@ cmdSetCoarseSampleOrderNV :: forall io
                              -- in fragments larger than one pixel.
                              CoarseSampleOrderTypeNV
                           -> -- | @pCustomSampleOrders@ is a pointer to an array of
-                             -- 'CoarseSampleOrderCustomNV' structures, each of which specifies the
+                             -- 'CoarseSampleOrderCustomNV' structures, each structure specifying the
                              -- coverage sample order for a single combination of fragment area and
                              -- coverage sample count.
                              ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV)
@@ -1274,9 +1274,9 @@ data PipelineViewportCoarseSampleOrderStateCreateInfoNV = PipelineViewportCoarse
     -- in fragments larger than one pixel.
     sampleOrderType :: CoarseSampleOrderTypeNV
   , -- | @pCustomSampleOrders@ is a pointer to an array of
-    -- @customSampleOrderCount@ 'CoarseSampleOrderCustomNV' structures, each of
-    -- which specifies the coverage sample order for a single combination of
-    -- fragment area and coverage sample count.
+    -- @customSampleOrderCount@ 'CoarseSampleOrderCustomNV' structures, each
+    -- structure specifying the coverage sample order for a single combination
+    -- of fragment area and coverage sample count.
     customSampleOrders :: Vector CoarseSampleOrderCustomNV
   }
   deriving (Typeable)

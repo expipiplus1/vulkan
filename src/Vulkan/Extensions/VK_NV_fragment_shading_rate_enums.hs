@@ -596,7 +596,7 @@ instance Zero PhysicalDeviceFragmentShadingRateEnumsPropertiesNV where
 -- If the @pNext@ chain of
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' includes a
 -- 'PipelineFragmentShadingRateEnumStateCreateInfoNV' structure, then that
--- structure includes parameters that control the pipeline fragment shading
+-- structure includes parameters controlling the pipeline fragment shading
 -- rate.
 --
 -- If this structure is not present, @shadingRateType@ is considered to be

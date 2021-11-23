@@ -4189,7 +4189,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fullDrawIndexUint32 fullDrawIndexUint32>.
     maxDrawIndexedIndexValue :: Word32
   , -- | #limits-maxDrawIndirectCount# @maxDrawIndirectCount@ is the maximum draw
-    -- count that is supported for indirect draw calls. See
+    -- count that is supported for indirect drawing calls. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiDrawIndirect multiDrawIndirect>.
     maxDrawIndirectCount :: Word32
   , -- | #limits-maxSamplerLodBias# @maxSamplerLodBias@ is the maximum absolute

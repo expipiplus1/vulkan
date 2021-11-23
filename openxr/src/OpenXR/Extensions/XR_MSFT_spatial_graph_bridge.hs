@@ -99,6 +99,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Handles (Space)
 import OpenXR.Core10.Handles (Space(Space))
@@ -170,7 +171,7 @@ createSpatialGraphNodeSpaceMSFT :: forall io
                                    SpatialGraphNodeSpaceCreateInfoMSFT
                                 -> io (Space)
 createSpatialGraphNodeSpaceMSFT session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSpatialGraphNodeSpaceMSFTPtr = pXrCreateSpatialGraphNodeSpaceMSFT cmds
   lift $ unless (xrCreateSpatialGraphNodeSpaceMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSpatialGraphNodeSpaceMSFT is null" Nothing Nothing

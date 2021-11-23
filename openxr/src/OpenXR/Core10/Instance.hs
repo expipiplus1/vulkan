@@ -266,7 +266,7 @@ getInstanceProcAddr :: forall io
                        ("name" ::: ByteString)
                     -> io (PFN_xrVoidFunction)
 getInstanceProcAddr instance' name = liftIO . evalContT $ do
-  let xrGetInstanceProcAddrPtr = pXrGetInstanceProcAddr (instanceCmds (instance' :: Instance))
+  let xrGetInstanceProcAddrPtr = pXrGetInstanceProcAddr (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetInstanceProcAddrPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetInstanceProcAddr is null" Nothing Nothing
   let xrGetInstanceProcAddr' = mkXrGetInstanceProcAddr xrGetInstanceProcAddrPtr
@@ -636,7 +636,7 @@ destroyInstance :: forall io
                    Instance
                 -> io ()
 destroyInstance instance' = liftIO $ do
-  let xrDestroyInstancePtr = pXrDestroyInstance (instanceCmds (instance' :: Instance))
+  let xrDestroyInstancePtr = pXrDestroyInstance (case instance' of Instance{instanceCmds} -> instanceCmds)
   unless (xrDestroyInstancePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyInstance is null" Nothing Nothing
   let xrDestroyInstance' = mkXrDestroyInstance xrDestroyInstancePtr
@@ -715,7 +715,7 @@ resultToString :: forall io
                   ("value" ::: Result)
                -> io (("buffer" ::: ByteString))
 resultToString instance' value = liftIO . evalContT $ do
-  let xrResultToStringPtr = pXrResultToString (instanceCmds (instance' :: Instance))
+  let xrResultToStringPtr = pXrResultToString (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrResultToStringPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrResultToString is null" Nothing Nothing
   let xrResultToString' = mkXrResultToString xrResultToStringPtr
@@ -797,7 +797,7 @@ structureTypeToString :: forall io
                          ("value" ::: StructureType)
                       -> io (("buffer" ::: ByteString))
 structureTypeToString instance' value = liftIO . evalContT $ do
-  let xrStructureTypeToStringPtr = pXrStructureTypeToString (instanceCmds (instance' :: Instance))
+  let xrStructureTypeToStringPtr = pXrStructureTypeToString (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrStructureTypeToStringPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrStructureTypeToString is null" Nothing Nothing
   let xrStructureTypeToString' = mkXrStructureTypeToString xrStructureTypeToStringPtr
@@ -854,7 +854,7 @@ getInstanceProperties :: forall io
                          Instance
                       -> io (InstanceProperties)
 getInstanceProperties instance' = liftIO . evalContT $ do
-  let xrGetInstancePropertiesPtr = pXrGetInstanceProperties (instanceCmds (instance' :: Instance))
+  let xrGetInstancePropertiesPtr = pXrGetInstanceProperties (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetInstancePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetInstanceProperties is null" Nothing Nothing
   let xrGetInstanceProperties' = mkXrGetInstanceProperties xrGetInstancePropertiesPtr
@@ -941,7 +941,7 @@ pollEvent :: forall io
              Instance
           -> io (Result, EventDataBuffer)
 pollEvent instance' = liftIO . evalContT $ do
-  let xrPollEventPtr = pXrPollEvent (instanceCmds (instance' :: Instance))
+  let xrPollEventPtr = pXrPollEvent (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrPollEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrPollEvent is null" Nothing Nothing
   let xrPollEvent' = mkXrPollEvent xrPollEventPtr
@@ -1262,7 +1262,7 @@ deriving instance Show (Chain es) => Show (InstanceCreateInfo es)
 
 instance Extensible InstanceCreateInfo where
   extensibleTypeName = "InstanceCreateInfo"
-  setNext x next = x{next = next}
+  setNext InstanceCreateInfo{..} next' = InstanceCreateInfo{next = next', ..}
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b
   extends _ f

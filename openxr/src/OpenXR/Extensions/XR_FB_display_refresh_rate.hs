@@ -97,6 +97,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -191,7 +192,7 @@ enumerateDisplayRefreshRatesFB :: forall io
                                   Session
                                -> io (Result, ("displayRefreshRates" ::: Vector Float))
 enumerateDisplayRefreshRatesFB session = liftIO . evalContT $ do
-  let xrEnumerateDisplayRefreshRatesFBPtr = pXrEnumerateDisplayRefreshRatesFB (instanceCmds (session :: Session))
+  let xrEnumerateDisplayRefreshRatesFBPtr = pXrEnumerateDisplayRefreshRatesFB (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateDisplayRefreshRatesFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateDisplayRefreshRatesFB is null" Nothing Nothing
   let xrEnumerateDisplayRefreshRatesFB' = mkXrEnumerateDisplayRefreshRatesFB xrEnumerateDisplayRefreshRatesFBPtr
@@ -269,7 +270,7 @@ getDisplayRefreshRateFB :: forall io
                            Session
                         -> io (Result, ("displayRefreshRate" ::: Float))
 getDisplayRefreshRateFB session = liftIO . evalContT $ do
-  let xrGetDisplayRefreshRateFBPtr = pXrGetDisplayRefreshRateFB (instanceCmds (session :: Session))
+  let xrGetDisplayRefreshRateFBPtr = pXrGetDisplayRefreshRateFB (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetDisplayRefreshRateFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetDisplayRefreshRateFB is null" Nothing Nothing
   let xrGetDisplayRefreshRateFB' = mkXrGetDisplayRefreshRateFB xrGetDisplayRefreshRateFBPtr
@@ -353,7 +354,7 @@ requestDisplayRefreshRateFB :: forall io
                                ("displayRefreshRate" ::: Float)
                             -> io (Result)
 requestDisplayRefreshRateFB session displayRefreshRate = liftIO $ do
-  let xrRequestDisplayRefreshRateFBPtr = pXrRequestDisplayRefreshRateFB (instanceCmds (session :: Session))
+  let xrRequestDisplayRefreshRateFBPtr = pXrRequestDisplayRefreshRateFB (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrRequestDisplayRefreshRateFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrRequestDisplayRefreshRateFB is null" Nothing Nothing
   let xrRequestDisplayRefreshRateFB' = mkXrRequestDisplayRefreshRateFB xrRequestDisplayRefreshRateFBPtr

@@ -104,6 +104,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -167,7 +168,7 @@ perfSettingsSetPerformanceLevelEXT :: forall io
                                       PerfSettingsLevelEXT
                                    -> io (Result)
 perfSettingsSetPerformanceLevelEXT session domain level = liftIO $ do
-  let xrPerfSettingsSetPerformanceLevelEXTPtr = pXrPerfSettingsSetPerformanceLevelEXT (instanceCmds (session :: Session))
+  let xrPerfSettingsSetPerformanceLevelEXTPtr = pXrPerfSettingsSetPerformanceLevelEXT (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrPerfSettingsSetPerformanceLevelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrPerfSettingsSetPerformanceLevelEXT is null" Nothing Nothing
   let xrPerfSettingsSetPerformanceLevelEXT' = mkXrPerfSettingsSetPerformanceLevelEXT xrPerfSettingsSetPerformanceLevelEXTPtr

@@ -122,6 +122,7 @@ import OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsBindingVulkanKHR)
 import OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsRequirementsVulkanKHR)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateVulkanDeviceKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateVulkanInstanceKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanGraphicsDevice2KHR))
@@ -205,7 +206,7 @@ createVulkanInstanceKHR :: forall io
                            VulkanInstanceCreateInfoKHR
                         -> io (("vulkanInstance" ::: Ptr OpenXR.VulkanTypes.Instance_T), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
 createVulkanInstanceKHR instance' createInfo = liftIO . evalContT $ do
-  let xrCreateVulkanInstanceKHRPtr = pXrCreateVulkanInstanceKHR (instanceCmds (instance' :: Instance))
+  let xrCreateVulkanInstanceKHRPtr = pXrCreateVulkanInstanceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrCreateVulkanInstanceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateVulkanInstanceKHR is null" Nothing Nothing
   let xrCreateVulkanInstanceKHR' = mkXrCreateVulkanInstanceKHR xrCreateVulkanInstanceKHRPtr
@@ -280,7 +281,7 @@ createVulkanDeviceKHR :: forall io
                          VulkanDeviceCreateInfoKHR
                       -> io (("vulkanDevice" ::: Ptr OpenXR.VulkanTypes.Device_T), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
 createVulkanDeviceKHR instance' createInfo = liftIO . evalContT $ do
-  let xrCreateVulkanDeviceKHRPtr = pXrCreateVulkanDeviceKHR (instanceCmds (instance' :: Instance))
+  let xrCreateVulkanDeviceKHRPtr = pXrCreateVulkanDeviceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrCreateVulkanDeviceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateVulkanDeviceKHR is null" Nothing Nothing
   let xrCreateVulkanDeviceKHR' = mkXrCreateVulkanDeviceKHR xrCreateVulkanDeviceKHRPtr
@@ -354,7 +355,7 @@ getVulkanGraphicsDevice2KHR :: forall io
                                VulkanGraphicsDeviceGetInfoKHR
                             -> io (("vulkanPhysicalDevice" ::: Ptr OpenXR.VulkanTypes.PhysicalDevice_T))
 getVulkanGraphicsDevice2KHR instance' getInfo = liftIO . evalContT $ do
-  let xrGetVulkanGraphicsDevice2KHRPtr = pXrGetVulkanGraphicsDevice2KHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanGraphicsDevice2KHRPtr = pXrGetVulkanGraphicsDevice2KHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanGraphicsDevice2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsDevice2KHR is null" Nothing Nothing
   let xrGetVulkanGraphicsDevice2KHR' = mkXrGetVulkanGraphicsDevice2KHR xrGetVulkanGraphicsDevice2KHRPtr

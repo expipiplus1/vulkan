@@ -87,6 +87,7 @@ import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsBindingVul
 import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_holographic_window_attachment (HolographicWindowAttachmentMSFT)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateSession))
 import OpenXR.Dynamic (InstanceCmds(pXrDestroySession))
 import OpenXR.Dynamic (InstanceCmds(pXrEnumerateEnvironmentBlendModes))
@@ -189,7 +190,7 @@ getSystem :: forall io
              SystemGetInfo
           -> io (SystemId)
 getSystem instance' getInfo = liftIO . evalContT $ do
-  let xrGetSystemPtr = pXrGetSystem (instanceCmds (instance' :: Instance))
+  let xrGetSystemPtr = pXrGetSystem (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetSystemPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetSystem is null" Nothing Nothing
   let xrGetSystem' = mkXrGetSystem xrGetSystemPtr
@@ -256,7 +257,7 @@ getSystemProperties :: forall a io
                        SystemId
                     -> io (SystemProperties a)
 getSystemProperties instance' systemId = liftIO . evalContT $ do
-  let xrGetSystemPropertiesPtr = pXrGetSystemProperties (instanceCmds (instance' :: Instance))
+  let xrGetSystemPropertiesPtr = pXrGetSystemProperties (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetSystemPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetSystemProperties is null" Nothing Nothing
   let xrGetSystemProperties' = mkXrGetSystemProperties xrGetSystemPropertiesPtr
@@ -337,7 +338,7 @@ createSession :: forall a io
                  (SessionCreateInfo a)
               -> io (Session)
 createSession instance' createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (instance' :: Instance)
+  let cmds = case instance' of Instance{instanceCmds} -> instanceCmds
   let xrCreateSessionPtr = pXrCreateSession cmds
   lift $ unless (xrCreateSessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSession is null" Nothing Nothing
@@ -416,7 +417,7 @@ destroySession :: forall io
                   Session
                -> io ()
 destroySession session = liftIO $ do
-  let xrDestroySessionPtr = pXrDestroySession (instanceCmds (session :: Session))
+  let xrDestroySessionPtr = pXrDestroySession (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrDestroySessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySession is null" Nothing Nothing
   let xrDestroySession' = mkXrDestroySession xrDestroySessionPtr
@@ -532,7 +533,7 @@ enumerateEnvironmentBlendModes :: forall io
                                   ViewConfigurationType
                                -> io (("environmentBlendModes" ::: Vector EnvironmentBlendMode))
 enumerateEnvironmentBlendModes instance' systemId viewConfigurationType = liftIO . evalContT $ do
-  let xrEnumerateEnvironmentBlendModesPtr = pXrEnumerateEnvironmentBlendModes (instanceCmds (instance' :: Instance))
+  let xrEnumerateEnvironmentBlendModesPtr = pXrEnumerateEnvironmentBlendModes (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateEnvironmentBlendModesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateEnvironmentBlendModes is null" Nothing Nothing
   let xrEnumerateEnvironmentBlendModes' = mkXrEnumerateEnvironmentBlendModes xrEnumerateEnvironmentBlendModesPtr
@@ -691,7 +692,7 @@ deriving instance Show (Chain es) => Show (SystemProperties es)
 
 instance Extensible SystemProperties where
   extensibleTypeName = "SystemProperties"
-  setNext x next = x{next = next}
+  setNext SystemProperties{..} next' = SystemProperties{next = next', ..}
   getNext SystemProperties{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SystemProperties e => b) -> Maybe b
   extends _ f
@@ -932,7 +933,7 @@ deriving instance Show (Chain es) => Show (SessionCreateInfo es)
 
 instance Extensible SessionCreateInfo where
   extensibleTypeName = "SessionCreateInfo"
-  setNext x next = x{next = next}
+  setNext SessionCreateInfo{..} next' = SessionCreateInfo{next = next', ..}
   getNext SessionCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SessionCreateInfo e => b) -> Maybe b
   extends _ f

@@ -93,6 +93,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.NamedType ((:::))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanDeviceExtensionsKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanGraphicsDeviceKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanGraphicsRequirementsKHR))
@@ -197,7 +198,7 @@ getVulkanInstanceExtensionsKHR :: forall io
                                   SystemId
                                -> io (("buffer" ::: ByteString))
 getVulkanInstanceExtensionsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetVulkanInstanceExtensionsKHRPtr = pXrGetVulkanInstanceExtensionsKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanInstanceExtensionsKHRPtr = pXrGetVulkanInstanceExtensionsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanInstanceExtensionsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanInstanceExtensionsKHR is null" Nothing Nothing
   let xrGetVulkanInstanceExtensionsKHR' = mkXrGetVulkanInstanceExtensionsKHR xrGetVulkanInstanceExtensionsKHRPtr
@@ -299,7 +300,7 @@ getVulkanDeviceExtensionsKHR :: forall io
                                 SystemId
                              -> io (("buffer" ::: ByteString))
 getVulkanDeviceExtensionsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetVulkanDeviceExtensionsKHRPtr = pXrGetVulkanDeviceExtensionsKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanDeviceExtensionsKHRPtr = pXrGetVulkanDeviceExtensionsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanDeviceExtensionsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanDeviceExtensionsKHR is null" Nothing Nothing
   let xrGetVulkanDeviceExtensionsKHR' = mkXrGetVulkanDeviceExtensionsKHR xrGetVulkanDeviceExtensionsKHRPtr
@@ -388,7 +389,7 @@ getVulkanGraphicsDeviceKHR :: forall io
                               ("vkInstance" ::: Ptr OpenXR.VulkanTypes.Instance_T)
                            -> io (("vkPhysicalDevice" ::: Ptr OpenXR.VulkanTypes.PhysicalDevice_T))
 getVulkanGraphicsDeviceKHR instance' systemId vkInstance = liftIO . evalContT $ do
-  let xrGetVulkanGraphicsDeviceKHRPtr = pXrGetVulkanGraphicsDeviceKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanGraphicsDeviceKHRPtr = pXrGetVulkanGraphicsDeviceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanGraphicsDeviceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsDeviceKHR is null" Nothing Nothing
   let xrGetVulkanGraphicsDeviceKHR' = mkXrGetVulkanGraphicsDeviceKHR xrGetVulkanGraphicsDeviceKHRPtr
@@ -470,7 +471,7 @@ getVulkanGraphicsRequirementsKHR :: forall io
                                     SystemId
                                  -> io (GraphicsRequirementsVulkanKHR)
 getVulkanGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetVulkanGraphicsRequirementsKHRPtr = pXrGetVulkanGraphicsRequirementsKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanGraphicsRequirementsKHRPtr = pXrGetVulkanGraphicsRequirementsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanGraphicsRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetVulkanGraphicsRequirementsKHR' = mkXrGetVulkanGraphicsRequirementsKHR xrGetVulkanGraphicsRequirementsKHRPtr

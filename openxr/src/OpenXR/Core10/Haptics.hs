@@ -49,6 +49,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
 import OpenXR.CStruct.Extends (SomeChild(..))
@@ -136,7 +137,7 @@ applyHapticFeedback :: forall a io
                        ("hapticFeedback" ::: a)
                     -> io (Result)
 applyHapticFeedback session hapticActionInfo hapticFeedback = liftIO . evalContT $ do
-  let xrApplyHapticFeedbackPtr = pXrApplyHapticFeedback (instanceCmds (session :: Session))
+  let xrApplyHapticFeedbackPtr = pXrApplyHapticFeedback (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrApplyHapticFeedbackPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrApplyHapticFeedback is null" Nothing Nothing
   let xrApplyHapticFeedback' = mkXrApplyHapticFeedback xrApplyHapticFeedbackPtr
@@ -212,7 +213,7 @@ stopHapticFeedback :: forall io
                       HapticActionInfo
                    -> io (Result)
 stopHapticFeedback session hapticActionInfo = liftIO . evalContT $ do
-  let xrStopHapticFeedbackPtr = pXrStopHapticFeedback (instanceCmds (session :: Session))
+  let xrStopHapticFeedbackPtr = pXrStopHapticFeedback (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrStopHapticFeedbackPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrStopHapticFeedback is null" Nothing Nothing
   let xrStopHapticFeedback' = mkXrStopHapticFeedback xrStopHapticFeedbackPtr

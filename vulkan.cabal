@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.5.
 --
 -- see: https://github.com/sol/hpack
 
@@ -108,9 +108,9 @@ library
       Vulkan.Core10.Enums.PipelineBindPoint
       Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
       Vulkan.Core10.Enums.PipelineCacheHeaderVersion
-      Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
+      Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits
       Vulkan.Core10.Enums.PipelineCreateFlagBits
-      Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags
+      Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
       Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
       Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
       Vulkan.Core10.Enums.PipelineLayoutCreateFlags
@@ -277,6 +277,7 @@ library
       Vulkan.Extensions.VK_AMD_shader_trinary_minmax
       Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
       Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+      Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
       Vulkan.Extensions.VK_EXT_4444_formats
       Vulkan.Extensions.VK_EXT_acquire_drm_display
       Vulkan.Extensions.VK_EXT_acquire_xlib_display
@@ -292,6 +293,7 @@ library
       Vulkan.Extensions.VK_EXT_debug_marker
       Vulkan.Extensions.VK_EXT_debug_report
       Vulkan.Extensions.VK_EXT_debug_utils
+      Vulkan.Extensions.VK_EXT_depth_clip_control
       Vulkan.Extensions.VK_EXT_depth_clip_enable
       Vulkan.Extensions.VK_EXT_depth_range_unrestricted
       Vulkan.Extensions.VK_EXT_descriptor_indexing

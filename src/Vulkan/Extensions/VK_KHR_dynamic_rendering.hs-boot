@@ -196,7 +196,9 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -209,7 +211,9 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --

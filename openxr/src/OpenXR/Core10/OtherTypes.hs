@@ -490,7 +490,7 @@ deriving instance Show (Chain es) => Show (CompositionLayerBaseHeader es)
 
 instance Extensible CompositionLayerBaseHeader where
   extensibleTypeName = "CompositionLayerBaseHeader"
-  setNext x next = x{next = next}
+  setNext CompositionLayerBaseHeader{..} next' = CompositionLayerBaseHeader{next = next', ..}
   getNext CompositionLayerBaseHeader{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CompositionLayerBaseHeader e => b) -> Maybe b
   extends _ f
@@ -613,7 +613,7 @@ deriving instance Show (Chain es) => Show (CompositionLayerProjectionView es)
 
 instance Extensible CompositionLayerProjectionView where
   extensibleTypeName = "CompositionLayerProjectionView"
-  setNext x next = x{next = next}
+  setNext CompositionLayerProjectionView{..} next' = CompositionLayerProjectionView{next = next', ..}
   getNext CompositionLayerProjectionView{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CompositionLayerProjectionView e => b) -> Maybe b
   extends _ f

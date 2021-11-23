@@ -61,7 +61,7 @@
 --
 -- This extension is based off the @VK_AMD_draw_indirect_count@ extension.
 -- This extension allows an application to source the number of draws for
--- indirect draw calls from a buffer.
+-- indirect drawing calls from a buffer.
 --
 -- Applications might want to do culling on the GPU via a compute shader
 -- prior to drawing. This enables the application to generate an arbitrary

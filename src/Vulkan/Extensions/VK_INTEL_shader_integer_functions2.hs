@@ -49,7 +49,7 @@
 -- pre-existing counterparts in the Kernel environment.
 --
 -- The added integer functions are defined by the
--- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions>
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions2>
 -- SPIR-V extension and can be used with the
 -- GL_INTEL_shader_integer_functions2 GLSL extension.
 --
