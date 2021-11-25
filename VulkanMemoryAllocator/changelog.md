@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump VMA, adds `getAllocationMemoryProperties`
 
 ## [0.7.4] - 2021-11-08
 - Bump VMA, documentation changes
