@@ -71,6 +71,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.NamedType ((:::))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrConvertTimeToTimespecTimeKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrConvertTimespecTimeToTimeKHR))
 import OpenXR.Core10.Handles (Instance_T)
@@ -146,7 +147,7 @@ convertTimeToTimespecTimeKHR :: forall io
                                 Time
                              -> io (("timespecTime" ::: Timespec))
 convertTimeToTimespecTimeKHR instance' time = liftIO . evalContT $ do
-  let xrConvertTimeToTimespecTimeKHRPtr = pXrConvertTimeToTimespecTimeKHR (instanceCmds (instance' :: Instance))
+  let xrConvertTimeToTimespecTimeKHRPtr = pXrConvertTimeToTimespecTimeKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrConvertTimeToTimespecTimeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrConvertTimeToTimespecTimeKHR is null" Nothing Nothing
   let xrConvertTimeToTimespecTimeKHR' = mkXrConvertTimeToTimespecTimeKHR xrConvertTimeToTimespecTimeKHRPtr
@@ -228,7 +229,7 @@ convertTimespecTimeToTimeKHR :: forall io
                                 ("timespecTime" ::: Timespec)
                              -> io (Time)
 convertTimespecTimeToTimeKHR instance' timespecTime = liftIO . evalContT $ do
-  let xrConvertTimespecTimeToTimeKHRPtr = pXrConvertTimespecTimeToTimeKHR (instanceCmds (instance' :: Instance))
+  let xrConvertTimespecTimeToTimeKHRPtr = pXrConvertTimespecTimeToTimeKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrConvertTimespecTimeToTimeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrConvertTimespecTimeToTimeKHR is null" Nothing Nothing
   let xrConvertTimespecTimeToTimeKHR' = mkXrConvertTimespecTimeToTimeKHR xrConvertTimespecTimeToTimeKHRPtr

@@ -38,6 +38,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.NamedType ((:::))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrPathToString))
 import OpenXR.Dynamic (InstanceCmds(pXrStringToPath))
 import OpenXR.Core10.Handles (Instance_T)
@@ -132,7 +133,7 @@ stringToPath :: forall io
                 ("pathString" ::: ByteString)
              -> io (Path)
 stringToPath instance' pathString = liftIO . evalContT $ do
-  let xrStringToPathPtr = pXrStringToPath (instanceCmds (instance' :: Instance))
+  let xrStringToPathPtr = pXrStringToPath (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrStringToPathPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrStringToPath is null" Nothing Nothing
   let xrStringToPath' = mkXrStringToPath xrStringToPathPtr
@@ -242,7 +243,7 @@ pathToString :: forall io
                 Path
              -> io (("buffer" ::: ByteString))
 pathToString instance' path = liftIO . evalContT $ do
-  let xrPathToStringPtr = pXrPathToString (instanceCmds (instance' :: Instance))
+  let xrPathToStringPtr = pXrPathToString (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrPathToStringPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrPathToString is null" Nothing Nothing
   let xrPathToString' = mkXrPathToString xrPathToStringPtr

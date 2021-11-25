@@ -75,6 +75,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Extensions.Handles (SpatialAnchorMSFT)
 import OpenXR.Extensions.Handles (SpatialAnchorMSFT(..))
@@ -166,7 +167,7 @@ createSpatialAnchorFromPerceptionAnchorMSFT :: forall io
                                                ("perceptionAnchor" ::: Ptr IUnknown)
                                             -> io (SpatialAnchorMSFT)
 createSpatialAnchorFromPerceptionAnchorMSFT session perceptionAnchor = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSpatialAnchorFromPerceptionAnchorMSFTPtr = pXrCreateSpatialAnchorFromPerceptionAnchorMSFT cmds
   lift $ unless (xrCreateSpatialAnchorFromPerceptionAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSpatialAnchorFromPerceptionAnchorMSFT is null" Nothing Nothing
@@ -280,7 +281,7 @@ tryGetPerceptionAnchorFromSpatialAnchorMSFT :: forall io
                                                SpatialAnchorMSFT
                                             -> io (("perceptionAnchor" ::: Ptr IUnknown))
 tryGetPerceptionAnchorFromSpatialAnchorMSFT session anchor = liftIO . evalContT $ do
-  let xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr = pXrTryGetPerceptionAnchorFromSpatialAnchorMSFT (instanceCmds (session :: Session))
+  let xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr = pXrTryGetPerceptionAnchorFromSpatialAnchorMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrTryGetPerceptionAnchorFromSpatialAnchorMSFT is null" Nothing Nothing
   let xrTryGetPerceptionAnchorFromSpatialAnchorMSFT' = mkXrTryGetPerceptionAnchorFromSpatialAnchorMSFT xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr

@@ -87,6 +87,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Handles (Space)
@@ -150,7 +151,7 @@ destroySpace :: forall io
                 Space
              -> io ()
 destroySpace space = liftIO $ do
-  let xrDestroySpacePtr = pXrDestroySpace (instanceCmds (space :: Space))
+  let xrDestroySpacePtr = pXrDestroySpace (case space of Space{instanceCmds} -> instanceCmds)
   unless (xrDestroySpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySpace is null" Nothing Nothing
   let xrDestroySpace' = mkXrDestroySpace xrDestroySpacePtr
@@ -244,7 +245,7 @@ enumerateReferenceSpaces :: forall io
                             Session
                          -> io (Result, ("spaces" ::: Vector ReferenceSpaceType))
 enumerateReferenceSpaces session = liftIO . evalContT $ do
-  let xrEnumerateReferenceSpacesPtr = pXrEnumerateReferenceSpaces (instanceCmds (session :: Session))
+  let xrEnumerateReferenceSpacesPtr = pXrEnumerateReferenceSpaces (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateReferenceSpacesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateReferenceSpaces is null" Nothing Nothing
   let xrEnumerateReferenceSpaces' = mkXrEnumerateReferenceSpaces xrEnumerateReferenceSpacesPtr
@@ -336,7 +337,7 @@ createReferenceSpace :: forall io
                         ReferenceSpaceCreateInfo
                      -> io (Result, Space)
 createReferenceSpace session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateReferenceSpacePtr = pXrCreateReferenceSpace cmds
   lift $ unless (xrCreateReferenceSpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateReferenceSpace is null" Nothing Nothing
@@ -442,7 +443,7 @@ createActionSpace :: forall io
                      ActionSpaceCreateInfo
                   -> io (Result, Space)
 createActionSpace session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateActionSpacePtr = pXrCreateActionSpace cmds
   lift $ unless (xrCreateActionSpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateActionSpace is null" Nothing Nothing
@@ -616,7 +617,7 @@ locateSpace :: forall a io
                Time
             -> io (Result, SpaceLocation a)
 locateSpace space baseSpace time = liftIO . evalContT $ do
-  let xrLocateSpacePtr = pXrLocateSpace (instanceCmds (space :: Space))
+  let xrLocateSpacePtr = pXrLocateSpace (case space of Space{instanceCmds} -> instanceCmds)
   lift $ unless (xrLocateSpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLocateSpace is null" Nothing Nothing
   let xrLocateSpace' = mkXrLocateSpace xrLocateSpacePtr
@@ -685,7 +686,7 @@ getReferenceSpaceBoundsRect :: forall io
                                ReferenceSpaceType
                             -> io (Result, ("bounds" ::: Extent2Df))
 getReferenceSpaceBoundsRect session referenceSpaceType = liftIO . evalContT $ do
-  let xrGetReferenceSpaceBoundsRectPtr = pXrGetReferenceSpaceBoundsRect (instanceCmds (session :: Session))
+  let xrGetReferenceSpaceBoundsRectPtr = pXrGetReferenceSpaceBoundsRect (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetReferenceSpaceBoundsRectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetReferenceSpaceBoundsRect is null" Nothing Nothing
   let xrGetReferenceSpaceBoundsRect' = mkXrGetReferenceSpaceBoundsRect xrGetReferenceSpaceBoundsRectPtr
@@ -1089,7 +1090,7 @@ deriving instance Show (Chain es) => Show (SpaceLocation es)
 
 instance Extensible SpaceLocation where
   extensibleTypeName = "SpaceLocation"
-  setNext x next = x{next = next}
+  setNext SpaceLocation{..} next' = SpaceLocation{next = next', ..}
   getNext SpaceLocation{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SpaceLocation e => b) -> Maybe b
   extends _ f

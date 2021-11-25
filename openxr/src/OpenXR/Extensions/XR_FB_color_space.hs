@@ -104,6 +104,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -192,7 +193,7 @@ enumerateColorSpacesFB :: forall io
                           Session
                        -> io (Result, ("colorSpaces" ::: Vector ColorSpaceFB))
 enumerateColorSpacesFB session = liftIO . evalContT $ do
-  let xrEnumerateColorSpacesFBPtr = pXrEnumerateColorSpacesFB (instanceCmds (session :: Session))
+  let xrEnumerateColorSpacesFBPtr = pXrEnumerateColorSpacesFB (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateColorSpacesFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateColorSpacesFB is null" Nothing Nothing
   let xrEnumerateColorSpacesFB' = mkXrEnumerateColorSpacesFB xrEnumerateColorSpacesFBPtr
@@ -281,7 +282,7 @@ setColorSpaceFB :: forall io
                    ColorSpaceFB
                 -> io (Result)
 setColorSpaceFB session colorspace = liftIO $ do
-  let xrSetColorSpaceFBPtr = pXrSetColorSpaceFB (instanceCmds (session :: Session))
+  let xrSetColorSpaceFBPtr = pXrSetColorSpaceFB (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrSetColorSpaceFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetColorSpaceFB is null" Nothing Nothing
   let xrSetColorSpaceFB' = mkXrSetColorSpaceFB xrSetColorSpaceFBPtr

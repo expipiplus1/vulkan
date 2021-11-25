@@ -94,6 +94,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Input (Vector2f)
@@ -192,7 +193,7 @@ getVisibilityMaskKHR :: forall io
                         VisibilityMaskTypeKHR
                      -> io (Result, VisibilityMaskKHR)
 getVisibilityMaskKHR session viewConfigurationType viewIndex visibilityMaskType = liftIO . evalContT $ do
-  let xrGetVisibilityMaskKHRPtr = pXrGetVisibilityMaskKHR (instanceCmds (session :: Session))
+  let xrGetVisibilityMaskKHRPtr = pXrGetVisibilityMaskKHR (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVisibilityMaskKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVisibilityMaskKHR is null" Nothing Nothing
   let xrGetVisibilityMaskKHR' = mkXrGetVisibilityMaskKHR xrGetVisibilityMaskKHRPtr

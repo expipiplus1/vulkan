@@ -166,6 +166,7 @@ library
       InstanceSigs
       LambdaCase
       MagicHash
+      NamedFieldPuns
       MultiWayIf
       NoMonomorphismRestriction
       OverloadedStrings

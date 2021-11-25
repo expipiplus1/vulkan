@@ -120,6 +120,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -195,7 +196,7 @@ getControllerModelKeyMSFT :: forall io
                              ("topLevelUserPath" ::: Path)
                           -> io (ControllerModelKeyStateMSFT)
 getControllerModelKeyMSFT session topLevelUserPath = liftIO . evalContT $ do
-  let xrGetControllerModelKeyMSFTPtr = pXrGetControllerModelKeyMSFT (instanceCmds (session :: Session))
+  let xrGetControllerModelKeyMSFTPtr = pXrGetControllerModelKeyMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetControllerModelKeyMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelKeyMSFT is null" Nothing Nothing
   let xrGetControllerModelKeyMSFT' = mkXrGetControllerModelKeyMSFT xrGetControllerModelKeyMSFTPtr
@@ -302,7 +303,7 @@ loadControllerModelMSFT :: forall io
                            ControllerModelKeyMSFT
                         -> io (("buffer" ::: Vector Word8))
 loadControllerModelMSFT session modelKey = liftIO . evalContT $ do
-  let xrLoadControllerModelMSFTPtr = pXrLoadControllerModelMSFT (instanceCmds (session :: Session))
+  let xrLoadControllerModelMSFTPtr = pXrLoadControllerModelMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrLoadControllerModelMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLoadControllerModelMSFT is null" Nothing Nothing
   let xrLoadControllerModelMSFT' = mkXrLoadControllerModelMSFT xrLoadControllerModelMSFTPtr
@@ -392,7 +393,7 @@ getControllerModelPropertiesMSFT :: forall io
                                     ControllerModelKeyMSFT
                                  -> io (ControllerModelPropertiesMSFT)
 getControllerModelPropertiesMSFT session modelKey = liftIO . evalContT $ do
-  let xrGetControllerModelPropertiesMSFTPtr = pXrGetControllerModelPropertiesMSFT (instanceCmds (session :: Session))
+  let xrGetControllerModelPropertiesMSFTPtr = pXrGetControllerModelPropertiesMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetControllerModelPropertiesMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelPropertiesMSFT is null" Nothing Nothing
   let xrGetControllerModelPropertiesMSFT' = mkXrGetControllerModelPropertiesMSFT xrGetControllerModelPropertiesMSFTPtr
@@ -474,7 +475,7 @@ getControllerModelStateMSFT :: forall io
                                ControllerModelKeyMSFT
                             -> io (ControllerModelStateMSFT)
 getControllerModelStateMSFT session modelKey = liftIO . evalContT $ do
-  let xrGetControllerModelStateMSFTPtr = pXrGetControllerModelStateMSFT (instanceCmds (session :: Session))
+  let xrGetControllerModelStateMSFTPtr = pXrGetControllerModelStateMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetControllerModelStateMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelStateMSFT is null" Nothing Nothing
   let xrGetControllerModelStateMSFT' = mkXrGetControllerModelStateMSFT xrGetControllerModelStateMSFTPtr

@@ -108,6 +108,7 @@ import OpenXR.Core10.Space (destroySpace)
 import OpenXR.Core10.FundamentalTypes (Bool32)
 import OpenXR.Extensions.Handles (HandTrackerEXT)
 import OpenXR.Extensions.Handles (HandTrackerEXT(..))
+import OpenXR.Extensions.Handles (HandTrackerEXT(HandTrackerEXT))
 import OpenXR.Extensions.Handles (HandTrackerEXT_T)
 import OpenXR.Dynamic (InstanceCmds(pXrCreateHandMeshSpaceMSFT))
 import OpenXR.Dynamic (InstanceCmds(pXrUpdateHandMeshMSFT))
@@ -237,7 +238,7 @@ createHandMeshSpaceMSFT :: forall io
                            HandMeshSpaceCreateInfoMSFT
                         -> io (Result, Space)
 createHandMeshSpaceMSFT handTracker createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (handTracker :: HandTrackerEXT)
+  let cmds = case handTracker of HandTrackerEXT{instanceCmds} -> instanceCmds
   let xrCreateHandMeshSpaceMSFTPtr = pXrCreateHandMeshSpaceMSFT cmds
   lift $ unless (xrCreateHandMeshSpaceMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateHandMeshSpaceMSFT is null" Nothing Nothing
@@ -346,7 +347,7 @@ updateHandMeshMSFT :: forall io
                       HandMeshUpdateInfoMSFT
                    -> io (Result, HandMeshMSFT)
 updateHandMeshMSFT handTracker updateInfo = liftIO . evalContT $ do
-  let xrUpdateHandMeshMSFTPtr = pXrUpdateHandMeshMSFT (instanceCmds (handTracker :: HandTrackerEXT))
+  let xrUpdateHandMeshMSFTPtr = pXrUpdateHandMeshMSFT (case handTracker of HandTrackerEXT{instanceCmds} -> instanceCmds)
   lift $ unless (xrUpdateHandMeshMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrUpdateHandMeshMSFT is null" Nothing Nothing
   let xrUpdateHandMeshMSFT' = mkXrUpdateHandMeshMSFT xrUpdateHandMeshMSFTPtr

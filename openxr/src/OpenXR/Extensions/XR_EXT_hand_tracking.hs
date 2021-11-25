@@ -166,6 +166,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Enums.SpaceLocationFlagBits (SpaceLocationFlags)
@@ -254,7 +255,7 @@ createHandTrackerEXT :: forall a io
                         (HandTrackerCreateInfoEXT a)
                      -> io (Result, HandTrackerEXT)
 createHandTrackerEXT session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateHandTrackerEXTPtr = pXrCreateHandTrackerEXT cmds
   lift $ unless (xrCreateHandTrackerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateHandTrackerEXT is null" Nothing Nothing
@@ -325,7 +326,7 @@ destroyHandTrackerEXT :: forall io
                          HandTrackerEXT
                       -> io ()
 destroyHandTrackerEXT handTracker = liftIO $ do
-  let xrDestroyHandTrackerEXTPtr = pXrDestroyHandTrackerEXT (instanceCmds (handTracker :: HandTrackerEXT))
+  let xrDestroyHandTrackerEXTPtr = pXrDestroyHandTrackerEXT (case handTracker of HandTrackerEXT{instanceCmds} -> instanceCmds)
   unless (xrDestroyHandTrackerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyHandTrackerEXT is null" Nothing Nothing
   let xrDestroyHandTrackerEXT' = mkXrDestroyHandTrackerEXT xrDestroyHandTrackerEXTPtr
@@ -395,7 +396,7 @@ locateHandJointsEXT :: forall a io
                        HandJointsLocateInfoEXT
                     -> io (Result, HandJointLocationsEXT a)
 locateHandJointsEXT handTracker locateInfo = liftIO . evalContT $ do
-  let xrLocateHandJointsEXTPtr = pXrLocateHandJointsEXT (instanceCmds (handTracker :: HandTrackerEXT))
+  let xrLocateHandJointsEXTPtr = pXrLocateHandJointsEXT (case handTracker of HandTrackerEXT{instanceCmds} -> instanceCmds)
   lift $ unless (xrLocateHandJointsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLocateHandJointsEXT is null" Nothing Nothing
   let xrLocateHandJointsEXT' = mkXrLocateHandJointsEXT xrLocateHandJointsEXTPtr
@@ -521,7 +522,7 @@ deriving instance Show (Chain es) => Show (HandTrackerCreateInfoEXT es)
 
 instance Extensible HandTrackerCreateInfoEXT where
   extensibleTypeName = "HandTrackerCreateInfoEXT"
-  setNext x next = x{next = next}
+  setNext HandTrackerCreateInfoEXT{..} next' = HandTrackerCreateInfoEXT{next = next', ..}
   getNext HandTrackerCreateInfoEXT{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends HandTrackerCreateInfoEXT e => b) -> Maybe b
   extends _ f
@@ -907,7 +908,7 @@ deriving instance Show (Chain es) => Show (HandJointLocationsEXT es)
 
 instance Extensible HandJointLocationsEXT where
   extensibleTypeName = "HandJointLocationsEXT"
-  setNext x next = x{next = next}
+  setNext HandJointLocationsEXT{..} next' = HandJointLocationsEXT{next = next', ..}
   getNext HandJointLocationsEXT{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends HandJointLocationsEXT e => b) -> Maybe b
   extends _ f

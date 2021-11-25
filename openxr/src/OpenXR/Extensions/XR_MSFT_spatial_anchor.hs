@@ -90,6 +90,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Handles (Space)
 import OpenXR.Core10.Handles (Space(Space))
@@ -190,7 +191,7 @@ createSpatialAnchorMSFT :: forall io
                            SpatialAnchorCreateInfoMSFT
                         -> io (SpatialAnchorMSFT)
 createSpatialAnchorMSFT session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSpatialAnchorMSFTPtr = pXrCreateSpatialAnchorMSFT cmds
   lift $ unless (xrCreateSpatialAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSpatialAnchorMSFT is null" Nothing Nothing
@@ -295,7 +296,7 @@ createSpatialAnchorSpaceMSFT :: forall io
                                 SpatialAnchorSpaceCreateInfoMSFT
                              -> io (Space)
 createSpatialAnchorSpaceMSFT session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSpatialAnchorSpaceMSFTPtr = pXrCreateSpatialAnchorSpaceMSFT cmds
   lift $ unless (xrCreateSpatialAnchorSpaceMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSpatialAnchorSpaceMSFT is null" Nothing Nothing
@@ -370,7 +371,7 @@ destroySpatialAnchorMSFT :: forall io
                             SpatialAnchorMSFT
                          -> io ()
 destroySpatialAnchorMSFT anchor = liftIO $ do
-  let xrDestroySpatialAnchorMSFTPtr = pXrDestroySpatialAnchorMSFT (instanceCmds (anchor :: SpatialAnchorMSFT))
+  let xrDestroySpatialAnchorMSFTPtr = pXrDestroySpatialAnchorMSFT (case anchor of SpatialAnchorMSFT{instanceCmds} -> instanceCmds)
   unless (xrDestroySpatialAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySpatialAnchorMSFT is null" Nothing Nothing
   let xrDestroySpatialAnchorMSFT' = mkXrDestroySpatialAnchorMSFT xrDestroySpatialAnchorMSFTPtr

@@ -88,6 +88,7 @@ import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_secondary_view_configuration (Se
 import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_secondary_view_configuration (SecondaryViewConfigurationFrameStateMSFT)
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
 import OpenXR.CStruct.Extends (SomeStruct)
@@ -182,7 +183,7 @@ beginFrame :: forall io
               ("frameBeginInfo" ::: Maybe FrameBeginInfo)
            -> io (Result)
 beginFrame session frameBeginInfo = liftIO . evalContT $ do
-  let xrBeginFramePtr = pXrBeginFrame (instanceCmds (session :: Session))
+  let xrBeginFramePtr = pXrBeginFrame (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrBeginFramePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrBeginFrame is null" Nothing Nothing
   let xrBeginFrame' = mkXrBeginFrame xrBeginFramePtr
@@ -316,7 +317,7 @@ locateViews :: forall io
                ViewLocateInfo
             -> io (Result, ViewState, ("views" ::: Vector View))
 locateViews session viewLocateInfo = liftIO . evalContT $ do
-  let xrLocateViewsPtr = pXrLocateViews (instanceCmds (session :: Session))
+  let xrLocateViewsPtr = pXrLocateViews (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrLocateViewsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLocateViews is null" Nothing Nothing
   let xrLocateViews' = mkXrLocateViews xrLocateViewsPtr
@@ -470,7 +471,7 @@ endFrame :: forall a io
             (FrameEndInfo a)
          -> io (Result)
 endFrame session frameEndInfo = liftIO . evalContT $ do
-  let xrEndFramePtr = pXrEndFrame (instanceCmds (session :: Session))
+  let xrEndFramePtr = pXrEndFrame (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEndFramePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEndFrame is null" Nothing Nothing
   let xrEndFrame' = mkXrEndFrame xrEndFramePtr
@@ -502,7 +503,7 @@ waitFrameSafeOrUnsafe :: forall a io
                          ("frameWaitInfo" ::: Maybe FrameWaitInfo)
                       -> io (Result, FrameState a)
 waitFrameSafeOrUnsafe mkXrWaitFrame session frameWaitInfo = liftIO . evalContT $ do
-  let xrWaitFramePtr = pXrWaitFrame (instanceCmds (session :: Session))
+  let xrWaitFramePtr = pXrWaitFrame (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrWaitFramePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrWaitFrame is null" Nothing Nothing
   let xrWaitFrame' = mkXrWaitFrame xrWaitFramePtr
@@ -975,7 +976,7 @@ deriving instance Show (Chain es) => Show (FrameEndInfo es)
 
 instance Extensible FrameEndInfo where
   extensibleTypeName = "FrameEndInfo"
-  setNext x next = x{next = next}
+  setNext FrameEndInfo{..} next' = FrameEndInfo{next = next', ..}
   getNext FrameEndInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FrameEndInfo e => b) -> Maybe b
   extends _ f
@@ -1160,7 +1161,7 @@ deriving instance Show (Chain es) => Show (FrameState es)
 
 instance Extensible FrameState where
   extensibleTypeName = "FrameState"
-  setNext x next = x{next = next}
+  setNext FrameState{..} next' = FrameState{next = next', ..}
   getNext FrameState{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FrameState e => b) -> Maybe b
   extends _ f
