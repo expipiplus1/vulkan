@@ -960,7 +960,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-imageView-06184# If the current render
 --     pass instance was begun with
@@ -969,7 +969,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-colorAttachmentCount-06185# If the
 --     currently bound pipeline was created with a
@@ -1797,7 +1797,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-imageView-06184# If the current
 --     render pass instance was begun with
@@ -1806,7 +1806,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-colorAttachmentCount-06185# If
 --     the currently bound pipeline was created with a
@@ -2678,7 +2678,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-imageView-06184# If the
 --     current render pass instance was begun with
@@ -2687,7 +2687,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-colorAttachmentCount-06185#
 --     If the currently bound pipeline was created with a

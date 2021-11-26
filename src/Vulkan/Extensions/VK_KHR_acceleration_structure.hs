@@ -4570,27 +4570,27 @@ foreign import ccall
 --
 -- -   For 'AccelerationStructureBuildGeometryInfoKHR':
 --
---     -   Its @type@, and @flags@ members are equal to those specified in
---         @pBuildInfo@.
+--     -   Its @type@, and @flags@ members are equal to @pBuildInfo->type@
+--         andm @pBuildInfo->flags@, respectively.
 --
---     -   @geometryCount@ is less than or equal to that specified in
---         @pBuildInfo@.
+--     -   @geometryCount@ is less than or equal to
+--         @pBuildInfo->geometryCount@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
---         given index, its @geometryType@ member is equal to that
---         specified in @pBuildInfo@.
+--         given index, its @geometryType@ member is equal to
+--         @pBuildInfo->geometryType@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
 --         given index, with a @geometryType@ member equal to
 --         'GEOMETRY_TYPE_TRIANGLES_KHR', the @vertexFormat@ and
---         @indexType@ members of @geometry.triangles@ are equal to those
---         specified in the same element in @pBuildInfo@.
+--         @indexType@ members of @geometry.triangles@ are equal to the
+--         corresponding members of the same element in @pBuildInfo@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
 --         given index, with a @geometryType@ member equal to
 --         'GEOMETRY_TYPE_TRIANGLES_KHR', the @maxVertex@ member of
---         @geometry.triangles@ is less than or equal to that specified in
---         the same element in @pBuildInfo@.
+--         @geometry.triangles@ is less than or equal to the corresponding
+--         member of the same element in @pBuildInfo@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
 --         given index, with a @geometryType@ member equal to
@@ -5137,7 +5137,7 @@ data AccelerationStructureGeometryTrianglesDataKHR (es :: [Type]) = Acceleration
     -- for this geometry.
     indexData :: DeviceOrHostAddressConstKHR
   , -- | @transformData@ is a device or host address to memory containing an
-    -- optional reference to a 'TransformMatrixKHR' structure that describes a
+    -- optional reference to a 'TransformMatrixKHR' structure describing a
     -- transformation from the space in which the vertices in this geometry are
     -- described to the space in which the acceleration structure is defined.
     transformData :: DeviceOrHostAddressConstKHR
@@ -6478,7 +6478,7 @@ data CopyAccelerationStructureInfoKHR = CopyAccelerationStructureInfoKHR
     src :: AccelerationStructureKHR
   , -- | @dst@ is the target acceleration structure for the copy.
     dst :: AccelerationStructureKHR
-  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value that specifies
+  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value specifying
     -- additional operations to perform during the copy.
     mode :: CopyAccelerationStructureModeKHR
   }
@@ -6577,7 +6577,7 @@ data CopyAccelerationStructureToMemoryInfoKHR = CopyAccelerationStructureToMemor
   , -- | @dst@ is the device or host address to memory which is the target for
     -- the copy
     dst :: DeviceOrHostAddressKHR
-  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value that specifies
+  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value specifying
     -- additional operations to perform during the copy.
     mode :: CopyAccelerationStructureModeKHR
   }
@@ -6666,7 +6666,7 @@ data CopyMemoryToAccelerationStructureInfoKHR = CopyMemoryToAccelerationStructur
     src :: DeviceOrHostAddressConstKHR
   , -- | @dst@ is the target acceleration structure for the copy.
     dst :: AccelerationStructureKHR
-  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value that specifies
+  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value specifying
     -- additional operations to perform during the copy.
     mode :: CopyAccelerationStructureModeKHR
   }

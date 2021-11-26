@@ -310,10 +310,10 @@ cmdBindInvocationMaskHUAWEI :: forall io
                             => -- | @commandBuffer@ is the command buffer into which the command will be
                                -- recorded
                                CommandBuffer
-                            -> -- | @imageView@ is an image view handle that specifies the invocation mask
-                               -- image @imageView@ /may/ be set to
-                               -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', which is equivalent to
-                               -- specifying a view of an image filled with ones value.
+                            -> -- | @imageView@ is an image view handle specifying the invocation mask image
+                               -- @imageView@ /may/ be set to 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+                               -- which is equivalent to specifying a view of an image filled with ones
+                               -- value.
                                ImageView
                             -> -- | @imageLayout@ is the layout that the image subresources accessible from
                                -- @imageView@ will be in when the invocation mask image is accessed

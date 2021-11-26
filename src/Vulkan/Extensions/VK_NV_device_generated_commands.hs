@@ -1346,7 +1346,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06184# If the
 --     current render pass instance was begun with
@@ -1355,7 +1355,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
 --     bound graphics pipeline /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-colorAttachmentCount-06185# If
 --     the currently bound pipeline was created with a
@@ -2878,8 +2878,8 @@ instance Zero IndirectCommandsStreamNV where
 data IndirectCommandsLayoutTokenNV = IndirectCommandsLayoutTokenNV
   { -- | @tokenType@ specifies the token command type.
     tokenType :: IndirectCommandsTokenTypeNV
-  , -- | @stream@ is the index of the input stream that contains the token
-    -- argument data.
+  , -- | @stream@ is the index of the input stream containing the token argument
+    -- data.
     stream :: Word32
   , -- | @offset@ is a relative starting offset within the input stream memory
     -- for the token argument data.

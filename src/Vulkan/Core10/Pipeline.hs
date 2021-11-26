@@ -26,9 +26,7 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , GraphicsPipelineCreateInfo(..)
                                , Pipeline(..)
                                , PipelineLayoutCreateFlags(..)
-                               , PipelineDepthStencilStateCreateFlags(..)
                                , PipelineDynamicStateCreateFlags(..)
-                               , PipelineColorBlendStateCreateFlags(..)
                                , PipelineMultisampleStateCreateFlags(..)
                                , PipelineRasterizationStateCreateFlags(..)
                                , PipelineViewportStateCreateFlags(..)
@@ -55,6 +53,10 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , PipelineShaderStageCreateFlags
                                , ColorComponentFlagBits(..)
                                , ColorComponentFlags
+                               , PipelineColorBlendStateCreateFlagBits(..)
+                               , PipelineColorBlendStateCreateFlags
+                               , PipelineDepthStencilStateCreateFlagBits(..)
+                               , PipelineDepthStencilStateCreateFlags
                                , SampleMask
                                ) where
 
@@ -157,7 +159,7 @@ import Vulkan.Core10.Handles (Pipeline(..))
 import Vulkan.Core10.Handles (PipelineCache)
 import Vulkan.Core10.Handles (PipelineCache(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_blend_operation_advanced (PipelineColorBlendAdvancedStateCreateInfoEXT)
-import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags (PipelineColorBlendStateCreateFlags)
+import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits (PipelineColorBlendStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_color_write_enable (PipelineColorWriteCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_pipeline_compiler_control (PipelineCompilerControlCreateInfoAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_framebuffer_mixed_samples (PipelineCoverageModulationStateCreateInfoNV)
@@ -165,7 +167,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PipelineC
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_coverage_to_color (PipelineCoverageToColorStateCreateInfoNV)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfoEXT)
-import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags (PipelineDepthStencilStateCreateFlags)
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PipelineDiscardRectangleStateCreateInfoEXT)
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags (PipelineDynamicStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PipelineFragmentShadingRateEnumStateCreateInfoNV)
@@ -190,6 +192,7 @@ import Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags (PipelineTessell
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoEXT)
 import Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags (PipelineVertexInputStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PipelineViewportDepthClipControlCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PipelineViewportExclusiveScissorStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PipelineViewportShadingRateImageStateCreateInfoNV)
 import Vulkan.Core10.Enums.PipelineViewportStateCreateFlags (PipelineViewportStateCreateFlags)
@@ -239,10 +242,12 @@ import Vulkan.Core10.Enums.DynamicState (DynamicState(..))
 import Vulkan.Core10.Enums.FrontFace (FrontFace(..))
 import Vulkan.Core10.Enums.LogicOp (LogicOp(..))
 import Vulkan.Core10.Handles (Pipeline(..))
-import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags (PipelineColorBlendStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits (PipelineColorBlendStateCreateFlagBits(..))
+import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits (PipelineColorBlendStateCreateFlags)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(..))
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
-import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags (PipelineDepthStencilStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlagBits(..))
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlags)
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags (PipelineDynamicStateCreateFlags(..))
 import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags (PipelineInputAssemblyStateCreateFlags(..))
 import Vulkan.Core10.Enums.PipelineLayoutCreateFlags (PipelineLayoutCreateFlags(..))
@@ -996,22 +1001,22 @@ instance Zero SpecializationInfo where
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
 --     and the identified entry point has an @OpExecutionMode@ instruction
---     that specifies a patch size with @OutputVertices@, the patch size
---     /must/ be greater than @0@ and less than or equal to
+--     specifying a patch size with @OutputVertices@, the patch size /must/
+--     be greater than @0@ and less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTessellationPatchSize@
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-00714# If @stage@ is
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
 --     the identified entry point /must/ have an @OpExecutionMode@
---     instruction that specifies a maximum output vertex count that is
---     greater than @0@ and less than or equal to
+--     instruction specifying a maximum output vertex count that is greater
+--     than @0@ and less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxGeometryOutputVertices@
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-00715# If @stage@ is
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
 --     the identified entry point /must/ have an @OpExecutionMode@
---     instruction that specifies an invocation count that is greater than
---     @0@ and less than or equal to
+--     instruction specifying an invocation count that is greater than @0@
+--     and less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxGeometryShaderInvocations@
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-02596# If @stage@ is a
@@ -1046,14 +1051,14 @@ instance Zero SpecializationInfo where
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-02093# If @stage@ is
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV',
 --     the identified entry point /must/ have an @OpExecutionMode@
---     instruction that specifies a maximum output vertex count,
+--     instruction specifying a maximum output vertex count,
 --     @OutputVertices@, that is greater than @0@ and less than or equal to
 --     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputVertices@
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-02094# If @stage@ is
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV',
 --     the identified entry point /must/ have an @OpExecutionMode@
---     instruction that specifies a maximum output primitive count,
+--     instruction specifying a maximum output primitive count,
 --     @OutputPrimitivesNV@, that is greater than @0@ and less than or
 --     equal to
 --     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputPrimitives@
@@ -2123,6 +2128,7 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportCoarseSampleOrderStateCreateInfoNV',
+--     'Vulkan.Extensions.VK_EXT_depth_clip_control.PipelineViewportDepthClipControlCreateInfoEXT',
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV',
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV',
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV',
@@ -2175,6 +2181,7 @@ instance Extensible PipelineViewportStateCreateInfo where
   getNext PipelineViewportStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineViewportStateCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PipelineViewportDepthClipControlCreateInfoEXT = Just f
     | Just Refl <- eqT @e @PipelineViewportCoarseSampleOrderStateCreateInfoNV = Just f
     | Just Refl <- eqT @e @PipelineViewportShadingRateImageStateCreateInfoNV = Just f
     | Just Refl <- eqT @e @PipelineViewportExclusiveScissorStateCreateInfoNV = Just f
@@ -2950,6 +2957,12 @@ instance Zero PipelineColorBlendAttachmentState where
 --     @logicOpEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', @logicOp@
 --     /must/ be a valid 'Vulkan.Core10.Enums.LogicOp.LogicOp' value
 --
+-- -   #VUID-VkPipelineColorBlendStateCreateInfo-rasterizationOrderColorAttachmentAccess-06465#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rasterizationOrderColorAttachmentAccess rasterizationOrderColorAttachmentAccess>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineColorBlendStateCreateInfo-sType-sType# @sType@
@@ -2966,8 +2979,10 @@ instance Zero PipelineColorBlendAttachmentState where
 -- -   #VUID-VkPipelineColorBlendStateCreateInfo-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   #VUID-VkPipelineColorBlendStateCreateInfo-flags-zerobitmask# @flags@
---     /must/ be @0@
+-- -   #VUID-VkPipelineColorBlendStateCreateInfo-flags-parameter# @flags@
+--     /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PipelineColorBlendStateCreateFlagBits'
+--     values
 --
 -- -   #VUID-VkPipelineColorBlendStateCreateInfo-pAttachments-parameter# If
 --     @attachmentCount@ is not @0@, @pAttachments@ /must/ be a valid
@@ -2980,12 +2995,14 @@ instance Zero PipelineColorBlendAttachmentState where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.LogicOp.LogicOp',
 -- 'PipelineColorBlendAttachmentState',
--- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags.PipelineColorBlendStateCreateFlags',
+-- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PipelineColorBlendStateCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineColorBlendStateCreateInfo (es :: [Type]) = PipelineColorBlendStateCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PipelineColorBlendStateCreateFlagBits'
+    -- specifying additional color blending information.
     flags :: PipelineColorBlendStateCreateFlags
   , -- | @logicOpEnable@ controls whether to apply
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-logicop Logical Operations>.
@@ -3290,6 +3307,18 @@ instance Zero StencilOpState where
 --     @reference@ in each of the 'StencilOpState' structs in @front@ and
 --     @back@ /must/ be the same
 --
+-- -   #VUID-VkPipelineDepthStencilStateCreateInfo-rasterizationOrderDepthAttachmentAccess-06463#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rasterizationOrderDepthAttachmentAccess rasterizationOrderDepthAttachmentAccess>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+--
+-- -   #VUID-VkPipelineDepthStencilStateCreateInfo-rasterizationOrderStencilAttachmentAccess-06464#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rasterizationOrderStencilAttachmentAccess rasterizationOrderStencilAttachmentAccess>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineDepthStencilStateCreateInfo-sType-sType# @sType@
@@ -3299,8 +3328,10 @@ instance Zero StencilOpState where
 -- -   #VUID-VkPipelineDepthStencilStateCreateInfo-pNext-pNext# @pNext@
 --     /must/ be @NULL@
 --
--- -   #VUID-VkPipelineDepthStencilStateCreateInfo-flags-zerobitmask#
---     @flags@ /must/ be @0@
+-- -   #VUID-VkPipelineDepthStencilStateCreateInfo-flags-parameter# @flags@
+--     /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PipelineDepthStencilStateCreateFlagBits'
+--     values
 --
 -- -   #VUID-VkPipelineDepthStencilStateCreateInfo-depthCompareOp-parameter#
 --     @depthCompareOp@ /must/ be a valid
@@ -3317,10 +3348,12 @@ instance Zero StencilOpState where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp', 'GraphicsPipelineCreateInfo',
--- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.PipelineDepthStencilStateCreateFlags',
+-- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PipelineDepthStencilStateCreateFlags',
 -- 'StencilOpState', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineDepthStencilStateCreateInfo = PipelineDepthStencilStateCreateInfo
-  { -- | @flags@ is reserved for future use.
+  { -- | @flags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PipelineDepthStencilStateCreateFlagBits'
+    -- specifying additional depth\/stencil state information.
     flags :: PipelineDepthStencilStateCreateFlags
   , -- | @depthTestEnable@ controls whether
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-depth depth testing>
@@ -3615,14 +3648,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, the shader code
 --     of at least one stage /must/ contain an @OpExecutionMode@
---     instruction that specifies the type of subdivision in the pipeline
+--     instruction specifying the type of subdivision in the pipeline
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00733# If the pipeline is
 --     being created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, and the shader
---     code of both stages contain an @OpExecutionMode@ instruction that
---     specifies the type of subdivision in the pipeline, they /must/ both
+--     code of both stages contain an @OpExecutionMode@ instruction
+--     specifying the type of subdivision in the pipeline, they /must/ both
 --     specify the same subdivision mode
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00734# If the pipeline is
@@ -3630,15 +3663,15 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, the shader code
 --     of at least one stage /must/ contain an @OpExecutionMode@
---     instruction that specifies the output patch size in the pipeline
+--     instruction specifying the output patch size in the pipeline
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00735# If the pipeline is
 --     being created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, and the shader
---     code of both contain an @OpExecutionMode@ instruction that specifies
---     the out patch size in the pipeline, they /must/ both specify the
---     same patch size
+--     code of both contain an @OpExecutionMode@ instruction specifying the
+--     out patch size in the pipeline, they /must/ both specify the same
+--     patch size
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00736# If the pipeline is
 --     being created with
@@ -3659,7 +3692,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes a geometry shader stage, and does not include
 --     any tessellation shader stages, its shader code /must/ contain an
---     @OpExecutionMode@ instruction that specifies an input primitive type
+--     @OpExecutionMode@ instruction specifying an input primitive type
 --     that is
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-geometry-execution compatible>
 --     with the primitive topology specified in @pInputAssembly@
@@ -3669,7 +3702,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes a geometry shader stage, and also includes
 --     tessellation shader stages, its shader code /must/ contain an
---     @OpExecutionMode@ instruction that specifies an input primitive type
+--     @OpExecutionMode@ instruction specifying an input primitive type
 --     that is
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-geometry-execution compatible>
 --     with the primitive topology that is output by the tessellation
@@ -4709,6 +4742,34 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     the @colorAttachmentCount@ member of that structure /must/ be equal
 --     to the value of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-06466# If @pStages@
+--     includes a fragment shader stage, and the fragment shader code
+--     enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>,
+--     the @flags@ member of 'PipelineDepthStencilStateCreateInfo' /must/
+--     not include
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+--     or
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06467# If the @flags@
+--     member of 'PipelineColorBlendStateCreateInfo' includes
+--     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM'
+--     @subpass@ /must/ have been created with
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06468# If the @flags@
+--     member of 'PipelineDepthStencilStateCreateInfo' includes
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM',
+--     @subpass@ /must/ have been created with
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06469# If the @flags@
+--     member of 'PipelineDepthStencilStateCreateInfo' includes
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM',
+--     @subpass@ /must/ have been created with
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
 --
 -- == Valid Usage (Implicit)
 --

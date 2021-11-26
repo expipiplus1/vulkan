@@ -54,9 +54,9 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.PipelineBindPoint
                             , module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineCacheHeaderVersion
-                            , module Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
+                            , module Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineCreateFlagBits
-                            , module Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags
+                            , module Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineLayoutCreateFlags
@@ -150,9 +150,9 @@ import Vulkan.Core10.Enums.PhysicalDeviceType
 import Vulkan.Core10.Enums.PipelineBindPoint
 import Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
 import Vulkan.Core10.Enums.PipelineCacheHeaderVersion
-import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
+import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits
 import Vulkan.Core10.Enums.PipelineCreateFlagBits
-import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
 import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
 import Vulkan.Core10.Enums.PipelineLayoutCreateFlags

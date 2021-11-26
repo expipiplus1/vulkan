@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.7.5] - 2021-11-25
+- Bump VMA, adds `getAllocationMemoryProperties`
+- Raise upper bound on `vulkan`
+
 ## [0.7.4] - 2021-11-08
 - Bump VMA, documentation changes
 

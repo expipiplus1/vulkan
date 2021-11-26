@@ -47,7 +47,7 @@
 -- and CTA (Consumer Technology Association) 861.3 metadata to a swapchain.
 -- The metadata includes the color primaries, white point, and luminance
 -- range of the reference monitor, which all together define the color
--- volume that contains all the possible colors the reference monitor can
+-- volume containing all the possible colors the reference monitor can
 -- produce. The reference monitor is the display where creative work is
 -- done and creative intent is established. To preserve such creative
 -- intent as much as possible and achieve consistent color reproduction on

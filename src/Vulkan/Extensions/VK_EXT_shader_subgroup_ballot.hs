@@ -71,26 +71,26 @@
 -- This extension provides access to a number of additional built-in shader
 -- variables in Vulkan:
 --
--- -   @SubgroupEqMaskKHR@, which contains the subgroup mask of the current
+-- -   @SubgroupEqMaskKHR@, containing the subgroup mask of the current
 --     subgroup invocation,
 --
--- -   @SubgroupGeMaskKHR@, which contains the subgroup mask of the
---     invocations greater than or equal to the current invocation,
+-- -   @SubgroupGeMaskKHR@, containing the subgroup mask of the invocations
+--     greater than or equal to the current invocation,
 --
--- -   @SubgroupGtMaskKHR@, which contains the subgroup mask of the
---     invocations greater than the current invocation,
+-- -   @SubgroupGtMaskKHR@, containing the subgroup mask of the invocations
+--     greater than the current invocation,
 --
--- -   @SubgroupLeMaskKHR@, which contains the subgroup mask of the
---     invocations less than or equal to the current invocation,
+-- -   @SubgroupLeMaskKHR@, containing the subgroup mask of the invocations
+--     less than or equal to the current invocation,
 --
--- -   @SubgroupLtMaskKHR@, which contains the subgroup mask of the
---     invocations less than the current invocation,
+-- -   @SubgroupLtMaskKHR@, containing the subgroup mask of the invocations
+--     less than the current invocation,
 --
--- -   @SubgroupLocalInvocationId@, which contains the index of an
---     invocation within a subgroup, and
+-- -   @SubgroupLocalInvocationId@, containing the index of an invocation
+--     within a subgroup, and
 --
--- -   @SubgroupSize@, which contains the maximum number of invocations in
---     a subgroup.
+-- -   @SubgroupSize@, containing the maximum number of invocations in a
+--     subgroup.
 --
 -- Additionally, this extension provides access to the new SPIR-V
 -- instructions:

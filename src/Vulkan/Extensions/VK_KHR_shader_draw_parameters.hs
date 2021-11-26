@@ -73,14 +73,14 @@
 -- The extension provides access to three additional built-in shader
 -- variables in Vulkan:
 --
--- -   @BaseInstance@, which contains the @firstInstance@ parameter passed
---     to drawing commands,
+-- -   @BaseInstance@, containing the @firstInstance@ parameter passed to
+--     drawing commands,
 --
--- -   @BaseVertex@, which contains the @firstVertex@ or @vertexOffset@
+-- -   @BaseVertex@, containing the @firstVertex@ or @vertexOffset@
 --     parameter passed to drawing commands, and
 --
--- -   @DrawIndex@, which contains the index of the draw call currently
---     being processed from an indirect draw call.
+-- -   @DrawIndex@, containing the index of the draw call currently being
+--     processed from an indirect drawing call.
 --
 -- When using GLSL source-based shader languages, the following variables
 -- from @GL_ARB_shader_draw_parameters@ can map to these SPIR-V built-in

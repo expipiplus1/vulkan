@@ -356,7 +356,7 @@ data PhysicalDeviceToolPropertiesEXT = PhysicalDeviceToolPropertiesEXT
   , -- | @description@ is a null-terminated UTF-8 string containing a description
     -- of the tool.
     description :: ByteString
-  , -- | @layer@ is a null-terminated UTF-8 string that contains the name of the
+  , -- | @layer@ is a null-terminated UTF-8 string containing the name of the
     -- layer implementing the tool, if the tool is implemented in a layer -
     -- otherwise it /may/ be an empty string.
     layer :: ByteString

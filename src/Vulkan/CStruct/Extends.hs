@@ -385,6 +385,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PhysicalD
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PhysicalDeviceDepthClipControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDeviceDepthClipEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (PhysicalDeviceDepthStencilResolveProperties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
@@ -474,6 +475,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceP
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_push_descriptor (PhysicalDevicePushDescriptorPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rgba10x6_formats (PhysicalDeviceRGBA10X6FormatsFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
@@ -582,6 +584,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineTessellationStateCreateInf
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineVertexInputStateCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PipelineViewportDepthClipControlCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PipelineViewportExclusiveScissorStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PipelineViewportShadingRateImageStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineViewportStateCreateInfo)
@@ -964,6 +967,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
+  Extends DeviceCreateInfo PhysicalDeviceDepthClipControlFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceVertexInputDynamicStateFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceExternalMemoryRDMAFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceColorWriteEnableFeaturesEXT = ()
@@ -1130,6 +1134,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceDepthClipControlFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVertexInputDynamicStateFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExternalMemoryRDMAFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceColorWriteEnableFeaturesEXT = ()
@@ -1222,6 +1227,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PipelineViewportStateCreateInfo PipelineViewportExclusiveScissorStateCreateInfoNV = ()
   Extends PipelineViewportStateCreateInfo PipelineViewportShadingRateImageStateCreateInfoNV = ()
   Extends PipelineViewportStateCreateInfo PipelineViewportCoarseSampleOrderStateCreateInfoNV = ()
+  Extends PipelineViewportStateCreateInfo PipelineViewportDepthClipControlCreateInfoEXT = ()
   Extends PresentInfoKHR DisplayPresentInfoKHR = ()
   Extends PresentInfoKHR PresentRegionsKHR = ()
   Extends PresentInfoKHR DeviceGroupPresentInfoKHR = ()
@@ -1671,6 +1677,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV -> go @PipelineFragmentShadingRateEnumStateCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE -> go @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
   STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE -> go @MutableDescriptorTypeCreateInfoVALVE
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT -> go @PhysicalDeviceDepthClipControlFeaturesEXT
+  STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT -> go @PipelineViewportDepthClipControlCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_INPUT_DYNAMIC_STATE_FEATURES_EXT -> go @PhysicalDeviceVertexInputDynamicStateFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_RDMA_FEATURES_NV -> go @PhysicalDeviceExternalMemoryRDMAFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_COLOR_WRITE_ENABLE_FEATURES_EXT -> go @PhysicalDeviceColorWriteEnableFeaturesEXT
@@ -2046,6 +2054,8 @@ infix 6 ::&
 {-# complete (::&) :: PipelineFragmentShadingRateEnumStateCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceMutableDescriptorTypeFeaturesVALVE #-}
 {-# complete (::&) :: MutableDescriptorTypeCreateInfoVALVE #-}
+{-# complete (::&) :: PhysicalDeviceDepthClipControlFeaturesEXT #-}
+{-# complete (::&) :: PipelineViewportDepthClipControlCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceVertexInputDynamicStateFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceExternalMemoryRDMAFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceColorWriteEnableFeaturesEXT #-}

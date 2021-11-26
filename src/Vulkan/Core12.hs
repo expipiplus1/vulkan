@@ -828,7 +828,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
 --
 -- -   #features-subgroup-extended-types# @shaderSubgroupExtendedTypes@ is
---     a boolean that specifies whether subgroup operations can use 8-bit
+--     a boolean specifying whether subgroup operations can use 8-bit
 --     integer, 16-bit integer, 64-bit integer, 16-bit floating-point, and
 --     vectors of these types in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>

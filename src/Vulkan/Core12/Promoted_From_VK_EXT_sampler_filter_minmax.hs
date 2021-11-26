@@ -140,7 +140,7 @@ instance Zero PhysicalDeviceSamplerFilterMinmaxProperties where
 --
 -- If the @pNext@ chain of 'Vulkan.Core10.Sampler.SamplerCreateInfo'
 -- includes a 'SamplerReductionModeCreateInfo' structure, then that
--- structure includes a mode that controls how texture filtering combines
+-- structure includes a mode controlling how texture filtering combines
 -- texel values.
 --
 -- If this structure is not present, @reductionMode@ is considered to be

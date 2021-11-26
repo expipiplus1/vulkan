@@ -141,7 +141,7 @@ instance Zero PhysicalDeviceImagelessFramebufferFeatures where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data FramebufferAttachmentsCreateInfo = FramebufferAttachmentsCreateInfo
   { -- | @pAttachmentImageInfos@ is a pointer to an array of
-    -- 'FramebufferAttachmentImageInfo' structures, each of which describes a
+    -- 'FramebufferAttachmentImageInfo' structures, each structure describing a
     -- number of parameters of the corresponding attachment in a render pass
     -- instance.
     attachmentImageInfos :: Vector FramebufferAttachmentImageInfo }

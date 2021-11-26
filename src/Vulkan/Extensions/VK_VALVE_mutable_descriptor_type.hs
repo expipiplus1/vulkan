@@ -352,7 +352,7 @@ instance Zero PhysicalDeviceMutableDescriptorTypeFeaturesVALVE where
 data MutableDescriptorTypeListVALVE = MutableDescriptorTypeListVALVE
   { -- | @pDescriptorTypes@ is @NULL@ or a pointer to an array of
     -- @descriptorTypeCount@
-    -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' values which define
+    -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' values defining
     -- which descriptor types a given binding may mutate to.
     descriptorTypes :: Vector DescriptorType }
   deriving (Typeable)

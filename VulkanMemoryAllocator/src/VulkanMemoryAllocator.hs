@@ -38,6 +38,7 @@ module VulkanMemoryAllocator  ( createAllocator
                               , setAllocationUserData
                               , createLostAllocation
                               , withLostAllocation
+                              , getAllocationMemoryProperties
                               , mapMemory
                               , withMappedMemory
                               , unmapMemory
@@ -1396,6 +1397,31 @@ withLostAllocation :: forall io r . MonadIO io => Allocator -> (io Allocation ->
 withLostAllocation allocator b =
   b (createLostAllocation allocator)
     (\(o0) -> freeMemory allocator o0)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaGetAllocationMemoryProperties" ffiVmaGetAllocationMemoryProperties
+  :: Allocator -> Allocation -> Ptr MemoryPropertyFlags -> IO ()
+
+-- | Given an allocation, returns Property Flags of its memory type.
+--
+-- This is just a convenience function. Same information can be obtained
+-- using 'getAllocationInfo' + 'getMemoryProperties'.
+getAllocationMemoryProperties :: forall io
+                               . (MonadIO io)
+                              => -- No documentation found for Nested "vmaGetAllocationMemoryProperties" "allocator"
+                                 Allocator
+                              -> -- No documentation found for Nested "vmaGetAllocationMemoryProperties" "allocation"
+                                 Allocation
+                              -> io (MemoryPropertyFlags)
+getAllocationMemoryProperties allocator allocation = liftIO . evalContT $ do
+  pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
+  lift $ traceAroundEvent "vmaGetAllocationMemoryProperties" ((ffiVmaGetAllocationMemoryProperties) (allocator) (allocation) (pPFlags))
+  pFlags <- lift $ peek @MemoryPropertyFlags pPFlags
+  pure $ (pFlags)
 
 
 foreign import ccall

@@ -196,7 +196,9 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -209,7 +211,9 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -255,6 +259,8 @@
 module Vulkan.Extensions.VK_KHR_dynamic_rendering  ( cmdBeginRenderingKHR
                                                    , cmdUseRenderingKHR
                                                    , cmdEndRenderingKHR
+                                                   , pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+                                                   , pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
                                                    , pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV
                                                    , PipelineRenderingCreateInfoKHR(..)
                                                    , RenderingInfoKHR(..)
@@ -355,6 +361,10 @@ import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX))
@@ -540,6 +550,14 @@ cmdEndRenderingKHR commandBuffer = liftIO $ do
   pure $ ()
 
 
+-- No documentation found for TopLevel "VK_PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
+pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
+pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
+
+
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV"
 pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV = STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD
 
@@ -636,7 +654,7 @@ pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV = STRUCTURE_TYPE_ATTACHME
 data PipelineRenderingCreateInfoKHR = PipelineRenderingCreateInfoKHR
   { -- | @viewMask@ is the viewMask used for rendering.
     viewMask :: Word32
-  , -- | @pColorAttachmentFormats@ is an array of
+  , -- | @pColorAttachmentFormats@ is a pointer to an array of
     -- 'Vulkan.Core10.Enums.Format.Format' values defining the format of color
     -- attachments used in this pipeline.
     colorAttachmentFormats :: Vector Format
@@ -1475,7 +1493,7 @@ data RenderingAttachmentInfoKHR = RenderingAttachmentInfoKHR
     -- of the render pass instance.
     storeOp :: AttachmentStoreOp
   , -- | @clearValue@ is a 'Vulkan.Core10.CommandBufferBuilding.ClearValue'
-    -- structure that defines values used to clear @imageView@ when @loadOp@ is
+    -- structure defining values used to clear @imageView@ when @loadOp@ is
     -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'.
     clearValue :: ClearValue
   }
@@ -1935,9 +1953,9 @@ instance Zero PhysicalDeviceDynamicRenderingFeaturesKHR where
 --     values
 --
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfoKHR-pColorAttachmentFormats-parameter#
---     @pColorAttachmentFormats@ /must/ be a valid pointer to an array of
---     @colorAttachmentCount@ valid 'Vulkan.Core10.Enums.Format.Format'
---     values
+--     If @colorAttachmentCount@ is not @0@, @pColorAttachmentFormats@
+--     /must/ be a valid pointer to an array of @colorAttachmentCount@
+--     valid 'Vulkan.Core10.Enums.Format.Format' values
 --
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfoKHR-depthAttachmentFormat-parameter#
 --     @depthAttachmentFormat@ /must/ be a valid
@@ -1952,9 +1970,6 @@ instance Zero PhysicalDeviceDynamicRenderingFeaturesKHR where
 --     be a valid
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
 --
--- -   #VUID-VkCommandBufferInheritanceRenderingInfoKHR-colorAttachmentCount-arraylength#
---     @colorAttachmentCount@ /must/ be greater than @0@
---
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>,
@@ -1967,7 +1982,7 @@ data CommandBufferInheritanceRenderingInfoKHR = CommandBufferInheritanceRenderin
     flags :: RenderingFlagsKHR
   , -- | @viewMask@ is the view mask used for rendering.
     viewMask :: Word32
-  , -- | @pColorAttachmentFormats@ is an array of
+  , -- | @pColorAttachmentFormats@ is a pointer to an array of
     -- 'Vulkan.Core10.Enums.Format.Format' values defining the format of color
     -- attachments.
     colorAttachmentFormats :: Vector Format
@@ -2101,7 +2116,7 @@ instance Zero CommandBufferInheritanceRenderingInfoKHR where
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AttachmentSampleCountInfoAMD = AttachmentSampleCountInfoAMD
-  { -- | @pColorAttachmentSamples@ is an array of
+  { -- | @pColorAttachmentSamples@ is a pointer to an array of
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' values
     -- defining the sample count of color attachments.
     colorAttachmentSamples :: Vector SampleCountFlagBits

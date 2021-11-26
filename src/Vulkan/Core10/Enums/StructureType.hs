@@ -89,6 +89,8 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA
                                                         , STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT
                                                         , STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT
                                                         , STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT
@@ -97,6 +99,7 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE
                                                         , STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT
                                                         , STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR
                                                         , STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR
@@ -850,6 +853,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_control.PhysicalDeviceDepthClipControlFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
@@ -935,6 +939,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexPropertiesEXT',
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_rgba10x6_formats.PhysicalDeviceRGBA10X6FormatsFeaturesEXT',
+-- 'Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access.PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM',
 -- 'Vulkan.Extensions.VK_KHR_ray_query.PhysicalDeviceRayQueryFeaturesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.PhysicalDeviceRayTracingMotionBlurFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelineFeaturesKHR',
@@ -1040,6 +1045,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoEXT',
 -- 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportCoarseSampleOrderStateCreateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_control.PipelineViewportDepthClipControlCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV',
 -- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo',
@@ -1371,6 +1377,10 @@ pattern STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA  = StructureType
 pattern STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR                   = StructureType 1000360000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT = StructureType 1000356000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT = StructureType 1000355001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT = StructureType 1000355000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT        = StructureType 1000353000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT"
@@ -1387,6 +1397,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE = 
 pattern STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT          = StructureType 1000346000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT = StructureType 1000344000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM = StructureType 1000342000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT = StructureType 1000340000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR"
@@ -2402,6 +2414,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES       = StructureType
              STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA,
              STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT,
+             STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT,
              STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT,
              STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT,
@@ -2410,6 +2424,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES       = StructureType
              STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE,
              STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT,
              STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR,
              STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR,
@@ -2987,9 +3002,13 @@ showTableStructureType =
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT
     , "PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT"
     )
-  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT      , "PHYSICAL_DEVICE_DRM_PROPERTIES_EXT")
-  , (STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT, "VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT")
-  , (STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT  , "VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT")
+  , ( STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT
+    , "PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT"
+    )
+  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT, "PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT")
+  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT             , "PHYSICAL_DEVICE_DRM_PROPERTIES_EXT")
+  , (STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT       , "VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT")
+  , (STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT         , "VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT")
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_INPUT_DYNAMIC_STATE_FEATURES_EXT
     , "PHYSICAL_DEVICE_VERTEX_INPUT_DYNAMIC_STATE_FEATURES_EXT"
     )
@@ -2999,18 +3018,21 @@ showTableStructureType =
     )
   , (STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT             , "DIRECTFB_SURFACE_CREATE_INFO_EXT")
   , (STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT, "PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT")
-  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT    , "PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT")
-  , (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR                          , "IMAGE_RESOLVE_2_KHR")
-  , (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR                      , "BUFFER_IMAGE_COPY_2_KHR")
-  , (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR                             , "IMAGE_BLIT_2_KHR")
-  , (STRUCTURE_TYPE_IMAGE_COPY_2_KHR                             , "IMAGE_COPY_2_KHR")
-  , (STRUCTURE_TYPE_BUFFER_COPY_2_KHR                            , "BUFFER_COPY_2_KHR")
-  , (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR                     , "RESOLVE_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR                        , "BLIT_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR              , "COPY_IMAGE_TO_BUFFER_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR              , "COPY_BUFFER_TO_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR                        , "COPY_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR                       , "COPY_BUFFER_INFO_2_KHR")
+  , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM
+    , "PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM"
+    )
+  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT, "PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT")
+  , (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR                      , "IMAGE_RESOLVE_2_KHR")
+  , (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR                  , "BUFFER_IMAGE_COPY_2_KHR")
+  , (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR                         , "IMAGE_BLIT_2_KHR")
+  , (STRUCTURE_TYPE_IMAGE_COPY_2_KHR                         , "IMAGE_COPY_2_KHR")
+  , (STRUCTURE_TYPE_BUFFER_COPY_2_KHR                        , "BUFFER_COPY_2_KHR")
+  , (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR                 , "RESOLVE_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR                    , "BLIT_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR          , "COPY_IMAGE_TO_BUFFER_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR          , "COPY_BUFFER_TO_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR                    , "COPY_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR                   , "COPY_BUFFER_INFO_2_KHR")
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR
     , "PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR"
     )

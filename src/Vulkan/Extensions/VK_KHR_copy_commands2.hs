@@ -58,7 +58,7 @@
 -- 'cmdCopyBufferToImage2KHR', 'cmdCopyImageToBuffer2KHR',
 -- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command contains an
 -- @*Info2KHR@ structure parameter that includes @sType@\/@pNext@ members.
--- Lower level structures that describe each region to be copied are also
+-- Lower level structures describing each region to be copied are also
 -- extended with @sType@\/@pNext@ members.
 --
 -- == New Commands

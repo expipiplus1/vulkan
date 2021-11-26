@@ -310,8 +310,8 @@ instance Zero VertexInputBindingDivisorDescriptionEXT where
 -- 'VertexInputBindingDivisorDescriptionEXT'
 data PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorStateCreateInfoEXT
   { -- | @pVertexBindingDivisors@ is a pointer to an array of
-    -- 'VertexInputBindingDivisorDescriptionEXT' structures, which specifies
-    -- the divisor value for each binding.
+    -- 'VertexInputBindingDivisorDescriptionEXT' structures specifying the
+    -- divisor value for each binding.
     --
     -- #VUID-VkPipelineVertexInputDivisorStateCreateInfoEXT-pVertexBindingDivisors-parameter#
     -- @pVertexBindingDivisors@ /must/ be a valid pointer to an array of

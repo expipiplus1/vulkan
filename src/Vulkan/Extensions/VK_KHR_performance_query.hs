@@ -821,8 +821,8 @@ acquireProfilingLockKHR :: forall io
                            -- #VUID-vkAcquireProfilingLockKHR-device-parameter# @device@ /must/ be a
                            -- valid 'Vulkan.Core10.Handles.Device' handle
                            Device
-                        -> -- | @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure which
-                           -- contains information about how the profiling is to be acquired.
+                        -> -- | @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure
+                           -- containing information about how the profiling is to be acquired.
                            --
                            -- #VUID-vkAcquireProfilingLockKHR-pInfo-parameter# @pInfo@ /must/ be a
                            -- valid pointer to a valid 'AcquireProfilingLockInfoKHR' structure

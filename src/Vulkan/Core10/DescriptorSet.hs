@@ -1650,9 +1650,10 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- @pTexelBufferView@, as described below. If 'DescriptorSetLayoutBinding'
     -- for @dstSet@ at @dstBinding@ is not equal to
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
-    -- @descriptorType@ /must/ be the same type as that specified in
-    -- 'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@. The type of
-    -- the descriptor also controls which array the descriptors are taken from.
+    -- @descriptorType@ /must/ be the same type as the @descriptorType@
+    -- specified in 'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@.
+    -- The type of the descriptor also controls which array the descriptors are
+    -- taken from.
     descriptorType :: DescriptorType
   , -- | @pImageInfo@ is a pointer to an array of 'DescriptorImageInfo'
     -- structures or is ignored, as described below.

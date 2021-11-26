@@ -435,7 +435,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     @components.g@, and @components.b@ /must/ not be
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ZERO' or
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ONE', and
---     /must/ not correspond to a component which contains zero or one as a
+--     /must/ not correspond to a component containing zero or one as a
 --     consequence of
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba conversion to RGBA>
 --
