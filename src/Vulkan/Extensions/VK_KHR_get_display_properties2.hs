@@ -110,11 +110,11 @@
 --
 -- -   'getPhysicalDeviceDisplayPlaneProperties2KHR': No. The only current
 --     input is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs
---     wouldn’t make sense.
+--     would not make sense.
 --
 -- -   'getDisplayModeProperties2KHR': No. The only current inputs are a
 --     'Vulkan.Core10.Handles.PhysicalDevice' and a
---     'Vulkan.Extensions.Handles.DisplayModeKHR'. Other inputs wouldn’t
+--     'Vulkan.Extensions.Handles.DisplayModeKHR'. Other inputs would not
 --     make sense.
 --
 -- 3) Should additional display query functions be extended?

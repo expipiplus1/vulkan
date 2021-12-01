@@ -154,12 +154,18 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 -- | VkSubpassDescriptionDepthStencilResolve - Structure specifying
 -- depth\/stencil resolve operations for a subpass
 --
+-- = Description
+--
+-- If @pDepthStencilResolveAttachment@ is @NULL@, or if its attachment
+-- index is 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', it indicates
+-- that no depth\/stencil resolve attachment will be used in the subpass.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03177#
 --     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
 --     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
---     @pDepthStencilAttachment@ /must/ not have the value
+--     @pDepthStencilAttachment@ /must/ not be @NULL@ or have the value
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03178#
@@ -189,31 +195,45 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03181#
---     If the 'Vulkan.Core10.Enums.Format.Format' of
+--     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
+--     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and
+--     'Vulkan.Core10.Enums.Format.Format' of
 --     @pDepthStencilResolveAttachment@ has a depth component, then the
 --     'Vulkan.Core10.Enums.Format.Format' of @pDepthStencilAttachment@
 --     /must/ have a depth component with the same number of bits and
 --     numerical type
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03182#
---     If the 'Vulkan.Core10.Enums.Format.Format' of
+--     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
+--     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and
+--     'Vulkan.Core10.Enums.Format.Format' of
 --     @pDepthStencilResolveAttachment@ has a stencil component, then the
 --     'Vulkan.Core10.Enums.Format.Format' of @pDepthStencilAttachment@
 --     /must/ have a stencil component with the same number of bits and
 --     numerical type
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-depthResolveMode-03183#
---     The value of @depthResolveMode@ /must/ be one of the bits set in
+--     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
+--     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and the
+--     'Vulkan.Core10.Enums.Format.Format' of
+--     @pDepthStencilResolveAttachment@ has a depth component, then the
+--     value of @depthResolveMode@ /must/ be one of the bits set in
 --     'PhysicalDeviceDepthStencilResolveProperties'::@supportedDepthResolveModes@
 --     or 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-03184#
---     The value of @stencilResolveMode@ /must/ be one of the bits set in
+--     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
+--     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and the
+--     'Vulkan.Core10.Enums.Format.Format' of
+--     @pDepthStencilResolveAttachment@ has a stencil component, then the
+--     value of @stencilResolveMode@ /must/ be one of the bits set in
 --     'PhysicalDeviceDepthStencilResolveProperties'::@supportedStencilResolveModes@
 --     or 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03185#
---     If the 'Vulkan.Core10.Enums.Format.Format' of
+--     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
+--     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the
+--     'Vulkan.Core10.Enums.Format.Format' of
 --     @pDepthStencilResolveAttachment@ has both depth and stencil
 --     components,
 --     'PhysicalDeviceDepthStencilResolveProperties'::@independentResolve@
@@ -223,7 +243,9 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     @depthResolveMode@ and @stencilResolveMode@ /must/ be identical
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03186#
---     If the 'Vulkan.Core10.Enums.Format.Format' of
+--     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
+--     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the
+--     'Vulkan.Core10.Enums.Format.Format' of
 --     @pDepthStencilResolveAttachment@ has both depth and stencil
 --     components,
 --     'PhysicalDeviceDepthStencilResolveProperties'::@independentResolve@
@@ -233,18 +255,6 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     @depthResolveMode@ and @stencilResolveMode@ /must/ be identical or
 --     one of them /must/ be
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
---
--- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-04588#
---     If the 'Vulkan.Core10.Enums.Format.Format' of
---     @pDepthStencilResolveAttachment@ has a depth component,
---     @depthResolveMode@ /must/ be a valid
---     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
---
--- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-04589#
---     If the 'Vulkan.Core10.Enums.Format.Format' of
---     @pDepthStencilResolveAttachment@ has a stencil component,
---     @stencilResolveMode@ /must/ be a valid
---     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
 --
 -- == Valid Usage (Implicit)
 --

@@ -162,13 +162,13 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 -- property) than for non-protected memory allocations. These limits can be
 -- system-wide, and depend on a variety of factors outside of the Vulkan
--- implementation, so can’t be queried in Vulkan. Applications /should/ use
--- as few allocations as possible from such memory types by suballocating
--- aggressively, and be prepared for allocation failure even when there is
--- apparently plenty of capacity remaining in the memory heap. As a
--- guideline, the Vulkan conformance test suite requires that at least 80
--- minimum-size allocations can exist concurrently when no other uses of
--- protected memory are active in the system.
+-- implementation, so they cannot be queried in Vulkan. Applications
+-- /should/ use as few allocations as possible from such memory types by
+-- suballocating aggressively, and be prepared for allocation failure even
+-- when there is apparently plenty of capacity remaining in the memory
+-- heap. As a guideline, the Vulkan conformance test suite requires that at
+-- least 80 minimum-size allocations can exist concurrently when no other
+-- uses of protected memory are active in the system.
 --
 -- Some platforms /may/ have a limit on the maximum size of a single
 -- allocation. For example, certain systems /may/ fail to create

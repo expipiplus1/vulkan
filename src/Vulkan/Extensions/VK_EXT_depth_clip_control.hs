@@ -110,9 +110,9 @@
 -- 3) Should the control provided in this extension be an enum that could
 -- be extended in the future?
 --
--- __RESOLVED__: Yes. It’s deemed highly unlikely that the depth range is
--- changed to anything other than [0, 1] in the future. Should that happen,
--- a new extension is required to extend such an enum, and that extension
+-- __RESOLVED__: Yes. It is highly unlikely that the depth range is changed
+-- to anything other than [0, 1] in the future. Should that happen a new
+-- extension will be required to extend such an enum, and that extension
 -- might as well add a new struct to chain to
 -- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pNext@
 -- instead.

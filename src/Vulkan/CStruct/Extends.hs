@@ -980,6 +980,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceRGBA10X6FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceDynamicRenderingFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceImageViewMinLodFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -1147,6 +1148,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRGBA10X6FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDynamicRenderingFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageViewMinLodFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1714,6 +1716,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX -> go @MultiviewPerViewAttributesInfoNVX
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT -> go @PhysicalDeviceImageViewMinLodFeaturesEXT
   STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT -> go @ImageViewMinLodCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM -> go @PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2091,6 +2094,7 @@ infix 6 ::&
 {-# complete (::&) :: MultiviewPerViewAttributesInfoNVX #-}
 {-# complete (::&) :: PhysicalDeviceImageViewMinLodFeaturesEXT #-}
 {-# complete (::&) :: ImageViewMinLodCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

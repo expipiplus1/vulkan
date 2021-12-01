@@ -1851,8 +1851,23 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     member of any element of @pInputAttachments@, @pColorAttachments@,
 --     @pResolveAttachments@ or @pDepthStencilAttachment@, or any element
 --     of @pPreserveAttachments@ in any given element of @pSubpasses@ is
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', it /must/ be
---     less than @attachmentCount@
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then it /must/
+--     be less than @attachmentCount@
+--
+-- -   #VUID-VkRenderPassCreateInfo2-fragmentDensityMapAttachment-06472# If
+--     the pNext chain includes a
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'
+--     structure and the @fragmentDensityMapAttachment@ member is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then @attachment@
+--     /must/ be less than @attachmentCount@
+--
+-- -   #VUID-VkRenderPassCreateInfo2-pSubpasses-06473# If the @pSubpasses@
+--     pNext chain includes a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
+--     structure and the @pDepthStencilResolveAttachment@ member is not
+--     @NULL@ and does not have the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then @attachment@
+--     /must/ be less than @attachmentCount@
 --
 -- -   #VUID-VkRenderPassCreateInfo2-pAttachments-02522# For any member of
 --     @pAttachments@ with a @loadOp@ equal to
@@ -1975,7 +1990,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --
 -- -   #VUID-VkRenderPassCreateInfo2-flags-04908# If @flags@ includes
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
---     and if @pDepthStencilResolveAttachmentKHR@ is not @NULL@, then the
+--     and if @pDepthStencilResolveAttachment@ is not @NULL@, then the
 --     depth\/stencil resolve attachment /must/ be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --

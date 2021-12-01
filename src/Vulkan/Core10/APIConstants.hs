@@ -178,7 +178,7 @@ pattern MAX_MEMORY_HEAPS = 16
 
 type REMAINING_MIP_LEVELS = 0xffffffff
 
--- | VK_REMAINING_MIP_LEVELS - Sentinel for all remaining array layers
+-- | VK_REMAINING_MIP_LEVELS - Sentinel for all remaining mipmap levels
 --
 -- = See Also
 --

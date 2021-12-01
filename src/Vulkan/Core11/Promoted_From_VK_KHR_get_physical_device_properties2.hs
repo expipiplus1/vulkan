@@ -195,6 +195,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceP
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_push_descriptor (PhysicalDevicePushDescriptorPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rgba10x6_formats (PhysicalDeviceRGBA10X6FormatsFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
@@ -715,6 +716,7 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageViewMinLodFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDynamicRenderingFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRGBA10X6FormatsFeaturesEXT = Just f
