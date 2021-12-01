@@ -146,8 +146,8 @@
 -- 1) Why is this information separate from the layer mechanism?
 --
 -- Some tooling may be built into a driver, or be part of the Vulkan loader
--- etc. - and so tying this information directly to layers would’ve been
--- awkward at best.
+-- etc. Tying this information directly to layers would have been awkward
+-- at best.
 --
 -- == Version History
 --

@@ -50,7 +50,7 @@
 --
 -- A buffer collection is a collection of one or more buffers which were
 -- allocated together as a group and which all have the same properties.
--- These properties describe the buffers’ internal representation such as
+-- These properties describe the buffers\' internal representation such as
 -- its dimensions and memory layout. This ensures that all of the buffers
 -- can be used interchangeably by tasks that require swapping among
 -- multiple buffers, such as double-buffered graphics rendering.

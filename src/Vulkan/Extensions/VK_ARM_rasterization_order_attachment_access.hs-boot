@@ -63,7 +63,11 @@
 --
 -- == New Structures
 --
--- -   'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM'
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM'
 --
 -- == New Enums
 --
