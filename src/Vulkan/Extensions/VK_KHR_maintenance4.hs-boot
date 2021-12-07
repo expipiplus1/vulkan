@@ -127,6 +127,11 @@
 --
 -- -   'KHR_MAINTENANCE_4_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE_KHR'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS_KHR'

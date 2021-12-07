@@ -934,9 +934,6 @@ foreign import ccall
 -- -   #VUID-vkCmdResetEvent2KHR-stageMask-parameter# @stageMask@ /must/ be
 --     a valid combination of 'PipelineStageFlagBits2KHR' values
 --
--- -   #VUID-vkCmdResetEvent2KHR-stageMask-requiredbitmask# @stageMask@
---     /must/ not be @0@
---
 -- -   #VUID-vkCmdResetEvent2KHR-commandBuffer-recording# @commandBuffer@
 --     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -1808,9 +1805,6 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteTimestamp2KHR-stage-parameter# @stage@ /must/ be a
 --     valid combination of 'PipelineStageFlagBits2KHR' values
 --
--- -   #VUID-vkCmdWriteTimestamp2KHR-stage-requiredbitmask# @stage@ /must/
---     not be @0@
---
 -- -   #VUID-vkCmdWriteTimestamp2KHR-queryPool-parameter# @queryPool@
 --     /must/ be a valid 'Vulkan.Core10.Handles.QueryPool' handle
 --
@@ -2001,9 +1995,6 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-parameter# @stage@ /must/ be
 --     a valid combination of 'PipelineStageFlagBits2KHR' values
---
--- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-requiredbitmask# @stage@
---     /must/ not be @0@
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-dstBuffer-parameter# @dstBuffer@
 --     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle

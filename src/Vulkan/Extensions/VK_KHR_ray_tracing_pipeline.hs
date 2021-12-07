@@ -3268,7 +3268,7 @@ data PhysicalDeviceRayTracingPipelinePropertiesKHR = PhysicalDeviceRayTracingPip
     -- 'cmdTraceRaysIndirectKHR' or 'cmdTraceRaysKHR' command.
     maxRayDispatchInvocationCount :: Word32
   , -- | @shaderGroupHandleAlignment@ is the /required/ alignment in bytes for
-    -- each shader binding table entry.
+    -- each shader binding table entry. The value /must/ be a power of two.
     shaderGroupHandleAlignment :: Word32
   , -- | @maxRayHitAttributeSize@ is the maximum size in bytes for a ray
     -- attribute structure

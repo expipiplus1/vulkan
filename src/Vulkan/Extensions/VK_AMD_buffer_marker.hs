@@ -204,6 +204,11 @@ foreign import ccall
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-synchronization2-06489# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE_KHR'
+--
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-dstOffset-01798# @dstOffset@ /must/
 --     be less than or equal to the size of @dstBuffer@ minus @4@
 --
@@ -225,8 +230,8 @@ foreign import ccall
 --     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-parameter#
---     @pipelineStage@ /must/ be a valid
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-parameter# If
+--     @pipelineStage@ is not @0@, @pipelineStage@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     value
 --

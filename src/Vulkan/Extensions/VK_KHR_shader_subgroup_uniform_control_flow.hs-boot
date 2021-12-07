@@ -41,6 +41,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html SPV_KHR_subgroup_uniform_control_flow>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroupuniform_qualifier.txt GL_EXT_subgroupuniform_qualifier>
+--
 -- [__Contributors__]
 --
 --     -   Alan Baker, Google

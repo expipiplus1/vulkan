@@ -304,14 +304,14 @@ data PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2Propertie
     -- range of a storage buffer descriptor is rounded up to when used for
     -- bounds-checking when
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
-    -- is enabled. This value is either 1 or 4.
+    -- is enabled. This value /must/ be either 1 or 4.
     robustStorageBufferAccessSizeAlignment :: DeviceSize
   , -- | #limits-robustUniformBufferAccessSizeAlignment#
     -- @robustUniformBufferAccessSizeAlignment@ is the number of bytes that the
     -- range of a uniform buffer descriptor is rounded up to when used for
     -- bounds-checking when
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
-    -- is enabled. This value is a power of two in the range [1, 256].
+    -- is enabled. This value /must/ be a power of two in the range [1, 256].
     robustUniformBufferAccessSizeAlignment :: DeviceSize
   }
   deriving (Typeable, Eq)

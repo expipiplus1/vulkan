@@ -46,6 +46,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gpu_shader_int16.html SPV_AMD_gpu_shader_int16>
 --
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_gpu_shader_int16.txt GL_AMD_gpu_shader_int16>
+--
 -- [__Contributors__]
 --
 --     -   Daniel Rakos, AMD
@@ -59,10 +62,6 @@
 --     -   Timothy Lottes, AMD
 --
 --     -   Zhi Cai, AMD
---
--- [__External Dependencies__]
---
---     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gpu_shader_int16.html SPV_AMD_gpu_shader_int16>
 --
 -- == Description
 --

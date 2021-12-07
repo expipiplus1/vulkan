@@ -38,6 +38,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_invocation_density.html SPV_EXT_fragment_invocation_density>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
+--
 -- [__Contributors__]
 --
 --     -   Matthew Netsch, Qualcomm Technologies, Inc.

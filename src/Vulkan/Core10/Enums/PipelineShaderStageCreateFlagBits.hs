@@ -30,9 +30,9 @@ type PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlagBits
 -- If 'PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 -- and 'PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT' are
 -- specified and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size minSubgroupSize>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minSubgroupSize minSubgroupSize>
 -- does not equal
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
 -- and no
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-required-subgroup-size required subgroup size>
 -- is specified, then the only way to guarantee that the \'X\' dimension of

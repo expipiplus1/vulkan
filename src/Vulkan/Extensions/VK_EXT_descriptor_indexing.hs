@@ -44,6 +44,12 @@
 --
 --     -   Promoted to Vulkan 1.2 Core
 --
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html SPV_EXT_descriptor_indexing>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt GL_EXT_nonuniform_qualifier>
+--
 -- [__Contributors__]
 --
 --     -   Jeff Bolz, NVIDIA

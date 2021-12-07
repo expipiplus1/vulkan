@@ -39,6 +39,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_ballot.html SPV_AMD_shader_ballot>
 --
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_shader_ballot.txt GL_AMD_shader_ballot>
+--
 -- [__Contributors__]
 --
 --     -   Qun Lin, AMD

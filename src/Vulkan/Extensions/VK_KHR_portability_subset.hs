@@ -412,7 +412,8 @@ data PhysicalDevicePortabilitySubsetPropertiesKHR = PhysicalDevicePortabilitySub
     -- @minVertexInputBindingStrideAlignment@ indicates the minimum alignment
     -- for vertex input strides.
     -- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ /must/
-    -- be a multiple of, and at least as large as, this value.
+    -- be a multiple of, and at least as large as, this value. The value /must/
+    -- be a power of two.
     minVertexInputBindingStrideAlignment :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

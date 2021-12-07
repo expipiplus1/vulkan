@@ -1690,9 +1690,9 @@ instance Zero RenderingFragmentShadingRateAttachmentInfoKHR where
 -- = Description
 --
 -- This structure can be included in the @pNext@ chain of
--- 'RenderingInfoKHR' to define a fragment density map. If @imageView@ is
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE', or if this structure is not
--- specified, @imageView@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+-- 'RenderingInfoKHR' to define a fragment density map. If this structure
+-- is not included in the @pNext@ chain, @imageView@ is treated as
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- == Valid Usage
 --

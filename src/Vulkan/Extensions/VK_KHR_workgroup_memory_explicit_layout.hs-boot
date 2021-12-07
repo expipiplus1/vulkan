@@ -41,6 +41,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html SPV_KHR_workgroup_memory_explicit_layout>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shared_memory_block.txt GL_EXT_shared_memory_block>
+--
 -- [__Contributors__]
 --
 --     -   Caio Marcelo de Oliveira Filho, Intel

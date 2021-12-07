@@ -1090,7 +1090,7 @@ instance Zero SpecializationInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
 --     feature /must/ be enabled, and @stage@ /must/ be a valid bit
 --     specified in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages requiredSubgroupSizeStages>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-requiredSubgroupSizeStages requiredSubgroupSizeStages>
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-pNext-02756# If a
 --     'Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -1100,7 +1100,7 @@ instance Zero SpecializationInfo where
 --     to the product of
 --     'Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'::@requiredSubgroupSize@
 --     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxComputeWorkgroupSubgroups maxComputeWorkgroupSubgroups>
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-pNext-02757# If a
 --     'Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -1117,7 +1117,7 @@ instance Zero SpecializationInfo where
 --     'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 --     flags set, the local workgroup size in the X dimension of the
 --     pipeline /must/ be a multiple of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-flags-02759# If @flags@ has
 --     the
@@ -4753,20 +4753,47 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     or
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06467# If the @flags@
---     member of 'PipelineColorBlendStateCreateInfo' includes
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06482# If the pipeline is
+--     being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     and the @flags@ member of 'PipelineColorBlendStateCreateInfo'
+--     includes
+--     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM',
+--     @renderpass@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06483# If the pipeline is
+--     being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     and the @flags@ member of 'PipelineDepthStencilStateCreateInfo'
+--     includes
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+--     or
+--     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM',
+--     @renderpass@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06484# If the pipeline is
+--     being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     and the @flags@ member of 'PipelineColorBlendStateCreateInfo'
+--     includes
 --     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM'
 --     @subpass@ /must/ have been created with
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM'
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06468# If the @flags@
---     member of 'PipelineDepthStencilStateCreateInfo' includes
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06485# If the pipeline is
+--     being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     and the @flags@ member of 'PipelineDepthStencilStateCreateInfo'
+--     includes
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM',
 --     @subpass@ /must/ have been created with
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06469# If the @flags@
---     member of 'PipelineDepthStencilStateCreateInfo' includes
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06486# If the pipeline is
+--     being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     and the @flags@ member of 'PipelineDepthStencilStateCreateInfo'
+--     includes
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM',
 --     @subpass@ /must/ have been created with
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'

@@ -5,6 +5,7 @@ module Vulkan.Core10.Enums.ImageAspectFlagBits  ( ImageAspectFlags
                                                                      , IMAGE_ASPECT_DEPTH_BIT
                                                                      , IMAGE_ASPECT_STENCIL_BIT
                                                                      , IMAGE_ASPECT_METADATA_BIT
+                                                                     , IMAGE_ASPECT_NONE_KHR
                                                                      , IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
                                                                      , IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
                                                                      , IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
@@ -52,6 +53,9 @@ pattern IMAGE_ASPECT_STENCIL_BIT            = ImageAspectFlagBits 0x00000004
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory sparse resource>
 -- operations.
 pattern IMAGE_ASPECT_METADATA_BIT           = ImageAspectFlagBits 0x00000008
+-- | 'IMAGE_ASPECT_NONE_KHR' specifies no image aspect, or the image aspect
+-- is not applicable.
+pattern IMAGE_ASPECT_NONE_KHR               = ImageAspectFlagBits 0x00000000
 -- | 'IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT' specifies /memory plane/ 3.
 pattern IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT = ImageAspectFlagBits 0x00000400
 -- | 'IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT' specifies /memory plane/ 2.
@@ -82,6 +86,7 @@ showTableImageAspectFlagBits =
   , (IMAGE_ASPECT_DEPTH_BIT             , "DEPTH_BIT")
   , (IMAGE_ASPECT_STENCIL_BIT           , "STENCIL_BIT")
   , (IMAGE_ASPECT_METADATA_BIT          , "METADATA_BIT")
+  , (IMAGE_ASPECT_NONE_KHR              , "NONE_KHR")
   , (IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT, "MEMORY_PLANE_3_BIT_EXT")
   , (IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT, "MEMORY_PLANE_2_BIT_EXT")
   , (IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT, "MEMORY_PLANE_1_BIT_EXT")

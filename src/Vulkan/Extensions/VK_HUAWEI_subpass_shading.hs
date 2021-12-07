@@ -38,10 +38,10 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/huawei/GLSL_HUAWEI_subpass_shading.txt GL_HUAWEI_subpass_shading>.
---
---     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/HUAWEI/SPV_HUAWEI_subpass_shading.html SPV_HUAWEI_subpass_shading>.
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/huawei/GLSL_HUAWEI_subpass_shading.txt GL_HUAWEI_subpass_shading>.
 --
 -- [__Contributors__]
 --

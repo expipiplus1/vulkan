@@ -41,6 +41,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html SPV_EXT_demote_to_helper_invocation>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_demote_to_helper_invocation.txt GL_EXT_demote_to_helper_invocation>
+--
 -- [__Contributors__]
 --
 --     -   Jeff Bolz, NVIDIA

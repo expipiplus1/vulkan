@@ -38,6 +38,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_invocation_density.html SPV_EXT_fragment_invocation_density>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
+--
 -- [__Contributors__]
 --
 --     -   Matthew Netsch, Qualcomm Technologies, Inc.
@@ -350,14 +353,14 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensityMapPropertiesEXT
-  { -- | #limits-minfragmentdensitytexelsize# @minFragmentDensityTexelSize@ is
+  { -- | #limits-minFragmentDensityTexelSize# @minFragmentDensityTexelSize@ is
     -- the minimum
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size>.
     minFragmentDensityTexelSize :: Extent2D
-  , -- | #limits-maxfragmentdensitytexelsize# @maxFragmentDensityTexelSize@ is
+  , -- | #limits-maxFragmentDensityTexelSize# @maxFragmentDensityTexelSize@ is
     -- the maximum fragment density texel size.
     maxFragmentDensityTexelSize :: Extent2D
-  , -- | #limits-fragmentdensityinvocations# @fragmentDensityInvocations@
+  , -- | #limits-fragmentDensityInvocations# @fragmentDensityInvocations@
     -- specifies whether the implementation /may/ invoke additional fragment
     -- shader invocations for each covered sample.
     fragmentDensityInvocations :: Bool

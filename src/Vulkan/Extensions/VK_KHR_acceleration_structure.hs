@@ -4981,7 +4981,8 @@ data PhysicalDeviceAccelerationStructurePropertiesKHR = PhysicalDeviceAccelerati
   , -- | #limits-minAccelerationStructureScratchOffsetAlignment#
     -- @minAccelerationStructureScratchOffsetAlignment@ is the minimum
     -- /required/ alignment, in bytes, for scratch data passed in to an
-    -- acceleration structure build command.
+    -- acceleration structure build command. The value /must/ be a power of
+    -- two.
     minAccelerationStructureScratchOffsetAlignment :: Word32
   }
   deriving (Typeable, Eq)
