@@ -4250,11 +4250,12 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- returned pointer will always produce an integer multiple of this limit.
     -- See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess>.
+    -- The value /must/ be a power of two.
     minMemoryMapAlignment :: Word64
   , -- | #limits-minTexelBufferOffsetAlignment# @minTexelBufferOffsetAlignment@
     -- is the minimum /required/ alignment, in bytes, for the @offset@ member
     -- of the 'Vulkan.Core10.BufferView.BufferViewCreateInfo' structure for
-    -- texel buffers. If
+    -- texel buffers. The value /must/ be a power of two. If
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
     -- is enabled, this limit is equivalent to the maximum of the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetAlignmentBytes uniformTexelBufferOffsetAlignmentBytes>
@@ -4281,7 +4282,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
     -- is updated, the @offset@ /must/ be an integer multiple of this limit.
     -- Similarly, dynamic offsets for uniform buffers /must/ be multiples of
-    -- this limit.
+    -- this limit. The value /must/ be a power of two.
     minUniformBufferOffsetAlignment :: DeviceSize
   , -- | #limits-minStorageBufferOffsetAlignment#
     -- @minStorageBufferOffsetAlignment@ is the minimum /required/ alignment,
@@ -4292,7 +4293,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
     -- is updated, the @offset@ /must/ be an integer multiple of this limit.
     -- Similarly, dynamic offsets for storage buffers /must/ be multiples of
-    -- this limit.
+    -- this limit. The value /must/ be a power of two.
     minStorageBufferOffsetAlignment :: DeviceSize
   , -- | #limits-minTexelOffset# @minTexelOffset@ is the minimum offset value for
     -- the @ConstOffset@ image operand of any of the @OpImageSample*@ or
@@ -4505,7 +4506,8 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyImageToBuffer2KHR', and
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. The per
     -- texel alignment requirements are enforced, but applications /should/ use
-    -- the optimal alignment for optimal performance and power use.
+    -- the optimal alignment for optimal performance and power use. The value
+    -- /must/ be a power of two.
     optimalBufferCopyOffsetAlignment :: DeviceSize
   , -- | #limits-optimalBufferCopyRowPitchAlignment#
     -- @optimalBufferCopyRowPitchAlignment@ is the optimal buffer row pitch
@@ -4517,11 +4519,13 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- the number of bytes between texels with the same X coordinate in
     -- adjacent rows (Y coordinates differ by one). The per texel alignment
     -- requirements are enforced, but applications /should/ use the optimal
-    -- alignment for optimal performance and power use.
+    -- alignment for optimal performance and power use. The value /must/ be a
+    -- power of two.
     optimalBufferCopyRowPitchAlignment :: DeviceSize
   , -- | #limits-nonCoherentAtomSize# @nonCoherentAtomSize@ is the size and
     -- alignment in bytes that bounds concurrent access to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
+    -- The value /must/ be a power of two.
     --
     -- [1]
     --     For all bitmasks of

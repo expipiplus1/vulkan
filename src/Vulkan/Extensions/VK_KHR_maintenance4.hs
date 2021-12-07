@@ -127,6 +127,11 @@
 --
 -- -   'KHR_MAINTENANCE_4_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE_KHR'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS_KHR'
@@ -462,12 +467,14 @@ instance Zero DeviceBufferMemoryRequirementsKHR where
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06417# If
 --     @pCreateInfo@::@flags@ has
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     set then @planAspect@ /must/ not be zero
+--     set then @planeAspect@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE_KHR'
 --
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06418# If
 --     @pCreateInfo@::@flags@ has
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     set then @planAspect@ /must/ not be zero
+--     set then @planeAspect@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE_KHR'
 --
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06419# If
 --     @pCreateInfo@::@flags@ has

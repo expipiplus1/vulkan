@@ -10873,6 +10873,11 @@ foreign import ccall
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
+-- -   #VUID-vkCmdWriteTimestamp-synchronization2-06489# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE_KHR'
+--
 -- -   #VUID-vkCmdWriteTimestamp-queryPool-01416# @queryPool@ /must/ have
 --     been created with a @queryType@ of
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP'

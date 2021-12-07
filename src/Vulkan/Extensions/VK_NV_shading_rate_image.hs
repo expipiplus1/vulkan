@@ -977,15 +977,14 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImagePropertiesNV = PhysicalDeviceShadingRateImagePropertiesNV
-  { -- | #limits-shading-rate-texel-size# @shadingRateTexelSize@ indicates the
-    -- width and height of the portion of the framebuffer corresponding to each
-    -- texel in the shading rate image.
+  { -- | #limits-shadingRateTexelSize# @shadingRateTexelSize@ indicates the width
+    -- and height of the portion of the framebuffer corresponding to each texel
+    -- in the shading rate image.
     shadingRateTexelSize :: Extent2D
-  , -- | #limits-shading-rate-palette-size# @shadingRatePaletteSize@ indicates
-    -- the maximum number of palette entries supported for the shading rate
-    -- image.
+  , -- | #limits-shadingRatePaletteSize# @shadingRatePaletteSize@ indicates the
+    -- maximum number of palette entries supported for the shading rate image.
     shadingRatePaletteSize :: Word32
-  , -- | #limits-shading-rate-max-coarse-samples# @shadingRateMaxCoarseSamples@
+  , -- | #limits-shadingRateMaxCoarseSamples# @shadingRateMaxCoarseSamples@
     -- specifies the maximum number of coverage samples supported in a single
     -- fragment. If the product of the fragment size derived from the base
     -- shading rate and the number of coverage samples per pixel exceeds this

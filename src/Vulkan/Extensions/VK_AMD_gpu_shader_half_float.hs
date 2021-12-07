@@ -46,6 +46,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gpu_shader_half_float.html SPV_AMD_gpu_shader_half_float>
 --
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_gpu_shader_half_float.txt GL_AMD_gpu_shader_half_float>
+--
 -- [__Contributors__]
 --
 --     -   Daniel Rakos, AMD

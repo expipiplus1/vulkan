@@ -76,20 +76,20 @@
 -- enable that pipeline to vary its subgroup size. If enabled, any
 -- @SubgroupSize@ decorated variables in the SPIR-V shader modules provided
 -- to pipeline creation /may/ vary between the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minimum>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minSubgroupSize minimum>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maximum>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubgroupSize maximum>
 -- subgroup sizes.
 --
 -- An implementation is also optionally allowed to support specifying a
 -- required subgroup size for a given pipeline stage. Implementations
 -- advertise which
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages stages support a required subgroup size>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-requiredSubgroupSizeStages stages support a required subgroup size>,
 -- and any pipeline of a supported stage can be passed a
 -- 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT' structure to set
 -- the subgroup size for that shader stage of the pipeline. For compute
 -- shaders, this requires the developer to query the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxComputeWorkgroupSubgroups maxComputeWorkgroupSubgroups>
 -- and ensure that:
 --
 -- \[s = { WorkGroupSize.x \times WorkGroupSize.y \times WorkgroupSize.z \leq SubgroupSize \times maxComputeWorkgroupSubgroups }\]
@@ -323,29 +323,29 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeaturesEXT where
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSubgroupSizeControlPropertiesEXT = PhysicalDeviceSubgroupSizeControlPropertiesEXT
-  { -- | #limits-min-subgroup-size# @minSubgroupSize@ is the minimum subgroup
-    -- size supported by this device. @minSubgroupSize@ is at least one if any
-    -- of the physical device’s queues support
+  { -- | #limits-minSubgroupSize# @minSubgroupSize@ is the minimum subgroup size
+    -- supported by this device. @minSubgroupSize@ is at least one if any of
+    -- the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @minSubgroupSize@
     -- is a power-of-two. @minSubgroupSize@ is less than or equal to
     -- @maxSubgroupSize@. @minSubgroupSize@ is less than or equal to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
     minSubgroupSize :: Word32
-  , -- | #limits-max-subgroup-size# @maxSubgroupSize@ is the maximum subgroup
-    -- size supported by this device. @maxSubgroupSize@ is at least one if any
-    -- of the physical device’s queues support
+  , -- | #limits-maxSubgroupSize# @maxSubgroupSize@ is the maximum subgroup size
+    -- supported by this device. @maxSubgroupSize@ is at least one if any of
+    -- the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @maxSubgroupSize@
     -- is a power-of-two. @maxSubgroupSize@ is greater than or equal to
     -- @minSubgroupSize@. @maxSubgroupSize@ is greater than or equal to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
     maxSubgroupSize :: Word32
-  , -- | #limits-max-subgroups-per-workgroup# @maxComputeWorkgroupSubgroups@ is
+  , -- | #limits-maxComputeWorkgroupSubgroups# @maxComputeWorkgroupSubgroups@ is
     -- the maximum number of subgroups supported by the implementation within a
     -- workgroup.
     maxComputeWorkgroupSubgroups :: Word32
-  , -- | #limits-required-subgroup-size-stages# @requiredSubgroupSizeStages@ is a
+  , -- | #limits-requiredSubgroupSizeStages# @requiredSubgroupSizeStages@ is a
     -- bitfield of what shader stages support having a required subgroup size
     -- specified.
     requiredSubgroupSizeStages :: ShaderStageFlags
@@ -426,11 +426,11 @@ data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageR
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02761#
     -- @requiredSubgroupSize@ /must/ be greater or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minSubgroupSize>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minSubgroupSize minSubgroupSize>
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02762#
     -- @requiredSubgroupSize@ /must/ be less than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
     requiredSubgroupSize :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

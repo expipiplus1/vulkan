@@ -39,6 +39,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_fragment_mask.html SPV_AMD_shader_fragment_mask>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/amd/GL_AMD_shader_fragment_mask.txt GL_AMD_shader_fragment_mask>
+--
 -- [__Contributors__]
 --
 --     -   Aaron Hagan, AMD

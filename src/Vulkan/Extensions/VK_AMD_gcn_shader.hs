@@ -39,6 +39,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gcn_shader.html SPV_AMD_gcn_shader>
 --
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_gcn_shader.txt GL_AMD_gcn_shader>
+--
 -- [__Contributors__]
 --
 --     -   Dominik Witczak, AMD

@@ -234,19 +234,23 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 data PhysicalDeviceTexelBufferAlignmentPropertiesEXT = PhysicalDeviceTexelBufferAlignmentPropertiesEXT
   { -- | #limits-storageTexelBufferOffsetAlignmentBytes#
     -- @storageTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
-    -- sufficient for a storage texel buffer of any format.
+    -- sufficient for a storage texel buffer of any format. The value /must/ be
+    -- a power of two.
     storageTexelBufferOffsetAlignmentBytes :: DeviceSize
   , -- | #limits-storageTexelBufferOffsetSingleTexelAlignment#
     -- @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a storage texel buffer of any format.
+    -- The value /must/ be a power of two.
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #limits-uniformTexelBufferOffsetAlignmentBytes#
     -- @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
-    -- sufficient for a uniform texel buffer of any format.
+    -- sufficient for a uniform texel buffer of any format. The value /must/ be
+    -- a power of two.
     uniformTexelBufferOffsetAlignmentBytes :: DeviceSize
   , -- | #limits-uniformTexelBufferOffsetSingleTexelAlignment#
     -- @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a uniform texel buffer of any format.
+    -- The value /must/ be a power of two.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }
   deriving (Typeable, Eq)

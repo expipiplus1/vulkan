@@ -36,6 +36,14 @@
 -- [__IP Status__]
 --     No known IP claims.
 --
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions2>.
+--
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/INTEL/INTEL_shader_integer_functions2.txt GL_INTEL_shader_integer_functions2>.
+--
 -- [__Contributors__]
 --
 --     -   Ian Romanick, Intel
