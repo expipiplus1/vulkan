@@ -385,9 +385,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pSurfaceInfo-06210#
---     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
---     reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pSurfaceInfo-06521#
+--     If the @VK_GOOGLE_surfaceless_query@ extension is not enabled,
+--     @pSurfaceInfo->surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pSurfaceInfo-06522#
+--     If @pSurfaceInfo->surface@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be supported by
+--     @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --

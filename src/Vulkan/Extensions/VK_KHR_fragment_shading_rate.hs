@@ -30,6 +30,9 @@
 --     -   Tobias Hector
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_fragment_shading_rate] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_fragment_shading_rate extension>> >
 --
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_fragment_shading_rate.asciidoc VK_KHR_fragment_shading_rate>
+--
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
@@ -60,6 +63,8 @@
 --     -   Jan-Harald Fredriksen, Arm
 --
 --     -   Jeff Bolz, Nvidia
+--
+--     -   Arseny Kapoulkine, Roblox
 --
 --     -   Contributors to the VK_NV_shading_rate_image specification
 --

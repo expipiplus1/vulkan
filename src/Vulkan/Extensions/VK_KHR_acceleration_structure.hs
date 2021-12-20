@@ -1273,6 +1273,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                    , FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR
                                                                                    , FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR
                                                                                    , FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV
                                                                                    , FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                                    , FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT
                                                                                    , FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
@@ -4571,7 +4572,7 @@ foreign import ccall
 -- -   For 'AccelerationStructureBuildGeometryInfoKHR':
 --
 --     -   Its @type@, and @flags@ members are equal to @pBuildInfo->type@
---         andm @pBuildInfo->flags@, respectively.
+--         and @pBuildInfo->flags@, respectively.
 --
 --     -   @geometryCount@ is less than or equal to
 --         @pBuildInfo->geometryCount@.
@@ -7579,6 +7580,13 @@ type FormatFeatureFlags2KHR = FormatFeatureFlagBits2KHR
 --     that image views created with this format /can/ be used for depth
 --     comparison performed by @OpImage*Dref@ instructions.
 --
+-- -   'FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV' specifies that the
+--     format is supported as a renderable
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary Linear Color Attachment>.
+--     This bit will be set for renderable color formats in the
+--     @linearTilingFeatures@. This /must/ not be set in the
+--     @optimalTilingFeatures@ or @bufferFeatures@ members.
+--
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by <VkBuffer.html buffers> or
 -- <VkBufferView.html buffer views> created with the queried
@@ -7805,6 +7813,13 @@ pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR         = FormatFe
 -- image views created with this format /can/ be used for depth comparison
 -- performed by @OpImage*Dref@ instructions.
 pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR       = FormatFeatureFlagBits2KHR 0x0000000200000000
+-- | 'FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV' specifies that the
+-- format is supported as a renderable
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary Linear Color Attachment>.
+-- This bit will be set for renderable color formats in the
+-- @linearTilingFeatures@. This /must/ not be set in the
+-- @optimalTilingFeatures@ or @bufferFeatures@ members.
+pattern FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV               = FormatFeatureFlagBits2KHR 0x0000004000000000
 -- | 'FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
 -- that an image view /can/ be used as a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
@@ -7868,6 +7883,7 @@ showTableFormatFeatureFlagBits2KHR =
   , (FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR         , "STORAGE_READ_WITHOUT_FORMAT_BIT_KHR")
   , (FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR        , "STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR")
   , (FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR      , "SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR")
+  , (FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV              , "LINEAR_COLOR_ATTACHMENT_BIT_NV")
   , (FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR    , "FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR")
   , (FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT                , "FRAGMENT_DENSITY_MAP_BIT_EXT")
   , (FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR, "ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR")

@@ -42,11 +42,10 @@
 --
 --     -   Promoted to Vulkan 1.2 Core
 --
---     -   This extension enables
+--     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_gpu_shader_int64.txt GL_ARB_gpu_shader_int64>
 --         and
---         <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GL_EXT_shader_atomic_int64.txt GL_EXT_shader_atomic_int64>
---         for GLSL source languages.
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_atomic_int64.txt GL_EXT_shader_atomic_int64>
 --
 -- [__Contributors__]
 --

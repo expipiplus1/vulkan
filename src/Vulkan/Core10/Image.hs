@@ -901,12 +901,16 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @extent.height@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
--- -   #VUID-VkImageCreateInfo-usage-02559# If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06514# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
+--     is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.width@ /must/ be less than or equal to
 --     \(\left\lceil{\frac{maxFramebufferWidth}{minFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
--- -   #VUID-VkImageCreateInfo-usage-02560# If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06515# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
+--     is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.height@ /must/ be less than or equal to
 --     \(\left\lceil{\frac{maxFramebufferHeight}{minFragmentDensityTexelSize_{height}}}\right\rceil\)

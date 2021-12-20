@@ -156,6 +156,15 @@ type FN_vkVoidFunction = () -> IO ()
 -- | PFN_vkVoidFunction - Placeholder function pointer type returned by
 -- queries
 --
+-- = Parameters
+--
+-- This type is returned from command function pointer queries, and /must/
+-- be
+--
+-- = Description
+--
+-- cast to an actual command function pointer before use.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,

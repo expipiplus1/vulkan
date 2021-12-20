@@ -201,6 +201,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   [[VUID-{refpage}-surface-06523]] @surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
 -- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
 --     @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'

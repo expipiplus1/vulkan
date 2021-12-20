@@ -1205,6 +1205,39 @@ instance Zero AttachmentReference where
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
+-- -   #VUID-VkSubpassDescription-linearColorAttachment-06496# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
+--     attachments in @pInputAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
+-- -   #VUID-VkSubpassDescription-linearColorAttachment-06497# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
+--     attachments in @pColorAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
+-- -   #VUID-VkSubpassDescription-linearColorAttachment-06498# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
+--     attachments in @pResolveAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
 -- -   #VUID-VkSubpassDescription-pColorAttachments-01506# If the
 --     @VK_AMD_mixed_attachment_samples@ extension is enabled, and all
 --     attachments in @pColorAttachments@ that are not
@@ -2170,6 +2203,13 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     created with a @flags@ value including
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --     unless that element is the fragment density map attachment
+--
+-- -   #VUID-VkFramebufferCreateInfo-renderPass-06502# If @renderPass@ was
+--     created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density map offsets>
+--     other than (0,0), each element of @pAttachments@ /must/ have been
+--     created with a @flags@ value including
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM'.
 --
 -- -   #VUID-VkFramebufferCreateInfo-pAttachments-00880# If @renderpass@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and @flags@ does not

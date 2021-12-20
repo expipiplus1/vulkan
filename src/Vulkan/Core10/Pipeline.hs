@@ -2923,23 +2923,6 @@ instance Zero PipelineColorBlendAttachmentState where
 -- | VkPipelineColorBlendStateCreateInfo - Structure specifying parameters of
 -- a newly created pipeline color blend state
 --
--- = Description
---
--- Each element of the @pAttachments@ array is a
--- 'PipelineColorBlendAttachmentState' structure specifying per-target
--- blending state for each individual color attachment. If the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-independentBlend independent blending>
--- feature is not enabled on the device, all
--- 'PipelineColorBlendAttachmentState' elements in the @pAttachments@ array
--- /must/ be identical.
---
--- The value of @attachmentCount@ /must/ be greater than the index of all
--- color attachments that are not
--- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' in
--- 'Vulkan.Core10.Pass.SubpassDescription'::@pColorAttachments@ or
--- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2'::@pColorAttachments@
--- for the subpass in which this pipeline is used.
---
 -- == Valid Usage
 --
 -- -   #VUID-VkPipelineColorBlendStateCreateInfo-pAttachments-00605# If the
@@ -3009,7 +2992,9 @@ data PipelineColorBlendStateCreateInfo (es :: [Type]) = PipelineColorBlendStateC
     logicOpEnable :: Bool
   , -- | @logicOp@ selects which logical operation to apply.
     logicOp :: LogicOp
-  , -- | @pAttachments@ is a pointer to an array of per target attachment states.
+  , -- | @pAttachments@ is a pointer to an array of
+    -- 'PipelineColorBlendAttachmentState' structures defining blend state for
+    -- each color attachment.
     attachments :: Vector PipelineColorBlendAttachmentState
   , -- | @blendConstants@ is a pointer to an array of four values used as the R,
     -- G, B, and A components of the blend constant that are used in blending,
@@ -3863,15 +3848,6 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and @subpass@ uses color attachments, @pColorBlendState@ /must/ be a
 --     valid pointer to a valid 'PipelineColorBlendStateCreateInfo'
 --     structure
---
--- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06045# If @renderPass@
---     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the pipeline is
---     being created with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
---     @pColorBlendState->attachmentCount@ /must/ be greater than the index
---     of all color attachments that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' for the @subpass@
---     index in @renderPass@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-00754# If the
 --     pipeline is being created with

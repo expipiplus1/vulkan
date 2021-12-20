@@ -1115,6 +1115,11 @@ instance Zero CoarseSampleLocationNV where
 --
 -- = Description
 --
+-- The 'CoarseSampleOrderCustomNV' structure is used with a coverage sample
+-- ordering type of 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV' to specify the
+-- order of coverage samples for one combination of fragment width,
+-- fragment height, and coverage sample count.
+--
 -- When using a custom sample ordering, element /j/ in @pSampleLocations@
 -- specifies a specific pixel location and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>

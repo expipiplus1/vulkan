@@ -1041,7 +1041,7 @@ cmdWaitEvents2KHRSafeOrUnsafe mkVkCmdWaitEvents2KHR commandBuffer events depende
 -- dependencies according to the elements of @pDependencyInfos@ and each
 -- corresponding element of @pEvents@. 'cmdWaitEvents2KHR' /must/ not be
 -- used to wait on event signal operations occurring on other queues, or
--- signal operations execyted by
+-- signal operations executed by
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent'.
 --
 -- The first
@@ -1814,8 +1814,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteTimestamp2KHR-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support transfer, graphics, compute, decode,
+--     or encode operations
 --
 -- -   #VUID-vkCmdWriteTimestamp2KHR-commonparent# Both of @commandBuffer@,
 --     and @queryPool@ /must/ have been created, allocated, or retrieved
@@ -1838,6 +1838,8 @@ foreign import ccall
 -- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |
 -- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
 -- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Decode                                                                                                                |
+-- |                                                                                                                            |                                                                                                                        | Encode                                                                                                                |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also

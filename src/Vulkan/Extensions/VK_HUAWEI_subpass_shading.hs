@@ -938,6 +938,10 @@ instance Zero PhysicalDeviceSubpassShadingPropertiesHUAWEI where
 --
 -- = Members
 --
+-- This structure describes the following feature:
+--
+-- = Description
+--
 -- If the 'PhysicalDeviceSubpassShadingFeaturesHUAWEI' structure is
 -- included in the @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
@@ -956,7 +960,8 @@ instance Zero PhysicalDeviceSubpassShadingPropertiesHUAWEI where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSubpassShadingFeaturesHUAWEI = PhysicalDeviceSubpassShadingFeaturesHUAWEI
-  { -- No documentation found for Nested "VkPhysicalDeviceSubpassShadingFeaturesHUAWEI" "subpassShading"
+  { -- | #features-subpassShading# @subpassShading@ specifies whether subpass
+    -- shading is supported.
     subpassShading :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
